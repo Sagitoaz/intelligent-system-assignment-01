@@ -1,0 +1,27 @@
+.git/
+.gitignore
+.env
+.env.*
+
+.venv/
+venv/
+**/__pycache__/
+**/*.pyc
+.pytest_cache/
+
+**/node_modules/
+web/dist/
+mobile/dist/
+mobile/.expo/
+
+.idea/
+.vscode/
+*.tsbuildinfo
+
+# Runtime images load the committed models but do not need research artifacts.
+data/
+figures/
+notebooks/
+logs/
+neo4j_data/
+neo4j_logs/

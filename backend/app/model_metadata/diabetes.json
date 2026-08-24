@@ -1,0 +1,30 @@
+{
+  "id": "diabetes",
+  "name": "Diabetes Prediction",
+  "task": "classification",
+  "dataset": "Pima Indians Diabetes dataset (768 observations in the assignment notebook)",
+  "expected_raw_features": [
+    "Pregnancies",
+    "Glucose",
+    "BloodPressure",
+    "BMI",
+    "DiabetesPedigreeFunction",
+    "Age"
+  ],
+  "fields": [
+    {"name": "Pregnancies", "label": "Pregnancies", "type": "number", "integer": true, "unit": "count", "description": "Number of pregnancies", "required": true, "nullable": false, "minimum": 0, "example": 1},
+    {"name": "Glucose", "label": "Glucose", "type": "number", "unit": "plasma glucose concentration", "description": "Plasma glucose concentration", "required": true, "nullable": false, "exclusive_minimum": 0, "example": 85},
+    {"name": "BloodPressure", "label": "Blood pressure", "type": "number", "unit": "mm Hg", "description": "Diastolic blood pressure", "required": true, "nullable": false, "exclusive_minimum": 0, "example": 66},
+    {"name": "BMI", "label": "BMI", "type": "number", "unit": "kg/m²", "description": "Body Mass Index", "required": true, "nullable": false, "exclusive_minimum": 0, "example": 24.0},
+    {"name": "DiabetesPedigreeFunction", "label": "Diabetes pedigree function", "type": "number", "unit": "score", "description": "Diabetes pedigree function", "required": true, "nullable": false, "minimum": 0, "example": 0.2},
+    {"name": "Age", "label": "Age", "type": "number", "integer": true, "unit": "years", "description": "Patient age", "required": true, "nullable": false, "exclusive_minimum": 0, "example": 23}
+  ],
+  "model": {
+    "name": "Random Forest Classifier",
+    "configuration": {"n_estimators": 100, "max_depth": 6, "random_state": 42},
+    "preprocessing": ["Median imputation", "Standard scaling"]
+  },
+  "class_labels": {"0": "Non-diabetic", "1": "Diabetic"},
+  "metrics": {"accuracy": 0.7468, "precision": 0.6667, "recall": 0.5556, "f1": 0.6061},
+  "disclaimer": "This prediction is for educational demonstration only and is not a medical diagnosis."
+}

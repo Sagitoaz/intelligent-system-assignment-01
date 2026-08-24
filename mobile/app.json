@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "Intelligent Systems A01",
+    "slug": "intelligent-systems-assignment-01",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": ["**/*"],
+    "android": { "package": "edu.assignment.intelligentsystems" },
+    "ios": { "bundleIdentifier": "edu.assignment.intelligentsystems" }
+  }
+}

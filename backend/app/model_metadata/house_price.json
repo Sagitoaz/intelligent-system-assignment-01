@@ -1,0 +1,40 @@
+{
+  "id": "house_price",
+  "name": "Vietnam House Price Prediction",
+  "task": "regression",
+  "dataset": "Vietnam housing listings dataset used by the assignment notebook (2024 collection)",
+  "expected_raw_features": [
+    "Province",
+    "Area",
+    "Frontage",
+    "Access Road",
+    "House direction",
+    "Balcony direction",
+    "Floors",
+    "Bedrooms",
+    "Bathrooms",
+    "Legal status",
+    "Furniture state"
+  ],
+  "fields": [
+    {"name": "Province", "label": "Province / city", "type": "categorical", "unit": null, "description": "Normalized province or city market", "required": true, "nullable": false, "options": ["An Giang", "Bà Rịa Vũng Tàu", "Bình Dương", "Bình Phước", "Bình Thuận", "Bình Định", "Bắc Giang", "Bắc Ninh", "Bến Tre", "Cà Mau", "Cần Thơ", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Nội", "Hà Tĩnh", "Hòa Bình", "Hưng Yên", "Hải Dương", "Hải Phòng", "Hồ Chí Minh", "Khánh Hòa", "Kiên Giang", "Long An", "Lào Cai", "Lâm Đồng", "Lạng Sơn", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", "Quảng Trị", "Sóc Trăng", "Sơn La", "Thanh Hóa", "Thái Bình", "Thái Nguyên", "Thừa Thiên Huế", "Tiền Giang", "Trà Vinh", "Tuyên Quang", "Tây Ninh", "Unknown", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái", "Điện Biên", "Đà Nẵng", "Đắk Lắk", "Đồng Nai", "Đồng Tháp"], "example": "Hồ Chí Minh"},
+    {"name": "Area", "label": "Area", "type": "number", "unit": "m²", "description": "Property area in square metres", "required": true, "nullable": false, "exclusive_minimum": 0, "example": 45.0},
+    {"name": "Frontage", "label": "Frontage", "type": "number", "unit": "m", "description": "Front width in metres", "required": true, "nullable": true, "exclusive_minimum": 0, "example": 4.0},
+    {"name": "Access Road", "label": "Access road width", "type": "number", "unit": "m", "description": "Access-road width in metres", "required": true, "nullable": true, "exclusive_minimum": 0, "example": 4.0},
+    {"name": "House direction", "label": "House direction", "type": "categorical", "unit": null, "description": "Direction faced by the house", "required": true, "nullable": true, "options": ["Bắc", "Nam", "Tây", "Tây - Bắc", "Tây - Nam", "Đông", "Đông - Bắc", "Đông - Nam"], "example": "Đông - Nam"},
+    {"name": "Balcony direction", "label": "Balcony direction", "type": "categorical", "unit": null, "description": "Direction faced by the balcony", "required": true, "nullable": true, "options": ["Bắc", "Nam", "Tây", "Tây - Bắc", "Tây - Nam", "Đông", "Đông - Bắc", "Đông - Nam"], "example": "Đông - Nam"},
+    {"name": "Floors", "label": "Floors", "type": "number", "unit": "count", "description": "Number of floors", "required": true, "nullable": true, "exclusive_minimum": 0, "example": 3.0},
+    {"name": "Bedrooms", "label": "Bedrooms", "type": "number", "unit": "count", "description": "Number of bedrooms", "required": true, "nullable": true, "exclusive_minimum": 0, "example": 3.0},
+    {"name": "Bathrooms", "label": "Bathrooms", "type": "number", "unit": "count", "description": "Number of bathrooms", "required": true, "nullable": true, "exclusive_minimum": 0, "example": 3.0},
+    {"name": "Legal status", "label": "Legal status", "type": "categorical", "unit": null, "description": "Certificate or sale-contract status", "required": true, "nullable": true, "options": ["Have certificate", "Sale contract"], "example": "Have certificate"},
+    {"name": "Furniture state", "label": "Furniture state", "type": "categorical", "unit": null, "description": "Basic or full furnishing state", "required": true, "nullable": true, "options": ["Basic", "Full"], "example": "Full"}
+  ],
+  "target": {"name": "Price", "unit": "billion VND", "description": "Listed property price on the original notebook scale"},
+  "model": {
+    "name": "Random Forest Regressor",
+    "configuration": {"n_estimators": 100, "max_depth": 12, "random_state": 42},
+    "preprocessing": ["Numerical median imputation", "Numerical standard scaling", "Categorical most-frequent imputation", "One-hot encoding with unknown categories ignored"]
+  },
+  "metrics": {"mae_billion_vnd": 1.2529, "rmse_billion_vnd": 1.6018, "r2": 0.4738, "mape": 0.2736},
+  "disclaimer": "Educational estimate only; not a professional property valuation."
+}

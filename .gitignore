@@ -1,35 +1,39 @@
+# Python environments, bytecode and test caches
 .venv/
+venv/
 __pycache__/
 *.pyc
+.pytest_cache/
 
 .ipynb_checkpoints/
-
 .idea/
 .vscode/
 
+# Local environment files; keep documented templates
 .env
+.env.*
+!.env.example
+!**/.env.example
 
+# JavaScript / Expo dependencies and generated output
+node_modules/
+web/dist/
+mobile/dist/
+.expo/
+*.tsbuildinfo
+web/vite.config.js
+web/vite.config.d.ts
+
+# Local Neo4j data and logs (Docker named volumes are external by default)
+neo4j_data/
+neo4j_logs/
+knowledge_graph/data/
+knowledge_graph/logs/
+logs/
+
+# Legacy ad-hoc artifacts; required nested model files are committed
 models/*.pkl
 models/*.joblib
 
 .DS_Store
 Thumbs.db
-
-.venv/
-__pycache__/
-*.pyc
-
-.ipynb_checkpoints/
-
-.idea/
-.vscode/
-
-.env
-
-models/*.pkl
-models/*.joblib
-
-.DS_Store
-Thumbs.db
-
-data/**/*.csv
