@@ -1,4 +1,4 @@
-import type { ModelMetadata } from './types'
+import type { GraphData, ModelMetadata } from './types'
 
 export const API_BASE_URL = (process.env.EXPO_PUBLIC_API_BASE_URL || '').replace(/\/$/, '')
 
@@ -27,4 +27,5 @@ export const api = {
   metadata: (slug: 'diabetes' | 'house-price') => request<ModelMetadata>(`/api/v1/models/${slug}`),
   predict: <T>(path: string, payload: Record<string, unknown>) =>
     request<T>(path, { method: 'POST', body: JSON.stringify(payload) }),
+  graph: () => request<GraphData>('/api/v1/diabetes/knowledge-graph'),
 }

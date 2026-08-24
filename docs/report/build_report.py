@@ -8,6 +8,7 @@ native editable Word content.
 from __future__ import annotations
 
 import re
+import sys
 import zipfile
 from pathlib import Path
 
@@ -341,9 +342,9 @@ def add_title_page(document: Document) -> None:
     for _ in range(3):
         document.add_paragraph()
     for text in [
-        "Student: __________________________________",
-        "Student ID: _______________________________",
-        "Class: ____________________________________",
+        "Student: Nguyễn Thành Trung",
+        "Student ID: B23DCCN861",
+        "Class: D23CTPM01-B",
         "Lecturer: _________________________________",
     ]:
         p = document.add_paragraph()
@@ -601,6 +602,8 @@ def validate(tables: int, figures: int) -> None:
     if "R² = 0.4738 does not mean 47.38% accuracy" not in body_text:
         raise RuntimeError("Regression accuracy warning is missing")
     critical_facts = [
+        "Student: Nguyễn Thành Trung", "Student ID: B23DCCN861", "Class: D23CTPM01-B",
+        "Lecturer: _________________________________",
         "768 observations", "500 class-0 and 268 class-1", "29.56%", "48.70%",
         "0.7013", "0.7338", "0.6818", "0.7597", "0.6408",
         "0.6462", "0.6243", "0.6061", "[[85, 15], [24, 30]]",
@@ -608,6 +611,8 @@ def validate(tables: int, figures: int) -> None:
         "1.4782", "1.3627", "1.3976", "1.3009", "1.2868",
         "1.6565", "1.6526", "1.6078", "1.2529", "2.5659", "1.6018",
         "0.4738", "27.36%", "17 nodes and 17 relationships",
+        "Responsive breakpoints adapt navigation", "Its five screens are Home, Diabetes, House Price, Knowledge Graph, and About",
+        "touch-oriented node explorer",
     ]
     missing_facts = [fact for fact in critical_facts if fact not in full_text]
     if missing_facts:
@@ -630,5 +635,10 @@ def validate(tables: int, figures: int) -> None:
 
 
 if __name__ == "__main__":
-    table_count, figure_count = build()
-    validate(table_count, figure_count)
+    if "--validate-only" in sys.argv:
+        existing = Document(DOCX_PATH)
+        image_count = len([rel for rel in existing.part.rels.values() if "image" in rel.reltype])
+        validate(len(existing.tables), image_count)
+    else:
+        table_count, figure_count = build()
+        validate(table_count, figure_count)

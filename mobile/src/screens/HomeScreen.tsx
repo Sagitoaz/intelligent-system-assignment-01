@@ -1,7 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native'
 import { colors, shared, spacing } from '../theme'
 
-export function HomeScreen({ navigate }: { navigate: (screen: 'diabetes' | 'house' | 'about') => void }) {
+export function HomeScreen({ navigate }: { navigate: (screen: 'diabetes' | 'house' | 'graph' | 'about') => void }) {
   const { width } = useWindowDimensions()
   const compact = width <= 375
 
@@ -17,18 +17,19 @@ export function HomeScreen({ navigate }: { navigate: (screen: 'diabetes' | 'hous
     </View>
     <SystemCard number="01" task="Classification" title="Diabetes Prediction" description="6 raw features · Random Forest" tone="teal" onPress={() => navigate('diabetes')} />
     <SystemCard number="02" task="Regression" title="Vietnam House Price" description="11 raw features · Random Forest" tone="orange" onPress={() => navigate('house')} />
+    <SystemCard number="KG" task="Transparency" title="Knowledge Graph" description="Explore the Diabetes model, features, metrics and provenance." tone="violet" onPress={() => navigate('graph')} />
     <Pressable accessibilityRole="link" onPress={() => navigate('about')} style={({ pressed }) => [styles.aboutLink, pressed && styles.pressed]}>
       <Text style={styles.aboutText}>View assignment methodology</Text><Text style={styles.arrow}>→</Text>
     </Pressable>
   </ScrollView>
 }
 
-function SystemCard({ number, task, title, description, tone, onPress }: { number: string; task: string; title: string; description: string; tone: 'teal' | 'orange'; onPress: () => void }) {
+function SystemCard({ number, task, title, description, tone, onPress }: { number: string; task: string; title: string; description: string; tone: 'teal' | 'orange' | 'violet'; onPress: () => void }) {
   return <Pressable
     accessibilityRole="button"
     accessibilityLabel={`Open ${title}`}
     onPress={onPress}
-    style={({ pressed }) => [styles.systemCard, tone === 'teal' ? styles.teal : styles.orange, pressed && styles.pressed]}
+    style={({ pressed }) => [styles.systemCard, tone === 'teal' ? styles.teal : tone === 'orange' ? styles.orange : styles.violet, pressed && styles.pressed]}
   >
     <View style={styles.cardTop}><Text style={styles.number}>{number}</Text><Text style={styles.task}>{task}</Text></View>
     <Text style={styles.cardTitle}>{title}</Text>
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
   systemCard: { minHeight: 164, borderRadius: 18, padding: 20, marginBottom: 14 },
   teal: { backgroundColor: colors.paleGreen },
   orange: { backgroundColor: colors.palePeach },
+  violet: { backgroundColor: '#eae5f2' },
   cardTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   number: { color: colors.muted, fontSize: 12, fontWeight: '700', letterSpacing: 0.5 },
   task: { overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.68)', borderRadius: 14, paddingHorizontal: 10, paddingVertical: 5, color: colors.ink, fontSize: 10, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.85 },

@@ -11,9 +11,9 @@ Systems:
 1. Diabetes Classification System
 2. Vietnam House Price Prediction System
 
-Student: __________________________________
-Student ID: _______________________________
-Class: ____________________________________
+Student: Nguyễn Thành Trung
+Student ID: B23DCCN861
+Class: D23CTPM01-B
 Lecturer: _________________________________
 Date: August 2026
 
@@ -368,19 +368,21 @@ The central invariant is **Training Pipeline = Inference Pipeline**. Diabetes in
 
 # 14. Web Application
 
-The web client uses React 19, Vite 7, and TypeScript. Routes provide Home, Diabetes, House Price, Knowledge Graph, and About pages. Shared metadata prevents the browser from hard-coding encoded features: the form sends the exact **raw** feature names expected by the backend, while the saved backend Pipeline performs imputation, scaling, and encoding.
+The web client uses React 19, Vite 7, and TypeScript. Routes provide Home, Diabetes, House Price, Knowledge Graph, and About pages. Shared metadata prevents the browser from hard-coding encoded features: the form sends the exact **raw** feature names expected by the backend, while the saved backend Pipeline performs imputation, scaling, and encoding. Responsive breakpoints adapt navigation, forms, result panels, cards, typography, and the graph layout for desktop, tablet, and phone widths.
 
-The production web URL is <https://intelligent-system-assignment-01.vercel.app>. `VITE_API_BASE_URL` supplies the backend origin at build time. The Knowledge Graph page requests model-centric nodes and edges from FastAPI and renders them with a force-graph component.
+The production web URL is <https://intelligent-system-assignment-01.vercel.app>. `VITE_API_BASE_URL` supplies the backend origin at build time. The Knowledge Graph page requests model-centric nodes and edges from FastAPI and renders them with a force-directed canvas. The canvas spaces nodes with configured forces, exposes relationship types as hover labels, provides an enlarged pointer area for every node, and synchronizes selection with an adjacent property panel.
 
 # 15. Mobile Application
 
-The mobile client uses Expo, React Native, and TypeScript. Its four screens are Home, Diabetes, House Price, and About. The Diabetes and House screens obtain metadata and submit the same raw API contracts as the web application. `EXPO_PUBLIC_API_BASE_URL` selects the backend URL appropriate to a browser, emulator, LAN-connected physical device, or deployed API.
+The mobile client uses Expo, React Native, and TypeScript. Its five screens are Home, Diabetes, House Price, Knowledge Graph, and About. The Diabetes and House screens obtain metadata and submit the same raw API contracts as the web application. The Knowledge Graph screen requests the existing graph endpoint and provides native node/relationship totals, a label legend, node property inspection, and navigable connections without depending on a desktop canvas. `EXPO_PUBLIC_API_BASE_URL` selects the backend URL appropriate to a browser, emulator, LAN-connected physical device, or deployed API.
 
-The current mobile delivery is demonstrated through Expo Go. The repository does not claim a Google Play or Apple App Store release. Static project evidence confirms the prediction request path and a TypeScript type-checkable client; no independent store deployment is claimed.
+The current mobile delivery is demonstrated through Expo Go. The repository does not claim a Google Play or Apple App Store release. Static project evidence confirms the prediction and Knowledge Graph request paths in a TypeScript type-checkable client; no independent store deployment is claimed.
 
 # 16. Diabetes Knowledge Graph
 
 The Neo4j AuraDB graph is transparent and model-centric. It records what the assignment system uses: the final model, six raw features, target, fitted preprocessing steps, dataset provenance, model-selection experiment, held-out metrics, and fitted impurity importance. It is **not a medical knowledge base** and contains no unsourced clinical claims.
+
+The same sourced graph is presented differently for each interface: the web client uses an interactive force-directed canvas with a details panel, while the mobile client uses a touch-oriented node explorer and explicit connection list. Both views consume the same FastAPI response and preserve the same 17-node/17-relationship graph semantics.
 
 **Table 16. Knowledge Graph schema represented in the Cypher seed.**
 

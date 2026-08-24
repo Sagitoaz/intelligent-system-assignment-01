@@ -6,13 +6,15 @@ import { AboutScreen } from './src/screens/AboutScreen'
 import { DiabetesScreen } from './src/screens/DiabetesScreen'
 import { HomeScreen } from './src/screens/HomeScreen'
 import { HousePriceScreen } from './src/screens/HousePriceScreen'
+import { KnowledgeGraphScreen } from './src/screens/KnowledgeGraphScreen'
 import { colors } from './src/theme'
 
-type Screen = 'home' | 'diabetes' | 'house' | 'about'
+type Screen = 'home' | 'diabetes' | 'house' | 'graph' | 'about'
 const tabs: { key: Screen; label: string; mark: string }[] = [
   { key: 'home', label: 'Home', mark: 'H' },
   { key: 'diabetes', label: 'Diabetes', mark: 'D' },
   { key: 'house', label: 'House price', mark: 'P' },
+  { key: 'graph', label: 'Graph', mark: 'KG' },
   { key: 'about', label: 'About', mark: 'i' },
 ]
 
@@ -32,7 +34,7 @@ function AppLayout() {
       <View><Text style={styles.brand}>Intelligent Systems</Text><Text style={styles.assignment}>Assignment 01</Text></View>
     </View>
     <View style={styles.content}>
-      {screen === 'home' ? <HomeScreen navigate={setScreen} /> : screen === 'diabetes' ? <DiabetesScreen /> : screen === 'house' ? <HousePriceScreen /> : <AboutScreen />}
+      {screen === 'home' ? <HomeScreen navigate={setScreen} /> : screen === 'diabetes' ? <DiabetesScreen /> : screen === 'house' ? <HousePriceScreen /> : screen === 'graph' ? <KnowledgeGraphScreen /> : <AboutScreen />}
     </View>
     <View style={[styles.nav, { height: 56 + bottomInset, paddingBottom: bottomInset }]}>
       {tabs.map((tab) => {
@@ -68,7 +70,7 @@ const styles = StyleSheet.create({
   activeTabMark: { backgroundColor: colors.teal, borderColor: colors.teal },
   tabMarkText: { color: colors.muted, fontSize: 9, fontWeight: '800' },
   activeTabMarkText: { color: 'white' },
-  navText: { color: colors.muted, fontSize: 10, lineHeight: 14 },
+  navText: { color: colors.muted, fontSize: 9, lineHeight: 13 },
   activeText: { color: colors.teal, fontWeight: '700' },
   activeIndicator: { width: 18, height: 2, borderRadius: 1, backgroundColor: 'transparent', marginTop: 1 },
   activeIndicatorVisible: { backgroundColor: colors.orange },
