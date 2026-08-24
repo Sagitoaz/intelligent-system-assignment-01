@@ -7,6 +7,8 @@ export type FieldMetadata = {
   description: string
   required: boolean
   nullable: boolean
+  minimum?: number
+  exclusive_minimum?: number
   options?: string[]
   example?: string | number
 }

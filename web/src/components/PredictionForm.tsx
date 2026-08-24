@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react'
 import { api } from '../api'
+import { numericInputMinimum, numericInputStep, validateNumericValues } from '../numericValidation'
 import type { ModelMetadata } from '../types'
 
 type Props<T> = {
@@ -33,9 +34,15 @@ export function PredictionForm<T>({ slug, endpoint, eyebrow, title, intro, submi
   async function submit(event: FormEvent) {
     event.preventDefault()
     if (!metadata) return
-    setLoading(true)
     setError('')
     setResult(null)
+    const validationError = validateNumericValues(metadata.fields, values)
+    if (validationError) {
+      setError(validationError)
+      return
+    }
+
+    setLoading(true)
     const payload = Object.fromEntries(metadata.fields.map((field) => {
       const raw = values[field.name] ?? ''
       if (field.nullable && raw === '') return [field.name, null]
@@ -83,8 +90,8 @@ export function PredictionForm<T>({ slug, endpoint, eyebrow, title, intro, submi
                     <input
                       type="number"
                       required={!field.nullable}
-                      min={field.name === 'Pregnancies' ? 0 : 0.000001}
-                      step={field.integer ? 1 : 'any'}
+                      min={numericInputMinimum(field)}
+                      step={numericInputStep(field)}
                       value={values[field.name] ?? ''}
                       onChange={(event) => setValues({ ...values, [field.name]: event.target.value })}
                     />
