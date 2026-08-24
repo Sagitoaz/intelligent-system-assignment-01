@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import ForceGraph2D, { type ForceGraphMethods } from 'react-force-graph-2d'
 import { api } from '../api'
 import type { GraphData, GraphEdge, GraphNode } from '../types'
@@ -15,8 +15,13 @@ export function KnowledgeGraphPage() {
   const [error, setError] = useState('')
   const container = useRef<HTMLDivElement>(null)
   const graphRef = useRef<ForceGraphMethods<GraphNode, GraphEdge>>(undefined)
+  const pointerStart = useRef<{ x: number; y: number } | null>(null)
   const [width, setWidth] = useState(900)
   const graphHeight = width < 680 ? 470 : 620
+  const forceGraphData = useMemo(
+    () => graph ? { nodes: graph.nodes, links: graph.edges } : { nodes: [], links: [] },
+    [graph],
+  )
 
   useEffect(() => {
     api.graph().then((data) => {
@@ -38,6 +43,38 @@ export function KnowledgeGraphPage() {
 
   function fitGraph() {
     graphRef.current?.zoomToFit(450, width < 680 ? 34 : 70)
+  }
+
+  function rememberPointer(event: ReactPointerEvent<HTMLDivElement>) {
+    pointerStart.current = { x: event.clientX, y: event.clientY }
+  }
+
+  function selectNodeAtPointer(event: ReactPointerEvent<HTMLDivElement>) {
+    const start = pointerStart.current
+    pointerStart.current = null
+    if (!start || !graph || !container.current || !graphRef.current) return
+    if ((event.target as HTMLElement).closest('button')) return
+    if (Math.hypot(event.clientX - start.x, event.clientY - start.y) > 8) return
+
+    const bounds = container.current.getBoundingClientRect()
+    const pointerX = event.clientX - bounds.left
+    const pointerY = event.clientY - bounds.top
+    let nearest: GraphNode | null = null
+    let nearestDistance = Number.POSITIVE_INFINITY
+
+    graph.nodes.forEach((node) => {
+      if (node.x == null || node.y == null) return
+      const screen = graphRef.current?.graph2ScreenCoords(node.x, node.y)
+      if (!screen) return
+      const distance = Math.hypot(pointerX - screen.x, pointerY - screen.y)
+      if (distance < nearestDistance) {
+        nearest = node
+        nearestDistance = distance
+      }
+    })
+
+    const hitRadius = event.pointerType === 'touch' ? 34 : 24
+    if (nearest && nearestDistance <= hitRadius) setSelected(nearest)
   }
 
   function paintNode(node: GraphNode, context: CanvasRenderingContext2D, globalScale: number) {
@@ -82,13 +119,18 @@ export function KnowledgeGraphPage() {
       {!graph && !error && <div className="status-card">Loading Neo4j graph…</div>}
       {graph && (
         <div className="graph-layout">
-          <div className="graph-canvas" ref={container}>
+          <div
+            className="graph-canvas"
+            ref={container}
+            onPointerDownCapture={rememberPointer}
+            onPointerUpCapture={selectNodeAtPointer}
+          >
             <div className="graph-toolbar"><span>{graph.nodes.length} nodes · {graph.edges.length} relationships</span><button onClick={fitGraph} type="button">Fit graph</button></div>
             <ForceGraph2D
               ref={graphRef}
               width={width}
               height={graphHeight}
-              graphData={{ nodes: graph.nodes, links: graph.edges }}
+              graphData={forceGraphData}
               nodeLabel={(node) => String((node as GraphNode).properties.name ?? '')}
               nodeCanvasObjectMode={() => 'replace'}
               nodeCanvasObject={(node, context, globalScale) => paintNode(node as GraphNode, context, globalScale)}
@@ -102,6 +144,7 @@ export function KnowledgeGraphPage() {
               }}
               nodeRelSize={7}
               linkLabel={(link) => (link as unknown as GraphEdge).type}
+              linkPointerAreaPaint={() => undefined}
               linkColor={() => '#9ca9a4'}
               linkWidth={1.15}
               linkCurvature={0.06}
