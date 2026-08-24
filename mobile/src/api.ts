@@ -13,7 +13,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
       headers: { 'Content-Type': 'application/json', ...init?.headers },
     })
   } catch {
-    throw new Error(`Cannot reach ${API_BASE_URL}. Check the device-specific API address.`)
+    throw new Error('Cannot reach the prediction service. Check your connection and try again.')
   }
   if (!response.ok) {
     const body = await response.json().catch(() => null)

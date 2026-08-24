@@ -6,7 +6,10 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "assetBundlePatterns": ["**/*"],
-    "android": { "package": "edu.assignment.intelligentsystems" },
+    "android": {
+      "package": "edu.assignment.intelligentsystems",
+      "softwareKeyboardLayoutMode": "resize"
+    },
     "ios": { "bundleIdentifier": "edu.assignment.intelligentsystems" }
   }
 }

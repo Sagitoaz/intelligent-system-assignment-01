@@ -1,20 +1,61 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { colors, shared } from '../theme'
+import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native'
+import { colors, shared, spacing } from '../theme'
 
 export function HomeScreen({ navigate }: { navigate: (screen: 'diabetes' | 'house' | 'about') => void }) {
-  return <ScrollView style={shared.screen} contentContainerStyle={shared.content}>
-    <Text style={shared.eyebrow}>Assignment 01 · Intelligent systems</Text><Text style={styles.hero}>Models made{`\n`}transparent.</Text>
-    <Text style={shared.intro}>Run both fitted scikit-learn pipelines from one mobile interface connected to the local FastAPI backend.</Text>
-    <SystemCard number="01" task="Classification" title="Diabetes Prediction" description="Six raw inputs. Educational prediction only — never a diagnosis." tone="teal" onPress={() => navigate('diabetes')} />
-    <SystemCard number="02" task="Regression" title="Vietnam House Price" description="Eleven raw property features. Estimate shown in billion VND." tone="orange" onPress={() => navigate('house')} />
-    <Pressable onPress={() => navigate('about')}><Text style={styles.aboutLink}>Read system methodology →</Text></Pressable>
+  const { width } = useWindowDimensions()
+  const compact = width <= 375
+
+  return <ScrollView
+    style={shared.screen}
+    contentContainerStyle={[shared.content, styles.content]}
+    showsVerticalScrollIndicator={false}
+  >
+    <View style={styles.heroBlock}>
+      <Text style={shared.eyebrow}>Assignment 01</Text>
+      <Text style={[styles.hero, compact && styles.heroCompact]}>Intelligent Systems</Text>
+      <Text style={styles.intro}>Two trained ML systems, one transparent prediction workflow.</Text>
+    </View>
+    <SystemCard number="01" task="Classification" title="Diabetes Prediction" description="6 raw features · Random Forest" tone="teal" onPress={() => navigate('diabetes')} />
+    <SystemCard number="02" task="Regression" title="Vietnam House Price" description="11 raw features · Random Forest" tone="orange" onPress={() => navigate('house')} />
+    <Pressable accessibilityRole="link" onPress={() => navigate('about')} style={({ pressed }) => [styles.aboutLink, pressed && styles.pressed]}>
+      <Text style={styles.aboutText}>View assignment methodology</Text><Text style={styles.arrow}>→</Text>
+    </Pressable>
   </ScrollView>
 }
 
 function SystemCard({ number, task, title, description, tone, onPress }: { number: string; task: string; title: string; description: string; tone: 'teal' | 'orange'; onPress: () => void }) {
-  return <Pressable onPress={onPress} style={({ pressed }) => [styles.systemCard, tone === 'teal' ? styles.teal : styles.orange, pressed && { opacity: .85 }]}>
-    <View style={styles.cardTop}><Text style={styles.number}>{number}</Text><Text style={styles.task}>{task}</Text></View><Text style={styles.cardTitle}>{title}</Text><Text style={styles.description}>{description}</Text><Text style={styles.open}>Open system  →</Text>
+  return <Pressable
+    accessibilityRole="button"
+    accessibilityLabel={`Open ${title}`}
+    onPress={onPress}
+    style={({ pressed }) => [styles.systemCard, tone === 'teal' ? styles.teal : styles.orange, pressed && styles.pressed]}
+  >
+    <View style={styles.cardTop}><Text style={styles.number}>{number}</Text><Text style={styles.task}>{task}</Text></View>
+    <Text style={styles.cardTitle}>{title}</Text>
+    <Text style={styles.description}>{description}</Text>
+    <View style={styles.openRow}><Text style={styles.open}>Open system</Text><Text style={styles.openArrow}>→</Text></View>
   </Pressable>
 }
 
-const styles = StyleSheet.create({ hero: { color: colors.ink, fontSize: 47, lineHeight: 50, fontWeight: '700', letterSpacing: -1.7, marginTop: 14 }, systemCard: { minHeight: 245, borderRadius: 20, padding: 22, marginBottom: 16 }, teal: { backgroundColor: '#dcebe5' }, orange: { backgroundColor: '#f5e3d1' }, cardTop: { flexDirection: 'row', justifyContent: 'space-between' }, number: { color: colors.muted, fontSize: 12, fontWeight: '700' }, task: { backgroundColor: 'rgba(255,255,255,.65)', borderRadius: 20, paddingHorizontal: 10, paddingVertical: 6, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }, cardTitle: { color: colors.ink, fontSize: 29, lineHeight: 34, fontWeight: '700', marginTop: 28 }, description: { color: colors.muted, lineHeight: 21, marginTop: 10 }, open: { color: colors.teal, fontWeight: '700', marginTop: 'auto' }, aboutLink: { color: colors.teal, fontWeight: '700', paddingVertical: 15 } })
+const styles = StyleSheet.create({
+  content: { paddingTop: 20 },
+  heroBlock: { marginBottom: 22 },
+  hero: { color: colors.ink, fontSize: 35, lineHeight: 40, fontWeight: '700', letterSpacing: -1.2, marginTop: 6 },
+  heroCompact: { fontSize: 32, lineHeight: 37 },
+  intro: { color: colors.muted, fontSize: 16, lineHeight: 23, marginTop: 8, maxWidth: 350 },
+  systemCard: { minHeight: 164, borderRadius: 18, padding: 20, marginBottom: 14 },
+  teal: { backgroundColor: colors.paleGreen },
+  orange: { backgroundColor: colors.palePeach },
+  cardTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  number: { color: colors.muted, fontSize: 12, fontWeight: '700', letterSpacing: 0.5 },
+  task: { overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.68)', borderRadius: 14, paddingHorizontal: 10, paddingVertical: 5, color: colors.ink, fontSize: 10, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.85 },
+  cardTitle: { color: colors.ink, fontSize: 25, lineHeight: 30, fontWeight: '700', letterSpacing: -0.5, marginTop: 15 },
+  description: { color: colors.muted, fontSize: 14, lineHeight: 20, marginTop: 4 },
+  openRow: { flexDirection: 'row', alignItems: 'center', marginTop: 'auto' },
+  open: { color: colors.teal, fontSize: 14, fontWeight: '700' },
+  openArrow: { color: colors.orange, fontSize: 18, marginLeft: spacing.xs, marginTop: -1 },
+  aboutLink: { minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
+  aboutText: { color: colors.teal, fontSize: 14, fontWeight: '700' },
+  arrow: { color: colors.orange, fontSize: 18, marginLeft: spacing.xs },
+  pressed: { opacity: 0.78 },
+})
