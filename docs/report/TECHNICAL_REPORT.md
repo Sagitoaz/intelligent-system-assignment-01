@@ -414,6 +414,8 @@ Notebook chứa ba ca tổng hợp cho mỗi hệ thống. Chúng nằm trong mi
 
 Nhãn chỉ minh họa cơ chế phân loại, không phải chẩn đoán hay lời khuyên y tế.
 
+![Hình 15. Giao diện web desktop thực hiện ca demo tiểu đường 1 và trả dự đoán Non-diabetic với xác suất lớp 1 là 1,1%.](assets/web_diabetes_prediction.png)
+
 **Bảng 19. Ca demo giá nhà và đầu ra.**
 
 | Ca | Province | Area | Frontage | Access Road | Hướng nhà/ban công | Tầng/PN/PT | Pháp lý/Nội thất | Giá dự đoán |
@@ -424,7 +426,17 @@ Nhãn chỉ minh họa cơ chế phân loại, không phải chẩn đoán hay l
 
 Đây là ước tính giáo dục, không phải giao dịch, thẩm định hay tư vấn đầu tư. Reload test xác nhận model đã lưu cho cùng kết quả với Pipeline cuối trong notebook.
 
-Ảnh giao diện thực tế cần chụp đúng bản chạy thật: web dự đoán tiểu đường, web dự đoán giá nhà, web Knowledge Graph có panel chi tiết, mobile prediction và mobile Knowledge Graph. Quy cách và dữ liệu nằm trong `docs/report/SCREENSHOT_GUIDE.md`; báo cáo không dùng mockup làm bằng chứng chạy hệ thống.
+![Hình 16. Giao diện web desktop thực hiện ca demo giá nhà 1 và trả giá ước tính 5,13 tỷ VND.](assets/web_house_price_prediction.png)
+
+![Hình 17. Knowledge Graph trên web hiển thị đủ 17 node, 17 relationship và thuộc tính của node Diabetes Prediction System.](assets/web_knowledge_graph.png)
+
+Ba ảnh dọc dưới đây kiểm tra cùng ứng dụng web ở viewport điện thoại. Chúng chứng minh navigation, card, form kết quả và canvas graph thích ứng theo chiều rộng màn hình. Các ảnh này không được trình bày như ảnh Expo React Native; bằng chứng mobile Expo trong báo cáo vẫn giới hạn ở source code, type-check và quá trình trình diễn qua Expo Go đã nêu tại Mục 15.
+
+![Hình 18. Trang Home của web tại viewport điện thoại, với menu hamburger và card hệ thống xếp một cột.](assets/web_responsive_mobile.png)
+
+![Hình 19. Form và kết quả dự đoán tiểu đường của web tại viewport điện thoại.](assets/mobile_prediction.png)
+
+![Hình 20. Knowledge Graph của web tại viewport điện thoại, với canvas co theo chiều rộng và panel chi tiết nằm phía dưới.](assets/mobile_knowledge_graph.png)
 
 # 19. Hạn chế
 

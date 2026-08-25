@@ -2,6 +2,10 @@
 
 Mục tiêu là bổ sung bằng chứng giao diện chạy thật vào Mục 18 của báo cáo. Không chụp credential, terminal chứa biến môi trường, QR Expo hoặc thông tin cá nhân. Dùng đúng bản mới nhất trên `main`.
 
+## Trạng thái ảnh đã nhận
+
+Đã nhận và chèn sáu ảnh vào báo cáo dưới số Hình 15–20. Hai file `mobile_prediction.png` và `mobile_knowledge_graph.png` có nội dung là web responsive, không phải ứng dụng Expo React Native: giao diện và canvas graph trùng với web, trong khi mobile dùng node explorer native. Vì vậy caption trong báo cáo mô tả trung thực chúng là ảnh web ở viewport điện thoại. Báo cáo không tuyên bố đây là ảnh Expo.
+
 ## Ảnh bắt buộc đề xuất
 
 1. `web_diabetes_prediction.png`
