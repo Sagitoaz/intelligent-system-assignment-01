@@ -1,193 +1,181 @@
 <!--
-Editable source for docs/report/TECHNICAL_REPORT.docx.
-Build with: .venv\Scripts\python.exe docs\report\build_report.py
+Nguồn nội dung có thể chỉnh sửa của TECHNICAL_REPORT.docx.
+Tạo lại: .venv\Scripts\python.exe docs\report\build_report.py
 
-TITLE PAGE
-INTELLIGENT SYSTEM DEVELOPMENT
-ASSIGNMENT 01
-From Data Representation to Intelligent Applications
+TRANG BÌA
+PHÁT TRIỂN HỆ THỐNG THÔNG MINH
+BÀI TẬP 01
+Từ biểu diễn dữ liệu đến ứng dụng thông minh
 
-Systems:
-1. Diabetes Classification System
-2. Vietnam House Price Prediction System
+Các hệ thống:
+1. Hệ thống phân loại tiểu đường
+2. Hệ thống dự đoán giá nhà Việt Nam
 
-Student: Nguyễn Thành Trung
-Student ID: B23DCCN861
-Class: D23CTPM01-B
-Lecturer: _________________________________
-Date: August 2026
-
-The DOCX builder inserts an editable Word TOC field after the title page.
+Sinh viên: Nguyễn Thành Trung
+Mã sinh viên: B23DCCN861
+Lớp: D23CTPM01-B
+Giảng viên: _________________________________
+Thời gian: Tháng 8 năm 2026
 -->
 
 <!-- REPORT BODY -->
 
-# 1. Introduction
+# 1. Giới thiệu
 
-Assignment 01 develops two end-to-end intelligent systems from real datasets: a binary Diabetes Classification System and a Vietnam House Price Prediction System. The work follows a common engineering progression: **Real-world Problem → Data → Representation → Traditional Machine Learning → Controlled Experiments → Final Model → Intelligent Application**. The first system maps six patient measurements to an educational class prediction. The second maps eleven property attributes to an estimated listed price in billion VND.
+Bài tập 01 xây dựng hai hệ thống thông minh hoàn chỉnh từ dữ liệu thực: hệ thống phân loại tiểu đường nhị phân và hệ thống dự đoán giá nhà Việt Nam. Cả hai tuân theo tiến trình **Bài toán thực tế → Dữ liệu → Biểu diễn → Học máy truyền thống → Thí nghiệm có kiểm soát → Mô hình cuối cùng → Ứng dụng thông minh**. Hệ thống thứ nhất ánh xạ sáu chỉ số thành dự đoán lớp phục vụ giáo dục; hệ thống thứ hai ánh xạ mười một thuộc tính bất động sản thành giá niêm yết ước tính theo tỷ VND.
 
-The assignment objective is broader than obtaining a high metric. It examines how raw observations are represented, how invalid or missing fields are handled, how several traditional model families respond to the same representation, and how controlled experiments support a defensible final choice. A held-out test set is reserved for evaluation, while cross-validation on training data is used for configuration selection. The selected preprocessing and estimator are then saved together as a scikit-learn `Pipeline`, preventing the web, mobile, or API layers from inventing a second preprocessing procedure.
+Mục tiêu không chỉ là đạt chỉ số cao mà còn hiểu cách biểu diễn quan sát thô, xử lý dữ liệu thiếu, so sánh các họ mô hình và lựa chọn cấu hình có căn cứ. Tập test độc lập chỉ dùng để đánh giá cuối cùng; cross-validation trên tập train dùng để chọn cấu hình. Tiền xử lý và bộ ước lượng được lưu chung trong `Pipeline` scikit-learn, bảo đảm web, mobile và API không tự tạo quy trình tiền xử lý khác.
 
-The application layer consists of a FastAPI backend, a React/Vite web client, an Expo React Native mobile client, and a Neo4j knowledge graph for the Diabetes model. The deployed topology uses Render for the API, Vercel for the web client, Neo4j AuraDB for the graph, and Expo Go for mobile demonstration. These are educational prediction systems: the Diabetes output is **not a medical diagnosis**, and the house-price output is not a professional valuation.
+Tầng ứng dụng gồm FastAPI, React/Vite, Expo React Native và Knowledge Graph Neo4j cho mô hình tiểu đường. Render chạy API, Vercel chạy web, Neo4j AuraDB lưu đồ thị và Expo Go phục vụ demo mobile. Đây là hệ thống giáo dục: đầu ra tiểu đường **không phải chẩn đoán y khoa**, còn đầu ra giá nhà không phải định giá chuyên nghiệp.
 
-![Figure 1. Common machine-learning lifecycle from training data to saved-pipeline inference.](assets/ml_pipeline.png)
+![Hình 1. Vòng đời học máy từ dữ liệu huấn luyện đến suy luận bằng Pipeline đã lưu.](assets/ml_pipeline.png)
 
-# 2. Intelligent System Definition
+# 2. Định nghĩa hệ thống thông minh
 
-An intelligent system in this assignment combines a learned model with the data representation, preprocessing, evaluation process, inference contract, and user-facing software required to apply the model consistently. It is therefore more than a call to `model.fit()`. The learned estimator is valuable only when its input meaning is explicit and the same fitted transformations are used at inference time.
+Trong bài tập, hệ thống thông minh kết hợp mô hình đã học với biểu diễn dữ liệu, tiền xử lý, đánh giá, hợp đồng suy luận và phần mềm giao tiếp người dùng. Hệ thống vì vậy không chỉ là `model.fit()`: ý nghĩa đầu vào phải rõ ràng và đúng các phép biến đổi đã fit phải được tái sử dụng khi suy luận.
 
-**Table 1. Assignment system overview.**
+**Bảng 1. Tổng quan hai hệ thống.**
 
-| System | Learning task | Raw application input | Output | Final estimator |
+| Hệ thống | Bài toán | Đầu vào thô | Đầu ra | Bộ ước lượng cuối |
 |---|---|---|---|---|
-| Diabetes Classification | Binary classification | Six numerical patient attributes | Class 0 or 1, label, and class-1 probability | Random Forest Classifier |
-| Vietnam House Price | Regression | Eleven numerical/categorical property attributes | Listed-price estimate in billion VND | Random Forest Regressor |
+| Phân loại tiểu đường | Phân loại nhị phân | Sáu thuộc tính số | Lớp 0/1, nhãn, xác suất lớp 1 | Random Forest Classifier |
+| Dự đoán giá nhà | Hồi quy | Mười một thuộc tính số/phân loại | Giá niêm yết theo tỷ VND | Random Forest Regressor |
 
-## 2.1 Diabetes Classification System
+## 2.1 Hệ thống phân loại tiểu đường
 
-The Diabetes system receives `Pregnancies`, `Glucose`, `BloodPressure`, `BMI`, `DiabetesPedigreeFunction`, and `Age`. It produces an educational prediction for `Outcome`, where 0 is labelled Non-diabetic and 1 is labelled Diabetic. The class and probability describe the fitted assignment model; they have not been clinically validated and must not be treated as diagnosis, screening guidance, or a medical decision.
+Hệ thống nhận `Pregnancies`, `Glucose`, `BloodPressure`, `BMI`, `DiabetesPedigreeFunction`, `Age` và dự đoán `Outcome`. Lớp 0 được gắn nhãn Non-diabetic, lớp 1 là Diabetic. Kết quả chỉ mô tả mô hình bài tập, chưa được kiểm định lâm sàng và không được dùng làm chẩn đoán, hướng dẫn sàng lọc hay quyết định y tế.
 
-## 2.2 Vietnam House Price Prediction System
+## 2.2 Hệ thống dự đoán giá nhà Việt Nam
 
-The House Price system receives a structured description of a listing: `Province`, `Area`, `Frontage`, `Access Road`, `House direction`, `Balcony direction`, `Floors`, `Bedrooms`, `Bathrooms`, `Legal status`, and `Furniture state`. It estimates the original `Price` target in billion VND. The prediction represents a learned association with 2024 listing prices, not a transaction guarantee or certified appraisal.
+Hệ thống nhận `Province`, `Area`, `Frontage`, `Access Road`, `House direction`, `Balcony direction`, `Floors`, `Bedrooms`, `Bathrooms`, `Legal status`, `Furniture state` và ước tính `Price` theo tỷ VND. Dự đoán phản ánh quan hệ học từ giá niêm yết năm 2024, không bảo đảm giá giao dịch.
 
-# 3. Problem Formulation
+# 3. Phát biểu bài toán
 
-## 3.1 Classification Problem
+## 3.1 Bài toán phân loại
 
-For patient observation *i*, the selected raw vector is xᵢ ∈ ℝ⁶ and the target is yᵢ ∈ {0,1}. The classifier learns a function ŷ = fθ(x) from historical labelled observations. Evaluation focuses on the positive class and reports Accuracy, Precision, Recall, F1-score, and a confusion matrix. Accuracy measures the overall correct fraction, Precision measures the purity of positive predictions, Recall measures the fraction of actual positives recovered, and F1 is the harmonic mean of Precision and Recall.
+Với quan sát thứ *i*, vector xᵢ ∈ ℝ⁶ và yᵢ ∈ {0,1}; bộ phân loại học ŷ = fθ(x). Đánh giá báo cáo Accuracy, Precision, Recall, F1-score và ma trận nhầm lẫn. Accuracy đo tỷ lệ đúng tổng thể; Precision đo độ tinh khiết của dự đoán dương; Recall đo phần trường hợp dương thực tế được phát hiện; F1 là trung bình điều hòa của Precision và Recall.
 
-The classification classes are imbalanced: 500 observations (65.1%) have Outcome 0 and 268 (34.9%) have Outcome 1. This motivates reporting metrics beyond Accuracy. A majority-class rule can appear acceptable by Accuracy while failing to detect every positive case.
+Dữ liệu mất cân bằng: 500 quan sát (65,1%) thuộc lớp 0 và 268 (34,9%) thuộc lớp 1. Vì vậy Accuracy phải đi kèm các chỉ số lớp dương. Quy tắc luôn dự đoán lớp đa số có thể có Accuracy tương đối cao nhưng bỏ sót mọi trường hợp dương.
 
-## 3.2 Regression Problem
+## 3.2 Bài toán hồi quy
 
-For property observation *i*, xᵢ contains a mixture of numerical and categorical raw attributes and yᵢ ∈ ℝ is `Price` in billion VND. The regressor learns ŷ = fθ(x). Evaluation uses MAE, MSE, RMSE, R², and MAPE. Lower MAE, MSE, RMSE, and MAPE are better; higher R² is better. RMSE and MAE remain in interpretable price units except that MSE is expressed in squared billion-VND units.
+Với bất động sản thứ *i*, xᵢ gồm thuộc tính số và phân loại, yᵢ ∈ ℝ là `Price`. Mô hình học ŷ = fθ(x) và được đánh giá bằng MAE, MSE, RMSE, R², MAPE. MAE và RMSE có đơn vị tỷ VND; MSE có đơn vị bình phương tỷ VND. Hồi quy không dùng Accuracy. R² đo phần phương sai được giải thích so với dự đoán trung bình, không phải tỷ lệ dự đoán đúng.
 
-Regression does not use classification Accuracy. R² measures the fraction of target variance explained relative to a mean predictor under the evaluated sample; it is neither a correctness rate nor a percentage of predictions that are accurate.
+# 4. Dữ liệu
 
-# 4. Dataset
+## 4.1 Bộ dữ liệu tiểu đường
 
-## 4.1 Diabetes Dataset
+Notebook đọc `data/diabetes/diabetes.csv`: 768 quan sát, chín cột gồm tám đầu vào và `Outcome`. Không có `NaN` tường minh hay dòng trùng, nhưng một số cột sinh lý chứa 0 không hợp lý và phải được xem là phép đo thiếu. Glucose có tương quan tuyệt đối lớn nhất với Outcome trong sáu thuộc tính được chọn (0.4947), tiếp theo là BMI 0.3137, Age 0.2384, Pregnancies 0.2219, DiabetesPedigreeFunction 0.1738 và BloodPressure 0.1706. Tương quan chỉ mang tính mô tả, không chứng minh nhân quả.
 
-The notebook loads `data/diabetes/diabetes.csv`, a Kaggle diabetes dataset with 768 observations and nine columns: eight candidate inputs plus the `Outcome` target. Pandas reports no explicit `NaN` values and no duplicate rows. However, the absence of `NaN` does not imply complete measurements because several physiological columns contain zero values that are implausible as recorded measurements.
+**Bảng 2. Giá trị 0 ẩn trong dữ liệu tiểu đường.**
 
-The target contains 500 class-0 and 268 class-1 observations. Glucose shows the strongest absolute linear correlation with Outcome among the selected six attributes (0.4947), followed by BMI (0.3137), Age (0.2384), Pregnancies (0.2219), DiabetesPedigreeFunction (0.1738), and BloodPressure (0.1706). These correlations are descriptive and do not establish causality.
-
-**Table 2. Diabetes hidden-zero data-quality findings.**
-
-| Measurement | Zero count | Zero rate | Treatment |
+| Phép đo | Số giá trị 0 | Tỷ lệ | Xử lý |
 |---|---:|---:|---|
-| Glucose | 5 | 0.65% | Convert zero to missing |
-| BloodPressure | 35 | 4.56% | Convert zero to missing |
-| SkinThickness | 227 | 29.56% | Convert zero to missing |
-| Insulin | 374 | 48.70% | Convert zero to missing |
-| BMI | 11 | 1.43% | Convert zero to missing |
+| Glucose | 5 | 0.65% | Chuyển thành thiếu |
+| BloodPressure | 35 | 4.56% | Chuyển thành thiếu |
+| SkinThickness | 227 | 29.56% | Chuyển thành thiếu |
+| Insulin | 374 | 48.70% | Chuyển thành thiếu |
+| BMI | 11 | 1.43% | Chuyển thành thiếu |
 
-`Pregnancies = 0` is retained because zero pregnancies is meaningful. SkinThickness and Insulin are not selected for the final six-feature representation because their missing-measurement rates are high and the controlled representation experiment did not improve with them. This does **not** mean that these variables are medically unimportant.
+`Pregnancies = 0` được giữ vì có ý nghĩa. SkinThickness và Insulin không được chọn do tỷ lệ thiếu cao và thí nghiệm biểu diễn không cải thiện khi thêm chúng. Điều này **không có nghĩa** hai biến không quan trọng về y khoa.
 
-## 4.2 Vietnam Housing Dataset 2024
+## 4.2 Bộ dữ liệu nhà ở Việt Nam 2024
 
-The notebook loads `data/house_price/vietnam_housing_dataset.csv`, identified as the Kaggle Vietnam Housing Dataset 2024. It contains 30,229 rows and 12 original columns. The eleven candidate inputs are Address, Area, Frontage, Access Road, House direction, Balcony direction, Floors, Bedrooms, Bathrooms, Legal status, and Furniture state; the target is `Price` in billion VND.
+Notebook đọc `data/house_price/vietnam_housing_dataset.csv`, Vietnam Housing Dataset 2024 trên Kaggle, gồm 30,229 dòng và 12 cột. Mười một đầu vào ứng viên là Address, Area, Frontage, Access Road, House direction, Balcony direction, Floors, Bedrooms, Bathrooms, Legal status, Furniture state; đích `Price` có đơn vị tỷ VND.
 
-**Table 3. Vietnam housing dataset schema and observed ranges.**
+**Bảng 3. Lược đồ dữ liệu nhà ở.**
 
-| Field | Type | Missing rate | Observed information |
+| Trường | Kiểu | Tỷ lệ thiếu | Miền quan sát |
 |---|---|---:|---|
-| Address | Categorical text | 0.00% | 10,265 unique strings |
-| Area | Numerical | 0.00% | 3.1–595.0 m² |
-| Frontage | Numerical | 38.25% | 1.0–77.0 m |
-| Access Road | Numerical | 43.99% | 1.0–85.0 m |
-| House direction | Categorical | 70.26% | 8 observed categories |
-| Balcony direction | Categorical | 82.65% | 8 observed categories |
-| Floors | Numerical/discrete | 11.92% | 1–10 |
-| Bedrooms | Numerical/discrete | 17.08% | 1–9 |
-| Bathrooms | Numerical/discrete | 23.40% | 1–9 |
-| Legal status | Categorical | 14.91% | 2 observed categories |
-| Furniture state | Categorical | 46.71% | 2 observed categories |
-| Price | Numerical target | 0.00% | 1.0–11.5 billion VND |
+| Address | Văn bản | 0.00% | 10,265 chuỗi |
+| Area | Số | 0.00% | 3.1–595.0 m² |
+| Frontage | Số | 38.25% | 1.0–77.0 m |
+| Access Road | Số | 43.99% | 1.0–85.0 m |
+| House direction | Phân loại | 70.26% | 8 nhóm |
+| Balcony direction | Phân loại | 82.65% | 8 nhóm |
+| Floors | Số/rời rạc | 11.92% | 1–10 |
+| Bedrooms | Số/rời rạc | 17.08% | 1–9 |
+| Bathrooms | Số/rời rạc | 23.40% | 1–9 |
+| Legal status | Phân loại | 14.91% | 2 nhóm |
+| Furniture state | Phân loại | 46.71% | 2 nhóm |
+| Price | Đích số | 0.00% | 1.0–11.5 tỷ VND |
 
-No duplicate rows, non-positive targets, or explicit missing targets are present. No observations are deleted. Address is deterministically reduced to a normalized `Province` by taking and normalizing its final comma-separated component. This produces 60 province labels and no missing Province values; three non-geographic endings are retained as `Unknown` instead of causing row deletion.
+Không có dòng trùng, Price thiếu hay Price không dương; không dòng nào bị xóa. Address được rút thành `Province` bằng thành phần cuối sau dấu phẩy, tạo 60 nhãn tỉnh/thành và không thiếu Province. Ba hậu tố phi địa lý được giữ là `Unknown` thay vì xóa dòng.
 
-**Table 4. House-price target and concentration statistics.**
+**Bảng 4. Thống kê biến đích và phân bố địa lý.**
 
-| Statistic | Value |
+| Thống kê | Giá trị |
 |---|---:|
-| Rows retained | 30,229 of 30,229 |
-| Mean Price | 5.8721 billion VND |
-| Median Price | 5.9000 billion VND |
-| Price skewness | -0.0290 |
-| Mean Area | 68.4987 m² |
-| Median Area | 56.0 m² |
-| Hồ Chí Minh listings | 11,788 |
-| Hà Nội listings | 10,464 |
+| Dòng được giữ | 30,229/30,229 |
+| Price trung bình | 5.8721 tỷ VND |
+| Price trung vị | 5.9000 tỷ VND |
+| Độ lệch Price | -0.0290 |
+| Area trung bình | 68.4987 m² |
+| Area trung vị | 56.0 m² |
+| Tin đăng Hồ Chí Minh | 11,788 |
+| Tin đăng Hà Nội | 10,464 |
 
-# 5. Data Representation
+# 5. Biểu diễn dữ liệu
 
-## 5.1 Diabetes Representation
+## 5.1 Biểu diễn tiểu đường
 
-Each selected patient is represented by the ordered six-dimensional vector `[Pregnancies, Glucose, BloodPressure, BMI, DiabetesPedigreeFunction, Age]`. Before splitting, invalid zeros in Glucose, BloodPressure, SkinThickness, Insulin, and BMI are represented as missing values. For the final six-feature vector, this affects Glucose, BloodPressure, and BMI. Median values and scaling parameters are learned only within the fitted Pipeline.
+Vector sáu chiều có thứ tự `[Pregnancies, Glucose, BloodPressure, BMI, DiabetesPedigreeFunction, Age]`. Các giá trị 0 không hợp lý ở cột phép đo được chuyển thành thiếu; với biểu diễn cuối, thao tác ảnh hưởng Glucose, BloodPressure, BMI. Trung vị và tham số scale chỉ được học trong Pipeline. Thí nghiệm 6 so với 8 thuộc tính giữ nguyên mô hình và đánh giá để đo riêng tác động của SkinThickness, Insulin.
 
-The representation is deliberately compact. The six-versus-eight-feature experiment holds the classifier and evaluation procedure constant, allowing the effect of adding SkinThickness and Insulin to be measured rather than assumed.
+## 5.2 Biểu diễn giá nhà
 
-## 5.2 House Price Representation
+Biểu diễn gọn gồm `Province`, `Area`, `Floors`, `Bedrooms`, `Bathrooms`, `Legal status`. Thí nghiệm 3 đánh giá và chọn đủ 11 trường sử dụng được: Province, Area, Frontage, Access Road, House direction, Balcony direction, Floors, Bedrooms, Bathrooms, Legal status, Furniture state. Address bị loại vì 10,265 chuỗi gây cardinality cao và hợp đồng giao diện không ổn định.
 
-The compact six-feature experiment begins with `Province`, `Area`, `Floors`, `Bedrooms`, `Bathrooms`, and `Legal status`. Experiment 3 then evaluates all eleven usable raw fields and selects them for the final system: Province, Area, Frontage, Access Road, House direction, Balcony direction, Floors, Bedrooms, Bathrooms, Legal status, and Furniture state. Address itself is excluded because its 10,265 text strings would create excessive cardinality and a fragile interface contract.
+**Thuộc tính thô** là trường người dùng cung cấp; **thuộc tính mã hóa** là cột số phát sinh như `categorical__Province_Hồ Chí Minh`; **vector số cuối** là toàn bộ ma trận sau điền thiếu, scale, one-hot encoding. Do đó thuộc tính thô ≠ thuộc tính mã hóa ≠ vector số cuối.
 
-A **raw feature** is an interpretable field supplied by a user or dataset row. An **encoded feature** is a derived numerical column such as `categorical__Province_Hồ Chí Minh`. The **final numerical vector** is the complete transformed matrix after imputation, scaling, and one-hot encoding. Therefore, raw feature ≠ encoded feature ≠ final numerical vector.
+# 6. Phân tích khám phá dữ liệu
 
-# 6. Exploratory Data Analysis
+EDA tiểu đường xác nhận mất cân bằng 65,1%/34,9% và vấn đề 0 ẩn. Sau xử lý, Glucose có 763 phép đo hợp lệ, trung bình 121.69, trung vị 117, skewness 0.531; BMI có 757 phép đo, trung bình 32.46, trung vị 32.30, skewness 0.594. Age từ 21–81 và lệch phải 1.13; BloodPressure hợp lệ có trung bình 72.41, trung vị 72. Kết quả ủng hộ điền thiếu bằng trung vị thay vì xóa dòng.
 
-Diabetes EDA confirms the 65.1%/34.9% target imbalance and exposes the hidden-zero issue. After invalid zeros are replaced by missing values, Glucose has 763 valid measurements, mean 121.69, median 117, and skewness 0.531. BMI has 757 valid measurements, mean 32.46, median 32.30, and skewness 0.594. Age ranges from 21 to 81 years and is right-skewed (1.13), while valid BloodPressure has mean 72.41 and median 72. These findings motivate robust median imputation rather than dropping rows.
+Price gần đối xứng trên thang gốc: trung bình gần trung vị, skewness -0.0290, nên notebook không log-transform đích. Area lệch phải mạnh 3.8885 với đuôi đến 595 m²; giá trị lớn vẫn được giữ vì có thể hợp lệ. Floors có trung vị 3, khoảng 1–10. Dữ liệu tập trung ở Hồ Chí Minh và Hà Nội nên đánh giá cho tỉnh ít mẫu còn bất định.
 
-House-price EDA shows that Price is nearly symmetric on its original scale: its mean and median are close and skewness is -0.0290. Consequently, the notebook does not introduce a logarithmic target transformation. Area is strongly right-skewed (3.8885), with a long tail up to 595 m²; large positive areas are retained because they may represent valid listings. Floors have a median of 3 and range from 1 to 10. The geographic distribution is strongly concentrated in Hồ Chí Minh and Hà Nội, so evaluation for sparsely represented provinces remains uncertain.
+# 7. Tiền xử lý dữ liệu
 
-# 7. Data Preprocessing
+Pipeline tiểu đường dùng `SimpleImputer(strategy="median")`, `StandardScaler` rồi bộ phân loại sau khi biểu diễn 0 không hợp lý thành thiếu. Dù cây không cần scale như KNN/SVM, pipeline chung giữ giao diện thí nghiệm nhất quán.
 
-For Diabetes, zero values in physiologically implausible measurement columns are first represented as missing. The model Pipeline then applies `SimpleImputer(strategy="median")`, `StandardScaler`, and the classifier. Although tree ensembles do not require scaling in the same way as distance- or margin-based models, the common preprocessing keeps the experimental interface consistent and is stored with the fitted estimator.
+Giá nhà dùng `ColumnTransformer`. Nhánh số: điền trung vị → `StandardScaler`. Nhánh phân loại: điền giá trị xuất hiện nhiều nhất → `OneHotEncoder(handle_unknown="ignore")`. Không dùng `LabelEncoder`. Tiền xử lý nằm trong từng Pipeline và từng fold CV, ngăn học medians, modes, scales hay categories từ validation/test.
 
-For House Price, the `ColumnTransformer` separates numerical and categorical fields. The numerical branch performs median imputation followed by `StandardScaler`. The categorical branch performs most-frequent imputation followed by `OneHotEncoder(handle_unknown="ignore")`. No `LabelEncoder` is used. Ignoring an unseen category prevents inference failure without imposing an artificial ordinal relationship between provinces, directions, legal states, or furniture states.
+# 8. Các mô hình học máy truyền thống
 
-Preprocessing occurs inside each model Pipeline and therefore inside each cross-validation fold. This prevents medians, modes, scales, and category information from being learned from validation or test observations.
+## 8.1 Mô hình phân loại
 
-# 8. Traditional Machine Learning Models
+Logistic Regression học biên log-odds tuyến tính trên vector đã scale, dễ diễn giải nhưng hạn chế với tương tác phi tuyến. KNN dựa trên hàng xóm; `n_neighbors` điều khiển tính cục bộ, còn suy luận tốn chi phí và nhạy với scale. Decision Tree học luật chia theo trục; depth kiểm soát độ phức tạp nhưng cây đơn dễ overfit.
 
-## 8.1 Classification Models
+Random Forest tổng hợp nhiều cây bootstrap; `n_estimators`, `max_depth`, `random_state` là tham số chính. Mô hình nắm tương tác phi tuyến và ổn định hơn cây đơn, nhưng impurity importance không mang nghĩa nhân quả. SVM học biên margin lớn, có thể phi tuyến qua kernel, hưởng lợi từ scale nhưng nhạy cấu hình và khó diễn giải.
 
-Logistic Regression receives the standardized six-value vector and learns a linear log-odds boundary; regularization controls coefficient magnitude, offering interpretability but limiting nonlinear interactions. KNN receives the same standardized vector and predicts from nearby training cases; `n_neighbors` governs locality, while inference cost and sensitivity to scale are weaknesses. A Decision Tree learns axis-aligned split rules; depth and minimum-sample controls regulate complexity, but a single tree is unstable and can overfit.
+## 8.2 Mô hình hồi quy
 
-Random Forest combines many bootstrapped decision trees and aggregates their class votes. Important settings are `n_estimators`, `max_depth`, and `random_state`; it models nonlinear interactions and is more stable than a single tree, but its impurity importance is not causal and the ensemble is less transparent than a short tree. SVM learns a maximum-margin boundary, using its kernel and regularization settings to express nonlinear separation; it benefits from scaling but can be sensitive to configuration and is less directly interpretable.
+Linear Regression học quan hệ cộng tuyến tính trên biểu diễn số/one-hot. KNN Regressor lấy trung bình mẫu gần, nhưng gặp hạn chế trong không gian one-hot nhiều chiều. Decision Tree Regressor dự đoán trung bình theo vùng, dễ có phương sai cao nếu không giới hạn sâu. Random Forest Regressor trung bình hóa nhiều cây, xử lý phi tuyến tốt nhưng có xu hướng làm phẳng cực trị và khó ngoại suy. SVR RBF học hàm phi tuyến với `C`, `gamma`, `epsilon`; kết quả mạnh nhưng chi phí và khả năng diễn giải kém thuận tiện hơn forest được chọn.
 
-## 8.2 Regression Models
+# 9. Thiết kế thí nghiệm
 
-Linear Regression receives the one-hot/numerical representation and learns an additive linear relationship; it is simple but cannot directly express complex interactions. KNN Regressor averages nearby transformed examples; `n_neighbors` controls smoothness, while high-dimensional one-hot space and prediction cost are limitations. Decision Tree Regressor partitions feature space into regions and predicts regional averages; unrestricted depth can have high variance.
+Hai notebook chia train/test 80/20 với `random_state=42`. Tiểu đường stratify theo Outcome: 614 train, 154 test. Giá nhà: 24,183 train, 6,046 test. Tập test không dùng chọn siêu tham số hoặc biểu diễn.
 
-Random Forest Regressor averages many regression trees. It handles nonlinear relationships and mixed transformed inputs, and provides model-specific impurity importance, but it can smooth extreme prices and cannot extrapolate reliably beyond learned patterns. SVR with an RBF kernel learns a nonlinear function within an epsilon-insensitive loss; kernel, `C`, `gamma`, and `epsilon` influence flexibility. It achieved strong results here, though training cost and interpretability are less convenient than for the selected forest.
+## 9.1 Thí nghiệm 1 – So sánh mô hình
 
-# 9. Experimental Design
+Chỉ thuật toán học thay đổi; dữ liệu, biểu diễn, tiền xử lý và split giữ nguyên. Bảng holdout ban đầu mang tính mô tả. CV năm fold chỉ trên train đánh giá độ ổn định: tiểu đường dùng F1, giá nhà dùng RMSE với `KFold(n_splits=5, random_state=42)` có shuffle.
 
-The notebooks use an 80/20 train/test split with `random_state=42`. Diabetes stratifies by Outcome, producing 614 training and 154 test observations. House Price produces 24,183 training and 6,046 test observations. The held-out test set is not used to select hyperparameters or feature representations.
+## 9.2 Thí nghiệm 2 – Khảo sát siêu tham số
 
-## 9.1 Experiment 1 – Model Comparison
+Tiểu đường thay `max_depth` qua 2, 4, 6, 8, None và đánh giá F1 CV. Giá nhà thử 4, 8, 12, 16, None theo RMSE CV. `n_estimators=100`, `random_state=42` giữ cố định.
 
-Experiment 1 changes only the learning algorithm while preserving data, representation, preprocessing, and split conditions. The initial holdout tables provide descriptive comparisons. Training-only five-fold cross-validation then evaluates model stability and supports selection without repeatedly consulting the test set. Diabetes uses F1-score; House Price uses RMSE with shuffled `KFold(n_splits=5, random_state=42)`.
+## 9.3 Thí nghiệm 3 – Biểu diễn thuộc tính
 
-## 9.2 Experiment 2 – Hyperparameter Investigation
+Tiểu đường so sánh 6 và 8 đầu vào dưới forest đã tinh chỉnh. Giá nhà so sánh 6 và 11 trường dưới forest depth 12. Chỉ biểu diễn thay đổi, giúp cô lập ảnh hưởng thông tin và missingness.
 
-The Diabetes experiment varies only Random Forest `max_depth` across 2, 4, 6, 8, and unrestricted depth, using five-fold training CV and F1. The House experiment varies `max_depth` across 4, 8, 12, 16, and unrestricted depth, using the same training folds and RMSE. In both cases, `n_estimators=100` and `random_state=42` remain fixed.
+# 10. Kết quả thí nghiệm
 
-## 9.3 Experiment 3 – Feature Representation
+## 10.1 Kết quả tiểu đường
 
-Diabetes compares the selected six raw features against all eight original inputs under the tuned forest and the same five folds. House Price compares the compact six-feature vector against all eleven usable raw fields under the depth-12 forest. Only the representation changes, isolating how information content and missingness affect performance.
+`DummyClassifier(strategy="most_frequent")` luôn dự đoán lớp 0. Baseline đạt Accuracy 0.6494 vì 100/154 mẫu test là lớp 0, nhưng Precision, Recall, F1 lớp 1 đều 0; ma trận `[[100, 0], [54, 0]]`. Accuracy đơn lẻ vì vậy không đủ.
 
-# 10. Experimental Results
+**Bảng 5. Baseline và holdout năm mô hình tiểu đường.**
 
-## 10.1 Diabetes Results
-
-The `DummyClassifier(strategy="most_frequent")` baseline predicts every held-out observation as class 0. It obtains Accuracy 0.6494 because 100 of the 154 test observations are class 0, but Precision, Recall, and F1 for class 1 are all 0. Its confusion matrix is `[[100, 0], [54, 0]]`. This is direct evidence that Accuracy alone is insufficient.
-
-**Table 5. Diabetes baseline and five-model holdout comparison.**
-
-| Model | Accuracy | Precision | Recall | F1-score |
+| Mô hình | Accuracy | Precision | Recall | F1-score |
 |---|---:|---:|---:|---:|
 | Baseline | 0.6494 | 0.0000 | 0.0000 | 0.0000 |
 | Logistic Regression | 0.7013 | 0.5909 | 0.4815 | 0.5306 |
@@ -196,23 +184,23 @@ The `DummyClassifier(strategy="most_frequent")` baseline predicts every held-out
 | Random Forest | 0.7597 | 0.6735 | 0.6111 | 0.6408 |
 | SVM | 0.7338 | 0.6512 | 0.5185 | 0.5773 |
 
-Random Forest is strongest on the initial holdout table. Training-only model comparison gives a different close ranking, with KNN first among the five original configurations. This difference reinforces why a single holdout ranking should not become the sole selection rule.
+Random Forest mạnh nhất trên holdout ban đầu, nhưng KNN đứng đầu CV của năm cấu hình gốc. Một holdout duy nhất không nên là quy tắc lựa chọn duy nhất.
 
-**Table 6. Diabetes five-model training cross-validation.**
+**Bảng 6. CV năm mô hình tiểu đường trên train.**
 
-| Model | Mean CV F1 | Std CV F1 |
+| Mô hình | F1 CV trung bình | Độ lệch chuẩn |
 |---|---:|---:|
 | KNN | 0.6404 | 0.0503 |
 | Logistic Regression | 0.6393 | 0.0316 |
 | SVM | 0.6377 | 0.0367 |
-| Random Forest (unrestricted) | 0.6227 | 0.0398 |
+| Random Forest (không giới hạn) | 0.6227 | 0.0398 |
 | Decision Tree | 0.5447 | 0.0194 |
 
-![Figure 2. Distribution of five-fold Diabetes F1-scores for the original model configurations.](../../figures/diabetes/model_cv_f1_boxplot.png)
+![Hình 2. Phân bố F1 năm fold của các cấu hình phân loại tiểu đường.](../../figures/diabetes/model_cv_f1_boxplot.png)
 
-**Table 7. Diabetes Experiment 2: Random Forest max_depth.**
+**Bảng 7. Thí nghiệm 2 tiểu đường: max_depth.**
 
-| max_depth | Mean CV F1 |
+| max_depth | F1 CV trung bình |
 |---:|---:|
 | 2 | 0.5513 |
 | 4 | 0.6224 |
@@ -220,28 +208,28 @@ Random Forest is strongest on the initial holdout table. Training-only model com
 | 8 | 0.6403 |
 | None | 0.6227 |
 
-![Figure 3. Diabetes Experiment 2: maximum tree depth versus mean cross-validation F1-score.](../../figures/diabetes/experiment_2_max_depth.png)
+![Hình 3. Độ sâu tối đa và F1 CV trung bình của Random Forest tiểu đường.](../../figures/diabetes/experiment_2_max_depth.png)
 
-Depth 6 gives the highest mean training CV F1, 0.6462. Depth 2 is too restrictive under these conditions; increasing depth beyond 6 does not improve the mean. When depth 6 is fitted and evaluated on the held-out test set, F1 is 0.6061, below the unrestricted forest's initial holdout F1 of 0.6408. This is not an error: the depth was selected by average training-fold performance, and the holdout is a separate finite sample. Returning to the test set to choose unrestricted depth would leak evaluation information into model selection.
+Depth 6 có F1 CV tốt nhất 0.6462. Khi đánh giá test, F1 bằng 0.6061, thấp hơn F1 holdout 0.6408 của forest không giới hạn. Đây không phải lỗi: depth được chọn bằng CV trên train, còn test là mẫu hữu hạn độc lập. Quay lại chọn theo test sẽ gây rò rỉ thông tin.
 
-**Table 8. Diabetes Experiment 3: raw feature representation.**
+**Bảng 8. Thí nghiệm 3 tiểu đường: biểu diễn thuộc tính.**
 
-| Representation | Raw features | Mean CV F1 | Std CV F1 |
+| Biểu diễn | Thuộc tính thô | F1 CV trung bình | Độ lệch chuẩn |
 |---|---:|---:|---:|
-| Selected representation | 6 | **0.6462** | 0.0231 |
-| All original inputs | 8 | 0.6243 | 0.0433 |
+| Biểu diễn được chọn | 6 | **0.6462** | 0.0231 |
+| Toàn bộ đầu vào | 8 | 0.6243 | 0.0433 |
 
-![Figure 4. Diabetes Experiment 3: six-feature versus eight-feature representation.](../../figures/diabetes/experiment_3_feature_representation.png)
+![Hình 4. Biểu diễn sáu so với tám thuộc tính tiểu đường.](../../figures/diabetes/experiment_3_feature_representation.png)
 
-Adding SkinThickness and Insulin neither improves mean F1 nor reduces variability under the controlled procedure. More features are therefore not necessarily better. The result is specific to this dataset, missingness pattern, classifier, and validation design; it does not show that the two omitted measurements are intrinsically unimportant.
+Thêm SkinThickness và Insulin không cải thiện F1 trung bình hay độ ổn định. Nhiều thuộc tính hơn không nhất thiết tốt hơn; kết quả không chứng minh hai phép đo vốn không quan trọng.
 
-## 10.2 House Price Results
+## 10.2 Kết quả giá nhà
 
-The `DummyRegressor(strategy="mean")` baseline produces MAE 1.8438, MSE 4.8760, RMSE 2.2082 billion VND, R² approximately 0, and MAPE 44.43%. Its near-zero R² is expected because it does not use property attributes.
+`DummyRegressor(strategy="mean")` đạt MAE 1.8438, MSE 4.8760, RMSE 2.2082 tỷ VND, R² xấp xỉ 0, MAPE 44.43%. R² gần 0 là dự kiến vì baseline không dùng thuộc tính nhà.
 
-**Table 9. House-price baseline and five-model holdout comparison.**
+**Bảng 9. Baseline và holdout năm mô hình giá nhà.**
 
-| Model | MAE | MSE | RMSE | R² | MAPE |
+| Mô hình | MAE | MSE | RMSE | R² | MAPE |
 |---|---:|---:|---:|---:|---:|
 | Baseline | 1.8438 | 4.8760 | 2.2082 | -0.0000 | 44.43% |
 | Linear Regression | 1.4782 | 3.4039 | 1.8450 | 0.3019 | 32.93% |
@@ -250,13 +238,13 @@ The `DummyRegressor(strategy="mean")` baseline produces MAE 1.8438, MSE 4.8760, 
 | Random Forest | 1.3009 | 2.9549 | 1.7190 | 0.3940 | 27.84% |
 | SVR | 1.2868 | 2.7615 | 1.6618 | 0.4336 | 27.31% |
 
-![Figure 5. House-price holdout RMSE and R² comparison across the five learned regressors.](../../figures/house_price/model_comparison.png)
+![Hình 5. So sánh RMSE và R² holdout của năm mô hình giá nhà.](../../figures/house_price/model_comparison.png)
 
-SVR is strongest on the descriptive holdout comparison. Training-only cross-validation confirms it as the strongest original configuration, with a small fold-to-fold spread.
+SVR mạnh nhất ở holdout và trong CV các cấu hình gốc.
 
-**Table 10. House Price Experiment 1: five-model cross-validation.**
+**Bảng 10. Thí nghiệm 1 giá nhà: CV năm mô hình.**
 
-| Model | Mean CV RMSE | Std CV RMSE |
+| Mô hình | RMSE CV trung bình | Độ lệch chuẩn |
 |---|---:|---:|
 | SVR | **1.6565** | 0.0120 |
 | Random Forest | 1.7130 | 0.0277 |
@@ -264,11 +252,11 @@ SVR is strongest on the descriptive holdout comparison. Training-only cross-vali
 | Linear Regression | 1.8539 | 0.0239 |
 | Decision Tree | 1.9365 | 0.0381 |
 
-![Figure 6. Distribution of five-fold House Price RMSE across the original regressors.](../../figures/house_price/model_cv_rmse_boxplot.png)
+![Hình 6. Phân bố RMSE năm fold của các mô hình hồi quy gốc.](../../figures/house_price/model_cv_rmse_boxplot.png)
 
-**Table 11. House Price Experiment 2: Random Forest max_depth.**
+**Bảng 11. Thí nghiệm 2 giá nhà: max_depth.**
 
-| max_depth | Mean CV RMSE | Std CV RMSE |
+| max_depth | RMSE CV trung bình | Độ lệch chuẩn |
 |---:|---:|---:|
 | 4 | 1.8191 | 0.0109 |
 | 8 | 1.6843 | 0.0138 |
@@ -276,213 +264,215 @@ SVR is strongest on the descriptive holdout comparison. Training-only cross-vali
 | 16 | 1.6683 | 0.0258 |
 | None | 1.7130 | 0.0277 |
 
-![Figure 7. House Price Experiment 2: maximum tree depth versus mean cross-validation RMSE.](../../figures/house_price/experiment_2_hyperparameter.png)
+![Hình 7. Độ sâu tối đa và RMSE CV trung bình của Random Forest giá nhà.](../../figures/house_price/experiment_2_hyperparameter.png)
 
-Depth 12 slightly improves upon the original SVR CV RMSE by 0.0039 billion VND. The difference is small and should not be overstated. Depth 4 underfits under these conditions; deeper forests increase the observed CV RMSE and variability.
+Depth 12 cải thiện SVR CV chỉ 0.0039 tỷ VND; chênh lệch nhỏ không nên phóng đại. Depth 4 underfit; forest sâu hơn tăng RMSE và độ biến thiên.
 
-**Table 12. House Price Experiment 3: raw feature representation.**
+**Bảng 12. Thí nghiệm 3 giá nhà: biểu diễn thuộc tính.**
 
-| Representation | Raw features | Mean CV RMSE | Std CV RMSE |
+| Biểu diễn | Thuộc tính thô | RMSE CV trung bình | Độ lệch chuẩn |
 |---|---:|---:|---:|
-| Compact representation | 6 | 1.6526 | 0.0189 |
-| All usable attributes | 11 | **1.6078** | 0.0231 |
+| Biểu diễn gọn | 6 | 1.6526 | 0.0189 |
+| Toàn bộ thuộc tính dùng được | 11 | **1.6078** | 0.0231 |
 
-![Figure 8. House Price Experiment 3: six-feature versus eleven-feature representation.](../../figures/house_price/experiment_3_feature_representation.png)
+![Hình 8. Biểu diễn sáu so với mười một thuộc tính giá nhà.](../../figures/house_price/experiment_3_feature_representation.png)
 
-Unlike Diabetes, the additional usable House Price attributes improve the representation. Frontage, Access Road, both direction fields, and Furniture state reduce mean CV RMSE by approximately 0.0448 billion VND. Pipeline imputation allows their observed information to contribute without deleting rows.
+Khác tiểu đường, Frontage, Access Road, hai trường hướng và Furniture state cải thiện biểu diễn, giảm RMSE CV khoảng 0.0448 tỷ VND. Pipeline tận dụng thông tin quan sát được mà không xóa dòng.
 
-# 11. Final Model Selection
+# 11. Lựa chọn mô hình cuối cùng
 
-## 11.1 Diabetes Final Model
+## 11.1 Mô hình tiểu đường cuối cùng
 
-The selected classifier is `RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42)` with the six raw features. Its saved Pipeline applies median imputation, `StandardScaler`, and the forest. Selection is based on the best mean training CV F1 among tested depths and the better six-feature representation; the held-out test set is used once for final evaluation.
+Mô hình là `RandomForestClassifier(n_estimators=100, max_depth=6, random_state=42)` với sáu thuộc tính. Pipeline: điền thiếu trung vị → `StandardScaler` → forest. Lựa chọn dựa trên F1 CV train và biểu diễn sáu thuộc tính; test chỉ dùng đánh giá cuối.
 
-**Table 13. Diabetes final held-out metrics.**
+**Bảng 13. Chỉ số test cuối của mô hình tiểu đường.**
 
-| Metric | Value |
+| Chỉ số | Giá trị |
 |---|---:|
 | Accuracy | 0.7468 |
 | Precision | 0.6667 |
 | Recall | 0.5556 |
 | F1-score | 0.6061 |
 
-The final confusion matrix is `[[85, 15], [24, 30]]`: TN = 85, FP = 15, FN = 24, and TP = 30. A false negative is an actual class-1 observation classified as class 0; the 24 false negatives explain the limited recall of 0.5556. These are educational classification errors, not clinical outcomes.
+Ma trận `[[85, 15], [24, 30]]`: TN=85, FP=15, FN=24, TP=30. Có 24 mẫu lớp 1 thực tế bị dự đoán lớp 0, giải thích Recall 0.5556. Đây là lỗi phân loại giáo dục, không phải kết quả lâm sàng.
 
-![Figure 9. Confusion matrix of the selected Diabetes classifier on the held-out test set.](../../figures/diabetes/final_confusion_matrix.png)
+![Hình 9. Ma trận nhầm lẫn của mô hình tiểu đường cuối.](../../figures/diabetes/final_confusion_matrix.png)
 
-The model's impurity-based importance is highest for Glucose (0.4017), followed by BMI (0.1985), Age (0.1344), DiabetesPedigreeFunction (0.1244), Pregnancies (0.0767), and BloodPressure (0.0643). These values describe tree split usage in this fitted model and do not establish causal or clinical importance.
+Importance theo impurity: Glucose 0.4017, BMI 0.1985, Age 0.1344, DiabetesPedigreeFunction 0.1244, Pregnancies 0.0767, BloodPressure 0.0643. Chúng mô tả phép chia của mô hình đã fit, không mang ý nghĩa nhân quả/lâm sàng.
 
-![Figure 10. Impurity-based raw feature importance from the final Diabetes Random Forest.](../../figures/diabetes/final_feature_importance.png)
+![Hình 10. Importance thuộc tính thô của Random Forest tiểu đường.](../../figures/diabetes/final_feature_importance.png)
 
-## 11.2 House Price Final Model
+## 11.2 Mô hình giá nhà cuối cùng
 
-The selected regressor is `RandomForestRegressor(n_estimators=100, max_depth=12, random_state=42)` using all eleven raw property fields. Its saved Pipeline contains numerical median imputation/scaling, categorical most-frequent imputation/one-hot encoding, and the fitted forest.
+Mô hình là `RandomForestRegressor(n_estimators=100, max_depth=12, random_state=42)` với 11 trường thô. Pipeline gồm nhánh số điền trung vị/scale, nhánh phân loại điền mode/one-hot và forest.
 
-**Table 14. House Price final held-out metrics.**
+**Bảng 14. Chỉ số test cuối của mô hình giá nhà.**
 
-| Metric | Value |
+| Chỉ số | Giá trị |
 |---|---:|
-| MAE | 1.2529 billion VND |
-| MSE | 2.5659 (billion VND)² |
-| RMSE | 1.6018 billion VND |
+| MAE | 1.2529 tỷ VND |
+| MSE | 2.5659 (tỷ VND)² |
+| RMSE | 1.6018 tỷ VND |
 | R² | 0.4738 |
 | MAPE | 27.36% |
 
-**R² = 0.4738 does not mean 47.38% accuracy.** It indicates that the fitted model explains approximately 47.38% of test-set price variance relative to the mean baseline. Regression does not use Accuracy, and the MAE/RMSE show that substantial listing-level uncertainty remains.
+**R² = 0.4738 không có nghĩa Accuracy bằng 47.38%.** Nó cho biết mô hình giải thích khoảng 47.38% phương sai giá test so với baseline trung bình. Hồi quy không dùng Accuracy; MAE/RMSE cho thấy sai số từng tin đăng vẫn đáng kể.
 
-![Figure 11. Actual versus predicted listed prices for the selected House Price model.](../../figures/house_price/final_actual_vs_predicted.png)
+![Hình 11. Giá thực tế so với giá dự đoán của mô hình giá nhà cuối.](../../figures/house_price/final_actual_vs_predicted.png)
 
-Predictions follow the general y = x direction but occupy a narrower range than actual values, consistent with regression toward the centre of the training distribution. The residual mean is -0.0255 billion VND, the median is -0.0803, and the residual standard deviation is 1.6016. Residuals range from -6.2601 to 5.8129 billion VND; the visible changing spread shows that individual errors remain material.
+Dự đoán theo xu hướng y=x nhưng có miền hẹp hơn giá thực tế. Residual trung bình -0.0255 tỷ VND, trung vị -0.0803, độ lệch chuẩn 1.6016 và khoảng -6.2601 đến 5.8129 tỷ VND.
 
-![Figure 12. Residuals (actual minus predicted) against predicted House Price.](../../figures/house_price/final_residual_plot.png)
+![Hình 12. Residual theo giá nhà dự đoán.](../../figures/house_price/final_residual_plot.png)
 
-The strongest transformed feature importances are numeric Area (0.2856), Bathrooms (0.2226), Floors (0.1094), Access Road (0.0770), and the Hồ Chí Minh Province indicator (0.0676). Because categories expand into multiple encoded columns, these are encoded-feature values and are not incorrectly merged into raw-variable totals.
+Importance mã hóa lớn nhất: Area 0.2856, Bathrooms 0.2226, Floors 0.1094, Access Road 0.0770, chỉ báo Province Hồ Chí Minh 0.0676. Đây là giá trị của cột đã mã hóa, không bị cộng sai thành tổng biến thô.
 
-![Figure 13. Top twenty encoded feature importances from the final House Price Random Forest.](../../figures/house_price/final_feature_importance.png)
+![Hình 13. Hai mươi thuộc tính mã hóa quan trọng nhất của Random Forest giá nhà.](../../figures/house_price/final_feature_importance.png)
 
-# 12. Intelligent Application Architecture
+# 12. Kiến trúc ứng dụng thông minh
 
-The application separates data-science artifacts from inference and presentation concerns. Executed notebooks create the trusted fitted Pipelines under `models/`. FastAPI loads both models once during application lifespan, validates their raw feature contracts against JSON metadata, and creates a one-row pandas DataFrame in the exact saved `feature_names_in_` order for each request. The API never refits a model or independently reconstructs preprocessing.
+Ứng dụng tách artifact khoa học dữ liệu khỏi suy luận và trình bày. Notebook đã chạy tạo Pipeline đáng tin cậy trong `models/`. FastAPI nạp hai mô hình một lần, đối chiếu hợp đồng thuộc tính thô với metadata JSON và tạo DataFrame một dòng theo đúng `feature_names_in_`. API không fit lại hay tự dựng lại tiền xử lý.
 
-React/Vite and Expo React Native are thin clients. They request model metadata, render fields from the shared contract, submit raw values, and display the prediction plus limitations. Neo4j is independent from prediction availability: a graph connection failure changes graph status but does not prevent either model from loading or predicting.
+React/Vite và Expo React Native là client mỏng: lấy metadata, dựng trường nhập, gửi giá trị thô và hiển thị dự đoán cùng giới hạn. Neo4j độc lập với prediction; lỗi graph không ngăn hai mô hình suy luận.
 
-![Figure 14. Actual deployed application topology across Vercel, Render, saved Pipelines, Expo Go, and Neo4j AuraDB.](assets/system_architecture.png)
+![Hình 14. Kiến trúc triển khai qua Vercel, Render, Pipeline đã lưu, Expo Go và Neo4j AuraDB.](assets/system_architecture.png)
 
-# 13. Backend and Model Inference
+# 13. Backend và suy luận mô hình
 
-The backend uses Python, FastAPI, Pydantic, pandas, joblib, and scikit-learn Pipelines. Pydantic rejects missing or extra fields, invalid signs, blank categoricals, `NaN`, and infinite values. Request size is limited, CORS origins are environment-controlled, and model exceptions return a generic error rather than a raw traceback. Only repository-controlled joblib files are loaded.
+Backend dùng Python, FastAPI, Pydantic, pandas, joblib, scikit-learn Pipeline. Pydantic từ chối trường thiếu/thừa, dấu không hợp lệ, chuỗi rỗng, `NaN`, vô cực. Request được giới hạn kích thước, CORS theo biến môi trường và lỗi mô hình không trả raw traceback. Chỉ joblib do repository kiểm soát được nạp.
 
-The central invariant is **Training Pipeline = Inference Pipeline**. Diabetes inference calls the saved classifier's `predict` and `predict_proba`. House inference converts nullable raw fields to `numpy.nan`, permitting the fitted Pipeline to apply its learned imputation before `predict`. The backend does not call `fit`, `fit_transform`, `SimpleImputer`, `StandardScaler`, or `OneHotEncoder` during prediction.
+Bất biến trung tâm là **Pipeline huấn luyện = Pipeline suy luận**. Tiểu đường gọi `predict`, `predict_proba`; giá nhà chuyển trường nullable thành `numpy.nan` để Pipeline đã fit tự điền thiếu. Backend không gọi `fit`, `fit_transform`, `SimpleImputer`, `StandardScaler`, `OneHotEncoder` khi dự đoán.
 
-**Table 15. Implemented FastAPI endpoints.**
+**Bảng 15. Các endpoint FastAPI.**
 
-| Method | Endpoint | Purpose | Main response |
+| Phương thức | Endpoint | Mục đích | Phản hồi chính |
 |---|---|---|---|
-| GET | `/health` | Service, model, and Neo4j status | Status object |
-| GET | `/api/v1/models` | Metadata for both systems | Model collection |
-| GET | `/api/v1/models/diabetes` | Diabetes feature/model contract | Metadata object |
-| GET | `/api/v1/models/house-price` | House feature/model contract | Metadata object |
-| POST | `/api/v1/diabetes/predict` | Educational classification | Class, label, probability |
-| POST | `/api/v1/house-price/predict` | Educational listed-price estimate | Price and unit |
-| GET | `/api/v1/diabetes/knowledge-graph` | Diabetes model/provenance graph | Nodes and edges |
+| GET | `/health` | Trạng thái dịch vụ, mô hình, Neo4j | Đối tượng trạng thái |
+| GET | `/api/v1/models` | Metadata hai hệ thống | Danh sách mô hình |
+| GET | `/api/v1/models/diabetes` | Hợp đồng mô hình tiểu đường | Metadata |
+| GET | `/api/v1/models/house-price` | Hợp đồng mô hình giá nhà | Metadata |
+| POST | `/api/v1/diabetes/predict` | Phân loại giáo dục | Lớp, nhãn, xác suất |
+| POST | `/api/v1/house-price/predict` | Ước tính giá niêm yết | Giá, đơn vị |
+| GET | `/api/v1/diabetes/knowledge-graph` | Graph mô hình/nguồn gốc | Node, edge |
 
-# 14. Web Application
+# 14. Ứng dụng web
 
-The web client uses React 19, Vite 7, and TypeScript. Routes provide Home, Diabetes, House Price, Knowledge Graph, and About pages. Shared metadata prevents the browser from hard-coding encoded features: the form sends the exact **raw** feature names expected by the backend, while the saved backend Pipeline performs imputation, scaling, and encoding. Responsive breakpoints adapt navigation, forms, result panels, cards, typography, and the graph layout for desktop, tablet, and phone widths.
+Web dùng React 19, Vite 7, TypeScript với các route Home, Diabetes, House Price, Knowledge Graph, About. Metadata chung ngăn hard-code thuộc tính mã hóa: form gửi đúng tên **thuộc tính thô**, còn Pipeline backend thực hiện điền thiếu, scale, encoding. Breakpoint responsive điều chỉnh navigation, form, kết quả, card, typography và graph cho desktop, tablet, điện thoại; màn hình nhỏ dùng hamburger và grid một cột để tránh tràn ngang.
 
-The production web URL is <https://intelligent-system-assignment-01.vercel.app>. `VITE_API_BASE_URL` supplies the backend origin at build time. The Knowledge Graph page requests model-centric nodes and edges from FastAPI and renders them with a force-directed canvas. The canvas spaces nodes with configured forces, exposes relationship types as hover labels, provides an enlarged pointer area for every node, and synchronizes selection with an adjacent property panel.
+Web production: <https://intelligent-system-assignment-01.vercel.app>. `VITE_API_BASE_URL` cung cấp backend origin lúc build. Trang Knowledge Graph lấy node/edge từ FastAPI và hiển thị canvas force-directed; mọi node có vùng click mở rộng, hit-test dự phòng chuột/cảm ứng và panel thuộc tính đồng bộ.
 
-# 15. Mobile Application
+# 15. Ứng dụng mobile
 
-The mobile client uses Expo, React Native, and TypeScript. Its five screens are Home, Diabetes, House Price, Knowledge Graph, and About. The Diabetes and House screens obtain metadata and submit the same raw API contracts as the web application. The Knowledge Graph screen requests the existing graph endpoint and provides native node/relationship totals, a label legend, node property inspection, and navigable connections without depending on a desktop canvas. `EXPO_PUBLIC_API_BASE_URL` selects the backend URL appropriate to a browser, emulator, LAN-connected physical device, or deployed API.
+Mobile dùng Expo, React Native, TypeScript với năm màn hình Home, Diabetes, House Price, Knowledge Graph, About. Diabetes và House lấy metadata, gửi cùng hợp đồng API thô như web. Knowledge Graph gọi endpoint hiện có, hiển thị tổng node/relationship, chú giải nhãn, thuộc tính node và kết nối điều hướng theo giao diện native. `EXPO_PUBLIC_API_BASE_URL` chọn backend cho trình duyệt, emulator, thiết bị LAN hoặc API đã triển khai.
 
-The current mobile delivery is demonstrated through Expo Go. The repository does not claim a Google Play or Apple App Store release. Static project evidence confirms the prediction and Knowledge Graph request paths in a TypeScript type-checkable client; no independent store deployment is claimed.
+Mobile được demo qua Expo Go; repository không tuyên bố phát hành Google Play hay App Store. Code TypeScript type-check xác nhận đường gọi prediction và graph, nhưng báo cáo không tuyên bố bản mobile production độc lập.
 
-# 16. Diabetes Knowledge Graph
+# 16. Knowledge Graph tiểu đường
 
-The Neo4j AuraDB graph is transparent and model-centric. It records what the assignment system uses: the final model, six raw features, target, fitted preprocessing steps, dataset provenance, model-selection experiment, held-out metrics, and fitted impurity importance. It is **not a medical knowledge base** and contains no unsourced clinical claims.
+Neo4j AuraDB lưu graph minh bạch, hướng mô hình: mô hình cuối, sáu thuộc tính, target, bước Pipeline, dataset, thí nghiệm chọn mô hình, chỉ số holdout và impurity importance. Đây **không phải cơ sở tri thức y khoa**.
 
-The same sourced graph is presented differently for each interface: the web client uses an interactive force-directed canvas with a details panel, while the mobile client uses a touch-oriented node explorer and explicit connection list. Both views consume the same FastAPI response and preserve the same 17-node/17-relationship graph semantics.
+Web dùng canvas force-directed và panel chi tiết; mobile dùng trình khám phá node hướng cảm ứng và danh sách kết nối. Cả hai dùng cùng phản hồi FastAPI và cùng ngữ nghĩa 17 node/17 relationship.
 
-**Table 16. Knowledge Graph schema represented in the Cypher seed.**
+**Bảng 16. Lược đồ Knowledge Graph trong Cypher seed.**
 
-| Category | Values |
+| Nhóm | Giá trị |
 |---|---|
-| Node labels | System; Model; Feature; Target; PipelineStep; Dataset; Experiment; Metric |
-| Relationship types | USES_MODEL; USES_FEATURE; PREDICTS; HAS_PIPELINE_STEP; TRAINED_ON; EVALUATED_BY; SELECTED; COMPARES_REPRESENTATION |
-| Scope property | `domain = "diabetes_assignment_01"` |
-| Provenance detail | 768 observations; training-only 5-fold CV; held-out metrics |
-| Interpretation boundary | Model transparency, not medical knowledge |
+| Nhãn node | System; Model; Feature; Target; PipelineStep; Dataset; Experiment; Metric |
+| Relationship | USES_MODEL; USES_FEATURE; PREDICTS; HAS_PIPELINE_STEP; TRAINED_ON; EVALUATED_BY; SELECTED; COMPARES_REPRESENTATION |
+| Phạm vi | `domain = "diabetes_assignment_01"` |
+| Nguồn gốc | 768 quan sát; CV 5 fold chỉ trên train; chỉ số holdout |
+| Ranh giới | Minh bạch mô hình, không phải tri thức y khoa |
 
-The Cypher uses `MERGE` and a uniqueness constraint on assignment entity keys. Production seeding was recorded twice with identical totals—17 nodes and 17 relationships after the first execution, and 17/17 after the second—demonstrating idempotence. A direct production API check for this report also returned 17 nodes and 17 relationships.
+Cypher dùng `MERGE` và ràng buộc duy nhất trên key AssignmentEntity. Seed production hai lần đều cho tổng 17 node và 17 relationship: 17/17 rồi 17/17, chứng minh idempotent. API production cũng trả 17 node và 17 relationship.
 
-# 17. Deployment Architecture
+# 17. Kiến trúc triển khai
 
-GitHub is the source repository: <https://github.com/Sagitoaz/intelligent-system-assignment-01>. Render hosts FastAPI at <https://intelligent-system-assignment-01.onrender.com>. Vercel hosts the React web client at <https://intelligent-system-assignment-01.vercel.app>. Neo4j AuraDB hosts the Diabetes Knowledge Graph, and Expo Go supports mobile demonstration. Credentials, database passwords, Aura identifiers, and other secrets are intentionally excluded.
+GitHub lưu source tại <https://github.com/Sagitoaz/intelligent-system-assignment-01>. Render chạy FastAPI tại <https://intelligent-system-assignment-01.onrender.com>. Vercel chạy React tại <https://intelligent-system-assignment-01.vercel.app>. Neo4j AuraDB lưu graph, Expo Go phục vụ demo mobile. Báo cáo loại bỏ mật khẩu, credential và định danh bí mật.
 
-**Table 17. Direct production validation performed for this report.**
+**Bảng 17. Kiểm tra production trực tiếp.**
 
-| Check | Observed result |
+| Kiểm tra | Kết quả |
 |---|---|
 | `GET /health` | HTTP 200; status=ok; diabetes=loaded; house_price=loaded; neo4j=available |
-| Diabetes notebook demo POST | HTTP 200; class 0; Non-diabetic; probability 0.01054453459068126 |
-| House notebook demo POST | HTTP 200; 5.1266618454336434 billion VND; formatted 5.13 billion VND |
-| Knowledge Graph GET | HTTP 200; 17 nodes; 17 relationships |
-| Vercel web root | HTTP 200; application HTML returned |
+| POST demo tiểu đường | HTTP 200; lớp 0; Non-diabetic; xác suất 0.01054453459068126 |
+| POST demo giá nhà | HTTP 200; 5.1266618454336434 tỷ VND; định dạng 5.13 tỷ VND |
+| GET Knowledge Graph | HTTP 200; 17 node; 17 relationship |
+| Trang gốc Vercel | HTTP 200; trả HTML ứng dụng |
 
-These checks verify the backend prediction routes, graph retrieval, and web deployment at report-generation time. Mobile uses the same HTTPS endpoints through the code path documented above; this report does not claim a separately instrumented production mobile test beyond the current project evidence and Expo Go demonstration record. Free-tier hosting can introduce cold-start delay, so initial requests may be slower than subsequent requests.
+Các kiểm tra xác nhận prediction, graph và web tại thời điểm tạo báo cáo. Mobile dùng cùng HTTPS endpoint; chưa có kiểm thử production mobile có instrument độc lập ngoài bằng chứng code và Expo Go. Free-tier có thể cold-start nên request đầu chậm hơn.
 
-# 18. System Demonstration
+# 18. Minh họa hệ thống
 
-The notebooks include three synthetic cases for each fitted system. They use observed value ranges, are not copied from held-out rows, and pass directly through the complete saved Pipeline without manual preprocessing.
+Notebook chứa ba ca tổng hợp cho mỗi hệ thống. Chúng nằm trong miền quan sát, không sao chép dòng holdout và đi thẳng qua Pipeline đã lưu.
 
-**Table 18. Diabetes notebook demonstration cases and outputs.**
+**Bảng 18. Ca demo tiểu đường và đầu ra.**
 
-| Case | Pregnancies | Glucose | BloodPressure | BMI | DPF | Age | Predicted class | Class-1 probability |
+| Ca | Pregnancies | Glucose | BloodPressure | BMI | DPF | Age | Lớp | Xác suất lớp 1 |
 |---|---:|---:|---:|---:|---:|---:|---|---:|
 | 1 | 1 | 85 | 66 | 24.0 | 0.20 | 23 | 0 – Non-diabetic | 0.0105 |
 | 2 | 4 | 125 | 72 | 32.0 | 0.50 | 35 | 0 – Non-diabetic | 0.4105 |
 | 3 | 8 | 180 | 80 | 38.0 | 1.20 | 55 | 1 – Diabetic | 0.8462 |
 
-The labels demonstrate classifier mechanics only. They are not medical diagnoses, validated patient risk estimates, or healthcare advice.
+Nhãn chỉ minh họa cơ chế phân loại, không phải chẩn đoán hay lời khuyên y tế.
 
-**Table 19. House Price notebook demonstration cases and outputs.**
+**Bảng 19. Ca demo giá nhà và đầu ra.**
 
-| Case | Province | Area | Frontage | Access Road | Directions (house/balcony) | Floors / Beds / Baths | Legal / Furniture | Predicted Price |
+| Ca | Province | Area | Frontage | Access Road | Hướng nhà/ban công | Tầng/PN/PT | Pháp lý/Nội thất | Giá dự đoán |
 |---|---|---:|---:|---:|---|---|---|---:|
-| 1 | Hồ Chí Minh | 45 | 4 | 4 | Đông - Nam / Đông - Nam | 3 / 3 / 3 | Have certificate / Full | 5.1267 billion VND |
-| 2 | Bình Dương | 80 | 5 | 8 | Nam / Nam | 2 / 3 / 2 | Have certificate / Basic | 3.0945 billion VND |
-| 3 | Hưng Yên | 90 | 6 | 13 | Đông - Bắc / Đông - Bắc | 5 / 5 / 5 | Sale contract / Full | 8.6189 billion VND |
+| 1 | Hồ Chí Minh | 45 | 4 | 4 | Đông - Nam / Đông - Nam | 3 / 3 / 3 | Have certificate / Full | 5.1267 tỷ VND |
+| 2 | Bình Dương | 80 | 5 | 8 | Nam / Nam | 2 / 3 / 2 | Have certificate / Basic | 3.0945 tỷ VND |
+| 3 | Hưng Yên | 90 | 6 | 13 | Đông - Bắc / Đông - Bắc | 5 / 5 / 5 | Sale contract / Full | 8.6189 tỷ VND |
 
-These are educational listed-price estimates, not offers, transactions, appraisals, or investment advice. Reload tests in both notebooks confirm that saved-model predictions match the in-memory final Pipeline outputs.
+Đây là ước tính giáo dục, không phải giao dịch, thẩm định hay tư vấn đầu tư. Reload test xác nhận model đã lưu cho cùng kết quả với Pipeline cuối trong notebook.
 
-# 19. Limitations
+Ảnh giao diện thực tế cần chụp đúng bản chạy thật: web dự đoán tiểu đường, web dự đoán giá nhà, web Knowledge Graph có panel chi tiết, mobile prediction và mobile Knowledge Graph. Quy cách và dữ liệu nằm trong `docs/report/SCREENSHOT_GUIDE.md`; báo cáo không dùng mockup làm bằng chứng chạy hệ thống.
 
-The Diabetes dataset contains only 768 observations and has limited population coverage. Missing measurements are encoded as zero, the target is imbalanced, and the final recall (0.5556) and F1 (0.6061) remain limited. The evaluation does not establish calibration, fairness, safety, prospective utility, external generalization, or clinically acceptable error costs. The system is not clinically validated and must remain an educational classification demonstration.
+# 19. Hạn chế
 
-The house data consists of 2024 listings and is geographically concentrated, especially in Hồ Chí Minh and Hà Nội. Many attributes are missing, Address-to-Province extraction is an imperfect substitute for geocoding, and a listing price may differ from the actual transaction price. Market conditions change over time. Final RMSE remains 1.6018 billion VND, which is substantial for individual properties, so the output is not a professional valuation.
+Dữ liệu tiểu đường chỉ có 768 quan sát, độ phủ quần thể hạn chế, missing bị mã hóa 0 và target mất cân bằng. Recall 0.5556, F1 0.6061 còn thấp. Chưa có calibration, fairness, đánh giá an toàn, external validation hay kiểm định lâm sàng. Hệ thống chỉ phục vụ giáo dục.
 
-The application also has operational limitations. Free-tier cloud services may sleep or cold-start; network and third-party service availability affect the demonstration; graph availability is deliberately decoupled from prediction; and Expo Go is a demonstration environment rather than an app-store deployment. The entire system is an educational deployment, not evidence of clinical, commercial, or production readiness.
+Dữ liệu nhà là tin đăng 2024, tập trung ở Hồ Chí Minh và Hà Nội, nhiều thuộc tính thiếu. Province trích từ Address chưa thay thế geocoding; giá niêm yết khác giá giao dịch; thị trường thay đổi. RMSE 1.6018 tỷ VND vẫn đáng kể nên không thể dùng như định giá chuyên nghiệp.
 
-**Table 20. Principal limitation categories.**
+Ứng dụng phụ thuộc mạng và free-tier có cold-start. Graph được tách khỏi prediction; Expo Go là môi trường demo, không phải app-store deployment. Hệ thống không tuyên bố sẵn sàng lâm sàng, thương mại hay production.
 
-| System | Data limitation | Model/evaluation limitation | Use boundary |
+**Bảng 20. Nhóm hạn chế chính.**
+
+| Hệ thống | Dữ liệu | Mô hình/đánh giá | Ranh giới sử dụng |
 |---|---|---|---|
-| Diabetes | 768 rows; hidden zeros; population limits; imbalance | Recall/F1 limited; no external/clinical validation | Not a medical diagnosis |
-| House Price | 2024 listings; geographic concentration; missing attributes | RMSE 1.6018; listing ≠ transaction; market drift | Not professional valuation |
-| Application | Free-tier services and network dependency | Cold starts; graph can be temporarily unavailable | Educational deployment; Expo Go demo |
+| Tiểu đường | 768 dòng; 0 ẩn; giới hạn quần thể; mất cân bằng | Recall/F1 hạn chế; chưa validation ngoài/lâm sàng | Không chẩn đoán y khoa |
+| Giá nhà | Tin đăng 2024; tập trung; thiếu trường | RMSE 1.6018; listing ≠ transaction; market drift | Không định giá chuyên nghiệp |
+| Ứng dụng | Free-tier, phụ thuộc mạng | Cold-start; graph có thể gián đoạn | Giáo dục; Expo Go demo |
 
-# 20. Reflection
+# 20. Phản ánh và bài học
 
-The majority-class Diabetes baseline is one of the most informative results: 64.94% Accuracy initially appears usable, yet Precision, Recall, and F1 are zero because every observation is predicted as the majority class. Evaluation must reflect the error that matters, not only the easiest aggregate score.
+Baseline đa số đạt Accuracy 64.94% nhưng Precision, Recall, F1 đều 0 vì luôn dự đoán lớp 0. Đánh giá phải phản ánh loại lỗi quan trọng chứ không chỉ chỉ số tổng hợp dễ đạt.
 
-Representation has measurable consequences. The same tuned Diabetes forest performs better with six features than eight, showing that more inputs are not automatically better when missingness and finite sample size are present. The House system reaches the opposite empirical conclusion: five additional usable attributes improve mean CV RMSE from 1.6526 to 1.6078. Representation should therefore be tested for each problem rather than treated as a fixed preprocessing detail.
+Biểu diễn có ảnh hưởng đo được. Tiểu đường tốt hơn với 6 thay vì 8 thuộc tính khi missingness cao và mẫu nhỏ. Giá nhà cho kết luận ngược: 5 trường bổ sung cải thiện RMSE CV từ 1.6526 xuống 1.6078. Biểu diễn cần được kiểm chứng riêng cho từng bài toán.
 
-Cross-validation and a held-out test answer different questions. The depth-6 Diabetes forest is selected because it has the best average training-fold F1, even though its test F1 is below the initially observed unrestricted forest. Revising the choice after seeing that test difference would convert the test set into a tuning resource. Controlled experiments preserve the test boundary and make the decision reproducible.
+CV và test trả lời câu hỏi khác nhau. Forest tiểu đường depth 6 được chọn theo F1 trung bình trên fold train dù F1 test thấp hơn forest không giới hạn quan sát trước đó. Đổi lựa chọn sau khi xem test sẽ biến test thành tài nguyên tuning.
 
-The saved Pipeline connects experimental discipline to software reliability. It guarantees that training-time medians, scales, categories, and estimator parameters are exactly those used by FastAPI. Web and mobile remain clients of a raw-feature contract. This confirms the central lesson of the assignment: an intelligent system is more than `model.fit()`; it is a coordinated data, representation, evaluation, inference, interface, and deployment workflow.
+Pipeline đã lưu bảo đảm medians, scales, categories và tham số lúc train chính là những gì FastAPI dùng. Web/mobile chỉ là client của hợp đồng đầu vào thô. Một hệ thống thông minh là sự phối hợp dữ liệu, biểu diễn, đánh giá, suy luận, giao diện và triển khai, không chỉ `model.fit()`.
 
-# 21. Conclusion
+# 21. Kết luận
 
-Assignment 01 delivers two complete educational intelligent systems: Diabetes Classification and Vietnam House Price Regression. Both include dataset inspection, explicit representation, EDA, missing-data preprocessing, a baseline, five traditional machine-learning families, controlled experiments, final selection, a saved fitted Pipeline, FastAPI inference, a React web client, and an Expo React Native mobile client. Diabetes additionally includes a deployed Neo4j model/provenance Knowledge Graph.
+Bài tập cung cấp hai hệ thống giáo dục hoàn chỉnh: Phân loại tiểu đường và Hồi quy giá nhà Việt Nam. Cả hai có dữ liệu, biểu diễn, EDA, xử lý thiếu, baseline, năm họ mô hình, thí nghiệm kiểm soát, lựa chọn cuối, Pipeline đã lưu, API, web và mobile. Tiểu đường có thêm Knowledge Graph Neo4j.
 
-The final Diabetes system uses a six-feature depth-6 Random Forest and achieves held-out Accuracy 0.7468, Precision 0.6667, Recall 0.5556, and F1 0.6061. The final House Price system uses eleven raw features and a depth-12 Random Forest, achieving MAE 1.2529, RMSE 1.6018 billion VND, R² 0.4738, and MAPE 27.36%. These results demonstrate a coherent assignment workflow; they do not establish clinical, professional valuation, commercial, or production readiness.
+Mô hình tiểu đường depth 6, 6 thuộc tính đạt Accuracy 0.7468, Precision 0.6667, Recall 0.5556, F1 0.6061. Mô hình giá nhà depth 12, 11 thuộc tính đạt MAE 1.2529, RMSE 1.6018 tỷ VND, R² 0.4738, MAPE 27.36%. Kết quả chứng minh quy trình bài tập nhất quán, không chứng minh sẵn sàng lâm sàng, định giá chuyên nghiệp hay thương mại.
 
-# 22. Reproducibility
+# 22. Khả năng tái lập
 
-The executed notebooks record Python 3.12.0, pandas 3.0.5, NumPy 2.5.2, matplotlib 3.11.1, scikit-learn 1.9.0, and joblib 1.5.3. Random splits, shuffled KFold, Decision Trees, and Random Forests use `random_state=42` where supported. Diabetes uses a stratified 80/20 split; House Price uses an 80/20 split and shuffled five-fold training CV. Fitted preprocessing lives inside every validation fold and inside the saved joblib artifact.
+Notebook ghi Python 3.12.0, pandas 3.0.5, NumPy 2.5.2, matplotlib 3.11.1, scikit-learn 1.9.0, joblib 1.5.3. Split, KFold shuffle, Decision Tree, Random Forest dùng `random_state=42` khi hỗ trợ. Tiểu đường dùng stratified 80/20; giá nhà dùng 80/20 và CV 5 fold trên train. Tiền xử lý đã fit nằm trong từng fold và artifact joblib.
 
-**Table 21. Reproducibility and runtime toolchain.**
+**Bảng 21. Công cụ tái lập.**
 
-| Layer | Main tools / versions evidenced by project |
+| Tầng | Công cụ/phiên bản |
 |---|---|
 | Notebook ML | Python 3.12.0; pandas 3.0.5; NumPy 2.5.2; matplotlib 3.11.1; scikit-learn 1.9.0; joblib 1.5.3 |
 | Backend | FastAPI; Uvicorn; Pydantic; pandas; NumPy; scikit-learn; Neo4j driver |
 | Web | Node.js 20+; React 19; Vite 7; TypeScript 5.9 |
 | Mobile | Expo 54; React Native 0.81; React 19; TypeScript 5.9 |
-| Report | Python; python-docx 1.2.0; native DOCX text, headings, and tables |
+| Báo cáo | Python; python-docx 1.2.0; text, heading, bảng DOCX native |
 
-From the repository root, the documented commands are:
+Lệnh từ thư mục gốc:
 
 ```text
 python -m venv .venv
@@ -500,64 +490,64 @@ npm install
 npx expo start
 ```
 
-Validation commands are `python -m pytest` with `PYTHONPATH=backend`, `npm run lint`, `npm run build`, and mobile `npm run typecheck`. The report can be rebuilt without modifying application dependencies:
+Kiểm tra bằng `python -m pytest` với `PYTHONPATH=backend`, web `npm run lint`, `npm run build`, mobile `npm run typecheck`. Tạo lại báo cáo bằng:
 
 ```text
 .venv\Scripts\python.exe -m pip install -r docs\report\requirements-report.txt
 .venv\Scripts\python.exe docs\report\build_report.py
 ```
 
-# 23. References
+# 23. Tài liệu tham khảo
 
-1. Kaggle. *Diabetes dataset used by the executed assignment notebook*. The notebook records Kaggle as the source but does not store a specific dataset-card URL; no author or publication metadata is inferred.
+1. Kaggle. *Bộ dữ liệu tiểu đường được notebook sử dụng*. Notebook ghi Kaggle là nguồn nhưng không lưu URL dataset card; báo cáo không suy diễn tác giả.
 2. Kaggle. *Vietnam Housing Dataset 2024*. <https://www.kaggle.com/datasets/nguyentiennhan/vietnam-housing-dataset-2024>.
-3. scikit-learn developers. *scikit-learn documentation*. <https://scikit-learn.org/stable/>.
-4. FastAPI. *FastAPI documentation*. <https://fastapi.tiangolo.com/>.
-5. Meta Open Source. *React documentation*. <https://react.dev/>.
-6. Vite. *Vite documentation*. <https://vite.dev/>.
-7. Expo. *Expo documentation*. <https://docs.expo.dev/>.
-8. Neo4j. *Neo4j documentation*. <https://neo4j.com/docs/>.
-9. Render. *Render documentation*. <https://render.com/docs>.
-10. Vercel. *Vercel documentation*. <https://vercel.com/docs>.
-11. Assignment source repository. <https://github.com/Sagitoaz/intelligent-system-assignment-01>.
+3. Nhóm phát triển scikit-learn. *Tài liệu scikit-learn*. <https://scikit-learn.org/stable/>.
+4. FastAPI. *Tài liệu FastAPI*. <https://fastapi.tiangolo.com/>.
+5. Meta Open Source. *Tài liệu React*. <https://react.dev/>.
+6. Vite. *Tài liệu Vite*. <https://vite.dev/>.
+7. Expo. *Tài liệu Expo*. <https://docs.expo.dev/>.
+8. Neo4j. *Tài liệu Neo4j*. <https://neo4j.com/docs/>.
+9. Render. *Tài liệu Render*. <https://render.com/docs>.
+10. Vercel. *Tài liệu Vercel*. <https://vercel.com/docs>.
+11. Source repository. <https://github.com/Sagitoaz/intelligent-system-assignment-01>.
 
-# Appendix A – API Endpoints
+# Phụ lục A – Các endpoint API
 
-**Table 22. Detailed API contract summary.**
+**Bảng 22. Hợp đồng API chi tiết.**
 
-| Method and path | Request | Success response | Important failure modes |
+| Phương thức/đường dẫn | Request | Phản hồi thành công | Lỗi chính |
 |---|---|---|---|
-| `GET /health` | None | Service, both model states, Neo4j state | Service unavailable/network error |
-| `GET /api/v1/models` | None | Both metadata objects | 500 unexpected server error |
-| `GET /api/v1/models/diabetes` | None | Six raw fields, model, metrics, disclaimer | 500 unexpected server error |
-| `GET /api/v1/models/house-price` | None | Eleven raw fields, categories, target, model | 500 unexpected server error |
-| `POST /api/v1/diabetes/predict` | Exact six-field JSON | Class, label, probability, model, disclaimer | 413 payload; 422 validation; 500 prediction |
-| `POST /api/v1/house-price/predict` | Exact eleven-key JSON; nullable optional measurements | Price, unit, formatted value, model, disclaimer | 413 payload; 422 validation; 500 prediction |
-| `GET /api/v1/diabetes/knowledge-graph` | None | Node and edge arrays | 503 Neo4j unavailable |
+| `GET /health` | Không | Trạng thái dịch vụ, mô hình, Neo4j | Mạng/dịch vụ |
+| `GET /api/v1/models` | Không | Hai metadata | 500 server |
+| `GET /api/v1/models/diabetes` | Không | Sáu trường, mô hình, metrics, disclaimer | 500 server |
+| `GET /api/v1/models/house-price` | Không | 11 trường, categories, target, model | 500 server |
+| `POST /api/v1/diabetes/predict` | JSON đúng 6 trường | Lớp, nhãn, xác suất, model | 413; 422; 500 |
+| `POST /api/v1/house-price/predict` | JSON đúng 11 key, có trường nullable | Giá, đơn vị, định dạng, model | 413; 422; 500 |
+| `GET /api/v1/diabetes/knowledge-graph` | Không | Mảng node và edge | 503 Neo4j |
 
-Diabetes request keys are case-sensitive and ordered in the saved feature contract: `Pregnancies`, `Glucose`, `BloodPressure`, `BMI`, `DiabetesPedigreeFunction`, `Age`. House request keys are `Province`, `Area`, `Frontage`, `Access Road`, `House direction`, `Balcony direction`, `Floors`, `Bedrooms`, `Bathrooms`, `Legal status`, `Furniture state`. Unknown extra keys are rejected.
+Key tiểu đường phân biệt hoa thường: `Pregnancies`, `Glucose`, `BloodPressure`, `BMI`, `DiabetesPedigreeFunction`, `Age`. Key nhà: `Province`, `Area`, `Frontage`, `Access Road`, `House direction`, `Balcony direction`, `Floors`, `Bedrooms`, `Bathrooms`, `Legal status`, `Furniture state`. Key thừa bị từ chối.
 
-# Appendix B – Project Structure
+# Phụ lục B – Cấu trúc dự án
 
 ```text
-data/                 Diabetes and Vietnam housing CSV datasets
-notebooks/            Executed Diabetes and House Price notebooks
-models/               Saved fitted sklearn Pipelines
-figures/              Notebook-generated evaluation figures
-backend/              FastAPI app, metadata, services, schemas, and tests
-web/                  React/Vite/TypeScript client
-mobile/               Expo React Native/TypeScript client
-knowledge_graph/      Idempotent Neo4j Cypher and graph documentation
-docs/                 Architecture, API, and this technical report
+data/                 CSV tiểu đường và nhà ở Việt Nam
+notebooks/            Notebook đã thực thi
+models/               sklearn Pipeline đã fit
+figures/              Hình đánh giá từ notebook
+backend/              FastAPI, metadata, service, schema, test
+web/                  React/Vite/TypeScript
+mobile/               Expo React Native/TypeScript
+knowledge_graph/      Cypher Neo4j idempotent và tài liệu
+docs/                 Kiến trúc, API và báo cáo kỹ thuật
 ```
 
-The report deliverables are `docs/report/TECHNICAL_REPORT.md`, `docs/report/TECHNICAL_REPORT.docx`, `docs/report/build_report.py`, report-only requirements, and the two generated diagram assets. Notebook, model, backend, web, mobile, and knowledge-graph source files are not modified by report generation.
+Sản phẩm báo cáo gồm `TECHNICAL_REPORT.md`, `TECHNICAL_REPORT.docx`, `build_report.py`, requirements riêng và assets. Sinh báo cáo không sửa notebook, model hay mã ứng dụng.
 
-# Appendix C – Demo Input Cases
+# Phụ lục C – Các ca đầu vào demo
 
-**Table 23. Complete Diabetes demo inputs from the executed notebook.**
+**Bảng 23. Đầu vào demo tiểu đường từ notebook.**
 
-| Field | Case 1 | Case 2 | Case 3 |
+| Trường | Ca 1 | Ca 2 | Ca 3 |
 |---|---:|---:|---:|
 | Pregnancies | 1 | 4 | 8 |
 | Glucose | 85 | 125 | 180 |
@@ -565,12 +555,12 @@ The report deliverables are `docs/report/TECHNICAL_REPORT.md`, `docs/report/TECH
 | BMI | 24.0 | 32.0 | 38.0 |
 | DiabetesPedigreeFunction | 0.20 | 0.50 | 1.20 |
 | Age | 23 | 35 | 55 |
-| Predicted class | 0 | 0 | 1 |
-| Label | Non-diabetic | Non-diabetic | Diabetic |
+| Lớp dự đoán | 0 | 0 | 1 |
+| Nhãn | Non-diabetic | Non-diabetic | Diabetic |
 
-**Table 24. Complete House Price demo inputs from the executed notebook.**
+**Bảng 24. Đầu vào demo giá nhà từ notebook.**
 
-| Field | Case 1 | Case 2 | Case 3 |
+| Trường | Ca 1 | Ca 2 | Ca 3 |
 |---|---|---|---|
 | Province | Hồ Chí Minh | Bình Dương | Hưng Yên |
 | Area | 45.0 | 80.0 | 90.0 |
@@ -583,4 +573,4 @@ The report deliverables are `docs/report/TECHNICAL_REPORT.md`, `docs/report/TECH
 | Bathrooms | 3.0 | 2.0 | 5.0 |
 | Legal status | Have certificate | Have certificate | Sale contract |
 | Furniture state | Full | Basic | Full |
-| Predicted Price | 5.1267 | 3.0945 | 8.6189 billion VND |
+| Giá dự đoán | 5.1267 | 3.0945 | 8.6189 tỷ VND |

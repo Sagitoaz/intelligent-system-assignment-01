@@ -70,29 +70,29 @@ def generate_system_architecture() -> Path:
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
-    ax.text(0.5, 0.965, "Deployed Intelligent Application Architecture", ha="center", va="top", fontsize=18, weight="bold", color=f"#{INK}")
+    ax.text(0.5, 0.965, "KIẾN TRÚC TRIỂN KHAI ỨNG DỤNG THÔNG MINH", ha="center", va="top", fontsize=18, weight="bold", color=f"#{INK}")
 
-    draw_box(ax, 0.07, 0.72, 0.22, 0.13, "React Web\nVercel", face="EAF3F6", edge=BLUE, fontsize=12)
-    draw_box(ax, 0.07, 0.39, 0.22, 0.13, "Expo React Native\nExpo Go", face="EAF3F6", edge=BLUE, fontsize=12)
-    draw_box(ax, 0.40, 0.56, 0.22, 0.16, "FastAPI API\nRender", face="EAF6F3", edge=TEAL, fontsize=13)
+    draw_box(ax, 0.07, 0.72, 0.22, 0.13, "Web React\nVercel", face="EAF3F6", edge=BLUE, fontsize=12)
+    draw_box(ax, 0.07, 0.39, 0.22, 0.13, "Mobile Expo React Native\nExpo Go", face="EAF3F6", edge=BLUE, fontsize=11)
+    draw_box(ax, 0.40, 0.56, 0.22, 0.16, "API FastAPI\nRender", face="EAF6F3", edge=TEAL, fontsize=13)
     ax.text(0.34, 0.78, "HTTPS", ha="center", color=f"#{BLUE}", fontsize=10, weight="bold")
     ax.text(0.34, 0.48, "HTTPS", ha="center", color=f"#{BLUE}", fontsize=10, weight="bold")
     arrow(ax, (0.29, 0.785), (0.40, 0.665))
     arrow(ax, (0.29, 0.455), (0.40, 0.61))
 
-    draw_box(ax, 0.72, 0.72, 0.22, 0.13, "Diabetes Pipeline\nRF Classifier", face="FFF4E7", edge=ORANGE, fontsize=11)
-    draw_box(ax, 0.72, 0.50, 0.22, 0.13, "House Pipeline\nRF Regressor", face="FFF4E7", edge=ORANGE, fontsize=11)
-    draw_box(ax, 0.72, 0.27, 0.22, 0.13, "Neo4j AuraDB\nDiabetes KG", face="F2ECF8", edge="71558F", fontsize=11)
+    draw_box(ax, 0.72, 0.72, 0.22, 0.13, "Pipeline tiểu đường\nRF Classifier", face="FFF4E7", edge=ORANGE, fontsize=11)
+    draw_box(ax, 0.72, 0.50, 0.22, 0.13, "Pipeline giá nhà\nRF Regressor", face="FFF4E7", edge=ORANGE, fontsize=11)
+    draw_box(ax, 0.72, 0.27, 0.22, 0.13, "Neo4j AuraDB\nKnowledge Graph", face="F2ECF8", edge="71558F", fontsize=11)
     arrow(ax, (0.62, 0.66), (0.72, 0.785))
     arrow(ax, (0.62, 0.63), (0.72, 0.565))
     arrow(ax, (0.62, 0.59), (0.72, 0.335))
 
-    draw_box(ax, 0.40, 0.18, 0.22, 0.12, "Prediction Responses\nJSON over HTTPS", face="F7F7F4", edge="758187", fontsize=11)
+    draw_box(ax, 0.40, 0.18, 0.22, 0.12, "Phản hồi dự đoán\nJSON qua HTTPS", face="F7F7F4", edge="758187", fontsize=11)
     arrow(ax, (0.83, 0.72), (0.62, 0.30), connectionstyle="arc3,rad=-0.22")
     arrow(ax, (0.83, 0.50), (0.62, 0.27), connectionstyle="arc3,rad=-0.12")
     arrow(ax, (0.40, 0.24), (0.29, 0.72), connectionstyle="arc3,rad=0.20")
     arrow(ax, (0.40, 0.22), (0.29, 0.45), connectionstyle="arc3,rad=0.10")
-    ax.text(0.51, 0.08, "Saved fitted scikit-learn Pipelines perform all learned preprocessing and inference.", ha="center", fontsize=10, color=f"#{INK}")
+    ax.text(0.51, 0.08, "Pipeline scikit-learn đã fit thực hiện toàn bộ tiền xử lý và suy luận đã học.", ha="center", fontsize=10, color=f"#{INK}")
     fig.tight_layout()
     fig.savefig(path, dpi=180, bbox_inches="tight", facecolor="white")
     plt.close(fig)
@@ -106,14 +106,14 @@ def generate_ml_pipeline() -> Path:
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
-    ax.text(0.27, 0.96, "TRAINING", ha="center", va="top", fontsize=17, weight="bold", color=f"#{TEAL}")
-    ax.text(0.75, 0.96, "INFERENCE", ha="center", va="top", fontsize=17, weight="bold", color=f"#{BLUE}")
+    ax.text(0.27, 0.96, "HUẤN LUYỆN", ha="center", va="top", fontsize=17, weight="bold", color=f"#{TEAL}")
+    ax.text(0.75, 0.96, "SUY LUẬN", ha="center", va="top", fontsize=17, weight="bold", color=f"#{BLUE}")
 
     training = [
-        "Dataset", "Raw Feature\nRepresentation", "Train/Test Split",
-        "Preprocessing\ninside Pipeline", "Multiple Traditional\nML Models",
-        "Controlled\nExperiments", "Final Selection",
-        "Saved sklearn\nPipeline",
+        "Dữ liệu", "Biểu diễn\nthuộc tính thô", "Chia Train/Test",
+        "Tiền xử lý\ntrong Pipeline", "Nhiều mô hình\nML truyền thống",
+        "Thí nghiệm\ncó kiểm soát", "Lựa chọn cuối",
+        "Lưu sklearn\nPipeline",
     ]
     ys = [0.84, 0.74, 0.64, 0.54, 0.44, 0.34, 0.24, 0.12]
     for index, (label, y) in enumerate(zip(training, ys)):
@@ -121,7 +121,7 @@ def generate_ml_pipeline() -> Path:
         if index:
             arrow(ax, (0.27, ys[index - 1]), (0.27, y + 0.075), color=TEAL)
 
-    inference = ["Raw User Input", "Same Saved Pipeline", "Prediction", "Web / Mobile"]
+    inference = ["Đầu vào thô", "Cùng Pipeline đã lưu", "Dự đoán", "Web / Mobile"]
     iys = [0.72, 0.54, 0.36, 0.18]
     for index, (label, y) in enumerate(zip(inference, iys)):
         draw_box(ax, 0.61, y, 0.28, 0.095, label, face="EEF4F8", edge=BLUE, fontsize=11)
@@ -129,8 +129,8 @@ def generate_ml_pipeline() -> Path:
             arrow(ax, (0.75, iys[index - 1]), (0.75, y + 0.095), color=BLUE)
 
     arrow(ax, (0.42, 0.157), (0.61, 0.587), color=ORANGE, connectionstyle="arc3,rad=-0.18")
-    ax.text(0.51, 0.42, "load once", ha="center", va="center", fontsize=10, weight="bold", color=f"#{ORANGE}", rotation=28)
-    ax.text(0.51, 0.045, "The same learned imputation, scaling, encoding, and estimator are preserved across training and inference.", ha="center", fontsize=10, color=f"#{INK}")
+    ax.text(0.51, 0.42, "nạp một lần", ha="center", va="center", fontsize=10, weight="bold", color=f"#{ORANGE}", rotation=28)
+    ax.text(0.51, 0.045, "Giữ nguyên điền thiếu, scale, mã hóa và bộ ước lượng giữa huấn luyện và suy luận.", ha="center", fontsize=10, color=f"#{INK}")
     fig.tight_layout()
     fig.savefig(path, dpi=180, bbox_inches="tight", facecolor="white")
     plt.close(fig)
@@ -288,7 +288,7 @@ def add_header_footer(section, *, first_page=False) -> None:
     header = section.header
     paragraph = header.paragraphs[0]
     paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = paragraph.add_run("Intelligent System Development – Assignment 01")
+    run = paragraph.add_run("Phát triển Hệ thống Thông minh – Bài tập 01")
     run.font.name = "Times New Roman"
     run.font.size = Pt(9)
     run.font.color.rgb = RGBColor.from_string("66747A")
@@ -296,7 +296,7 @@ def add_header_footer(section, *, first_page=False) -> None:
     footer = section.footer
     paragraph = footer.paragraphs[0]
     paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = paragraph.add_run("Page ")
+    run = paragraph.add_run("Trang ")
     run.font.name = "Times New Roman"
     run.font.size = Pt(9)
     add_field(paragraph, "PAGE", "1")
@@ -307,7 +307,7 @@ def add_title_page(document: Document) -> None:
         document.add_paragraph()
     p = document.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r = p.add_run("INTELLIGENT SYSTEM DEVELOPMENT")
+    r = p.add_run("PHÁT TRIỂN HỆ THỐNG THÔNG MINH")
     r.bold = True
     r.font.name = "Times New Roman"
     r.font.size = Pt(22)
@@ -316,7 +316,7 @@ def add_title_page(document: Document) -> None:
 
     p = document.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r = p.add_run("ASSIGNMENT 01")
+    r = p.add_run("BÀI TẬP 01")
     r.bold = True
     r.font.name = "Times New Roman"
     r.font.size = Pt(20)
@@ -324,7 +324,7 @@ def add_title_page(document: Document) -> None:
     p = document.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.space_before = Pt(12)
-    r = p.add_run("From Data Representation to Intelligent Applications")
+    r = p.add_run("Từ biểu diễn dữ liệu đến ứng dụng thông minh")
     r.italic = True
     r.font.name = "Times New Roman"
     r.font.size = Pt(15)
@@ -333,7 +333,7 @@ def add_title_page(document: Document) -> None:
         document.add_paragraph()
     p = document.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    add_inline(p, "Systems:\n1. Diabetes Classification System\n2. Vietnam House Price Prediction System")
+    add_inline(p, "Các hệ thống:\n1. Hệ thống phân loại tiểu đường\n2. Hệ thống dự đoán giá nhà Việt Nam")
     for run in p.runs:
         run.font.name = "Times New Roman"
         run.font.size = Pt(13)
@@ -342,10 +342,10 @@ def add_title_page(document: Document) -> None:
     for _ in range(3):
         document.add_paragraph()
     for text in [
-        "Student: Nguyễn Thành Trung",
-        "Student ID: B23DCCN861",
-        "Class: D23CTPM01-B",
-        "Lecturer: _________________________________",
+        "Sinh viên: Nguyễn Thành Trung",
+        "Mã sinh viên: B23DCCN861",
+        "Lớp: D23CTPM01-B",
+        "Giảng viên: _________________________________",
     ]:
         p = document.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -356,7 +356,7 @@ def add_title_page(document: Document) -> None:
     p = document.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.space_before = Pt(18)
-    r = p.add_run("August 2026")
+    r = p.add_run("Tháng 8 năm 2026")
     r.font.name = "Times New Roman"
     r.font.size = Pt(12)
 
@@ -365,15 +365,15 @@ def add_toc(document: Document) -> None:
     p = document.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.space_after = Pt(18)
-    r = p.add_run("TABLE OF CONTENTS")
+    r = p.add_run("MỤC LỤC")
     r.bold = True
     r.font.name = "Times New Roman"
     r.font.size = Pt(17)
     r.font.color.rgb = RGBColor.from_string(TEAL)
     toc_p = document.add_paragraph()
     toc_p.paragraph_format.first_line_indent = Cm(0)
-    add_field(toc_p, 'TOC \\o "1-3" \\h \\z \\u', "[Right-click and update the Table of Contents in Microsoft Word]")
-    note = document.add_paragraph("If page numbers are not visible, right-click the field above and select Update Field → Update entire table.")
+    add_field(toc_p, 'TOC \\o "1-3" \\h \\z \\u', "[Nhấp chuột phải và cập nhật toàn bộ Mục lục trong Microsoft Word]")
+    note = document.add_paragraph("Nếu chưa có số trang, nhấp chuột phải vào trường trên và chọn Update Field → Update entire table.")
     note.alignment = WD_ALIGN_PARAGRAPH.CENTER
     note.paragraph_format.first_line_indent = Cm(0)
     for run in note.runs:
@@ -435,10 +435,10 @@ def parse_markdown(document: Document, markdown: str) -> tuple[int, int]:
     code_lines: list[str] = []
     paragraph_lines: list[str] = []
     major_breaks = {
-        "4. Dataset", "8. Traditional Machine Learning Models", "10. Experimental Results",
-        "12. Intelligent Application Architecture", "16. Diabetes Knowledge Graph",
-        "18. System Demonstration", "19. Limitations", "22. Reproducibility",
-        "23. References", "Appendix A – API Endpoints",
+        "4. Dữ liệu", "8. Các mô hình học máy truyền thống", "10. Kết quả thí nghiệm",
+        "12. Kiến trúc ứng dụng thông minh", "16. Knowledge Graph tiểu đường",
+        "18. Minh họa hệ thống", "19. Hạn chế", "22. Khả năng tái lập",
+        "23. Tài liệu tham khảo", "Phụ lục A – Các endpoint API",
     }
 
     def flush_paragraph():
@@ -447,7 +447,7 @@ def parse_markdown(document: Document, markdown: str) -> tuple[int, int]:
             return
         text = " ".join(line.strip() for line in paragraph_lines).strip()
         if text:
-            style = "Caption" if re.match(r"^\*\*(Table|Figure) \d+\.", text) else None
+            style = "Caption" if re.match(r"^\*\*(Bảng|Hình) \d+\.", text) else None
             paragraph = document.add_paragraph(style=style)
             if style:
                 paragraph.paragraph_format.keep_with_next = True
@@ -547,10 +547,10 @@ def build() -> tuple[int, int]:
     section = document.sections[0]
     configure_section(section)
     add_header_footer(section, first_page=True)
-    document.core_properties.title = "Intelligent System Development – Assignment 01 Technical Report"
-    document.core_properties.subject = "Diabetes classification and Vietnam house price regression intelligent systems"
-    document.core_properties.author = "Student: ______________________________"
-    document.core_properties.keywords = "intelligent systems, machine learning, FastAPI, React, Expo, Neo4j"
+    document.core_properties.title = "Báo cáo kỹ thuật Phát triển Hệ thống Thông minh – Bài tập 01"
+    document.core_properties.subject = "Hệ thống phân loại tiểu đường và hồi quy giá nhà Việt Nam"
+    document.core_properties.author = "Nguyễn Thành Trung"
+    document.core_properties.keywords = "hệ thống thông minh, học máy, FastAPI, React, Expo, Neo4j"
 
     add_title_page(document)
     document.add_page_break()
@@ -577,8 +577,8 @@ def validate(tables: int, figures: int) -> None:
     headings = [p for p in document.paragraphs if p.style.name.startswith("Heading")]
     heading_text = {p.text.strip() for p in headings}
     required = {
-        "1. Introduction", "10. Experimental Results", "17. Deployment Architecture",
-        "23. References", "Appendix C – Demo Input Cases",
+        "1. Giới thiệu", "10. Kết quả thí nghiệm", "17. Kiến trúc triển khai",
+        "23. Tài liệu tham khảo", "Phụ lục C – Các ca đầu vào demo",
     }
     missing = required - heading_text
     if missing:
@@ -599,20 +599,19 @@ def validate(tables: int, figures: int) -> None:
         raise RuntimeError("Page-number field was not created")
     if len(document.paragraphs) < 150 or not document.tables or not headings or not image_relationships:
         raise RuntimeError("DOCX structural validation failed")
-    if "R² = 0.4738 does not mean 47.38% accuracy" not in body_text:
+    if "R² = 0.4738 không có nghĩa Accuracy bằng 47.38%" not in body_text:
         raise RuntimeError("Regression accuracy warning is missing")
     critical_facts = [
-        "Student: Nguyễn Thành Trung", "Student ID: B23DCCN861", "Class: D23CTPM01-B",
-        "Lecturer: _________________________________",
-        "768 observations", "500 class-0 and 268 class-1", "29.56%", "48.70%",
+        "Sinh viên: Nguyễn Thành Trung", "Mã sinh viên: B23DCCN861", "Lớp: D23CTPM01-B",
+        "Giảng viên: _________________________________",
+        "768 quan sát", "500 quan sát", "268", "29.56%", "48.70%",
         "0.7013", "0.7338", "0.6818", "0.7597", "0.6408",
         "0.6462", "0.6243", "0.6061", "[[85, 15], [24, 30]]",
-        "30,229 rows", "1.8438", "4.8760", "2.2082", "44.43%",
+        "30,229 dòng", "1.8438", "4.8760", "2.2082", "44.43%",
         "1.4782", "1.3627", "1.3976", "1.3009", "1.2868",
         "1.6565", "1.6526", "1.6078", "1.2529", "2.5659", "1.6018",
-        "0.4738", "27.36%", "17 nodes and 17 relationships",
-        "Responsive breakpoints adapt navigation", "Its five screens are Home, Diabetes, House Price, Knowledge Graph, and About",
-        "touch-oriented node explorer",
+        "0.4738", "27.36%", "17 node", "17 relationship",
+        "hamburger", "năm màn hình", "hướng cảm ứng",
     ]
     missing_facts = [fact for fact in critical_facts if fact not in full_text]
     if missing_facts:
