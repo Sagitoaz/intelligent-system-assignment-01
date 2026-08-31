@@ -5,6 +5,7 @@ import { DiabetesPage } from './pages/DiabetesPage'
 import { HomePage } from './pages/HomePage'
 import { HousePricePage } from './pages/HousePricePage'
 import { KnowledgeGraphPage } from './pages/KnowledgeGraphPage'
+import { EcommercePage } from './pages/EcommercePage'
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/diabetes" element={<DiabetesPage />} />
         <Route path="/house-price" element={<HousePricePage />} />
+        <Route path="/ecommerce" element={<EcommercePage />} />
         <Route path="/diabetes/knowledge-graph" element={<KnowledgeGraphPage />} />
         <Route path="/about" element={<AboutPage />} />
       </Routes>

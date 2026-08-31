@@ -7,6 +7,7 @@ native editable Word content.
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 import zipfile
@@ -30,6 +31,10 @@ PROJECT_ROOT = REPORT_DIR.parent.parent
 MARKDOWN_PATH = REPORT_DIR / "TECHNICAL_REPORT.md"
 DOCX_PATH = REPORT_DIR / "TECHNICAL_REPORT.docx"
 ASSET_DIR = REPORT_DIR / "assets"
+NOTEBOOK_PATHS = (
+    PROJECT_ROOT / "notebooks" / "diabetes" / "01_diabetes_system.ipynb",
+    PROJECT_ROOT / "notebooks" / "house_price" / "02_house_price_system.ipynb",
+)
 
 INK = "20313A"
 TEAL = "176B6A"
@@ -539,6 +544,68 @@ def parse_markdown(document: Document, markdown: str) -> tuple[int, int]:
     return tables, figures
 
 
+def add_notebook_appendices(document: Document) -> tuple[int, int, int]:
+    """Đưa toàn bộ Markdown và code của hai notebook vào cuối báo cáo.
+
+    Output đã chạy không được chèn vì yêu cầu chỉ gồm code và phần giải thích;
+    các kết quả/biểu đồ quan trọng đã có trong thân báo cáo kỹ thuật.
+    """
+    document.add_page_break()
+    document.add_heading("Phụ lục D – Toàn bộ code và giải thích trong hai notebook", level=1)
+    intro = document.add_paragraph(
+        "Phụ lục này sao chép các cell Markdown (giải thích) và cell code theo đúng "
+        "thứ tự trong hai notebook đã Việt hóa. Tên biến, tên cột và API thư viện "
+        "được giữ nguyên để mã nguồn vẫn thực thi được. Output của cell không được "
+        "lặp lại nhằm tránh làm báo cáo quá nặng và trùng với phần kết quả chính."
+    )
+    intro.paragraph_format.first_line_indent = Cm(0.7)
+
+    markdown_cells = 0
+    code_cells = 0
+    notebook_tables = 0
+    notebook_figures = 0
+    titles = (
+        "Notebook 1 – Hệ thống phân loại tiểu đường",
+        "Notebook 2 – Hệ thống dự đoán giá nhà Việt Nam",
+    )
+
+    for notebook_index, (path, title) in enumerate(zip(NOTEBOOK_PATHS, titles)):
+        if notebook_index:
+            document.add_page_break()
+        document.add_heading(title, level=2)
+        notebook = json.loads(path.read_text(encoding="utf-8"))
+        for cell_index, cell in enumerate(notebook["cells"], start=1):
+            source = "".join(cell.get("source", [])).strip()
+            if not source:
+                continue
+            if cell["cell_type"] == "markdown":
+                markdown_cells += 1
+                label = document.add_paragraph()
+                label.paragraph_format.keep_with_next = True
+                label.paragraph_format.first_line_indent = Cm(0)
+                run = label.add_run(f"Cell {cell_index} – Giải thích")
+                run.bold = True
+                run.font.color.rgb = RGBColor.from_string(TEAL)
+                tables, figures = parse_markdown(
+                    document,
+                    f"<!-- REPORT BODY -->\n{source}\n",
+                )
+                notebook_tables += tables
+                notebook_figures += figures
+            elif cell["cell_type"] == "code":
+                code_cells += 1
+                label = document.add_paragraph()
+                label.paragraph_format.keep_with_next = True
+                label.paragraph_format.first_line_indent = Cm(0)
+                run = label.add_run(f"Cell {cell_index} – Mã nguồn")
+                run.bold = True
+                run.font.color.rgb = RGBColor.from_string(BLUE)
+                code = document.add_paragraph(source, style="Code Block")
+                code.paragraph_format.keep_together = False
+
+    return markdown_cells, code_cells, notebook_tables + notebook_figures
+
+
 def build() -> tuple[int, int]:
     generate_system_architecture()
     generate_ml_pipeline()
@@ -558,6 +625,7 @@ def build() -> tuple[int, int]:
     document.add_page_break()
     markdown = MARKDOWN_PATH.read_text(encoding="utf-8")
     tables, figures = parse_markdown(document, markdown)
+    markdown_cells, code_cells, _ = add_notebook_appendices(document)
 
     settings = document.settings._element
     update_fields = settings.find(qn("w:updateFields"))
@@ -567,6 +635,11 @@ def build() -> tuple[int, int]:
     update_fields.set(qn("w:val"), "true")
 
     document.save(DOCX_PATH)
+    if markdown_cells != 98 or code_cells < 140:
+        raise RuntimeError(
+            f"Notebook appendix is incomplete: {markdown_cells} Markdown cells, "
+            f"{code_cells} code cells"
+        )
     return tables, figures
 
 
@@ -579,6 +652,7 @@ def validate(tables: int, figures: int) -> None:
     required = {
         "1. Giới thiệu", "10. Kết quả thí nghiệm", "17. Kiến trúc triển khai",
         "23. Tài liệu tham khảo", "Phụ lục C – Các ca đầu vào demo",
+        "Phụ lục D – Toàn bộ code và giải thích trong hai notebook",
     }
     missing = required - heading_text
     if missing:

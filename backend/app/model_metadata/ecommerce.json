@@ -1,0 +1,32 @@
+{
+  "id": "ecommerce",
+  "name": "E-commerce Customer Preference",
+  "task": "binary classification",
+  "dataset": "Kaggle Amazon Fine Food Reviews (Reviews.csv; 568454 raw rows)",
+  "expected_raw_features": ["Summary", "Text", "HelpfulnessNumerator", "HelpfulnessDenominator"],
+  "raw_features": ["Summary", "Text", "HelpfulnessNumerator", "HelpfulnessDenominator"],
+  "raw_feature_count": 4,
+  "text_features": ["Summary", "Text"],
+  "numerical_features": ["HelpfulnessNumerator", "HelpfulnessDenominator"],
+  "derived_features": ["helpfulness_ratio", "review_length", "summary_length"],
+  "fields": [
+    {"name": "Summary", "label": "Review summary", "type": "text", "multiline": false, "unit": null, "description": "Optional short review title", "required": true, "nullable": false, "example": "Excellent product"},
+    {"name": "Text", "label": "Review text", "type": "text", "multiline": true, "unit": null, "description": "Nonblank review body (maximum 20000 characters)", "required": true, "nullable": false, "example": "Fresh, tasty and exactly as described. I would buy it again."},
+    {"name": "HelpfulnessNumerator", "label": "Helpful votes", "type": "number", "integer": true, "unit": "votes", "description": "Votes marking this review helpful", "required": true, "nullable": false, "minimum": 0, "example": 1},
+    {"name": "HelpfulnessDenominator", "label": "Total votes", "type": "number", "integer": true, "unit": "votes", "description": "Total helpfulness votes; must be at least helpful votes", "required": true, "nullable": false, "minimum": 0, "example": 1}
+  ],
+  "target": {"name": "Positive Preference", "definition": "Score 4-5 = Positive; Score 1-2 = Negative; Score 3 excluded"},
+  "class_labels": {"0": "Negative", "1": "Positive"},
+  "representation": "Combined Summary + Text TF-IDF (unigrams/bigrams) plus five engineered numerical features",
+  "vocabulary_size": 12000,
+  "final_transformed_dimension": 12005,
+  "model": {
+    "name": "Logistic Regression",
+    "configuration": {"C": 2.0, "solver": "liblinear", "max_iter": 300, "random_state": 42},
+    "preprocessing": ["Summary + review text cleaning", "TF-IDF (12000 vocabulary)", "Five engineered tabular features", "Max-absolute scaling", "Logistic Regression"]
+  },
+  "evaluation_metrics": {"accuracy": 0.9566, "precision": 0.9639, "recall": 0.9855, "f1": 0.9746, "roc_auc": 0.9842},
+  "metrics": {"accuracy": 0.9566, "precision": 0.9639, "recall": 0.9855, "f1": 0.9746, "roc_auc": 0.9842},
+  "limitations": ["Preference is a rating-derived proxy, not independently observed intent", "Class imbalance favors positive reviews", "Product/user identifiers are excluded and near-duplicate language may remain"],
+  "disclaimer": "This is an educational prediction of review preference, not a measurement of actual customer intention."
+}

@@ -17,9 +17,12 @@ __pycache__/
 
 # JavaScript / Expo dependencies and generated output
 node_modules/
+dist/
+build/
 web/dist/
 mobile/dist/
 .expo/
+*.local
 *.tsbuildinfo
 web/vite.config.js
 web/vite.config.d.ts
@@ -34,6 +37,9 @@ logs/
 # Legacy ad-hoc artifacts; required nested model files are committed
 models/*.pkl
 models/*.joblib
+
+# Large local-only Kaggle source dataset (download separately for notebooks)
+data/ecommerce/Reviews.csv
 
 .DS_Store
 Thumbs.db

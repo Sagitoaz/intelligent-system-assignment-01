@@ -13,7 +13,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <div className="topbar-row">
           <NavLink className="brand" to="/">
             <span className="brand-mark">IS</span>
-            <span><strong>Intelligent Systems</strong><small>Assignment 01</small></span>
+            <span><strong>Intelligent Systems</strong><small>Assignment 02</small></span>
           </NavLink>
           <button
             className="menu-button"
@@ -30,13 +30,14 @@ export function Layout({ children }: { children: ReactNode }) {
           <NavLink to="/">Home</NavLink>
           <NavLink to="/diabetes">Diabetes</NavLink>
           <NavLink to="/house-price">House price</NavLink>
+          <NavLink to="/ecommerce">E-commerce</NavLink>
           <NavLink to="/diabetes/knowledge-graph">Knowledge graph</NavLink>
           <NavLink to="/about">About</NavLink>
         </nav>
       </header>
       <main>{children}</main>
       <footer>
-        <span>Intelligent System Development · Assignment 01</span>
+        <span>Intelligent System Development · Assignment 02</span>
         <span>Local educational demonstration</span>
       </footer>
     </div>

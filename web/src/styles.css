@@ -111,3 +111,6 @@ footer { min-height:80px; border-top:1px solid var(--line); padding:0 clamp(24px
   .page-heading h1,.hero h1 { font-size:36px; }
   .form-heading { flex-direction:column; }
 }
+
+.form-grid textarea { display:block; width:100%; min-width:0; min-height:148px; resize:vertical; border:1px solid #cbd5ce; border-radius:9px; background:#fbfcf9; padding:12px 13px; color:var(--ink); font:inherit; }
+.form-grid textarea:focus { outline:2px solid #88bdb3; border-color:transparent; }

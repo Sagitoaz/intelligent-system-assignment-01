@@ -6,15 +6,15 @@ import { AboutScreen } from './src/screens/AboutScreen'
 import { DiabetesScreen } from './src/screens/DiabetesScreen'
 import { HomeScreen } from './src/screens/HomeScreen'
 import { HousePriceScreen } from './src/screens/HousePriceScreen'
-import { KnowledgeGraphScreen } from './src/screens/KnowledgeGraphScreen'
+import { EcommerceScreen } from './src/screens/EcommerceScreen'
 import { colors } from './src/theme'
 
-type Screen = 'home' | 'diabetes' | 'house' | 'graph' | 'about'
+type Screen = 'home' | 'diabetes' | 'house' | 'ecommerce' | 'about'
 const tabs: { key: Screen; label: string; mark: string }[] = [
   { key: 'home', label: 'Home', mark: 'H' },
   { key: 'diabetes', label: 'Diabetes', mark: 'D' },
   { key: 'house', label: 'House price', mark: 'P' },
-  { key: 'graph', label: 'Graph', mark: 'KG' },
+  { key: 'ecommerce', label: 'E-commerce', mark: 'E' },
   { key: 'about', label: 'About', mark: 'i' },
 ]
 
@@ -31,10 +31,10 @@ function AppLayout() {
     <StatusBar style="dark" backgroundColor={colors.surface} />
     <View style={[styles.header, { paddingTop: insets.top }]}>
       <View style={styles.mark}><Text style={styles.markText}>IS</Text></View>
-      <View><Text style={styles.brand}>Intelligent Systems</Text><Text style={styles.assignment}>Assignment 01</Text></View>
+      <View><Text style={styles.brand}>Intelligent Systems</Text><Text style={styles.assignment}>Assignment 02</Text></View>
     </View>
     <View style={styles.content}>
-      {screen === 'home' ? <HomeScreen navigate={setScreen} /> : screen === 'diabetes' ? <DiabetesScreen /> : screen === 'house' ? <HousePriceScreen /> : screen === 'graph' ? <KnowledgeGraphScreen /> : <AboutScreen />}
+      {screen === 'home' ? <HomeScreen navigate={setScreen} /> : screen === 'diabetes' ? <DiabetesScreen /> : screen === 'house' ? <HousePriceScreen /> : screen === 'ecommerce' ? <EcommerceScreen /> : <AboutScreen />}
     </View>
     <View style={[styles.nav, { height: 56 + bottomInset, paddingBottom: bottomInset }]}>
       {tabs.map((tab) => {

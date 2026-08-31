@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Intelligent Systems A01",
-    "slug": "intelligent-systems-assignment-01",
-    "version": "1.0.0",
+    "name": "Intelligent Systems A02",
+    "slug": "intelligent-systems-assignment-02",
+    "version": "2.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "assetBundlePatterns": ["**/*"],

@@ -1,174 +1,132 @@
-# Intelligent System Development Assignment 01
+# Intelligent System Development Assignment 02
 
-Local end-to-end application for two fitted machine-learning systems. The application does **not** train models: FastAPI loads the trusted local scikit-learn Pipelines in `models/` once at startup, validates their raw feature contracts, and uses them for every prediction from the web and mobile clients.
+From Data Representation to a Deployable Intelligent System. This repository contains three reproducible machine-learning applications and one local FastAPI service used by responsive React and Expo clients. No cloud deployment or remote push is performed by this work.
 
-This repository is built for local demonstration only. Nothing in this project is deployed.
+## Three applications
 
-## Systems
+1. **Diabetes Prediction** — binary classification from six raw patient attributes; persisted Random Forest Pipeline.
+2. **Vietnam House Price Prediction** — regression from 11 mixed property attributes; persisted Random Forest Pipeline.
+3. **E-commerce Customer Preference** — rating-derived binary preference classification from review text and helpfulness values; persisted TF-IDF + Logistic Regression Pipeline.
 
-### Diabetes Classification
+## Dataset sources
 
-- Dataset: Kaggle diabetes dataset used in the notebook, 768 observations.
-- Final model: Random Forest Classifier (`n_estimators=100`, `max_depth=6`, `random_state=42`).
-- Exact raw features: `Pregnancies`, `Glucose`, `BloodPressure`, `BMI`, `DiabetesPedigreeFunction`, `Age`.
-- Fitted preprocessing: median imputation and standard scaling inside the saved Pipeline.
-- Held-out metrics: Accuracy 0.7468, Precision 0.6667, Recall 0.5556, F1 0.6061.
-- Limitation: an educational classification demonstration, not a medical diagnosis or clinical decision system.
+- Diabetes: [Kaggle Pima Indians Diabetes Database](https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database), local `data/diabetes/diabetes.csv` (768 rows). The original A1 notebook recorded Kaggle but did not preserve its dataset-card URL; this widely used card matches the local schema.
+- House price: [Kaggle Vietnam Housing Dataset 2024](https://www.kaggle.com/datasets/nguyentiennhan/vietnam-housing-dataset-2024), local `data/house_price/vietnam_housing_dataset.csv` (30,229 rows).
+- E-commerce: [Kaggle Amazon Product Reviews](https://www.kaggle.com/datasets/arhamrumi/amazon-product-reviews), actual local file `data/ecommerce/Reviews.csv` (568,454 rows, 10 columns).
 
-### Vietnam House Price Regression
+The 300+ MB Ecommerce CSV is intentionally excluded from Git. To reproduce the notebook, download `Reviews.csv` from the Kaggle link above and place it at exactly `data/ecommerce/Reviews.csv`. The deployed backend does not need this training CSV because it loads the persisted fitted Pipeline.
 
-- Dataset: 30,229 Vietnam housing listings in the cleaned notebook representation; the source data is the 2024 collection documented by the notebook.
-- Final model: Random Forest Regressor (`n_estimators=100`, `max_depth=12`, `random_state=42`).
-- Exact **11 raw features**: `Province`, `Area`, `Frontage`, `Access Road`, `House direction`, `Balcony direction`, `Floors`, `Bedrooms`, `Bathrooms`, `Legal status`, `Furniture state`.
-- Fitted preprocessing: numerical median imputation/scaling and categorical most-frequent imputation/one-hot encoding with unknown categories ignored.
-- Target: original `Price` in billion VND.
-- Held-out metrics: MAE 1.2529 billion VND, RMSE 1.6018 billion VND, R² 0.4738, MAPE 27.36%.
-- Limitation: listed prices are not necessarily transactions; the model is an educational estimate, not a professional valuation.
+## Representation and results
 
-## Architecture
+| Application | Raw representation | Final numerical representation | Saved model | Held-out result |
+|---|---|---|---|---|
+| Diabetes | 6 CSV values | median-imputed, scaled `B × 6` | Random Forest Classifier | Accuracy 0.7468; F1 0.6061 |
+| House | 11 mixed values | imputed/scaled/one-hot `B × 83` | Random Forest Regressor | MAE 1.2529; RMSE 1.6018; R² 0.4738 |
+| E-commerce | Summary, Text, 2 helpfulness counts | TF-IDF `V=12,000` + 5 engineered values = `B × 12,005` | Logistic Regression | Accuracy 0.9566; F1 0.9746; ROC-AUC 0.9842 |
 
-```text
-ML Notebooks
-      ↓
-Saved fitted sklearn Pipelines
-      ↓
-FastAPI ─────────────→ Neo4j Diabetes Knowledge Graph
-      ↓
-Web / Expo Mobile
-      ↓
-User-facing educational prediction
-```
+E-commerce uses Score only to derive `Score 4–5 → Positive`, `Score 1–2 → Negative`; neutral Score 3 is removed. Score, target, Id, ProductId, UserId and ProfileName are excluded from model input. Of 568,454 source rows, 524,983 are usable after neutral, invalid-helpfulness and duplicate-review removal. A reproducible stratified 120,000-row subset is split 70/15/15.
 
-The training Pipeline equals the inference Pipeline. API code creates a one-row DataFrame with the exact saved raw column names/order, then calls `predict` (and `predict_proba` for Diabetes). It never refits, scales, imputes, or encodes separately. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
-
-## Project Structure
+## Repository structure
 
 ```text
-backend/             FastAPI app, metadata, services, schemas and pytest tests
-web/                 React + Vite + TypeScript responsive web app
-mobile/              Expo React Native + TypeScript mobile app
-knowledge_graph/     Idempotent Neo4j Cypher and graph documentation
-docs/                API contract and architecture documentation
-models/              Trusted fitted joblib Pipelines
-notebooks/           Final ML notebooks (unchanged by application inference)
-data/                Local assignment datasets
-figures/             Notebook output figures
-docker-compose.yml   Neo4j, backend, seed helper and web services
+data/                    Three local datasets
+notebooks/               Three final notebooks plus experiments/
+models/                  Three fitted joblib Pipelines and Ecommerce evidence
+figures/                 Evaluation/representation figures by application
+shared_ml/               Importable Ecommerce custom transformers
+scripts/                 Reproducible training/notebook/audit utilities
+backend/                 FastAPI, schemas, metadata, services and pytest
+web/                     React/Vite/TypeScript responsive application
+mobile/                  Expo React Native/TypeScript demonstration
+knowledge_graph/         Optional Diabetes Neo4j bonus
+docs/                    API, architecture, comparison and archived A1 report
 ```
 
-## Prerequisites
+See [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) for the exact final tree and [docs/ASSIGNMENT_02_COMPARISON.md](docs/ASSIGNMENT_02_COMPARISON.md) for the cross-application discussion.
 
-- Python 3.12 (the saved models were produced with Python 3.12 and scikit-learn 1.9.0)
-- Node.js 20+ and npm
-- Docker Desktop with Docker Compose for the Neo4j integration
-- The two required model files under `models/diabetes/` and `models/house_price/`
+## Setup and notebook execution
 
-## Run Backend
-
-PowerShell from the repository root:
+Python 3.12 and Node.js 20+ are recommended. The saved artifacts use scikit-learn 1.9.0.
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install -r backend\requirements.txt
-$env:PYTHONPATH = "backend"
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+python -m pip install -r requirements.txt
+python -m jupyter nbconvert --to notebook --execute notebooks/ecommerce/03_ecommerce_interest_system.ipynb --inplace --ExecutePreprocessor.timeout=600
 ```
 
-Startup fails clearly when a model/metadata file is missing or its feature contract disagrees with `feature_names_in_`. Neo4j connectivity failure is non-fatal; `/health` reports it while both prediction APIs remain operational.
+The Ecommerce experiment can be reproduced with `python -m scripts.train_ecommerce`. It keeps TF-IDF sparse, uses `random_state=42`, records A/B/C representation results and six-model validation timings, persists the full Pipeline, and verifies fresh-load predictions. Diabetes and House preserve their valid 80/20 plus training-only CV methodology.
 
-Swagger UI: <http://localhost:8000/docs>
+## Backend and API
 
-Linux/cloud start command from the repository root (the platform supplies `PORT`):
+```powershell
+python -m pip install -r backend\requirements.txt
+$env:PYTHONPATH = "backend;."
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+Render-compatible native build/start configuration from the repository root:
 
 ```sh
-PYTHONPATH=backend uvicorn app.main:app --host 0.0.0.0 --port "$PORT"
+pip install -r backend/requirements.txt
+PYTHONPATH=backend:. uvicorn app.main:app --host 0.0.0.0 --port "$PORT"
 ```
 
-Install backend runtime dependencies from `backend/requirements.txt`. Configure
-`NEO4J_URI`, `NEO4J_USER`, and `NEO4J_PASSWORD` in the hosting environment; no
-cloud credentials belong in the repository.
+Alternatively, `backend/Dockerfile` copies `backend/`, all three `models/`, and `shared_ml/` into the Linux image. Configure production `CORS_ORIGINS`, model/Neo4j settings, and secrets in the hosting platform rather than committing an `.env` file.
 
-## Run Neo4j and Seed the Graph
-
-Copy `.env.example` to `.env`, change the example local password, then use the same value for local backend configuration.
-
-```powershell
-docker compose up -d neo4j
-docker compose --profile tools run --rm neo4j-seed
-```
-
-Neo4j Browser is at <http://localhost:7474>, Bolt is at `bolt://localhost:7687`. The seed is idempotent because it uses `MERGE`.
-
-To run backend + Neo4j + web entirely with Docker:
-
-```powershell
-docker compose up --build neo4j backend web
-```
-
-The Docker web UI is then at <http://localhost:8080>.
-
-## Run Web
-
-```powershell
-Copy-Item web\.env.example web\.env
-Set-Location web
-npm install
-npm run dev
-```
-
-Open <http://localhost:5173>. Production-style local validation uses `npm run lint` and `npm run build`. `VITE_API_BASE_URL` controls the backend URL.
-
-## Run Mobile
-
-```powershell
-Copy-Item mobile\.env.example mobile\.env
-Set-Location mobile
-npm install
-npx expo start
-```
-
-Configure `EXPO_PUBLIC_API_BASE_URL` for the runtime target:
-
-- Browser and usually iOS simulator: `http://localhost:8000`
-- Android emulator: commonly `http://10.0.2.2:8000`
-- Physical phone: the computer's LAN IP such as `http://192.168.x.x:8000`
-
-The phone and computer must be reachable on the same network, and the backend must listen on `0.0.0.0`. The repository does not guess or commit a LAN IP.
-
-## Run Tests
-
-```powershell
-$env:PYTHONPATH = "backend"
-.\.venv\Scripts\python.exe -m pytest
-
-Set-Location web
-npm run lint
-npm run build
-
-Set-Location ..\mobile
-npm run typecheck
-```
-
-Tests compare notebook demo requests through the API against direct predictions from the saved joblib models, verify exact feature contracts, invalid payload handling, and assert that prediction never calls `fit`.
-
-## API Docs
-
-The complete shared contract and exact examples are in [docs/API.md](docs/API.md). Main endpoints:
+Endpoints:
 
 - `GET /health`
 - `GET /api/v1/models`
-- `GET /api/v1/models/diabetes`
-- `GET /api/v1/models/house-price`
+- `GET /api/v1/models/{diabetes|house-price|ecommerce}`
 - `POST /api/v1/diabetes/predict`
 - `POST /api/v1/house-price/predict`
-- `GET /api/v1/diabetes/knowledge-graph`
+- `POST /api/v1/ecommerce/predict`
+- `GET /api/v1/diabetes/knowledge-graph` (optional bonus; Neo4j failure is non-fatal)
 
-## Important Notes
+Swagger UI is at `http://localhost:8000/docs`. Full payloads are in [docs/API.md](docs/API.md).
 
-- Only trusted local `.joblib` files are loaded; uploads and arbitrary pickle execution are not accepted.
-- Request payloads are schema-validated, extra fields are rejected, non-finite values are rejected, and request size is limited.
-- CORS is configured through comma-separated `CORS_ORIGINS`; no production wildcard is the default.
-- No real password is committed. Change example credentials for local use.
-- Diabetes output is labelled **Prediction**, never diagnosis. House output is an educational estimate, never appraisal or investment advice.
-- This task intentionally performs no cloud deployment, Expo publishing, Docker Hub publishing, Git commit, or Git push.
+## Web
+
+```powershell
+Set-Location web
+npm install
+npm run dev
+npm run lint
+npm run build
+```
+
+Set `VITE_API_BASE_URL`. Routes are `/`, `/diabetes`, `/house-price`, `/ecommerce`, `/diabetes/knowledge-graph`, and `/about`. Responsive rules cover 360, 390, 412, 768 and 1024+ px layouts.
+
+## Mobile
+
+```powershell
+Set-Location mobile
+npm install
+npm run typecheck
+npx expo start
+npx expo export --platform android
+```
+
+Set `EXPO_PUBLIC_API_BASE_URL`; no hosted URL is hard-coded. Primary screens are Home, Diabetes, House Price, E-commerce and About.
+
+## Tests and persisted models
+
+```powershell
+$env:PYTHONPATH = "backend;."
+.\.venv\Scripts\python.exe -m pytest
+```
+
+Models live at:
+
+- `models/diabetes/diabetes_model.joblib`
+- `models/house_price/house_price_model.joblib`
+- `models/ecommerce/ecommerce_interest_model.joblib`
+
+Tests validate contracts, invalid payloads, direct-versus-HTTP equality, fresh loading, absence of inference-time `fit`, and independence from Neo4j.
+
+## Reproducibility, deployment status, and limitations
+
+Preprocessors are fitted only on training data; held-out test data is not used for tuning. Exact duplicate Ecommerce reviews are removed before splitting. The full fitted transformations and estimators are serialized together.
+
+Nothing in this Assignment 02 upgrade was deployed, published, or pushed. Diabetes is not diagnosis; House is not professional valuation; Ecommerce predicts a rating-derived proxy rather than independently observed intention. Class imbalance, listing-price bias, small medical data, and near-duplicate/user/product dependencies remain limitations.

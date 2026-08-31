@@ -4,7 +4,7 @@ import { numericInputMinimum, numericInputStep, validateNumericValues } from '..
 import type { ModelMetadata } from '../types'
 
 type Props<T> = {
-  slug: 'diabetes' | 'house-price'
+  slug: 'diabetes' | 'house-price' | 'ecommerce'
   endpoint: string
   eyebrow: string
   title: string
@@ -86,6 +86,15 @@ export function PredictionForm<T>({ slug, endpoint, eyebrow, title, intro, submi
                       {field.nullable && <option value="">Not provided — pipeline imputes</option>}
                       {field.options?.map((option) => <option key={option} value={option}>{option}</option>)}
                     </select>
+                  ) : field.type === 'text' ? (
+                    field.multiline ? <textarea
+                      required value={values[field.name] ?? ''}
+                      maxLength={20000} rows={7}
+                      onChange={(event) => setValues({ ...values, [field.name]: event.target.value })}
+                    /> : <input
+                      type="text" required value={values[field.name] ?? ''} maxLength={500}
+                      onChange={(event) => setValues({ ...values, [field.name]: event.target.value })}
+                    />
                   ) : (
                     <input
                       type="number"

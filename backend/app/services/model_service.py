@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 from app.core.config import Settings
-from app.schemas.predictions import DiabetesPredictionRequest, HousePricePredictionRequest
+from app.schemas.predictions import DiabetesPredictionRequest, EcommercePredictionRequest, HousePricePredictionRequest
 
 
 logger = logging.getLogger(__name__)
@@ -39,6 +39,10 @@ class ModelService:
             "house_price": (
                 self.settings.house_price_model_path,
                 self.settings.metadata_dir / "house_price.json",
+            ),
+            "ecommerce": (
+                self.settings.ecommerce_model_path,
+                self.settings.metadata_dir / "ecommerce.json",
             ),
         }
         for key, (model_path, metadata_path) in definitions.items():
@@ -100,7 +104,7 @@ class ModelService:
 
     def get_metadata(self, key: str | None = None) -> dict[str, Any] | list[dict[str, Any]]:
         if key is None:
-            return [self.metadata["diabetes"], self.metadata["house_price"]]
+            return [self.metadata["diabetes"], self.metadata["house_price"], self.metadata["ecommerce"]]
         return self.metadata[key]
 
     def predict_diabetes(self, payload: DiabetesPredictionRequest) -> dict[str, Any]:
@@ -146,6 +150,24 @@ class ModelService:
             "predicted_price": prediction,
             "unit": unit,
             "formatted": f"{prediction:.2f} {unit}",
+            "model": metadata["model"]["name"],
+            "disclaimer": metadata["disclaimer"],
+        }
+
+    def predict_ecommerce(self, payload: EcommercePredictionRequest) -> dict[str, Any]:
+        model = self.models["ecommerce"]
+        metadata = self.metadata["ecommerce"]
+        frame = pd.DataFrame([payload.model_dump(by_alias=True)], columns=metadata["expected_raw_features"])
+        try:
+            prediction = int(model.predict(frame)[0])
+            probability = float(model.predict_proba(frame)[0, list(model.classes_).index(1)])
+        except Exception as exc:
+            logger.exception("Ecommerce model prediction failed")
+            raise PredictionError("The ecommerce model could not produce a prediction") from exc
+        return {
+            "prediction": prediction,
+            "label": metadata["class_labels"][str(prediction)],
+            "probability": probability,
             "model": metadata["model"]["name"],
             "disclaimer": metadata["disclaimer"],
         }

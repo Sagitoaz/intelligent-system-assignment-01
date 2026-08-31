@@ -1,7 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native'
 import { colors, shared, spacing } from '../theme'
 
-export function HomeScreen({ navigate }: { navigate: (screen: 'diabetes' | 'house' | 'graph' | 'about') => void }) {
+export function HomeScreen({ navigate }: { navigate: (screen: 'diabetes' | 'house' | 'ecommerce' | 'about') => void }) {
   const { width } = useWindowDimensions()
   const compact = width <= 375
 
@@ -11,13 +11,13 @@ export function HomeScreen({ navigate }: { navigate: (screen: 'diabetes' | 'hous
     showsVerticalScrollIndicator={false}
   >
     <View style={styles.heroBlock}>
-      <Text style={shared.eyebrow}>Assignment 01</Text>
+      <Text style={shared.eyebrow}>Assignment 02</Text>
       <Text style={[styles.hero, compact && styles.heroCompact]}>Intelligent Systems</Text>
-      <Text style={styles.intro}>Two trained ML systems, one transparent prediction workflow.</Text>
+      <Text style={styles.intro}>Three trained ML systems, one transparent prediction workflow.</Text>
     </View>
     <SystemCard number="01" task="Classification" title="Diabetes Prediction" description="6 raw features · Random Forest" tone="teal" onPress={() => navigate('diabetes')} />
     <SystemCard number="02" task="Regression" title="Vietnam House Price" description="11 raw features · Random Forest" tone="orange" onPress={() => navigate('house')} />
-    <SystemCard number="KG" task="Transparency" title="Knowledge Graph" description="Explore the Diabetes model, features, metrics and provenance." tone="violet" onPress={() => navigate('graph')} />
+    <SystemCard number="03" task="Text classification" title="Customer Preference" description="TF-IDF review text + 5 behavioral features" tone="violet" onPress={() => navigate('ecommerce')} />
     <Pressable accessibilityRole="link" onPress={() => navigate('about')} style={({ pressed }) => [styles.aboutLink, pressed && styles.pressed]}>
       <Text style={styles.aboutText}>View assignment methodology</Text><Text style={styles.arrow}>→</Text>
     </Pressable>

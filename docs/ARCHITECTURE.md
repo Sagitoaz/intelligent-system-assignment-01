@@ -1,74 +1,34 @@
-# Application Architecture
+# Assignment 02 Architecture
 
-## Runtime topology
-
-```text
-User
-│
-├── React/Vite Web
-│
-└── Expo React Native Mobile
-          │
-          ▼
-       FastAPI
-          │
-          ├── ModelService: Diabetes
-          │      └── models/diabetes/diabetes_model.joblib
-          │              └── median imputer → scaler → Random Forest classifier
-          │
-          ├── ModelService: House Price
-          │      └── models/house_price/house_price_model.joblib
-          │              └── ColumnTransformer → Random Forest regressor
-          │
-          └── Neo4jService
-                 └── Neo4j Diabetes model/provenance graph
-```
-
-FastAPI model loading is part of application lifespan. Missing models or mismatched contracts stop startup; Neo4j failure is logged and represented as `unavailable` but does not prevent the model service from starting.
-
-## Representation consistency
+## End-to-end flow
 
 ```text
-User raw values
-  → Pydantic type/finite/basic-sign validation
-  → one-row pandas DataFrame in exact feature_names_in_ order
-  → saved fitted Pipeline
-      → learned imputation
-      → learned scaling / one-hot encoding
-      → fitted estimator
-  → response formatting
+Raw CSV/text → understand/clean → fitted numerical representation
+             → train/validate/test → complete joblib Pipeline
+             → FastAPI (load once) → React web / Expo mobile
+                         └──────────→ optional Diabetes Neo4j graph
 ```
 
-The central invariant is:
+The core invariant is **training Pipeline = inference Pipeline**. FastAPI validates raw JSON, creates a one-row DataFrame in metadata order, then calls `predict`/`predict_proba`. It never fits a vectorizer, scaler, encoder, imputer, transformer or estimator.
 
-```text
-Training Pipeline = Inference Pipeline
-```
+## Three representations
 
-The application does not reproduce preprocessing. It does not call `fit`, `fit_transform`, `StandardScaler`, `SimpleImputer`, or `OneHotEncoder` during prediction. Converting an explicit JSON `null` to `numpy.nan` for nullable house fields only represents a missing raw value so the saved Pipeline can perform its learned imputation.
+- Diabetes: six numeric values → hidden-zero cleaning → median imputation → standard scaling → `B × 6`.
+- House: 11 mixed fields → numeric median/scaling and categorical mode/one-hot → `B × 83`.
+- Ecommerce: Summary + Text → sparse TF-IDF (`V=12,000`) and four raw values → five engineered/scaled numerical features → sparse `B × 12,005`.
 
-## Model contracts
+`shared_ml/ecommerce_transformers.py` makes custom feature logic importable in notebooks, FastAPI, tests and fresh processes. The saved Ecommerce artifact contains both transformer branches and Logistic Regression. Lambda/notebook-local pickle dependencies are avoided.
 
-JSON metadata under `backend/app/model_metadata/` is notebook-derived and checked against the saved objects. Startup checks:
+## Leakage boundaries
 
-1. metadata field order equals `expected_raw_features`;
-2. expected features equal the Pipeline `feature_names_in_` exactly, including case and spaces;
-3. the saved object is a prediction Pipeline;
-4. House numerical/categorical groups equal the fitted `ColumnTransformer` columns;
-5. House UI category options equal fitted encoder categories;
-6. the encoder's unknown category policy is `ignore`.
+Diabetes and House keep the existing 80/20 held-out test plus training-only CV. Ecommerce removes exact duplicate review keys before a stratified 70/15/15 split. Score creates y and is immediately excluded; identifiers and target-derived features are excluded. TF-IDF vocabulary and scaling are fitted on train only during comparison, then the frozen configuration is refitted on train+validation before one test evaluation.
 
-Web and mobile fetch this metadata to render forms, keeping all clients aligned with the backend contract.
+## Runtime components
 
-## Reliability boundaries
+One FastAPI process loads three trusted local artifacts at startup and verifies metadata against each `feature_names_in_`. Neo4j connectivity is optional/non-fatal. Web and mobile discover raw form fields from metadata and send no transformed values. `VITE_API_BASE_URL` and `EXPO_PUBLIC_API_BASE_URL` control connectivity.
 
-- Models load once at startup, never once per request.
-- Prediction failures return a generic 500 response without a raw traceback.
-- Pydantic returns structured 422 validation errors for missing, extra, wrong-type, blank, non-positive where applicable, NaN, or infinite inputs.
-- Payloads larger than `MAX_REQUEST_BYTES` are rejected.
-- Neo4j graph reads return 503 when unavailable; prediction endpoints remain independent.
-- Only repository-controlled model paths resolved from `PROJECT_ROOT` are loaded.
+The Docker backend copies `shared_ml`, models and backend code and exposes port 8000. The responsive Vite client is the primary polished UI; Expo is a minimal functional demonstration.
 
-## Knowledge graph
+## Security and failure handling
 
-The graph is transparent and model-centric, not a graph of unsourced medical claims. Its nodes describe the assignment system, selected classifier, six raw features, Outcome target, fitted pipeline steps, dataset provenance, model-selection experiment, and held-out metrics. Exact fitted feature importances live on `USES_FEATURE` relationships and are explicitly labelled impurity-based rather than causal.
+Only repository-owned joblib files are loaded. Extra payload fields, blanks, invalid ranges, non-finite values and oversized bodies are rejected. Error responses do not echo invalid sensitive values. Prediction services remain available when the knowledge graph is offline.

@@ -35,8 +35,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title=settings.app_name,
-    version="1.0.0",
-    description="Local inference API backed by the assignment's fitted scikit-learn Pipelines.",
+    version="2.0.0",
+    description="Local inference API for three Assignment 02 fitted scikit-learn Pipelines.",
     lifespan=lifespan,
 )
 

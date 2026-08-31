@@ -50,3 +50,13 @@ def house_demo_case() -> dict:
         "Legal status": "Have certificate",
         "Furniture state": "Full",
     }
+
+
+@pytest.fixture
+def ecommerce_demo_case() -> dict:
+    return {
+        "Summary": "Excellent",
+        "Text": "Fresh, tasty and exactly as described. I would buy it again.",
+        "HelpfulnessNumerator": 1,
+        "HelpfulnessDenominator": 1,
+    }

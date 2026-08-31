@@ -8,7 +8,7 @@ import type { FieldMetadata, ModelMetadata } from '../types'
 export type FieldGroup = { title: string; fields: string[] }
 
 type Props<T> = {
-  slug: 'diabetes' | 'house-price'
+  slug: 'diabetes' | 'house-price' | 'ecommerce'
   endpoint: string
   eyebrow: string
   title: string
@@ -130,14 +130,16 @@ function Field({ field, value, isLast, onChange, onFocus, setInputRef }: {
     </View> : <TextInput
       ref={setInputRef}
       accessibilityLabel={field.label}
-      style={styles.input}
-      keyboardType={field.integer ? 'number-pad' : 'decimal-pad'}
+      style={[styles.input, field.multiline && styles.multilineInput]}
+      keyboardType={field.type === 'number' ? (field.integer ? 'number-pad' : 'decimal-pad') : 'default'}
+      multiline={field.multiline}
+      numberOfLines={field.multiline ? 6 : 1}
       value={value}
       onChangeText={onChange}
       onFocus={onFocus}
       placeholder={field.nullable ? 'Leave blank if unknown' : 'Required'}
       placeholderTextColor="#8a9691"
-      selectTextOnFocus
+      selectTextOnFocus={!field.multiline}
     />}
     <Text style={styles.help}>{field.description}</Text>
   </View>
@@ -167,6 +169,7 @@ const styles = StyleSheet.create({
   unit: { color: colors.muted, fontWeight: '400' },
   optional: { color: colors.teal, backgroundColor: colors.paleGreen, borderRadius: 9, paddingHorizontal: 7, paddingVertical: 2, fontSize: 10, fontWeight: '700', textTransform: 'uppercase' },
   input: { minHeight: 48, borderColor: '#cbd5ce', borderWidth: 1, borderRadius: 10, paddingHorizontal: 13, paddingVertical: 10, backgroundColor: 'white', color: colors.ink, fontSize: 16 },
+  multilineInput: { minHeight: 132, textAlignVertical: 'top' },
   pickerWrap: { minHeight: 50, borderColor: '#cbd5ce', borderWidth: 1, borderRadius: 10, overflow: 'hidden', backgroundColor: 'white', justifyContent: 'center' },
   picker: { color: colors.ink, minHeight: 50 },
   help: { color: colors.muted, fontSize: 11, lineHeight: 16, marginTop: 4 },

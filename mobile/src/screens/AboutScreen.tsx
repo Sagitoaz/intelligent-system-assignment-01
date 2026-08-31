@@ -5,14 +5,16 @@ const pipeline = ['Input', 'Representation', 'Preprocessing', 'Model', 'Predicti
 
 export function AboutScreen() {
   return <ScrollView style={shared.screen} contentContainerStyle={shared.content} showsVerticalScrollIndicator={false}>
-    <Text style={shared.eyebrow}>Assignment 01</Text>
+    <Text style={shared.eyebrow}>Assignment 02</Text>
     <Text style={shared.title}>Intelligent System Development</Text>
-    <Text style={shared.intro}>Two fitted machine-learning pipelines presented through one clear prediction workflow.</Text>
+    <Text style={shared.intro}>Three fitted machine-learning pipelines presented through one clear prediction workflow.</Text>
 
     <View style={styles.systemsCard}>
       <SystemRow number="01" name="Diabetes" task="Classification" />
       <View style={styles.divider} />
       <SystemRow number="02" name="House Price" task="Regression" />
+      <View style={styles.divider} />
+      <SystemRow number="03" name="Customer Preference" task="Text classification" />
     </View>
 
     <View style={styles.pipelineCard}>
@@ -26,7 +28,7 @@ export function AboutScreen() {
 
     <View style={styles.note}>
       <Text style={styles.noteTitle}>Educational scope</Text>
-      <Text style={styles.noteText}>Predictions demonstrate the assignment pipelines. They are not medical advice or a professional property valuation.</Text>
+      <Text style={styles.noteText}>Predictions demonstrate the assignment pipelines. They are not medical advice, professional valuation, or actual customer intention.</Text>
     </View>
   </ScrollView>
 }

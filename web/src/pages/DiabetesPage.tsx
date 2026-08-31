@@ -8,7 +8,7 @@ export function DiabetesPage() {
       endpoint="/api/v1/diabetes/predict"
       eyebrow="System 01 · Classification"
       title="Diabetes Prediction"
-      intro="Enter six interpretable raw values. The saved pipeline handles the fitted transformations and returns an educational prediction."
+      intro="Raw patient values → median imputation → standardization → Random Forest → educational prediction."
       submitLabel="Generate prediction"
       renderResult={(result) => (
         <>

@@ -51,6 +51,36 @@ class HousePricePredictionRequest(StrictPayload):
         return value.strip() if value is not None else None
 
 
+class EcommercePredictionRequest(StrictPayload):
+    summary: Annotated[str, Field(alias="Summary", max_length=500)]
+    text: Annotated[str, Field(alias="Text", min_length=1, max_length=20_000)]
+    helpfulness_numerator: Annotated[int, Field(alias="HelpfulnessNumerator", ge=0)]
+    helpfulness_denominator: Annotated[int, Field(alias="HelpfulnessDenominator", ge=0)]
+
+    @field_validator("summary", "text")
+    @classmethod
+    def normalize_text(cls, value: str) -> str:
+        if not value.strip() and cls.__name__:
+            # Summary may be empty, but Text is checked by the model validator below.
+            return ""
+        return value.strip()
+
+    @field_validator("text")
+    @classmethod
+    def reject_blank_review(cls, value: str) -> str:
+        if not value:
+            raise ValueError("review text must not be blank")
+        return value
+
+    @field_validator("helpfulness_denominator")
+    @classmethod
+    def validate_helpfulness(cls, denominator: int, info) -> int:
+        numerator = info.data.get("helpfulness_numerator")
+        if numerator is not None and numerator > denominator:
+            raise ValueError("HelpfulnessNumerator must not exceed HelpfulnessDenominator")
+        return denominator
+
+
 class DiabetesPredictionResponse(BaseModel):
     prediction: int
     label: str
@@ -63,5 +93,13 @@ class HousePricePredictionResponse(BaseModel):
     predicted_price: float
     unit: str
     formatted: str
+    model: str
+    disclaimer: str
+
+
+class EcommercePredictionResponse(BaseModel):
+    prediction: int
+    label: str
+    probability: float
     model: str
     disclaimer: str

@@ -6,6 +6,8 @@ from app.schemas.graph import GraphResponse
 from app.schemas.predictions import (
     DiabetesPredictionRequest,
     DiabetesPredictionResponse,
+    EcommercePredictionRequest,
+    EcommercePredictionResponse,
     HousePricePredictionRequest,
     HousePricePredictionResponse,
 )
@@ -23,6 +25,7 @@ def health(request: Request) -> dict:
         "models": {
             "diabetes": "loaded" if "diabetes" in model_service.models else "unavailable",
             "house_price": "loaded" if "house_price" in model_service.models else "unavailable",
+            "ecommerce": "loaded" if "ecommerce" in model_service.models else "unavailable",
         },
         "neo4j": request.app.state.neo4j_service.status,
     }
@@ -43,6 +46,11 @@ def house_price_metadata(request: Request) -> dict:
     return request.app.state.model_service.get_metadata("house_price")
 
 
+@router.get("/api/v1/models/ecommerce")
+def ecommerce_metadata(request: Request) -> dict:
+    return request.app.state.model_service.get_metadata("ecommerce")
+
+
 @router.post("/api/v1/diabetes/predict", response_model=DiabetesPredictionResponse)
 def predict_diabetes(payload: DiabetesPredictionRequest, request: Request) -> dict:
     return request.app.state.model_service.predict_diabetes(payload)
@@ -51,6 +59,11 @@ def predict_diabetes(payload: DiabetesPredictionRequest, request: Request) -> di
 @router.post("/api/v1/house-price/predict", response_model=HousePricePredictionResponse)
 def predict_house_price(payload: HousePricePredictionRequest, request: Request) -> dict:
     return request.app.state.model_service.predict_house_price(payload)
+
+
+@router.post("/api/v1/ecommerce/predict", response_model=EcommercePredictionResponse)
+def predict_ecommerce(payload: EcommercePredictionRequest, request: Request) -> dict:
+    return request.app.state.model_service.predict_ecommerce(payload)
 
 
 @router.get("/api/v1/diabetes/knowledge-graph", response_model=GraphResponse)

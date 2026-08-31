@@ -1,7 +1,8 @@
 export type FieldMetadata = {
   name: string
   label: string
-  type: 'number' | 'categorical'
+  type: 'number' | 'categorical' | 'text'
+  multiline?: boolean
   integer?: boolean
   unit: string | null
   description: string
@@ -11,7 +12,7 @@ export type FieldMetadata = {
 }
 
 export type ModelMetadata = {
-  id: 'diabetes' | 'house_price'
+  id: 'diabetes' | 'house_price' | 'ecommerce'
   name: string
   task: 'classification' | 'regression'
   fields: FieldMetadata[]
@@ -21,6 +22,7 @@ export type ModelMetadata = {
 
 export type DiabetesResult = { prediction: number; label: string; probability: number | null; model: string; disclaimer: string }
 export type HouseResult = { predicted_price: number; unit: string; formatted: string; model: string; disclaimer: string }
+export type EcommerceResult = { prediction: number; label: 'Positive' | 'Negative'; probability: number; model: string; disclaimer: string }
 
 export type GraphNode = {
   id: string

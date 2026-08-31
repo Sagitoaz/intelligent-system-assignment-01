@@ -8,7 +8,7 @@ export function HousePricePage() {
       endpoint="/api/v1/house-price/predict"
       eyebrow="System 02 · Regression"
       title="Vietnam House Price Prediction"
-      intro="Describe a property using the final eleven-feature representation selected in the notebook experiments."
+      intro="Raw property attributes → missing handling → numerical scaling and categorical one-hot encoding → Random Forest → educational price estimate."
       submitLabel="Estimate property price"
       renderResult={(result) => (
         <>

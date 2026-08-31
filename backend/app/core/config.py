@@ -20,11 +20,12 @@ def _as_bool(value: str | None, default: bool) -> bool:
 
 @dataclass(frozen=True)
 class Settings:
-    app_name: str = "Intelligent System Development Assignment 01 API"
+    app_name: str = "Intelligent System Development Assignment 02 API"
     api_prefix: str = "/api/v1"
     project_root: Path = PROJECT_ROOT
     diabetes_model_path: Path = PROJECT_ROOT / "models" / "diabetes" / "diabetes_model.joblib"
     house_price_model_path: Path = PROJECT_ROOT / "models" / "house_price" / "house_price_model.joblib"
+    ecommerce_model_path: Path = PROJECT_ROOT / "models" / "ecommerce" / "ecommerce_interest_model.joblib"
     metadata_dir: Path = PROJECT_ROOT / "backend" / "app" / "model_metadata"
     neo4j_uri: str = os.getenv("NEO4J_URI", "bolt://localhost:7687")
     neo4j_user: str = os.getenv("NEO4J_USER", "neo4j")

@@ -1,0 +1,270 @@
+{
+  "dataset": {
+    "raw_rows": 568454,
+    "target_valid_rows": 568454,
+    "neutral_removed": 42640,
+    "blank_text_removed": 0,
+    "invalid_helpfulness_removed": 2,
+    "duplicate_reviews_removed": 829,
+    "usable_rows": 524983,
+    "modeling_rows": 120000,
+    "modeling_distribution": {
+      "0": 18686,
+      "1": 101314
+    }
+  },
+  "splits": {
+    "train": 84000,
+    "validation": 18000,
+    "test": 18000
+  },
+  "raw_fields": [
+    "Summary",
+    "Text",
+    "HelpfulnessNumerator",
+    "HelpfulnessDenominator"
+  ],
+  "vocabulary_size": 12000,
+  "tabular_dimension": 5,
+  "final_transformed_dimension": 12005,
+  "feature_build_time_seconds": 19.18,
+  "representation_results": {
+    "A_tabular_only": {
+      "accuracy": 0.8441666666666666,
+      "precision": 0.8445284697508897,
+      "recall": 0.9994077778508916,
+      "f1": 0.91546366896718,
+      "roc_auc": 0.6409967619695862,
+      "training_time_seconds": 0.24
+    },
+    "B_text_only": {
+      "accuracy": 0.957,
+      "precision": 0.9627205646454925,
+      "recall": 0.9873001250246759,
+      "f1": 0.9748554349944772,
+      "roc_auc": 0.9836002331703046,
+      "training_time_seconds": 2.25
+    },
+    "C_tabular_plus_text": {
+      "accuracy": 0.9574444444444444,
+      "precision": 0.9630960785572171,
+      "recall": 0.9874317299467,
+      "f1": 0.9751120930534798,
+      "roc_auc": 0.984033242943179,
+      "training_time_seconds": 3.25
+    }
+  },
+  "model_comparison": {
+    "Logistic Regression": {
+      "accuracy": 0.9574444444444444,
+      "precision": 0.9630960785572171,
+      "recall": 0.9874317299467,
+      "f1": 0.9751120930534798,
+      "roc_auc": 0.984033242943179,
+      "training_time_seconds": 3.48
+    },
+    "Decision Tree": {
+      "accuracy": 0.8988888888888888,
+      "precision": 0.9229747675962815,
+      "recall": 0.9603869184707509,
+      "f1": 0.9413092550790068,
+      "roc_auc": 0.8568281532930188,
+      "training_time_seconds": 47.38
+    },
+    "Random Forest": {
+      "accuracy": 0.8587777777777778,
+      "precision": 0.8566999267151474,
+      "recall": 1.0,
+      "f1": 0.9228200145737188,
+      "roc_auc": 0.9512434517102314,
+      "training_time_seconds": 5.56
+    },
+    "Linear SVC": {
+      "accuracy": 0.9598333333333333,
+      "precision": 0.9703015336625942,
+      "recall": 0.9824965453707969,
+      "f1": 0.9763609612555174,
+      "roc_auc": 0.9831589129902956,
+      "training_time_seconds": 3.16
+    },
+    "SGD Classifier": {
+      "accuracy": 0.9530555555555555,
+      "precision": 0.9564885496183206,
+      "recall": 0.9894058037770612,
+      "f1": 0.9726687582883203,
+      "roc_auc": 0.9828404882378277,
+      "training_time_seconds": 0.55
+    },
+    "Complement NB": {
+      "accuracy": 0.9031111111111111,
+      "precision": 0.9847229228219356,
+      "recall": 0.8991906297295519,
+      "f1": 0.9400151337965192,
+      "roc_auc": 0.9707371314695376,
+      "training_time_seconds": 0.05
+    }
+  },
+  "selected_model": "Logistic Regression",
+  "selection_rule": "Highest validation F1 among probability-capable models within 0.01 of the overall best F1; ROC-AUC breaks ties.",
+  "test_metrics": {
+    "accuracy": 0.9565555555555556,
+    "precision": 0.9638926433674454,
+    "recall": 0.9854576561163387,
+    "f1": 0.9745558664671048,
+    "roc_auc": 0.9842295939185286,
+    "training_time_seconds": 22.82,
+    "confusion_matrix": [
+      [
+        2242,
+        561
+      ],
+      [
+        221,
+        14976
+      ]
+    ],
+    "classification_report": {
+      "0": {
+        "precision": 0.9102720259845717,
+        "recall": 0.7998572957545487,
+        "f1-score": 0.8515001898974554,
+        "support": 2803.0
+      },
+      "1": {
+        "precision": 0.9638926433674454,
+        "recall": 0.9854576561163387,
+        "f1-score": 0.9745558664671048,
+        "support": 15197.0
+      },
+      "accuracy": 0.9565555555555556,
+      "macro avg": {
+        "precision": 0.9370823346760085,
+        "recall": 0.8926574759354438,
+        "f1-score": 0.91302802818228,
+        "support": 18000.0
+      },
+      "weighted avg": {
+        "precision": 0.9555427216716568,
+        "recall": 0.9565555555555556,
+        "f1-score": 0.9553933630546199,
+        "support": 18000.0
+      }
+    }
+  },
+  "reload_predictions_equal": true,
+  "demo_predictions": [
+    1,
+    0,
+    0
+  ],
+  "representation_example": {
+    "original": {
+      "Summary": "Yummy and Fast!",
+      "Text": "This is a high quality scone mix. I love scones, and I never seem to have time to make them. I don't like scones in most bakeries (ugh, Starbucks, I'm looking at you!), and these are a life saver whenever I want a scone with tea. I love scones so much I actually named my cat Scone. I've also substituted the water with milk and cream, and it has come out delicious each time. I like to have a few on hand for company. The scones also freeze well.",
+      "HelpfulnessNumerator": 0,
+      "HelpfulnessDenominator": 0
+    },
+    "tokens": [
+      "yummy",
+      "and",
+      "fast",
+      "this",
+      "is",
+      "high",
+      "quality",
+      "scone",
+      "mix",
+      "love",
+      "scones",
+      "and",
+      "never",
+      "seem",
+      "to",
+      "have",
+      "time",
+      "to",
+      "make",
+      "them"
+    ],
+    "token_ids": {
+      "yummy": 11989,
+      "and": 433,
+      "fast": 3407,
+      "this": 10245,
+      "is": 5069,
+      "high": 4687,
+      "quality": 7905,
+      "mix": 6278,
+      "love": 5942,
+      "never": 6579,
+      "seem": 8398,
+      "to": 10472,
+      "have": 4482,
+      "time": 10427,
+      "make": 6024,
+      "them": 10004
+    },
+    "nonzero_tfidf": [
+      {
+        "token": "actually",
+        "index": 144,
+        "value": 0.08836274594068527
+      },
+      {
+        "token": "also",
+        "index": 313,
+        "value": 0.10950927436351776
+      },
+      {
+        "token": "and",
+        "index": 433,
+        "value": 0.06701992452144623
+      },
+      {
+        "token": "and cream",
+        "index": 488,
+        "value": 0.16122108697891235
+      },
+      {
+        "token": "and fast",
+        "index": 515,
+        "value": 0.15754105150699615
+      },
+      {
+        "token": "and it",
+        "index": 568,
+        "value": 0.07176613062620163
+      },
+      {
+        "token": "and never",
+        "index": 605,
+        "value": 0.14052675664424896
+      },
+      {
+        "token": "and these",
+        "index": 691,
+        "value": 0.12135579437017441
+      },
+      {
+        "token": "are",
+        "index": 806,
+        "value": 0.044227827340364456
+      },
+      {
+        "token": "at",
+        "index": 1012,
+        "value": 0.051312156021595
+      },
+      {
+        "token": "cat",
+        "index": 2061,
+        "value": 0.09473786503076553
+      },
+      {
+        "token": "come",
+        "index": 2373,
+        "value": 0.09327006340026855
+      }
+    ]
+  }
+}

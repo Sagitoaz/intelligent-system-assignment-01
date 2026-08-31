@@ -7,9 +7,9 @@ export function HomePage() {
     <div className="page home-page">
       <section className="hero">
         <div>
-          <span className="eyebrow">Assignment 01 · Intelligent System Development</span>
-          <h1>Two models.<br /><em>One transparent system.</em></h1>
-          <p>Explore classification and regression through the exact fitted pipelines developed in the assignment notebooks.</p>
+          <span className="eyebrow">Assignment 02 · Intelligent System Development</span>
+          <h1>Three models.<br /><em>One deployable workflow.</em></h1>
+          <p>Follow raw data through numerical representation, fitted models, evaluation and local web/mobile inference.</p>
           <div className="hero-actions">
             <Link className="primary-button" to="/diabetes">Try a prediction</Link>
             <Link className="text-link" to="/about">View methodology →</Link>
@@ -39,6 +39,12 @@ export function HomePage() {
             <h3>Vietnam House<br />Price Prediction</h3>
             <p>Eleven raw property attributes pass through numerical and categorical preprocessing before a price estimate in billion VND.</p>
             <div className="card-links"><Link to="/house-price">Open system →</Link></div>
+          </article>
+          <article className="system-card teal-card">
+            <span className="system-number">03</span><span className="task-pill">Text classification</span>
+            <h3>Customer<br />Preference</h3>
+            <p>Review text becomes a sparse 12,000-term TF-IDF vector, joined with five behavioral features for preference prediction.</p>
+            <div className="card-links"><Link to="/ecommerce">Open system →</Link></div>
           </article>
         </div>
       </section>

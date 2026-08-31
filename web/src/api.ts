@@ -28,7 +28,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  model: (slug: 'diabetes' | 'house-price') => request<ModelMetadata>(`/api/v1/models/${slug}`),
+  model: (slug: 'diabetes' | 'house-price' | 'ecommerce') => request<ModelMetadata>(`/api/v1/models/${slug}`),
   predict: <T>(path: string, payload: Record<string, unknown>) =>
     request<T>(path, { method: 'POST', body: JSON.stringify(payload) }),
   graph: () => request<GraphData>('/api/v1/diabetes/knowledge-graph'),
