@@ -28,7 +28,10 @@ Generated caches, virtual environments, `node_modules` and build output are omit
 ├── figures/
 │   ├── diabetes/
 │   ├── house_price/
-│   └── ecommerce/
+│   ├── ecommerce/
+│   └── png/
+│       ├── web/                     # Home and three production prediction pages
+│       └── mobile/                  # Expo Home/forms/results for three systems
 ├── shared_ml/
 │   ├── __init__.py
 │   └── ecommerce_transformers.py
@@ -71,6 +74,10 @@ Generated caches, virtual environments, `node_modules` and build output are omit
 │   ├── API.md
 │   ├── ARCHITECTURE.md
 │   ├── ASSIGNMENT_02_COMPARISON.md
+│   ├── report_assignment_02/
+│   │   ├── ASSIGNMENT_02_REPORT.{md,docx,pdf}
+│   │   ├── build_report.py
+│   │   └── assets/                  # generated architecture and screenshot composites
 │   └── archive/assignment_01/       # former A1 report, PDF, assets and builder
 ├── README.md
 ├── PROJECT_STRUCTURE.md
@@ -100,4 +107,4 @@ At inference, web/mobile raw JSON → Pydantic validation → ordered one-row Da
 
 ## Configuration, tests, and archive
 
-`VITE_API_BASE_URL`, `EXPO_PUBLIC_API_BASE_URL`, Neo4j variables, CORS, and request-size settings are documented in example environment files. Vercel uses `web/vercel.json` for SPA route fallback. Pytest covers the three model contracts and predictions; npm scripts validate both clients. The large local Ecommerce CSV, environment files, dependencies, caches and build output are excluded by `.gitignore`, while the three deployment model artifacts remain candidates for Git. The complete Assignment 01 report tree was moved to `docs/archive/assignment_01/` and is not presented as the current report. No final A2 Word/PDF report is created yet.
+`VITE_API_BASE_URL`, `EXPO_PUBLIC_API_BASE_URL`, Neo4j variables, CORS, and request-size settings are documented in example environment files. Vercel uses `web/vercel.json` for SPA route fallback. Pytest covers the three model contracts and predictions; npm scripts validate both clients. The large local Ecommerce CSV, environment files, dependencies, caches and build output are excluded by `.gitignore`, while the three deployment model artifacts remain candidates for Git. The complete Assignment 01 report tree was moved to `docs/archive/assignment_01/` and is not presented as the current report. The final Assignment 02 report is maintained as Markdown, editable DOCX, and a 13-page A4 PDF under `docs/report_assignment_02/`; its builder also regenerates the architecture and screenshot composites from repository evidence.

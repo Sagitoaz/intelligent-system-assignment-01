@@ -1,6 +1,6 @@
 # Intelligent System Development Assignment 02
 
-From Data Representation to a Deployable Intelligent System. This repository contains three reproducible machine-learning applications and one local FastAPI service used by responsive React and Expo clients. No cloud deployment or remote push is performed by this work.
+From Data Representation to a Deployable Intelligent System. This repository contains three reproducible machine-learning applications, a FastAPI backend, a responsive React web client, and an Expo mobile client. The released web application runs on Vercel and calls the released backend on Render.
 
 ## Three applications
 
@@ -39,10 +39,18 @@ backend/                 FastAPI, schemas, metadata, services and pytest
 web/                     React/Vite/TypeScript responsive application
 mobile/                  Expo React Native/TypeScript demonstration
 knowledge_graph/         Optional Diabetes Neo4j bonus
-docs/                    API, architecture, comparison and archived A1 report
+docs/                    API, architecture, final A2 report and archived A1 report
 ```
 
 See [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) for the exact final tree and [docs/ASSIGNMENT_02_COMPARISON.md](docs/ASSIGNMENT_02_COMPARISON.md) for the cross-application discussion.
+
+## Final Assignment 02 report
+
+- [Editable report source](docs/report_assignment_02/ASSIGNMENT_02_REPORT.md)
+- [Microsoft Word report](docs/report_assignment_02/ASSIGNMENT_02_REPORT.docx)
+- [PDF report](docs/report_assignment_02/ASSIGNMENT_02_REPORT.pdf)
+
+The report is written in Vietnamese, uses the executed notebook evidence and persisted results, and includes real production Web and Expo screenshots. Rebuild the DOCX and report assets with `python docs/report_assignment_02/build_report.py`.
 
 ## Setup and notebook execution
 
@@ -88,6 +96,8 @@ Swagger UI is at `http://localhost:8000/docs`. Full payloads are in [docs/API.md
 
 ## Web
 
+Production: [https://intelligent-system-assignment-01.vercel.app](https://intelligent-system-assignment-01.vercel.app)
+
 ```powershell
 Set-Location web
 npm install
@@ -129,4 +139,6 @@ Tests validate contracts, invalid payloads, direct-versus-HTTP equality, fresh l
 
 Preprocessors are fitted only on training data; held-out test data is not used for tuning. Exact duplicate Ecommerce reviews are removed before splitting. The full fitted transformations and estimators are serialized together.
 
-Nothing in this Assignment 02 upgrade was deployed, published, or pushed. Diabetes is not diagnosis; House is not professional valuation; Ecommerce predicts a rating-derived proxy rather than independently observed intention. Class imbalance, listing-price bias, small medical data, and near-duplicate/user/product dependencies remain limitations.
+Production backend: [https://intelligent-system-assignment-01.onrender.com](https://intelligent-system-assignment-01.onrender.com). Production web: [https://intelligent-system-assignment-01.vercel.app](https://intelligent-system-assignment-01.vercel.app). The mobile application remains an Expo demonstration and is not published as a store application.
+
+Diabetes is not diagnosis; House is not professional valuation; Ecommerce predicts a rating-derived proxy rather than independently observed intention. Class imbalance, listing-price bias, small medical data, and near-duplicate/user/product dependencies remain limitations.
