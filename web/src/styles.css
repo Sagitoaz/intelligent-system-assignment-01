@@ -46,7 +46,7 @@ footer { min-height:80px; border-top:1px solid var(--line); padding:0 clamp(24px
   .about-grid { grid-template-columns:1fr; }
 }
 
-@media (max-width:760px) {
+@media (max-width:800px) {
   .topbar { height:auto; min-height:66px; padding:12px 18px; align-items:stretch; flex-direction:column; gap:0; }
   .topbar-row { display:flex; width:100%; align-items:center; justify-content:space-between; gap:16px; }
   .brand { min-width:0; }
