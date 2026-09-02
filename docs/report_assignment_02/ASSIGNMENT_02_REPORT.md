@@ -233,6 +233,13 @@ Final confusion matrix `[[2242, 561], [221, 14976]]` cho Recall Positive rất c
 
 *Hình 9. Web Vercel và Mobile Expo gửi raw input qua HTTPS tới FastAPI Render; backend validation rồi gọi một trong ba persisted Pipelines.*
 
+## 8.1 Liên kết sản phẩm đã triển khai và mã nguồn
+
+- **Ứng dụng Web (Vercel):** [https://intelligent-system-assignment-01.vercel.app](https://intelligent-system-assignment-01.vercel.app)
+- **Backend API (Render):** [https://intelligent-system-assignment-01.onrender.com](https://intelligent-system-assignment-01.onrender.com)
+- **Tài liệu API production:** [https://intelligent-system-assignment-01.onrender.com/docs](https://intelligent-system-assignment-01.onrender.com/docs)
+- **Repository GitHub:** [https://github.com/Sagitoaz/intelligent-system-assignment-01](https://github.com/Sagitoaz/intelligent-system-assignment-01)
+
 Production Web: `https://intelligent-system-assignment-01.vercel.app`. Production Backend: `https://intelligent-system-assignment-01.onrender.com`. FastAPI tải ba joblib artifacts một lần trong lifespan. Metadata xác định raw fields; Pydantic từ chối unknown/invalid fields; service tạo một-row `DataFrame` đúng thứ tự `feature_names_in_` rồi gọi `predict`/`predict_proba`. Không có `fit` tại inference.
 
 Web React/Vite và Mobile Expo dùng cùng REST contract. Vercel route rewrite cho phép direct refresh. CORS cho phép production Vercel origin một cách explicit. Ecommerce artifact phụ thuộc các custom classes trong `shared_ml/ecommerce_transformers.py`, được copy/import trên Render; production health đã xác nhận cả ba model loaded.
