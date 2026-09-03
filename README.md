@@ -47,10 +47,9 @@ See [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) for the exact final tree and [d
 ## Final Assignment 02 report
 
 - [Editable report source](docs/report_assignment_02/ASSIGNMENT_02_REPORT.md)
-- [Microsoft Word report](docs/report_assignment_02/ASSIGNMENT_02_REPORT.docx)
-- [PDF report](docs/report_assignment_02/ASSIGNMENT_02_REPORT.pdf)
+- [Final editable Microsoft Word report](docs/report_assignment_02/ASSIGNMENT_02_REPORT.docx)
 
-The report is written in Vietnamese, uses the executed notebook evidence and persisted results, and includes real production Web and Expo screenshots. Rebuild the DOCX and report assets with `python docs/report_assignment_02/build_report.py`.
+The report is written in Vietnamese, uses executed notebook code/output and persisted results, and includes real production Web and Expo screenshots. DOCX is the final editable deliverable; PDF export is intentionally left to the author. Rebuild the DOCX and report assets with `python docs/report_assignment_02/build_report.py`.
 
 ## Setup and notebook execution
 

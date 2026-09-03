@@ -75,7 +75,7 @@ Generated caches, virtual environments, `node_modules` and build output are omit
 │   ├── ARCHITECTURE.md
 │   ├── ASSIGNMENT_02_COMPARISON.md
 │   ├── report_assignment_02/
-│   │   ├── ASSIGNMENT_02_REPORT.{md,docx,pdf}
+│   │   ├── ASSIGNMENT_02_REPORT.{md,docx}
 │   │   ├── build_report.py
 │   │   └── assets/                  # generated architecture and screenshot composites
 │   └── archive/assignment_01/       # former A1 report, PDF, assets and builder
@@ -107,4 +107,4 @@ At inference, web/mobile raw JSON → Pydantic validation → ordered one-row Da
 
 ## Configuration, tests, and archive
 
-`VITE_API_BASE_URL`, `EXPO_PUBLIC_API_BASE_URL`, Neo4j variables, CORS, and request-size settings are documented in example environment files. Vercel uses `web/vercel.json` for SPA route fallback. Pytest covers the three model contracts and predictions; npm scripts validate both clients. The large local Ecommerce CSV, environment files, dependencies, caches and build output are excluded by `.gitignore`, while the three deployment model artifacts remain candidates for Git. The complete Assignment 01 report tree was moved to `docs/archive/assignment_01/` and is not presented as the current report. The final Assignment 02 report is maintained as Markdown, editable DOCX, and a 13-page A4 PDF under `docs/report_assignment_02/`; its builder also regenerates the architecture and screenshot composites from repository evidence.
+`VITE_API_BASE_URL`, `EXPO_PUBLIC_API_BASE_URL`, Neo4j variables, CORS, and request-size settings are documented in example environment files. Vercel uses `web/vercel.json` for SPA route fallback. Pytest covers the three model contracts and predictions; npm scripts validate both clients. The large local Ecommerce CSV, environment files, dependencies, caches and build output are excluded by `.gitignore`, while the three deployment model artifacts remain candidates for Git. The complete Assignment 01 report tree was moved to `docs/archive/assignment_01/` and is not presented as the current report. The final Assignment 02 report is maintained as Markdown source and an expanded editable DOCX under `docs/report_assignment_02/`; its builder regenerates the Word report, architecture, and Web/Mobile screenshot composites. PDF export is intentionally not part of the repository deliverable.

@@ -17,6 +17,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.style import WD_STYLE_TYPE
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
+from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.shared import Cm, Inches, Pt, RGBColor
 
 
@@ -31,6 +32,18 @@ TEAL = "1D5A54"
 ORANGE = "D96F32"
 MUTED = "65736F"
 PALE = "EEF4F1"
+
+TABLE_CAPTIONS = [
+    "Bảng 1. So sánh tổng quan ba hệ thống thông minh.",
+    "Bảng 2. Tóm tắt raw form và numerical representation.",
+    "Bảng 3. Controlled representation experiment của Ecommerce.",
+    "Bảng 4. Validation comparison của sáu Ecommerce models.",
+    "Bảng 5. Final test metrics và phạm vi diễn giải.",
+    "Bảng 6. Diabetes baseline và năm model trên holdout mô tả.",
+    "Bảng 7. Hai benchmark House bổ sung trên training folds.",
+    "Bảng 8. Ecommerce representation evidence trong phụ lục.",
+    "Bảng 9. Ecommerce six-model evidence trong phụ lục.",
+]
 
 
 def add_field(paragraph, instruction: str, placeholder: str = "") -> None:
@@ -63,6 +76,12 @@ def set_repeat_header(row) -> None:
     element = OxmlElement("w:tblHeader")
     element.set(qn("w:val"), "true")
     properties.append(element)
+
+
+def prevent_row_split(row) -> None:
+    properties = row._tr.get_or_add_trPr()
+    if properties.find(qn("w:cantSplit")) is None:
+        properties.append(OxmlElement("w:cantSplit"))
 
 
 def generate_architecture() -> None:
@@ -184,17 +203,29 @@ def configure(document: Document) -> None:
     caption.paragraph_format.first_line_indent = Cm(0)
     caption.paragraph_format.space_after = Pt(5)
 
-    if "Code Block" not in document.styles:
-        code = document.styles.add_style("Code Block", WD_STYLE_TYPE.PARAGRAPH)
-    else:
-        code = document.styles["Code Block"]
-    code.font.name = "Consolas"
-    code.font.size = Pt(8.2)
-    code.paragraph_format.left_indent = Cm(0.5)
-    code.paragraph_format.right_indent = Cm(0.3)
-    code.paragraph_format.first_line_indent = Cm(0)
-    code.paragraph_format.line_spacing = 1.0
-    code.paragraph_format.space_after = Pt(5)
+    for style_name, fill, font_size in (
+        ("Code Block", "F2F6F5", 9.0),
+        ("Output Block", "EEF5F9", 9.0),
+    ):
+        if style_name not in document.styles:
+            block_style = document.styles.add_style(style_name, WD_STYLE_TYPE.PARAGRAPH)
+        else:
+            block_style = document.styles[style_name]
+        block_style.font.name = "Consolas"
+        block_style._element.rPr.rFonts.set(qn("w:eastAsia"), "Consolas")
+        block_style.font.size = Pt(font_size)
+        block_style.paragraph_format.left_indent = Cm(0.55)
+        block_style.paragraph_format.right_indent = Cm(0.35)
+        block_style.paragraph_format.first_line_indent = Cm(0)
+        block_style.paragraph_format.line_spacing = 1.0
+        block_style.paragraph_format.space_before = Pt(3)
+        block_style.paragraph_format.space_after = Pt(6)
+        properties = block_style._element.get_or_add_pPr()
+        shading = properties.find(qn("w:shd"))
+        if shading is None:
+            shading = OxmlElement("w:shd")
+            properties.append(shading)
+        shading.set(qn("w:fill"), fill)
 
     header = section.header.paragraphs[0]
     header.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -247,7 +278,26 @@ def add_cover(document: Document) -> None:
     paragraph.add_run("2026").font.size = Pt(13)
 
 
-INLINE = re.compile(r"(\*\*.+?\*\*|`.+?`)")
+INLINE = re.compile(r"(\[[^\]]+\]\(https?://[^)]+\)|\*\*.+?\*\*|`.+?`)")
+
+
+def add_hyperlink(paragraph, label: str, url: str) -> None:
+    relationship_id = paragraph.part.relate_to(url, RT.HYPERLINK, is_external=True)
+    hyperlink = OxmlElement("w:hyperlink")
+    hyperlink.set(qn("r:id"), relationship_id)
+    run = OxmlElement("w:r")
+    properties = OxmlElement("w:rPr")
+    color = OxmlElement("w:color")
+    color.set(qn("w:val"), TEAL)
+    underline = OxmlElement("w:u")
+    underline.set(qn("w:val"), "single")
+    properties.extend((color, underline))
+    run.append(properties)
+    text = OxmlElement("w:t")
+    text.text = label
+    run.append(text)
+    hyperlink.append(run)
+    paragraph._p.append(hyperlink)
 
 
 def add_inline(paragraph, text: str) -> None:
@@ -256,7 +306,11 @@ def add_inline(paragraph, text: str) -> None:
         if match.start() > position:
             paragraph.add_run(text[position:match.start()])
         token = match.group(0)
-        if token.startswith("**"):
+        if token.startswith("["):
+            link = re.fullmatch(r"\[([^\]]+)\]\((https?://[^)]+)\)", token)
+            if link:
+                add_hyperlink(paragraph, link.group(1), link.group(2))
+        elif token.startswith("**"):
             run = paragraph.add_run(token[2:-2])
             run.bold = True
         else:
@@ -268,7 +322,10 @@ def add_inline(paragraph, text: str) -> None:
         paragraph.add_run(text[position:])
 
 
-def add_table(document: Document, rows: list[list[str]]) -> None:
+def add_table(document: Document, rows: list[list[str]], caption_text: str) -> None:
+    caption = document.add_paragraph(style="Caption")
+    caption.paragraph_format.keep_with_next = True
+    add_inline(caption, caption_text)
     table = document.add_table(rows=len(rows), cols=len(rows[0]))
     table.style = "Table Grid"
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -276,6 +333,7 @@ def add_table(document: Document, rows: list[list[str]]) -> None:
     set_repeat_header(table.rows[0])
     font_size = 7.5 if len(rows[0]) >= 6 else 8.5 if len(rows[0]) >= 4 else 9.5
     for row_index, values in enumerate(rows):
+        prevent_row_split(table.rows[row_index])
         for column_index, value in enumerate(values):
             cell = table.cell(row_index, column_index)
             cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
@@ -320,6 +378,7 @@ def parse_body(document: Document, markdown: str) -> tuple[int, int]:
     tables = figures = 0
     paragraph_lines: list[str] = []
     in_code = False
+    code_language = ""
     code_lines: list[str] = []
 
     def flush():
@@ -345,11 +404,14 @@ def parse_body(document: Document, markdown: str) -> tuple[int, int]:
         if stripped.startswith("```"):
             flush()
             if in_code:
-                paragraph = document.add_paragraph("\n".join(code_lines), style="Code Block")
+                style = "Output Block" if code_language in {"text", "output"} else "Code Block"
+                paragraph = document.add_paragraph("\n".join(code_lines), style=style)
                 paragraph.paragraph_format.keep_together = True
                 code_lines = []
+                code_language = ""
                 in_code = False
             else:
+                code_language = stripped[3:].strip().lower()
                 in_code = True
             index += 1
             continue
@@ -371,7 +433,12 @@ def parse_body(document: Document, markdown: str) -> tuple[int, int]:
         heading = re.match(r"^(#{1,3})\s+(.+)$", stripped)
         if heading:
             flush()
-            document.add_heading(heading.group(2), level=len(heading.group(1)))
+            title = heading.group(2)
+            if len(heading.group(1)) == 1 and (
+                title.startswith("Phụ lục") or title == "Tài liệu tham khảo"
+            ):
+                document.add_page_break()
+            document.add_heading(title, level=len(heading.group(1)))
             index += 1
             continue
         if stripped.startswith("|") and index + 1 < len(lines) and re.match(r"^\|?\s*:?-+", lines[index + 1].strip()):
@@ -382,7 +449,9 @@ def parse_body(document: Document, markdown: str) -> tuple[int, int]:
                 table_lines.append(lines[index].strip())
                 index += 1
             rows = [[cell.strip() for cell in row.strip("|").split("|")] for row in table_lines]
-            add_table(document, rows)
+            if tables >= len(TABLE_CAPTIONS):
+                raise RuntimeError("Missing table caption definition")
+            add_table(document, rows, TABLE_CAPTIONS[tables])
             tables += 1
             continue
         bullet = re.match(r"^[-*]\s+(.+)$", stripped)
@@ -448,8 +517,17 @@ def validate(expected_tables: int, expected_figures: int) -> None:
     missing = [item for item in required if item not in full]
     if missing:
         raise RuntimeError(f"Missing report facts: {missing}")
-    if "**" in text or re.search(r"(?<!`)`[^`]+`", text):
-        raise RuntimeError("Literal Markdown artifact in DOCX paragraphs")
+    prose_text = "\n".join(
+        paragraph.text for paragraph in document.paragraphs
+        if paragraph.style.name not in {"Code Block", "Output Block"}
+    )
+    artifact_paragraphs = [
+        paragraph.text for paragraph in document.paragraphs
+        if paragraph.style.name not in {"Code Block", "Output Block"}
+        and ("**" in paragraph.text or re.search(r"(?<!`)`[^`]+`", paragraph.text))
+    ]
+    if artifact_paragraphs:
+        raise RuntimeError(f"Literal Markdown artifact in DOCX prose: {artifact_paragraphs[:3]}")
     images = [relationship for relationship in document.part.rels.values() if "image" in relationship.reltype]
     if len(document.tables) != expected_tables or len(images) != expected_figures:
         raise RuntimeError(f"Structure mismatch: tables={len(document.tables)}, images={len(images)}")
@@ -459,15 +537,66 @@ def validate(expected_tables: int, expected_figures: int) -> None:
     ]
     if duplicate_captions:
         raise RuntimeError(f"Missing or duplicated figure captions: {duplicate_captions}")
+    bad_table_captions = [
+        number for number in range(1, len(document.tables) + 1)
+        if text.count(f"Bảng {number}.") != 1
+    ]
+    if bad_table_captions:
+        raise RuntimeError(f"Missing or duplicated table captions: {bad_table_captions}")
     if "TOC \\o" not in document._element.xml or "PAGE" not in document.sections[0].footer._element.xml:
         raise RuntimeError("TOC/page-number field missing")
+    external_links = {
+        relationship.target_ref for relationship in document.part.rels.values()
+        if relationship.reltype == RT.HYPERLINK and relationship.is_external
+    }
+    required_links = {
+        "https://intelligent-system-assignment-01.vercel.app",
+        "https://intelligent-system-assignment-01.onrender.com",
+        "https://intelligent-system-assignment-01.onrender.com/docs",
+        "https://github.com/Sagitoaz/intelligent-system-assignment-01",
+    }
+    if not required_links.issubset(external_links):
+        raise RuntimeError(f"Missing clickable deployment links: {required_links - external_links}")
     section = document.sections[0]
     if abs(section.page_width.cm - 21) > 0.05 or abs(section.page_height.cm - 29.7) > 0.05:
         raise RuntimeError("Not A4")
     word_count = len(re.findall(r"\b\w+[\w-]*\b", text, flags=re.UNICODE))
-    estimated_pages = round(2 + word_count / 520 + len(images) * 0.32 + len(document.tables) * 0.12)
+    prose_word_count = len(re.findall(r"\b\w+[\w-]*\b", prose_text, flags=re.UNICODE))
+    evidence_blocks = [
+        paragraph for paragraph in document.paragraphs
+        if paragraph.style.name in {"Code Block", "Output Block"}
+    ]
+    code_blocks = sum(paragraph.style.name == "Code Block" for paragraph in evidence_blocks)
+    output_blocks = sum(paragraph.style.name == "Output Block" for paragraph in evidence_blocks)
+    analysis_paragraphs = sum(
+        "Phân tích" in paragraph.text for paragraph in document.paragraphs
+    )
+    evidence_lines = sum(paragraph.text.count("\n") + 1 for paragraph in evidence_blocks)
+    max_evidence_line = max(
+        (len(line) for paragraph in evidence_blocks for line in paragraph.text.splitlines()),
+        default=0,
+    )
+    if max_evidence_line > 115:
+        raise RuntimeError(f"Code/output line may overflow: {max_evidence_line} characters")
+    content_width = section.page_width - section.left_margin - section.right_margin
+    if any(shape.width > content_width for shape in document.inline_shapes):
+        raise RuntimeError("Inline image exceeds the writable page width")
+    page_breaks = document._element.xml.count('w:type="page"')
+    estimated_pages = round(
+        2
+        + prose_word_count / 500
+        + evidence_lines / 55
+        + len(images) * 0.30
+        + len(document.tables) * 0.16
+    )
     print(f"DOCX={DOCX}")
-    print(f"paragraphs={len(document.paragraphs)} tables={len(document.tables)} images={len(images)} words~={word_count}")
+    print(
+        f"paragraphs={len(document.paragraphs)} tables={len(document.tables)} "
+        f"images={len(images)} words~={word_count} evidence_blocks={len(evidence_blocks)} "
+        f"code_blocks={code_blocks} output_blocks={output_blocks} "
+        f"analysis_paragraphs={analysis_paragraphs} evidence_lines={evidence_lines} "
+        f"max_evidence_line={max_evidence_line} page_breaks={page_breaks}"
+    )
     print(f"estimated_pages~={estimated_pages} valid_zip=True a4=True toc=True page_numbers=True facts=True")
 
 
