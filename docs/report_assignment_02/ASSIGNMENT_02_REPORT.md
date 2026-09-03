@@ -75,6 +75,8 @@ Trong bảng, `B` là số observations được suy luận cùng lúc. Với Ec
 
 ## 4.1 Bằng chứng code: hidden-zero của Diabetes
 
+**In [D-01] — Cell xử lý hidden-zero**
+
 ```python
 invalid_zero_columns = [
     "Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI"
@@ -84,11 +86,25 @@ df_clean[invalid_zero_columns] = (
 )
 ```
 
+**Out [D-01] — Output đã lưu trong notebook**
+
+```text
+NaN count after replacing invalid zeros
+Glucose            5
+BloodPressure     35
+SkinThickness    227
+Insulin           374
+BMI                11
+Rows removed        0
+```
+
 **Giải thích:** Code chỉ đổi zero thành missing cho các phép đo sinh lý mà zero không hợp lý. `Pregnancies=0` được giữ vì là giá trị có nghĩa. `SimpleImputer(strategy="median")` nằm trong `Pipeline`, nên median được học từ training folds thay vì toàn dataset.
 
-**Phân tích kết quả:** Việc xử lý hidden zero ngăn model coi “không đo được” là mức sinh lý cực thấp. Nó cũng giải thích tại sao raw representation và clean representation khác nhau dù đều có sáu cột.
+**Giải thích output:** Năm con số trong `Out [D-01]` khớp đúng số zero bất hợp lý đã thống kê trước phép thay thế. `Rows removed = 0` xác nhận cell chỉ đánh dấu measurement thiếu, không xóa observation. Việc xử lý này ngăn model coi “không đo được” là mức sinh lý cực thấp và giải thích tại sao raw representation với clean representation khác nhau dù đều có sáu cột.
 
 ## 4.2 Bằng chứng code: Address thành Province
+
+**In [H-01] — Cell rút gọn Address**
 
 ```python
 def extract_province(address):
@@ -102,11 +118,22 @@ def extract_province(address):
 df_clean["Province"] = df_clean["Address"].apply(extract_province)
 ```
 
+**Out [H-01] — Output đã lưu trong notebook**
+
+```text
+Address unique values before transform : 10265
+Province unique values after transform : 60
+Province missing values                : 0
+Rows after transform                   : 30229
+```
+
 **Giải thích:** Thành phần địa lý cuối được chuẩn hóa Unicode và ánh xạ alias. Input là `Address`; output là một category `Province`. Phép biến đổi không đọc `Price`, nên không tạo target leakage.
 
-**Phân tích kết quả:** Output notebook xác nhận 0 Province missing và 60 labels. Cách này giảm cardinality so với one-hot trực tiếp 10.265 địa chỉ, đồng thời vẫn giữ tín hiệu thị trường.
+**Giải thích output:** Cardinality giảm từ 10.265 địa chỉ xuống 60 Province trong khi vẫn giữ đủ 30.229 observations và không tạo giá trị Province thiếu. Cách này làm one-hot representation gọn hơn nhưng vẫn giữ tín hiệu thị trường theo địa lý.
 
 ## 4.3 Bằng chứng code: TF-IDF và FeatureUnion
+
+**In [E-01] — Cell tạo hai nhánh feature**
 
 ```python
 text = Pipeline([
@@ -124,9 +151,20 @@ tabular = Pipeline([
 features = FeatureUnion([("text", text), ("tabular", tabular)])
 ```
 
+**Out [E-01] — Output đã lưu trong notebook**
+
+```text
+TF-IDF vocabulary size       : 12000
+Engineered numerical columns : 5
+Text representation shape    : (1, 12000)
+Tabular representation shape : (1, 5)
+Combined representation      : (1, 12005)
+Combined matrix type         : sparse
+```
+
 **Giải thích:** `TfidfVectorizer` học vocabulary chỉ từ training data và tạo sparse unigram/bigram weights. Nhánh tabular tạo numerator, denominator, helpfulness ratio, review length, summary length; `MaxAbsScaler` giữ khả năng xử lý sparse. `FeatureUnion` ghép hai nhánh theo cột.
 
-**Phân tích kết quả:** Token ID chỉ là vị trí trong vocabulary; TF-IDF vector chứa weighted term values; embedding là dense learned vector. Notebook không đồng nhất ba khái niệm. TF-IDF được chọn thay vì tensor Transformer `B×T×d` vì phù hợp CPU, 120.000 rows và deployment gọn; đổi lại nó mất phần lớn context ngoài bigram.
+**Giải thích output:** Shape thực tế chứng minh phép cộng chiều `12.000 + 5 = 12.005`; đây là model input sau transform chứ không phải 12.005 trường người dùng phải nhập. Token ID chỉ là vị trí trong vocabulary; TF-IDF vector chứa weighted term values; embedding là dense learned vector. Notebook không đồng nhất ba khái niệm. TF-IDF được chọn thay vì tensor Transformer `B×T×d` vì phù hợp CPU, 120.000 rows và deployment gọn; đổi lại nó mất phần lớn context ngoài bigram.
 
 # 5. Tiền xử lý và EDA
 
@@ -297,7 +335,7 @@ Phụ lục này chọn các cell đại diện trong notebook Diabetes thay vì
 
 ## A.1 Khảo sát dataset và target
 
-**Đoạn mã A.1 — Đọc dữ liệu và xác nhận kích thước**
+**In [A.1] — Đọc dữ liệu và xác nhận kích thước**
 
 ```python
 df = pd.read_csv(DATA_PATH)
@@ -307,9 +345,7 @@ print("Number of columns:", columns)
 df.head()
 ```
 
-**Giải thích mã:** `read_csv` tạo một observation cho mỗi hàng; `shape` kiểm tra quy mô trước mọi phép biến đổi. `head` cho phép đối chiếu tên cột và kiểu giá trị thực tế thay vì suy đoán schema.
-
-**Kết quả thực thi:**
+**Out [A.1] — Output đã lưu trong notebook**
 
 ```text
 Number of observations: 768
@@ -320,13 +356,13 @@ Class counts: Outcome 0 = 500; Outcome 1 = 268
 Class percentages: 65.1% và 34.9%
 ```
 
-**Phân tích kết quả:** Chín cột gồm tám candidate inputs và target `Outcome`. Chênh lệch 500–268 tạo mất cân bằng vừa phải: một bộ phân loại luôn trả lớp 0 vẫn đạt Accuracy gần 65%. Vì vậy các thí nghiệm phía sau phải đọc đồng thời Precision, Recall, F1-score và confusion matrix.
+**Giải thích code và output:** `read_csv` tạo một observation cho mỗi hàng; `shape` kiểm tra quy mô trước mọi phép biến đổi. `head` cho phép đối chiếu tên cột và kiểu giá trị thực tế thay vì suy đoán schema. Output xác nhận chín cột gồm tám candidate inputs và target `Outcome`. Chênh lệch 500–268 tạo mất cân bằng vừa phải: một bộ phân loại luôn trả lớp 0 vẫn đạt Accuracy gần 65%. Vì vậy các thí nghiệm phía sau phải đọc đồng thời Precision, Recall, F1-score và confusion matrix.
 
 **Ý nghĩa đối với bước tiếp theo:** Target được tách khỏi `X`; split sử dụng `stratify=y` để giữ tỷ lệ lớp giữa train và test. Baseline majority-class được giữ làm mốc nhằm phát hiện trường hợp Accuracy cao nhưng không nhận diện lớp Diabetic.
 
 ## A.2 Hidden-zero và ý nghĩa của missing measurement
 
-**Đoạn mã A.2 — Đếm zero ở các phép đo sinh lý**
+**In [A.2] — Đếm zero ở các phép đo sinh lý**
 
 ```python
 zero_check_columns = [
@@ -338,7 +374,7 @@ zero_summary = pd.DataFrame({
 })
 ```
 
-**Kết quả thực thi:**
+**Out [A.2] — Output đã lưu trong notebook**
 
 ```text
                Zero Count  Zero Percentage (%)
@@ -349,13 +385,11 @@ Insulin               374                48.70
 BMI                    11                 1.43
 ```
 
-**Giải thích mã:** Kiểm tra `isna()` ban đầu trả zero missing values, nhưng giá trị số 0 ở những phép đo trên không hợp lý về sinh lý và thực chất biểu diễn “không đo được”. Code tách riêng danh sách này để tránh áp dụng quy tắc một cách mù quáng cho mọi cột.
-
-**Phân tích kết quả:** `SkinThickness` và `Insulin` có tỷ lệ hidden-zero lần lượt 29,56% và 48,70%, cao hơn rõ rệt ba phép đo còn lại. Ngược lại, `Pregnancies=0` là trạng thái hợp lệ nên không được đổi thành missing. Nếu đổi zero của `Pregnancies`, mô hình sẽ làm mất thông tin có nghĩa; nếu giữ zero của `Insulin`, scaler và model sẽ coi missing measurement như một mức insulin cực thấp.
+**Giải thích code và output:** Kiểm tra `isna()` ban đầu trả zero missing values, nhưng giá trị số 0 ở những phép đo trên không hợp lý về sinh lý và thực chất biểu diễn “không đo được”. Code tách riêng danh sách này để tránh áp dụng quy tắc một cách mù quáng cho mọi cột. Output cho thấy `SkinThickness` và `Insulin` có tỷ lệ hidden-zero lần lượt 29,56% và 48,70%, cao hơn rõ rệt ba phép đo còn lại. Ngược lại, `Pregnancies=0` là trạng thái hợp lệ nên không được đổi thành missing. Nếu đổi zero của `Pregnancies`, mô hình sẽ làm mất thông tin có nghĩa; nếu giữ zero của `Insulin`, scaler và model sẽ coi missing measurement như một mức insulin cực thấp.
 
 **Ý nghĩa đối với bước tiếp theo:** Các zero không hợp lý được đổi thành `NaN`, sau đó imputation diễn ra bên trong Pipeline. Mức thiếu rất lớn của `SkinThickness` và `Insulin` là một bằng chứng thực nghiệm hỗ trợ việc so sánh representation sáu và tám feature thay vì mặc định “nhiều feature hơn luôn tốt hơn”.
 
-**Đoạn mã A.3 — Chuyển zero không hợp lý thành missing**
+**In [A.3] — Chuyển zero không hợp lý thành missing**
 
 ```python
 invalid_zero_columns = [
@@ -365,6 +399,8 @@ df_clean[invalid_zero_columns] = (
     df_clean[invalid_zero_columns].replace(0, np.nan)
 )
 ```
+
+**Out [A.3] — Output đã lưu trong notebook**
 
 ```text
 Glucose            5
@@ -378,7 +414,7 @@ BMI               11
 
 ## A.3 Representation sáu feature và Pipeline chống leakage
 
-**Đoạn mã A.4 — Xác định raw representation cuối**
+**In [A.4] — Xác định raw representation cuối**
 
 ```python
 selected_features = [
@@ -389,9 +425,19 @@ X = df_clean[selected_features].copy()
 y = df_clean["Outcome"].copy()
 ```
 
-Mỗi observation trước preprocessing là một vector sáu giá trị. Sau hidden-zero handling, median imputation và scaling, shape vẫn là `B×6`; các phép biến đổi chỉ thay giá trị chứ không sinh thêm cột. `B` là số hồ sơ được suy luận cùng lúc, còn 6 là số raw numerical features đã chốt.
+**Out [A.4] — Output đã lưu trong notebook**
 
-**Đoạn mã A.5 — Pipeline tiền xử lý và classifier**
+```text
+selected_features:
+['Pregnancies', 'Glucose', 'BloodPressure', 'BMI',
+ 'DiabetesPedigreeFunction', 'Age']
+X shape: (768, 6)
+y shape: (768,)
+```
+
+**Giải thích code và output:** Mỗi observation trước preprocessing là một vector sáu giá trị. Output `X shape = (768, 6)` xác nhận representation có đúng sáu cột; `y` chỉ chứa target và không nằm trong feature matrix. Sau hidden-zero handling, median imputation và scaling, shape vẫn là `B×6`; các phép biến đổi chỉ thay giá trị chứ không sinh thêm cột. `B` là số hồ sơ được suy luận cùng lúc.
+
+**In [A.5] — Pipeline tiền xử lý và classifier**
 
 ```python
 preprocessor = Pipeline([
@@ -407,9 +453,18 @@ final_model = Pipeline([
 ])
 ```
 
-**Giải thích mã:** `SimpleImputer` học median và `StandardScaler` học mean/standard deviation khi Pipeline được `fit`. Trong cross-validation, mỗi training fold học thống kê riêng; validation fold chỉ đi qua `transform`. Artifact lưu cả hai transformer và classifier.
+**Out [A.5] — Output đã lưu trong notebook**
 
-**Kết quả thực thi:** Split có 614 training samples và 154 testing samples; tỷ lệ lớp lần lượt xấp xỉ 0,651/0,349 và 0,649/0,351. Persisted model tải lại cho demo predictions `[0, 0, 1]`, bằng predictions trước khi lưu.
+```text
+Training samples : 614
+Testing samples  : 154
+Train class ratio: class 0 = 0.651; class 1 = 0.349
+Test class ratio : class 0 = 0.649; class 1 = 0.351
+Reloaded demo predictions: [0, 0, 1]
+Predictions before/after save are equal: True
+```
+
+**Giải thích code và output:** `SimpleImputer` học median và `StandardScaler` học mean/standard deviation khi Pipeline được `fit`. Trong cross-validation, mỗi training fold học thống kê riêng; validation fold chỉ đi qua `transform`. Output xác nhận stratified split giữ tỷ lệ lớp gần như nhau và artifact tải lại cho đúng ba demo predictions `[0, 0, 1]`. Artifact vì thế chứa cả hai transformer lẫn classifier, không chỉ estimator cuối.
 
 **Ý nghĩa đối với bước tiếp theo:** Tại inference, API chỉ tạo DataFrame sáu cột rồi gọi `predict`/`predict_proba`; không fit imputer, scaler hoặc model. Đây là ranh giới chống leakage và chống sai khác giữa notebook với production.
 
@@ -430,7 +485,7 @@ final_model = Pipeline([
 
 ## A.5 Controlled experiments: depth và 6-vs-8 feature
 
-**Đoạn mã A.6 — Cross-validation theo max_depth**
+**In [A.6] — Cross-validation theo max_depth**
 
 ```python
 rf_depth_6_scores = cross_val_score(
@@ -439,6 +494,8 @@ rf_depth_6_scores = cross_val_score(
 print(rf_depth_6_scores)
 print("Mean F1-score:", round(rf_depth_6_scores.mean(), 4))
 ```
+
+**Out [A.6] — Output đã lưu trong notebook**
 
 ```text
 max_depth=2     mean CV F1 = 0.5513
@@ -484,7 +541,7 @@ Kết quả chỉ minh họa hệ thống phân loại học thuật. Dataset nh
 
 ## B.1 Dataset, observation và target
 
-**Đoạn mã B.1 — Đọc dữ liệu và kiểm tra schema**
+**In [B.1] — Đọc dữ liệu và kiểm tra schema**
 
 ```python
 df = pd.read_csv(DATA_PATH)
@@ -494,6 +551,8 @@ print("Number of columns:", columns)
 print(df.columns.tolist())
 ```
 
+**Out [B.1] — Output đã lưu trong notebook**
+
 ```text
 Number of observations: 30229
 Number of columns: 12
@@ -502,11 +561,11 @@ Balcony direction, Floors, Bedrooms, Bathrooms,
 Legal status, Furniture state, Price
 ```
 
-**Giải thích và phân tích:** Mỗi hàng là một tin đăng, không phải một giao dịch hoàn tất. `Price` là target liên tục theo tỷ VND; 11 cột còn lại là candidate raw inputs. Target có minimum 1,0, maximum 11,5, mean 5,8721, median 5,9 và skewness -0,029 trong dataset đã dùng. Vì đây là regression, báo cáo dùng MAE, MSE, RMSE, R² và MAPE; không có khái niệm Accuracy cho giá nhà.
+**Giải thích code và output:** Mỗi hàng là một tin đăng, không phải một giao dịch hoàn tất. Output xác nhận dataset có 30.229 observations, 11 candidate raw inputs và target liên tục `Price` theo tỷ VND. Target có minimum 1,0, maximum 11,5, mean 5,8721, median 5,9 và skewness -0,029 trong dataset đã dùng. Vì đây là regression, báo cáo dùng MAE, MSE, RMSE, R² và MAPE; không có khái niệm Accuracy cho giá nhà.
 
 ## B.2 Missingness và quyết định giữ observation
 
-**Đoạn mã B.2 — Missing-value ledger**
+**In [B.2] — Missing-value ledger**
 
 ```python
 missing_summary = pd.DataFrame({
@@ -515,7 +574,7 @@ missing_summary = pd.DataFrame({
 })
 ```
 
-**Kết quả thực thi:**
+**Out [B.2] — Output đã lưu trong notebook**
 
 ```text
 Frontage             11564 missing
@@ -533,7 +592,7 @@ Furniture state       14119 missing
 
 ## B.3 Từ Address cardinality cao đến Province
 
-**Đoạn mã B.3 — Trích xuất và chuẩn hóa Province**
+**In [B.3] — Trích xuất và chuẩn hóa Province**
 
 ```python
 def extract_province(address):
@@ -551,15 +610,23 @@ def extract_province(address):
 df_clean["Province"] = df_clean["Address"].apply(extract_province)
 ```
 
-**Giải thích mã:** `Address` có 10.265 unique values, quá chi tiết để one-hot trực tiếp trong phạm vi dataset này. Hàm chuẩn hóa Unicode, lấy thành phần sau dấu phẩy cuối và gom alias đã biết. Đây là parsing xác định, không phải geocoding và không suy ra tọa độ.
+**Out [B.3] — Output đã lưu trong notebook**
 
-**Kết quả thực thi:** Dataset sau làm sạch vẫn có 30.229 rows, zero row dropped và zero missing target. Province tạo được 60 nhãn chuẩn hóa; Hồ Chí Minh và Hà Nội chiếm phần lớn observations.
+```text
+Address unique values before transform : 10265
+Province unique values after transform : 60
+Rows before / after transform           : 30229 / 30229
+Rows dropped                            : 0
+Missing Price                           : 0
+```
+
+**Giải thích code và output:** `Address` có 10.265 unique values, quá chi tiết để one-hot trực tiếp trong phạm vi dataset này. Hàm chuẩn hóa Unicode, lấy thành phần sau dấu phẩy cuối và gom alias đã biết. Output xác nhận dataset sau làm sạch vẫn có 30.229 rows, zero row dropped, zero missing target và 60 Province labels chuẩn hóa. Đây là parsing xác định, không phải geocoding và không suy ra tọa độ.
 
 **Ý nghĩa:** Province giảm cardinality, tạo representation ổn định hơn và vẫn giữ tín hiệu thị trường theo địa lý. Geographic imbalance còn lại được ghi là limitation thay vì xem preprocessing là đã giải quyết hoàn toàn.
 
 ## B.4 ColumnTransformer và 11→83 dimensions
 
-**Đoạn mã B.4 — Hai nhánh preprocessing**
+**In [B.4] — Hai nhánh preprocessing**
 
 ```python
 def create_preprocessor(numeric_features, categorical_features):
@@ -577,9 +644,7 @@ def create_preprocessor(numeric_features, categorical_features):
     ])
 ```
 
-**Giải thích mã:** Numerical và categorical columns cần phép biến đổi khác nhau nên được định tuyến bằng `ColumnTransformer`. Không dùng `LabelEncoder` cho Province/hướng/trạng thái vì integer code sẽ tạo thứ tự giả. `handle_unknown="ignore"` khiến category mới ở inference trở thành vector zero trong nhóm tương ứng thay vì làm API crash.
-
-**Kết quả thực thi:**
+**Out [B.4] — Output đã lưu trong notebook**
 
 ```text
 original df shape = (30229, 12)
@@ -588,7 +653,7 @@ example raw shape = (1, 11)
 transformed representation shape = (1, 83)
 ```
 
-**Phân tích kết quả:** Người dùng nhập 11 fields nhưng model nhận 83 numerical columns. Các numerical features vẫn đóng góp một cột mỗi feature; categorical categories mở rộng thành nhiều one-hot indicators. Do đó `B×11` là raw form còn `B×83` mới là model input.
+**Giải thích code và output:** Numerical và categorical columns cần phép biến đổi khác nhau nên được định tuyến bằng `ColumnTransformer`. Không dùng `LabelEncoder` cho Province/hướng/trạng thái vì integer code sẽ tạo thứ tự giả. `handle_unknown="ignore"` khiến category mới ở inference trở thành vector zero trong nhóm tương ứng thay vì làm API crash. Output chứng minh người dùng nhập 11 fields nhưng model nhận 83 numerical columns: `B×11` là raw form còn `B×83` mới là model input.
 
 ## B.5 Model comparison và representation experiment
 
@@ -601,9 +666,31 @@ Assignment 02 bổ sung hai benchmark training-fold:
 | Ridge Regression | 1,4531 | 1,8206 | 0,3230 | 0,6530 |
 | Gradient Boosting | 1,3045 | 1,6375 | 0,4523 | 13,6325 |
 
+**In [B.5] — Controlled comparison 6 và 11 raw features**
+
+```python
+for name, X_rep, numeric_cols, categorical_cols in representation_definitions:
+    pipeline = create_model_pipeline(
+        RandomForestRegressor(
+            n_estimators=100, max_depth=12, random_state=42
+        ),
+        numeric_cols,
+        categorical_cols,
+    )
+    rmse = -cross_val_score(
+        pipeline, X_rep, y_train, cv=cv_strategy,
+        scoring="neg_root_mean_squared_error",
+    )
+    print(name, np.round(rmse, 4), rmse.mean(), rmse.std())
+```
+
+**Out [B.5] — Output đã lưu trong notebook**
+
 ```text
-6 selected features: mean CV RMSE = 1.6526
-11 usable features:  mean CV RMSE = 1.6078
+Selected 6 features folds : [1.6372 1.6894 1.6402 1.6473 1.6490]
+Mean CV RMSE = 1.6526; Std CV RMSE = 0.0189
+All usable 11 fields folds: [1.5814 1.6466 1.5925 1.5983 1.6201]
+Mean CV RMSE = 1.6078; Std CV RMSE = 0.0231
 ```
 
 **Phân tích kết quả:** Khác Diabetes, việc thêm năm raw fields House làm CV RMSE giảm khoảng 0,0448 tỷ VND. Các thuộc tính frontage, access road, directions và furniture bổ sung tín hiệu đủ để bù cho missingness sau imputation. Thí nghiệm chỉ thay representation, giữ split, estimator và CV strategy cố định nên chênh lệch có thể gắn với feature set trong điều kiện này.
@@ -611,6 +698,8 @@ Assignment 02 bổ sung hai benchmark training-fold:
 Depth experiment cho Random Forest đạt CV RMSE thấp nhất tại `max_depth=12` trong các giá trị 4, 8, 12, 16 và None. Final pipeline vì thế dùng 11 raw fields cùng depth 12; quyết định dựa trên training folds, không dựa trên final test.
 
 ## B.6 Final evaluation, residual và limitation
+
+**In [B.6] — Fit final Pipeline và tính regression metrics**
 
 ```python
 final_model = Pipeline([
@@ -622,6 +711,8 @@ final_model = Pipeline([
     ))
 ])
 ```
+
+**Out [B.6] — Output đã lưu trong notebook**
 
 ```text
 MAE   = 1.2529 tỷ VND
@@ -643,7 +734,7 @@ Actual-vs-predicted và residual plot cùng cho thấy regression toward the mea
 
 ## C.1 Dataset, cleaning ledger và sampling
 
-**Đoạn mã C.1 — Đọc file nguồn thực tế**
+**In [C.1] — Đọc file nguồn thực tế**
 
 ```python
 df = pd.read_csv(root / "data/ecommerce/Reviews.csv")
@@ -652,14 +743,16 @@ print("shape:", df.shape)
 df.head()
 ```
 
+**Out [C.1] — Output đã lưu trong notebook**
+
 ```text
 filename: Reviews.csv
 shape: (568454, 10)
 ```
 
-**Phân tích kết quả:** 568.454 là raw dataset size, không phải modeling sample. Quy mô này cùng representation văn bản 12.000 chiều khiến sparse matrix trở thành yêu cầu kỹ thuật; tạo dense matrix sẽ lãng phí bộ nhớ rất lớn.
+**Giải thích code và output:** `read_csv` nạp file nguồn, còn `shape` kiểm tra số observation và số cột trước cleaning. Output xác nhận 568.454 là raw dataset size, không phải modeling sample. Quy mô này cùng representation văn bản 12.000 chiều khiến sparse matrix trở thành yêu cầu kỹ thuật; tạo dense matrix sẽ lãng phí bộ nhớ rất lớn.
 
-**Đoạn mã C.2 — Target, record validation và duplicate removal**
+**In [C.2] — Target, record validation và duplicate removal**
 
 ```python
 work = raw.loc[valid_score & raw["Score"].ne(3)].copy()
@@ -676,6 +769,8 @@ duplicate = work.duplicated(
 )
 work = work.loc[nonblank & helpful & ~duplicate].copy()
 ```
+
+**Out [C.2] — Output đã lưu trong notebook**
 
 ```text
 raw_rows                     568454
@@ -720,7 +815,7 @@ high=4687, quality=7905, mix=6278, love=5942, never=6579
 
 **Phân tích:** Token ID chỉ là vị trí của term trong fitted vocabulary. ID 11989 của `yummy` không có nghĩa “tích cực hơn” ID 433 của `and`; khoảng cách giữa IDs cũng không có ý nghĩa ngữ nghĩa.
 
-**Đoạn mã C.3 — TF-IDF branch**
+**In [C.3] — TF-IDF branch**
 
 ```python
 text = Pipeline([
@@ -736,6 +831,8 @@ text = Pipeline([
     )),
 ])
 ```
+
+**Out [C.3] — Output đã lưu trong notebook**
 
 ```text
 Non-zero TF-IDF values của review thật:
@@ -753,7 +850,7 @@ and never     index 605   value 0.140527
 
 ## C.4 Năm engineered values và final dimension
 
-**Đoạn mã C.4 — Tabular transformer**
+**In [C.4] — Tabular transformer**
 
 ```python
 ratio = numerator / denominator.clip(lower=1)
@@ -766,7 +863,18 @@ return np.column_stack([
 ])
 ```
 
-Năm values gồm helpfulness numerator, denominator, ratio, review word count và summary word count. Mẫu số được chặn tối thiểu 1 để trường hợp 0/0 hợp lệ không gây division-by-zero. `FeatureUnion` ghép `12.000` text columns với `5` numerical columns, tạo `X_final ∈ R^(B×12005)`. API vẫn chỉ nhận bốn raw fields; 12.005 dimensions được tái tạo hoàn toàn bên trong persisted Pipeline.
+**Out [C.4] — Output đã lưu trong notebook**
+
+```text
+Engineered feature names:
+['HelpfulnessNumerator', 'HelpfulnessDenominator',
+ 'HelpfulnessRatio', 'ReviewWordCount', 'SummaryWordCount']
+Tabular shape          : (1, 5)
+TF-IDF shape           : (1, 12000)
+Combined feature shape : (1, 12005)
+```
+
+**Giải thích code và output:** Năm values gồm helpfulness numerator, denominator, ratio, review word count và summary word count. Mẫu số được chặn tối thiểu 1 để trường hợp 0/0 hợp lệ không gây division-by-zero. Output xác nhận `FeatureUnion` ghép `12.000` text columns với `5` numerical columns, tạo `X_final ∈ R^(B×12005)`. API vẫn chỉ nhận bốn raw fields; 12.005 dimensions được tái tạo hoàn toàn bên trong persisted Pipeline.
 
 ## C.5 Controlled representation comparison
 
@@ -817,12 +925,16 @@ Confusion matrix [[2242, 561], [221, 14976]]
 
 ## C.8 Persistence và inference độc lập notebook
 
+**In [C.8] — Fresh-process load và prediction**
+
 ```python
 artifact = root / "models/ecommerce/ecommerce_interest_model.joblib"
 pipeline = joblib.load(artifact)
 predictions = pipeline.predict(demo)
 probabilities = pipeline.predict_proba(demo)[:, 1]
 ```
+
+**Out [C.8] — Output đã lưu trong notebook**
 
 ```text
 feature_names_in_:

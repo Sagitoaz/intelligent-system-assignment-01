@@ -203,9 +203,11 @@ def configure(document: Document) -> None:
     caption.paragraph_format.first_line_indent = Cm(0)
     caption.paragraph_format.space_after = Pt(5)
 
-    for style_name, fill, font_size in (
-        ("Code Block", "F2F6F5", 9.0),
-        ("Output Block", "EEF5F9", 9.0),
+    # Jupyter-like evidence cells: a neutral code area and a visually distinct
+    # output area. The coloured left rule makes In/Out pairs easy to scan.
+    for style_name, fill, border_color, font_size in (
+        ("Code Block", "F7F7F7", "2F6FEB", 9.0),
+        ("Output Block", "F7FBFF", "D97706", 9.0),
     ):
         if style_name not in document.styles:
             block_style = document.styles.add_style(style_name, WD_STYLE_TYPE.PARAGRAPH)
@@ -226,6 +228,18 @@ def configure(document: Document) -> None:
             shading = OxmlElement("w:shd")
             properties.append(shading)
         shading.set(qn("w:fill"), fill)
+        borders = properties.find(qn("w:pBdr"))
+        if borders is None:
+            borders = OxmlElement("w:pBdr")
+            properties.append(borders)
+        left_border = borders.find(qn("w:left"))
+        if left_border is None:
+            left_border = OxmlElement("w:left")
+            borders.append(left_border)
+        left_border.set(qn("w:val"), "single")
+        left_border.set(qn("w:sz"), "18")
+        left_border.set(qn("w:space"), "6")
+        left_border.set(qn("w:color"), border_color)
 
     header = section.header.paragraphs[0]
     header.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -488,7 +502,7 @@ def build() -> tuple[int, int]:
     run.font.color.rgb = RGBColor.from_string(TEAL)
     toc = document.add_paragraph()
     toc.paragraph_format.first_line_indent = Cm(0)
-    add_field(toc, 'TOC \\o "1-3" \\h \\z \\u', "Cập nhật mục lục trong Microsoft Word")
+    add_field(toc, 'TOC \\o "1-3" \\h \\z \\u', "")
     document.add_page_break()
     tables, figures = parse_body(document, MARKDOWN.read_text(encoding="utf-8"))
     settings = document.settings._element
@@ -568,6 +582,17 @@ def validate(expected_tables: int, expected_figures: int) -> None:
     ]
     code_blocks = sum(paragraph.style.name == "Code Block" for paragraph in evidence_blocks)
     output_blocks = sum(paragraph.style.name == "Output Block" for paragraph in evidence_blocks)
+    markdown = MARKDOWN.read_text(encoding="utf-8")
+    fence_languages = re.findall(r"^```(python|text|output)\s*$", markdown, flags=re.MULTILINE)
+    unpaired_code_blocks = [
+        index for index, language in enumerate(fence_languages)
+        if language == "python"
+        and (index + 1 >= len(fence_languages) or fence_languages[index + 1] not in {"text", "output"})
+    ]
+    if unpaired_code_blocks:
+        raise RuntimeError(f"Python evidence without following output block: {unpaired_code_blocks}")
+    if markdown.count("**In [") < code_blocks or markdown.count("**Out [") < code_blocks:
+        raise RuntimeError("Every notebook code excerpt must have explicit In/Out labels")
     analysis_paragraphs = sum(
         "Phân tích" in paragraph.text for paragraph in document.paragraphs
     )
