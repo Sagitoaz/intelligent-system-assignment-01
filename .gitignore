@@ -41,5 +41,13 @@ models/*.joblib
 # Large local-only Kaggle source dataset (download separately for notebooks)
 data/ecommerce/Reviews.csv
 
+# Assignment 03 raw datasets (local-only; notebooks use saved paths/artifacts)
+data/diabetes/diabetes_012_health_indicators_BRFSS2015.csv
+data/diabetes/diabetes_binary_5050split_health_indicators_BRFSS2015.csv
+data/diabetes/diabetes_binary_health_indicators_BRFSS2015.csv
+data/house_price/realtor-data.zip.csv
+data/ecommerce/train.csv
+data/ecommerce/test.csv
+
 .DS_Store
 Thumbs.db

@@ -1,0 +1,5 @@
+model,split,accuracy,precision,recall,f1,roc_auc,training_seconds,parameter_count,learned_representation,input_representation,interpretability
+Logistic Regression,official test,0.92878,0.9283687659846548,0.92926,0.9288141691987846,0.9787837385999999,19.93222370001604,,False,Sparse TF-IDF unigram+bigram,Coefficient/token likelihood
+LinearSVC,official test,0.929135,0.9283425662524329,0.93006,0.9292004895471688,0.97900195215,42.20941720000701,,False,Sparse TF-IDF unigram+bigram,Coefficient/token likelihood
+ComplementNB,official test,0.88496,0.8874864114023433,0.8817,0.8845837430021871,0.95437553675,0.3760002000199165,,False,Sparse TF-IDF unigram+bigram,Coefficient/token likelihood
+Deeper MLP / Adam 1e-3,official test,0.929695,0.9271959039618234,0.93262,0.9299000423760501,0.98011204655,1070.9367677000118,1282210.0,True,Sparse TF-IDF unigram+bigram,Phân tán; cần probe

@@ -1,0 +1,12 @@
+# Môi trường độc lập cho Assignment 03 — Python 3.12
+numpy>=2.2,<3
+pandas>=2.2,<4
+scipy>=1.14,<2
+scikit-learn>=1.6,<2
+matplotlib>=3.9,<4
+torch>=2.6,<3
+jupyter>=1,<2
+ipykernel>=6.29,<8
+nbformat>=5.10,<6
+nbclient>=0.10,<1
+joblib>=1.4,<2

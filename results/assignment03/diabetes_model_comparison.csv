@@ -1,0 +1,5 @@
+model,split,accuracy,precision,recall,f1,roc_auc,training_seconds,parameter_count,learned_representation,input_representation,interpretability
+Logistic Regression,test,0.7334174287816672,0.31281892685944024,0.7631082610335722,0.44373766176793156,0.8215558668628574,0.347680799983209,,False,BRFSS scaled ordinal/numeric + binary passthrough,Cao hơn với linear/tree
+Decision Tree,test,0.713313360664354,0.2954993070245824,0.7640513013956998,0.4261743201304508,0.8000663554873431,0.7568226000003051,,False,BRFSS scaled ordinal/numeric + binary passthrough,Cao hơn với linear/tree
+Random Forest,test,0.7850047303689688,0.3535456302777495,0.6554130516786119,0.45932192188222853,0.8248440427204484,18.421089899988146,,False,BRFSS scaled ordinal/numeric + binary passthrough,Cao hơn với linear/tree
+Deeper MLP / Adam 1e-3,test,0.7327078734363502,0.3150216548894461,0.7819690682761222,0.44911444510642906,0.8295832913404421,133.96896790000028,3554.0,True,BRFSS scaled ordinal/numeric + binary passthrough,Phân tán; cần probe
