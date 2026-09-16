@@ -1,0 +1,3 @@
+architecture,mean_validation_f1,mean_validation_loss
+improved,0.4537959149468091,0.533804694811503
+basic,0.4325740061370991,0.5395031571388245

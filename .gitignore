@@ -1,5 +1,6 @@
 # Python environments, bytecode and test caches
 .venv/
+.venv-a04/
 venv/
 __pycache__/
 *.pyc
@@ -48,6 +49,10 @@ data/diabetes/diabetes_binary_health_indicators_BRFSS2015.csv
 data/house_price/realtor-data.zip.csv
 data/ecommerce/train.csv
 data/ecommerce/test.csv
+
+# Assignment 04 derived token tensors above the Git hosting file limit
+results/assignment04/full_scale/prepared/comments/train_ids.npy
+results/assignment04/full_scale/prepared/comments/test_ids.npy
 
 .DS_Store
 Thumbs.db

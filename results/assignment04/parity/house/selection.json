@@ -1,0 +1,6 @@
+{
+  "dataset": "house",
+  "rule": "mean validation RMSE asc, then MAE asc across frameworks",
+  "selected_architecture": "improved",
+  "test_opened_after_selection": true
+}

@@ -1,0 +1,104 @@
+{
+  "dataset": "diabetes",
+  "feature_order": [
+    "BMI",
+    "HighBP",
+    "HighChol",
+    "CholCheck",
+    "HeartDiseaseorAttack",
+    "Stroke",
+    "Smoker",
+    "PhysActivity",
+    "Fruits",
+    "Veggies",
+    "HvyAlcoholConsump",
+    "AnyHealthcare",
+    "NoDocbcCost",
+    "GenHlth",
+    "MentHlth",
+    "PhysHlth",
+    "DiffWalk",
+    "Sex",
+    "Age",
+    "Education",
+    "Income"
+  ],
+  "fit_split": "master_train_only",
+  "means": [
+    28.376295220074784,
+    2.5116513492814345,
+    3.19317925845835,
+    4.243580213542371,
+    8.031670946524304,
+    5.049764607829887,
+    6.053537640221651
+  ],
+  "output_shape_per_row": [
+    1,
+    21
+  ],
+  "prepared_artifact": {
+    "bytes": 413984,
+    "path": "results\\assignment04\\parity\\prepared\\diabetes_parity.npz",
+    "sha256": "8d4f24fa05d4cf326324f81b2e76956485f684db32845e382ccc35029ddaf0e5"
+  },
+  "problem": "classification",
+  "scaled_features": [
+    "BMI",
+    "GenHlth",
+    "MentHlth",
+    "PhysHlth",
+    "Age",
+    "Education",
+    "Income"
+  ],
+  "scales": [
+    6.607856242266359,
+    1.068575759881405,
+    7.427074532430184,
+    8.719427562858785,
+    3.0503536886748446,
+    0.9861900361985135,
+    2.0732872858575773
+  ],
+  "sequence_length": 21,
+  "splits": {
+    "test": {
+      "master_class_counts": {
+        "0.0": 32750,
+        "1.0": 5302
+      },
+      "master_rows": 38052,
+      "parity_class_counts": {
+        "0.0": 8607,
+        "1.0": 1393
+      },
+      "parity_rows": 10000
+    },
+    "train": {
+      "master_class_counts": {
+        "0.0": 152834,
+        "1.0": 24742
+      },
+      "master_rows": 177576,
+      "parity_class_counts": {
+        "0.0": 34427,
+        "1.0": 5573
+      },
+      "parity_rows": 40000
+    },
+    "validation": {
+      "master_class_counts": {
+        "0.0": 32750,
+        "1.0": 5302
+      },
+      "master_rows": 38052,
+      "parity_class_counts": {
+        "0.0": 8607,
+        "1.0": 1393
+      },
+      "parity_rows": 10000
+    }
+  },
+  "vocabulary_size": null
+}

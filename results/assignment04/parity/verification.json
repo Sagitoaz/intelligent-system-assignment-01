@@ -1,0 +1,135 @@
+{
+  "artifact_checks": {
+    "all_figures_nonempty": true,
+    "all_history_losses_finite": true,
+    "all_notebooks_executed_without_errors": true,
+    "all_numeric_outputs_finite_where_present": true,
+    "all_run_keys_once": true,
+    "comments_artifact_checksums_verified": true,
+    "diabetes_manifest_verified": true,
+    "figures": {
+      "comments_parity_loss_curves.png": {
+        "bytes": 129629,
+        "exists": true
+      },
+      "diabetes_parity_loss_curves.png": {
+        "bytes": 105501,
+        "exists": true
+      },
+      "house_parity_loss_curves.png": {
+        "bytes": 107518,
+        "exists": true
+      }
+    },
+    "house_manifest_verified": true,
+    "nonselected_test_metrics_absent": true,
+    "notebooks": {
+      "01_diabetes_cnn.ipynb": {
+        "cells": 35,
+        "code_cells": 9,
+        "error_outputs": 0,
+        "executed_code_cells": 9
+      },
+      "02_house_price_cnn.ipynb": {
+        "cells": 35,
+        "code_cells": 9,
+        "error_outputs": 0,
+        "executed_code_cells": 9
+      },
+      "03_comments_cnn.ipynb": {
+        "cells": 35,
+        "code_cells": 9,
+        "error_outputs": 0,
+        "executed_code_cells": 9
+      }
+    },
+    "parameter_counts_equal_across_frameworks": true,
+    "protected_a03_diff": [],
+    "protected_a03_diff_empty": true,
+    "run_count": 18,
+    "selected_test_rows_per_task": {
+      "comments": 3,
+      "diabetes": 3,
+      "house": 3
+    },
+    "unique_run_keys": 18
+  },
+  "backward_parity_with_pytorch": {
+    "db": 3.5002543609689203e-16,
+    "dw": 4.4092201016550643e-16,
+    "dx": 2.977555756297349e-16
+  },
+  "base_forward_parity": {
+    "basic": {
+      "scratch_tensorflow_logits": 4.76837158203125e-07,
+      "scratch_tensorflow_loss": 1.7881393432617188e-07,
+      "scratch_torch_logits": 7.152557373046875e-07,
+      "scratch_torch_loss": 1.1920928955078125e-07
+    },
+    "improved": {
+      "scratch_tensorflow_logits": 4.76837158203125e-07,
+      "scratch_tensorflow_loss": 0.0,
+      "scratch_torch_logits": 2.384185791015625e-07,
+      "scratch_torch_loss": 0.0
+    }
+  },
+  "finite_difference_relative_errors": {
+    "conv_db": 7.110592385594389e-11,
+    "conv_dw": 1.791253113743665e-10,
+    "conv_dx": 4.106423595158017e-10,
+    "cross_entropy": 3.922199676292386e-11,
+    "dense_db": 9.75413536242477e-12,
+    "dense_dw": 9.457216717567938e-11,
+    "dense_dx": 2.6665347131072905e-10,
+    "embedding": 7.265841895701615e-13,
+    "mse": 3.043949198148071e-10
+  },
+  "procedure_incident": {
+    "dataset": "diabetes",
+    "event": "resume guard initially treated test_samples as a metric and recomputed test for scratch/pytorch once",
+    "fix": "completed-task guard now keys only on three non-null test_loss rows",
+    "impact": "no weights, selection, hyperparameters, or stored metrics changed; no tuning followed"
+  },
+  "task_initial_forward_parity": {
+    "comments": {
+      "basic": {
+        "scratch_pytorch_max_abs": 2.9802322387695312e-08,
+        "scratch_tensorflow_max_abs": 4.470348358154297e-08
+      },
+      "improved": {
+        "scratch_pytorch_max_abs": 1.043081283569336e-07,
+        "scratch_tensorflow_max_abs": 1.043081283569336e-07
+      }
+    },
+    "diabetes": {
+      "basic": {
+        "scratch_pytorch_max_abs": 2.384185791015625e-07,
+        "scratch_tensorflow_max_abs": 4.76837158203125e-07
+      },
+      "improved": {
+        "scratch_pytorch_max_abs": 4.76837158203125e-07,
+        "scratch_tensorflow_max_abs": 7.152557373046875e-07
+      }
+    },
+    "house": {
+      "basic": {
+        "scratch_pytorch_max_abs": 6.51925802230835e-09,
+        "scratch_tensorflow_max_abs": 7.450580596923828e-09
+      },
+      "improved": {
+        "scratch_pytorch_max_abs": 2.9802322387695312e-08,
+        "scratch_tensorflow_max_abs": 2.9802322387695312e-08
+      }
+    }
+  },
+  "tests": {
+    "command": ".venv/Scripts/python.exe -m pytest tests/assignment04 -q",
+    "output": ".........................................................                [100%]\n57 passed in 49.76s",
+    "passed": true
+  },
+  "timing_anomaly": {
+    "recorded_wall_seconds": 44830.81077909999,
+    "run": "comments/improved/tensorflow",
+    "status": "invalid for speed comparison because wall timer included host/session suspension"
+  }
+}

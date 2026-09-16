@@ -1,0 +1,6 @@
+{
+  "dataset": "comments",
+  "rule": "mean validation F1 desc, then loss asc across frameworks",
+  "selected_architecture": "improved",
+  "test_opened_after_selection": true
+}

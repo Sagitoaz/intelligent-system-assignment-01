@@ -1,0 +1,19 @@
+{
+  "status": "pass",
+  "runs": 6,
+  "notebooks": {
+    "01_diabetes_cnn.ipynb": {
+      "cells": 26,
+      "executed_code_cells": 7
+    },
+    "02_house_price_cnn.ipynb": {
+      "cells": 26,
+      "executed_code_cells": 7
+    },
+    "03_comments_cnn.ipynb": {
+      "cells": 26,
+      "executed_code_cells": 7
+    }
+  },
+  "a03_protected_diff": false
+}

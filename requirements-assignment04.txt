@@ -1,0 +1,13 @@
+# Shared Python 3.12 environment used by Assignment 03 and Assignment 04.
+# Versions below are the actual validated A04 core/runtime versions.
+numpy==2.5.2
+pandas==3.0.5
+scipy==1.18.1
+scikit-learn==1.9.0
+matplotlib==3.11.1
+joblib==1.5.3
+torch==2.13.0
+tensorflow==2.21.0
+pytest==9.1.1
+jupyter==1.1.1
+ipykernel==7.3.0

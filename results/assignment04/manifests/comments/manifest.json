@@ -1,0 +1,148 @@
+{
+  "artifact_sha256": {
+    "parity_test_indices.csv": "abc2d8609f14d3faba5630ad4e47d24bbbf44f7a0fd00463c67f378aea213377",
+    "parity_train_indices.csv": "699b80aff5a0bf2d0bd7e5a168937105b7919710dbdecf59bb2346b9782ea955",
+    "parity_validation_indices.csv": "521cd013d12e9f7fdc99805c159a3d02b6800d409e9ed70b42afbb4a41d4f73e",
+    "test_indices.csv": "051fe170e8a5d2d36a2b595604e72f5de18376460ff6658a0cae6bd1fc58520d",
+    "train_indices.csv": "0db5abdcc278b749fce063140b9b4641223dd29ea5aab31c2f46c717c4a78c99",
+    "validation_indices.csv": "70c1dbd0efd3aab9477d2bdcf7adf1e55eb24e1a107f2690e7a1dcf7ebcdd7fc",
+    "vocabulary.json": "654e2465dc447ef2886a9a6a6715eeacc9fb810888e5e6273ca54f83fa0b8527"
+  },
+  "audit": {
+    "after": {
+      "train_test": 0,
+      "train_validation": 0,
+      "validation_test": 0
+    },
+    "before": {
+      "train_test": 11,
+      "train_validation": 3,
+      "validation_test": 1
+    },
+    "before_rates": {
+      "train_test": 5.5e-05,
+      "train_validation": 3e-05,
+      "validation_test": 5e-06
+    },
+    "material_design_change": false,
+    "material_rate_threshold": 0.01
+  },
+  "class_counts": {
+    "test": {
+      "1": 100000,
+      "2": 100000
+    },
+    "train": {
+      "1": 400000,
+      "2": 400000
+    },
+    "validation": {
+      "1": 50000,
+      "2": 50000
+    }
+  },
+  "deduplication": "train-priority; validation excludes train; test excludes train and validation; deterministic refill from own official source",
+  "max_length_decision": {
+    "candidates": [
+      128,
+      192,
+      256
+    ],
+    "p95_exceeds_largest_candidate": false,
+    "recommended_max_len": 192,
+    "selection_percentile": "p95",
+    "train_token_lengths": {
+      "count": 800000,
+      "max": 257,
+      "min": 2,
+      "p50": 71.0,
+      "p75": 109.0,
+      "p90": 146.0,
+      "p95": 163.0,
+      "p99": 184.0,
+      "truncation_rate_at_128": 0.162735,
+      "truncation_rates": {
+        "128": 0.162735,
+        "192": 0.0026975,
+        "256": 1.25e-06
+      }
+    },
+    "truncation_rate_at_final_max_len": 0.0026975,
+    "truncation_rate_at_recommended_max_len": 0.0026975
+  },
+  "normalization": "NFC + lowercase + collapsed whitespace",
+  "parity": {
+    "balanced_sizes": {
+      "test": 10000,
+      "train": 20000,
+      "validation": 5000
+    },
+    "index_files": {
+      "test": "parity_test_indices.csv",
+      "train": "parity_train_indices.csv",
+      "validation": "parity_validation_indices.csv"
+    }
+  },
+  "representation_audit": {
+    "test": {
+      "examples": 200000,
+      "max_len": 192,
+      "oov_token_rate": 0.029047710175797423,
+      "tokens": 15864624,
+      "truncation_rate": 0.002515
+    },
+    "validation": {
+      "examples": 100000,
+      "max_len": 192,
+      "oov_token_rate": 0.028963248405199486,
+      "tokens": 7923248,
+      "truncation_rate": 0.00265
+    }
+  },
+  "seed": 42,
+  "sizes": {
+    "test": 200000,
+    "train": 800000,
+    "validation": 100000
+  },
+  "source_roles": {
+    "test": "official_test only",
+    "train": "official_train only",
+    "validation": "official_train only"
+  },
+  "source_sha256": {
+    "test": "0fa636ac5cdeed0ef2c92b0497dd04c6a68520a8a76bf20acacd7b209e41e5c2",
+    "train": "0cf8915f4bf17d8bdc9087c647f3d3f38d75a4473dc37434dd4ba4853fb732e8"
+  },
+  "sources": {
+    "test": "data\\ecommerce\\test.csv",
+    "train": "data\\ecommerce\\train.csv"
+  },
+  "text_hash": "sha256(normalized UTF-8 text)",
+  "token_length_statistics": {
+    "train": {
+      "count": 800000,
+      "max": 257,
+      "min": 2,
+      "p50": 71.0,
+      "p75": 109.0,
+      "p90": 146.0,
+      "p95": 163.0,
+      "p99": 184.0,
+      "truncation_rate_at_128": 0.162735,
+      "truncation_rates": {
+        "128": 0.162735,
+        "192": 0.0026975,
+        "256": 1.25e-06
+      }
+    }
+  },
+  "vocabulary": {
+    "embedding_dim": 16,
+    "fit_split": "train",
+    "max_tokens": 20000,
+    "oov_id": 1,
+    "pad_id": 0,
+    "path": "vocabulary.json"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "diabetes": {
+    "train": 177576,
+    "validation": 38052,
+    "test": 38052
+  },
+  "house": {
+    "train": 280000,
+    "validation": 60000,
+    "test": 60000
+  },
+  "comments": {
+    "train": 800000,
+    "validation": 100000,
+    "test": 200000
+  }
+}
