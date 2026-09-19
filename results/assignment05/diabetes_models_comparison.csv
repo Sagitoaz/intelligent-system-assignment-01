@@ -1,0 +1,5 @@
+Model,Parameters,Best Epoch,Training Time (s),Accuracy,Precision,Recall,F1,ROC-AUC
+Basic CNN 1D,6850,6,14.59,0.8595,0.6824,0.567,0.5826,0.8188
+LeNet-style 1D,5050,5,13.64,0.8607,0.6877,0.5591,0.5718,0.8188
+VGG-style 1D,16146,5,23.58,0.8633,0.7078,0.5537,0.5638,0.8151
+ResNet-style 1D,7058,6,28.3,0.8603,0.6879,0.5735,0.5913,0.8165
