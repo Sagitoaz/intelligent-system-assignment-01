@@ -1,0 +1,18 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1791263571.259210   15364 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1791263578.091148   15364 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING:tensorflow:TensorFlow GPU support is not available on native Windows for TensorFlow >= 2.11. Even if CUDA/cuDNN are installed, GPU will not be used. Please use WSL2 or the TensorFlow-DirectML plugin.
+WARNING:tensorflow:From E:\WINDOW\Project\intelligent-system-assignment-01\.venv\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+{
+  "records_recomputed": 128,
+  "saved_models_reloaded": 52,
+  "max_probability_reload_error": 8.863438272221913e-08,
+  "raw_hashes_verified": true,
+  "labels_and_sample_counts_verified": true,
+  "thresholds_verified": true,
+  "fingerprint": "1b41aafb020a3dbfaf742bf9ea807d88492209714b637076ca7214b58c118f58",
+  "initial_run_note": "Resume guard added during initial run; initial data/model hashes preserved and checked. Entry-point changes added provenance/output routing only. Metrics and labels independently recomputed before sealing compatibility fingerprint.",
+  "warnings": []
+}

@@ -1,0 +1,63 @@
+{
+  "dataset": "taiwan_bankruptcy",
+  "kind": "random_forest",
+  "framework": "sklearn",
+  "seed": 22,
+  "epochs_budget": 60,
+  "patience": 8,
+  "n_train": 4091,
+  "n_val": 1364,
+  "n_test": 1364,
+  "representation": "tabular",
+  "architecture": "random_forest",
+  "run_fingerprint": "061a5353503e24c569ad1c5c2b2354fb20bdb519ed41624002dfc4b49f41f8eb",
+  "training_seconds": 1.7611994000035338,
+  "parameters": null,
+  "history": [],
+  "metrics": {
+    "accuracy": 0.8782991202346041,
+    "balanced_accuracy": 0.9151515151515152,
+    "roc_auc": 0.9751033057851239,
+    "average_precision": 0.5752713290028407,
+    "f1": 0.336,
+    "precision": 0.20388349514563106,
+    "recall": 0.9545454545454546,
+    "mcc": 0.4096962953638788,
+    "log_loss": 0.06915083159114181,
+    "confusion_matrix": [
+      [
+        1156,
+        164
+      ],
+      [
+        2,
+        42
+      ]
+    ],
+    "threshold": 0.05,
+    "accuracy_at_05": 0.9706744868035191
+  },
+  "validation_metrics": {
+    "accuracy": 0.8563049853372434,
+    "balanced_accuracy": 0.8708333333333333,
+    "roc_auc": 0.9411501377410468,
+    "average_precision": 0.4471447845349524,
+    "f1": 0.2846715328467153,
+    "precision": 0.16956521739130434,
+    "recall": 0.8863636363636364,
+    "mcc": 0.3499867631077463,
+    "log_loss": 0.08553807688134835,
+    "confusion_matrix": [
+      [
+        1129,
+        191
+      ],
+      [
+        5,
+        39
+      ]
+    ],
+    "threshold": 0.05,
+    "accuracy_at_05": 0.9699413489736071
+  }
+}

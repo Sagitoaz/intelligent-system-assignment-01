@@ -1,0 +1,63 @@
+{
+  "dataset": "taiwan_bankruptcy",
+  "kind": "logistic",
+  "framework": "sklearn",
+  "seed": 33,
+  "epochs_budget": 60,
+  "patience": 8,
+  "n_train": 4091,
+  "n_val": 1364,
+  "n_test": 1364,
+  "representation": "tabular",
+  "architecture": "logistic",
+  "run_fingerprint": "061a5353503e24c569ad1c5c2b2354fb20bdb519ed41624002dfc4b49f41f8eb",
+  "training_seconds": 0.022274000002653338,
+  "parameters": null,
+  "history": [],
+  "metrics": {
+    "accuracy": 0.9156891495601173,
+    "balanced_accuracy": 0.8685606060606061,
+    "roc_auc": 0.9182162534435262,
+    "average_precision": 0.4651919265485581,
+    "f1": 0.3850267379679144,
+    "precision": 0.2517482517482518,
+    "recall": 0.8181818181818182,
+    "mcc": 0.4251345122036391,
+    "log_loss": 0.11395657807588577,
+    "confusion_matrix": [
+      [
+        1213,
+        107
+      ],
+      [
+        8,
+        36
+      ]
+    ],
+    "threshold": 0.08,
+    "accuracy_at_05": 0.968475073313783
+  },
+  "validation_metrics": {
+    "accuracy": 0.906158357771261,
+    "balanced_accuracy": 0.8306818181818182,
+    "roc_auc": 0.9227100550964187,
+    "average_precision": 0.35378823426789197,
+    "f1": 0.3402061855670103,
+    "precision": 0.22,
+    "recall": 0.75,
+    "mcc": 0.3735069122640985,
+    "log_loss": 0.1153085008263588,
+    "confusion_matrix": [
+      [
+        1203,
+        117
+      ],
+      [
+        11,
+        33
+      ]
+    ],
+    "threshold": 0.08,
+    "accuracy_at_05": 0.9699413489736071
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "python": "3.12.0",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "numpy": "2.5.2",
+  "torch": "2.13.0+cpu",
+  "tensorflow": "2.21.0",
+  "keras": "3.15.1",
+  "keras_backend": "tensorflow",
+  "sklearn": "1.9.0",
+  "device": "CPU",
+  "threads": 2,
+  "epochs": 60,
+  "patience": 8,
+  "seeds": [
+    11,
+    22,
+    33
+  ],
+  "batch_size": 64,
+  "learning_rate": 0.001,
+  "window": 20,
+  "threshold": "maximize validation balanced accuracy on grid .05:.01:.95",
+  "effective_bias": "RNN/LSTM redundant bias_hh frozen at zero in NumPy/PyTorch",
+  "timing": "training + per-epoch validation, first compilation included",
+  "initial_weights": "same NumPy draw mapped into all frameworks; same mini-batch order"
+}

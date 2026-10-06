@@ -1,0 +1,38 @@
+{
+ "sp500": {
+  "auc_mean": 0.5122546313335786,
+  "auc_sd": 0.015591978692727876,
+  "ensemble_ci": {
+   "auc": 0.514262053735738,
+   "low": 0.47483798575469643,
+   "high": 0.5475991702768703,
+   "p_value_auc_le_half": 0.26936531734132935,
+   "n_boot": 2000,
+   "method": "moving block bootstrap, block=20"
+  }
+ },
+ "vnindex": {
+  "auc_mean": 0.5224712405755648,
+  "auc_sd": 0.0018031090937273245,
+  "ensemble_ci": {
+   "auc": 0.533852696548869,
+   "low": 0.4983861848190087,
+   "high": 0.5803740919576216,
+   "p_value_auc_le_half": 0.02798600699650175,
+   "n_boot": 2000,
+   "method": "moving block bootstrap, block=20"
+  }
+ },
+ "btc": {
+  "auc_mean": 0.5053107962917048,
+  "auc_sd": 0.010505223574411896,
+  "ensemble_ci": {
+   "auc": 0.5072982481639493,
+   "low": 0.4787141108663446,
+   "high": 0.5363289885005719,
+   "p_value_auc_le_half": 0.303848075962019,
+   "n_boot": 2000,
+   "method": "moving block bootstrap, block=20"
+  }
+ }
+}

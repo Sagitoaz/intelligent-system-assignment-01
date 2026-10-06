@@ -1,0 +1,48 @@
+{
+  "files": {
+    "E:/WINDOW/Project/intelligent-system-assignment-01/data/tieuluan/processed/btc.npz": "ebe3d8a6aa611de75889cf7f63f141ec5afb80d229f22499a8c916bc2e9979a1",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/data/tieuluan/processed/credit_default.npz": "6c86cef5e1c50f693b2aec44ffa1314e6e65736c48da29de2040e34b20d30a09",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/data/tieuluan/processed/sp500.npz": "7af19f7b9156847f8741e87cdb41799e4372ac01962f6f8a3bf6ceaf25a6dbe4",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/data/tieuluan/processed/taiwan_bankruptcy.npz": "93de7ca057f9d9f3ae0d5442f8381c9782467b08d39dcfb127691ad204e2c329",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/data/tieuluan/processed/vnindex.npz": "824585deaa8f71ab38bf204c47ee213379e0b4c56590f03d703962254e014162",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/scripts/tieuluan/run_experiments.py": "3cf0a37bc44660a5ce221c7ae3fd76234de241967dd8409dcd70e068f7239513",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/src/tieuluan/config.py": "a71d2fdedca7709f7f31a1bbaecbea2fdbb793657cebda2922d9755bb16383c7",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/src/tieuluan/experiment_data.py": "22a4043761589530b11bf84b67fc3579cc4ff0b5ee6dc42a3d520039f249247f",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/src/tieuluan/experiment_models.py": "84fa233d2c9ecf40adfe62ef51b0c696934664f7ae6224f65ee97aba76317a87",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/src/tieuluan/scratch/__init__.py": "481cbada6c4b06e6fcb9f54fedf633a79fcb7112f12b28a3527cd126e2f59135",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/src/tieuluan/scratch/core.py": "1f9e9f6509e23118920f5a4cedbb137076456332e81a95d2b987848508a110f0",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/src/tieuluan/scratch/gradcheck.py": "14d9b096f0dc7b37a070c3546900e723f74a2f1e2f261df765df15b17953eea2",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/src/tieuluan/scratch/layers.py": "4e8963c4e2a2578d968fc0e6cc675167f28f44c45fcb5d309e0256e8ed701916",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/src/tieuluan/scratch/losses.py": "82c1fb872a3f681882260241bb9edf3db635e470425b4157470ae6d22655f402",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/src/tieuluan/scratch/optim.py": "baca43928e0138cd65974cfc4405554bb2b13c71c9e2a4c0d3375192e0e8d002",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/src/tieuluan/scratch/recurrent.py": "81c0d8412100f30257d9bddb4dcd577fd5a266505a951d2ded86270331f8a0a2",
+    "E:/WINDOW/Project/intelligent-system-assignment-01/src/tieuluan/scratch/train.py": "49b100c4aaa8dd0c37beb159885a852886ab4259592677723cc05dd8687173a5"
+  },
+  "environment": {
+    "python": "3.12.0",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "numpy": "2.5.2",
+    "torch": "2.13.0+cpu",
+    "tensorflow": "2.21.0",
+    "keras": "3.15.1",
+    "keras_backend": "tensorflow",
+    "sklearn": "1.9.0",
+    "device": "CPU",
+    "threads": 2,
+    "epochs": 60,
+    "patience": 8,
+    "seeds": [
+      11,
+      22,
+      33
+    ],
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "window": 20,
+    "threshold": "maximize validation balanced accuracy on grid .05:.01:.95",
+    "effective_bias": "RNN/LSTM redundant bias_hh frozen at zero in NumPy/PyTorch",
+    "timing": "training + per-epoch validation, first compilation included",
+    "initial_weights": "same NumPy draw mapped into all frameworks; same mini-batch order"
+  },
+  "fingerprint": "061a5353503e24c569ad1c5c2b2354fb20bdb519ed41624002dfc4b49f41f8eb"
+}

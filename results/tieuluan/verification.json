@@ -1,0 +1,59 @@
+{
+ "gradient_check": {
+  "mlp": {
+   "max_relative_error": 2.011474320410161e-08,
+   "checked_tensors": 5,
+   "norm_relative_error": 1.9077654819502787e-10
+  },
+  "cnn": {
+   "max_relative_error": 6.821172891198958e-08,
+   "checked_tensors": 5,
+   "norm_relative_error": 9.504389685023447e-11
+  },
+  "rnn": {
+   "max_relative_error": 1.5689033253837648e-07,
+   "checked_tensors": 7,
+   "norm_relative_error": 2.349229931115314e-10
+  },
+  "lstm": {
+   "max_relative_error": 3.557561401602077e-05,
+   "checked_tensors": 7,
+   "norm_relative_error": 9.325923868385889e-09
+  },
+  "gru": {
+   "max_relative_error": 6.916670782917967e-06,
+   "checked_tensors": 7,
+   "norm_relative_error": 5.902922828878912e-10
+  }
+ },
+ "forward_parity_max_abs_logit_diff": {
+  "mlp": {
+   "pytorch": 2.384185791015625e-07,
+   "keras": 2.384185791015625e-07
+  },
+  "cnn4": {
+   "pytorch": 4.76837158203125e-07,
+   "keras": 3.5762786865234375e-07
+  },
+  "cnn8": {
+   "pytorch": 1.1920928955078125e-07,
+   "keras": 1.1920928955078125e-07
+  },
+  "cnndeep": {
+   "pytorch": 1.4901161193847656e-07,
+   "keras": 1.7881393432617188e-07
+  },
+  "rnn": {
+   "pytorch": 1.1920928955078125e-07,
+   "keras": 1.1920928955078125e-07
+  },
+  "lstm": {
+   "pytorch": 2.9802322387695312e-08,
+   "keras": 4.470348358154297e-08
+  },
+  "gru": {
+   "pytorch": 2.9802322387695312e-08,
+   "keras": 4.470348358154297e-08
+  }
+ }
+}

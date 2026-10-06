@@ -1,0 +1,9 @@
+{
+  "records_recomputed": 128,
+  "checkpoints_reloaded": 52,
+  "max_probability_reload_error": 0.0,
+  "fingerprint": "061a5353503e24c569ad1c5c2b2354fb20bdb519ed41624002dfc4b49f41f8eb",
+  "files_changed_since_run": [],
+  "raw_snapshot_verified": true,
+  "labels_counts_thresholds_metrics_verified": true
+}

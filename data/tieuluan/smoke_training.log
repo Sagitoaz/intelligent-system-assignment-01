@@ -1,0 +1,26 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1791245242.748401   20016 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1791245247.283697   20016 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+RUN 1/9 taiwan_bankruptcy__mlp__scratch__11
+DONE AUC=0.3467 BAcc=0.4600 time=0.0s
+RUN 2/9 taiwan_bankruptcy__mlp__pytorch__11
+DONE AUC=0.3467 BAcc=0.4600 time=0.1s
+RUN 3/9 taiwan_bankruptcy__mlp__keras__11
+WARNING:tensorflow:TensorFlow GPU support is not available on native Windows for TensorFlow >= 2.11. Even if CUDA/cuDNN are installed, GPU will not be used. Please use WSL2 or the TensorFlow-DirectML plugin.
+DONE AUC=0.3467 BAcc=0.4600 time=0.8s
+WARNING:tensorflow:From E:\WINDOW\Project\intelligent-system-assignment-01\.venv\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+RUN 4/9 sp500__cnn4__scratch__11
+DONE AUC=0.5377 BAcc=0.5221 time=0.1s
+RUN 5/9 sp500__cnn4__pytorch__11
+DONE AUC=0.5377 BAcc=0.5221 time=0.1s
+RUN 6/9 sp500__cnn4__keras__11
+DONE AUC=0.5377 BAcc=0.5221 time=0.9s
+RUN 7/9 sp500__lstm__scratch__11
+DONE AUC=0.5441 BAcc=0.5294 time=0.0s
+RUN 8/9 sp500__lstm__pytorch__11
+DONE AUC=0.5441 BAcc=0.5294 time=0.1s
+RUN 9/9 sp500__lstm__keras__11
+DONE AUC=0.5441 BAcc=0.5294 time=2.1s
+COMPLETED 9 records

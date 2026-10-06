@@ -1,0 +1,285 @@
+{
+  "sp500": {
+    "raw_rows": 6726,
+    "sha256": "cd1c20a965f383bac9d404e11b1e1d282e0e703ecb386efadbafae3f4bb279dc",
+    "first": "2000-01-03",
+    "last": "2026-09-30",
+    "splits": {
+      "train": {
+        "n": 5010,
+        "positive": 2683,
+        "first": "2000-02-01",
+        "last_target": "2019-12-31"
+      },
+      "val": {
+        "n": 755,
+        "positive": 395,
+        "first": "2020-01-02",
+        "last_target": "2022-12-30"
+      },
+      "test": {
+        "n": 938,
+        "positive": 520,
+        "first": "2023-01-03",
+        "last_target": "2026-09-30"
+      }
+    },
+    "window": 20,
+    "raw_sample": [
+      {
+        "date": "2000-01-03",
+        "open": 1469.25,
+        "high": 1478.0,
+        "low": 1438.359985,
+        "close": 1455.219971,
+        "volume": 931800000,
+        "source": "Yahoo Finance"
+      },
+      {
+        "date": "2000-01-04",
+        "open": 1455.219971,
+        "high": 1455.219971,
+        "low": 1397.430054,
+        "close": 1399.420044,
+        "volume": 1009000000,
+        "source": "Yahoo Finance"
+      },
+      {
+        "date": "2000-01-05",
+        "open": 1399.420044,
+        "high": 1413.27002,
+        "low": 1377.680054,
+        "close": 1402.109985,
+        "volume": 1085500000,
+        "source": "Yahoo Finance"
+      }
+    ],
+    "return_quantiles": {
+      "min": -0.11984055248695646,
+      "q25": -0.004712444863289922,
+      "median": 0.0006295172481336486,
+      "q75": 0.005888999219050062,
+      "max": 0.11580036960722695
+    }
+  },
+  "vnindex": {
+    "raw_rows": 6313,
+    "sha256": "d54a7cfa5b27e8dd6c6d5d1dd0c6e73094482ac1f2ab44de73a15b703845a22a",
+    "first": "2000-07-28",
+    "last": "2026-09-30",
+    "splits": {
+      "train": {
+        "n": 4611,
+        "positive": 2249,
+        "first": "2000-09-15",
+        "last_target": "2019-12-31"
+      },
+      "val": {
+        "n": 750,
+        "positive": 432,
+        "first": "2020-01-02",
+        "last_target": "2022-12-30"
+      },
+      "test": {
+        "n": 929,
+        "positive": 521,
+        "first": "2023-01-03",
+        "last_target": "2026-09-30"
+      }
+    },
+    "window": 20,
+    "raw_sample": [
+      {
+        "date": "2000-07-28",
+        "open": 100.0,
+        "high": 100.0,
+        "low": 100.0,
+        "close": 100.0,
+        "volume": 4200,
+        "source": "DNSE Entrade"
+      },
+      {
+        "date": "2000-07-31",
+        "open": 101.55,
+        "high": 101.55,
+        "low": 101.55,
+        "close": 101.55,
+        "volume": 10300,
+        "source": "DNSE Entrade"
+      },
+      {
+        "date": "2000-08-02",
+        "open": 103.38,
+        "high": 103.38,
+        "low": 103.38,
+        "close": 103.38,
+        "volume": 300,
+        "source": "DNSE Entrade"
+      }
+    ],
+    "return_quantiles": {
+      "min": -0.07369963681158798,
+      "q25": -0.005714482820368544,
+      "median": 0.00028390145525480914,
+      "q75": 0.007411079130806297,
+      "max": 0.23372988103568937
+    }
+  },
+  "btc": {
+    "raw_rows": 4397,
+    "sha256": "ab6a897a1d80c6b2c520e1134604259005557712cddc53ec63610d78a7027f9a",
+    "first": "2014-09-17",
+    "last": "2026-09-30",
+    "splits": {
+      "train": {
+        "n": 1911,
+        "positive": 1045,
+        "first": "2014-10-07",
+        "last_target": "2019-12-31"
+      },
+      "val": {
+        "n": 1095,
+        "positive": 562,
+        "first": "2020-01-01",
+        "last_target": "2022-12-31"
+      },
+      "test": {
+        "n": 1368,
+        "positive": 686,
+        "first": "2023-01-01",
+        "last_target": "2026-09-30"
+      }
+    },
+    "window": 20,
+    "raw_sample": [
+      {
+        "date": "2014-09-17",
+        "open": 465.864014,
+        "high": 468.174011,
+        "low": 452.421997,
+        "close": 457.334015,
+        "volume": 21056800,
+        "source": "Yahoo Finance"
+      },
+      {
+        "date": "2014-09-18",
+        "open": 456.859985,
+        "high": 456.859985,
+        "low": 413.104004,
+        "close": 424.440002,
+        "volume": 34483200,
+        "source": "Yahoo Finance"
+      },
+      {
+        "date": "2014-09-19",
+        "open": 424.102997,
+        "high": 427.834991,
+        "low": 384.532013,
+        "close": 394.79599,
+        "volume": 37919700,
+        "source": "Yahoo Finance"
+      }
+    ],
+    "return_quantiles": {
+      "min": -0.3716953856106434,
+      "q25": -0.012415079378231136,
+      "median": 0.0010760507848645018,
+      "q75": 0.015559926669400537,
+      "max": 0.2524716942938108
+    }
+  },
+  "taiwan_bankruptcy": {
+    "raw_rows": 6819,
+    "features": 95,
+    "missing": 0,
+    "sha256": "67bf2e7c75490f7ad3f76bbce57d49cdc25967cdab607527b94f944863fa14d8",
+    "positive": 220,
+    "splits": {
+      "train": {
+        "n": 4091,
+        "positive": 132
+      },
+      "val": {
+        "n": 1364,
+        "positive": 44
+      },
+      "test": {
+        "n": 1364,
+        "positive": 44
+      }
+    },
+    "raw_sample": [
+      {
+        "Bankrupt?": 1,
+        " ROA(C) before interest and depreciation before interest": 0.370594257300249,
+        " ROA(A) before interest and % after tax": 0.424389446140427,
+        " ROA(B) before interest and depreciation after tax": 0.40574977247176,
+        " Operating Gross Margin": 0.601457213277793,
+        " Realized Sales Gross Margin": 0.601457213277793
+      },
+      {
+        "Bankrupt?": 1,
+        " ROA(C) before interest and depreciation before interest": 0.464290937454297,
+        " ROA(A) before interest and % after tax": 0.53821412996075,
+        " ROA(B) before interest and depreciation after tax": 0.516730017666899,
+        " Operating Gross Margin": 0.610235085544617,
+        " Realized Sales Gross Margin": 0.610235085544617
+      },
+      {
+        "Bankrupt?": 1,
+        " ROA(C) before interest and depreciation before interest": 0.426071271876371,
+        " ROA(A) before interest and % after tax": 0.499018752725687,
+        " ROA(B) before interest and depreciation after tax": 0.472295090743616,
+        " Operating Gross Margin": 0.601450006486113,
+        " Realized Sales Gross Margin": 0.601363524985947
+      }
+    ]
+  },
+  "credit_default": {
+    "raw_rows": 30000,
+    "features": 23,
+    "missing": 0,
+    "sha256": "30c6be3abd8dcfd3e6096c828bad8c2f011238620f5369220bd60cfc82700933",
+    "positive": 6636,
+    "splits": {
+      "train": {
+        "n": 18000,
+        "positive": 3982
+      },
+      "val": {
+        "n": 6000,
+        "positive": 1327
+      },
+      "test": {
+        "n": 6000,
+        "positive": 1327
+      }
+    },
+    "raw_sample": [
+      {
+        "ID": 1,
+        "LIMIT_BAL": 20000,
+        "SEX": 2,
+        "EDUCATION": 2,
+        "MARRIAGE": 1,
+        "AGE": 24
+      },
+      {
+        "ID": 2,
+        "LIMIT_BAL": 120000,
+        "SEX": 2,
+        "EDUCATION": 2,
+        "MARRIAGE": 2,
+        "AGE": 26
+      },
+      {
+        "ID": 3,
+        "LIMIT_BAL": 90000,
+        "SEX": 2,
+        "EDUCATION": 2,
+        "MARRIAGE": 2,
+        "AGE": 34
+      }
+    ]
+  }
+}

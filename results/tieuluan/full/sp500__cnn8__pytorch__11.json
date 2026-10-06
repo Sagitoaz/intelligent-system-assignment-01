@@ -1,0 +1,111 @@
+{
+  "dataset": "sp500",
+  "kind": "cnn8",
+  "framework": "pytorch",
+  "seed": 11,
+  "epochs_budget": 60,
+  "patience": 8,
+  "n_train": 5010,
+  "n_val": 755,
+  "n_test": 938,
+  "representation": "image",
+  "architecture": "1×20×20 → Conv(8 bộ lọc 3×3) → ReLU → MaxPool(2×2) → Flatten → Dense(1)",
+  "run_fingerprint": "061a5353503e24c569ad1c5c2b2354fb20bdb519ed41624002dfc4b49f41f8eb",
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.6956047257977331,
+      "val_loss": 0.6938143687742184
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.6921779759629758,
+      "val_loss": 0.6945687055696917
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.6905012002962078,
+      "val_loss": 0.697683664198136
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.6895584357712797,
+      "val_loss": 0.694710562901717
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.687864312940015,
+      "val_loss": 0.6953903831012234
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.6882415518313348,
+      "val_loss": 0.697885193609151
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.6871428064481465,
+      "val_loss": 0.6960116263074564
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.6876411343287089,
+      "val_loss": 0.6961424168317324
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.6865226334678437,
+      "val_loss": 0.6967546492476864
+    }
+  ],
+  "best_epoch": 1,
+  "epochs_run": 9,
+  "training_seconds": 2.4539307999948505,
+  "parameters": 729,
+  "metrics": {
+    "accuracy": 0.4520255863539446,
+    "balanced_accuracy": 0.5022497239602502,
+    "roc_auc": 0.4946172248803828,
+    "average_precision": 0.5640919605541366,
+    "f1": 0.07553956834532374,
+    "precision": 0.5833333333333334,
+    "recall": 0.04038461538461539,
+    "mcc": 0.011641113482159113,
+    "log_loss": 0.6899129270567154,
+    "confusion_matrix": [
+      [
+        403,
+        15
+      ],
+      [
+        499,
+        21
+      ]
+    ],
+    "threshold": 0.59,
+    "accuracy_at_05": 0.5341151385927505
+  },
+  "validation_metrics": {
+    "accuracy": 0.4860927152317881,
+    "balanced_accuracy": 0.5073839662447257,
+    "roc_auc": 0.5027426160337553,
+    "average_precision": 0.5366737540280098,
+    "f1": 0.0892018779342723,
+    "precision": 0.6129032258064516,
+    "recall": 0.04810126582278481,
+    "mcc": 0.03717229426912049,
+    "log_loss": 0.6938143687742184,
+    "confusion_matrix": [
+      [
+        348,
+        12
+      ],
+      [
+        376,
+        19
+      ]
+    ],
+    "threshold": 0.59,
+    "accuracy_at_05": 0.5178807947019868
+  }
+}

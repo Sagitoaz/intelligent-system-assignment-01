@@ -1,0 +1,63 @@
+{
+  "dataset": "credit_default",
+  "kind": "random_forest",
+  "framework": "sklearn",
+  "seed": 22,
+  "epochs_budget": 60,
+  "patience": 8,
+  "n_train": 18000,
+  "n_val": 6000,
+  "n_test": 6000,
+  "representation": "tabular",
+  "architecture": "random_forest",
+  "run_fingerprint": "061a5353503e24c569ad1c5c2b2354fb20bdb519ed41624002dfc4b49f41f8eb",
+  "training_seconds": 2.669896899999003,
+  "parameters": null,
+  "history": [],
+  "metrics": {
+    "accuracy": 0.7783333333333333,
+    "balanced_accuracy": 0.719289780749164,
+    "roc_auc": 0.7814945998844393,
+    "average_precision": 0.5605196988062332,
+    "f1": 0.5503718728870859,
+    "precision": 0.49908031882280807,
+    "recall": 0.613413715146948,
+    "mcc": 0.40913227242341405,
+    "log_loss": 0.42821805003825186,
+    "confusion_matrix": [
+      [
+        3856,
+        817
+      ],
+      [
+        513,
+        814
+      ]
+    ],
+    "threshold": 0.24999999999999994,
+    "accuracy_at_05": 0.8225
+  },
+  "validation_metrics": {
+    "accuracy": 0.7841666666666667,
+    "balanced_accuracy": 0.7168294799398363,
+    "roc_auc": 0.785564541996052,
+    "average_precision": 0.556586054534833,
+    "f1": 0.5498783454987834,
+    "precision": 0.5103225806451613,
+    "recall": 0.5960813865862848,
+    "mcc": 0.41118363468991986,
+    "log_loss": 0.43047722300221325,
+    "confusion_matrix": [
+      [
+        3914,
+        759
+      ],
+      [
+        536,
+        791
+      ]
+    ],
+    "threshold": 0.24999999999999994,
+    "accuracy_at_05": 0.8155
+  }
+}

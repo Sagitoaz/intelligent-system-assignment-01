@@ -1,0 +1,264 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1791245297.476767    9828 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1791245309.869839    9828 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+RUN 1/128 taiwan_bankruptcy__mlp__scratch__11
+DONE AUC=0.9546 BAcc=0.8845 time=0.4s
+RUN 2/128 taiwan_bankruptcy__mlp__pytorch__11
+DONE AUC=0.9546 BAcc=0.8845 time=2.1s
+RUN 3/128 taiwan_bankruptcy__mlp__keras__11
+WARNING:tensorflow:TensorFlow GPU support is not available on native Windows for TensorFlow >= 2.11. Even if CUDA/cuDNN are installed, GPU will not be used. Please use WSL2 or the TensorFlow-DirectML plugin.
+DONE AUC=0.9548 BAcc=0.8848 time=6.2s
+WARNING:tensorflow:From E:\WINDOW\Project\intelligent-system-assignment-01\.venv\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+RUN 4/128 taiwan_bankruptcy__logistic__sklearn__11
+DONE AUC=0.9182 BAcc=0.8686 time=0.1s
+RUN 5/128 taiwan_bankruptcy__random_forest__sklearn__11
+DONE AUC=0.9743 BAcc=0.9239 time=1.9s
+RUN 6/128 taiwan_bankruptcy__mlp__scratch__22
+DONE AUC=0.9311 BAcc=0.8655 time=0.4s
+RUN 7/128 taiwan_bankruptcy__mlp__pytorch__22
+DONE AUC=0.9311 BAcc=0.8655 time=3.3s
+RUN 8/128 taiwan_bankruptcy__mlp__keras__22
+DONE AUC=0.9334 BAcc=0.8928 time=5.3s
+RUN 9/128 taiwan_bankruptcy__logistic__sklearn__22
+DONE AUC=0.9182 BAcc=0.8686 time=0.0s
+RUN 10/128 taiwan_bankruptcy__random_forest__sklearn__22
+DONE AUC=0.9751 BAcc=0.9152 time=1.6s
+RUN 11/128 taiwan_bankruptcy__mlp__scratch__33
+DONE AUC=0.9245 BAcc=0.8591 time=0.3s
+RUN 12/128 taiwan_bankruptcy__mlp__pytorch__33
+DONE AUC=0.9245 BAcc=0.8591 time=1.8s
+RUN 13/128 taiwan_bankruptcy__mlp__keras__33
+DONE AUC=0.9248 BAcc=0.8477 time=4.5s
+RUN 14/128 taiwan_bankruptcy__logistic__sklearn__33
+DONE AUC=0.9182 BAcc=0.8686 time=0.1s
+RUN 15/128 taiwan_bankruptcy__random_forest__sklearn__33
+DONE AUC=0.9761 BAcc=0.9239 time=2.1s
+RUN 16/128 taiwan_bankruptcy__majority__baseline__0
+DONE AUC=0.5000 BAcc=0.5000 time=0.0s
+RUN 17/128 credit_default__mlp__scratch__11
+DONE AUC=0.7758 BAcc=0.7169 time=1.6s
+RUN 18/128 credit_default__mlp__pytorch__11
+DONE AUC=0.7758 BAcc=0.7169 time=8.8s
+RUN 19/128 credit_default__mlp__keras__11
+DONE AUC=0.7760 BAcc=0.7171 time=18.1s
+RUN 20/128 credit_default__logistic__sklearn__11
+DONE AUC=0.7376 BAcc=0.6995 time=0.0s
+RUN 21/128 credit_default__random_forest__sklearn__11
+DONE AUC=0.7814 BAcc=0.7155 time=3.3s
+RUN 22/128 credit_default__mlp__scratch__22
+DONE AUC=0.7764 BAcc=0.7156 time=2.1s
+RUN 23/128 credit_default__mlp__pytorch__22
+DONE AUC=0.7764 BAcc=0.7156 time=8.3s
+RUN 24/128 credit_default__mlp__keras__22
+DONE AUC=0.7763 BAcc=0.7098 time=18.3s
+RUN 25/128 credit_default__logistic__sklearn__22
+DONE AUC=0.7376 BAcc=0.6995 time=0.0s
+RUN 26/128 credit_default__random_forest__sklearn__22
+DONE AUC=0.7815 BAcc=0.7193 time=3.5s
+RUN 27/128 credit_default__mlp__scratch__33
+DONE AUC=0.7770 BAcc=0.7004 time=1.5s
+RUN 28/128 credit_default__mlp__pytorch__33
+DONE AUC=0.7770 BAcc=0.7004 time=8.8s
+RUN 29/128 credit_default__mlp__keras__33
+DONE AUC=0.7784 BAcc=0.7030 time=16.4s
+RUN 30/128 credit_default__logistic__sklearn__33
+DONE AUC=0.7376 BAcc=0.6995 time=0.1s
+RUN 31/128 credit_default__random_forest__sklearn__33
+DONE AUC=0.7811 BAcc=0.7189 time=3.1s
+RUN 32/128 credit_default__majority__baseline__0
+DONE AUC=0.5000 BAcc=0.5000 time=0.0s
+RUN 33/128 sp500__cnn4__scratch__11
+DONE AUC=0.5239 BAcc=0.5019 time=6.4s
+RUN 34/128 sp500__cnn4__pytorch__11
+DONE AUC=0.5234 BAcc=0.5025 time=5.7s
+RUN 35/128 sp500__cnn4__keras__11
+DONE AUC=0.5234 BAcc=0.5166 time=7.0s
+RUN 36/128 sp500__lstm__scratch__11
+DONE AUC=0.4952 BAcc=0.4942 time=9.1s
+RUN 37/128 sp500__lstm__pytorch__11
+DONE AUC=0.4952 BAcc=0.4942 time=5.9s
+RUN 38/128 sp500__lstm__keras__11
+DONE AUC=0.4952 BAcc=0.4942 time=16.8s
+RUN 39/128 sp500__cnn8__pytorch__11
+DONE AUC=0.5065 BAcc=0.5037 time=7.2s
+RUN 40/128 sp500__cnndeep__pytorch__11
+DONE AUC=0.5165 BAcc=0.5158 time=4.3s
+RUN 41/128 sp500__rnn__pytorch__11
+DONE AUC=0.5091 BAcc=0.5047 time=3.4s
+RUN 42/128 sp500__gru__pytorch__11
+DONE AUC=0.4894 BAcc=0.4913 time=12.0s
+RUN 43/128 sp500__cnn4__scratch__22
+DONE AUC=0.5190 BAcc=0.5015 time=5.1s
+RUN 44/128 sp500__cnn4__pytorch__22
+DONE AUC=0.5190 BAcc=0.5015 time=2.4s
+RUN 45/128 sp500__cnn4__keras__22
+DONE AUC=0.5190 BAcc=0.5177 time=4.2s
+RUN 46/128 sp500__lstm__scratch__22
+DONE AUC=0.4896 BAcc=0.4867 time=6.9s
+RUN 47/128 sp500__lstm__pytorch__22
+DONE AUC=0.4896 BAcc=0.4867 time=7.4s
+RUN 48/128 sp500__lstm__keras__22
+DONE AUC=0.4896 BAcc=0.4867 time=16.1s
+RUN 49/128 sp500__cnn8__pytorch__22
+DONE AUC=0.5081 BAcc=0.5122 time=6.1s
+RUN 50/128 sp500__cnndeep__pytorch__22
+DONE AUC=0.4819 BAcc=0.5015 time=6.9s
+RUN 51/128 sp500__rnn__pytorch__22
+DONE AUC=0.4925 BAcc=0.5063 time=5.3s
+RUN 52/128 sp500__gru__pytorch__22
+DONE AUC=0.4916 BAcc=0.4898 time=20.0s
+RUN 53/128 sp500__cnn4__scratch__33
+DONE AUC=0.4949 BAcc=0.4963 time=5.6s
+RUN 54/128 sp500__cnn4__pytorch__33
+DONE AUC=0.4944 BAcc=0.5037 time=5.2s
+RUN 55/128 sp500__cnn4__keras__33
+DONE AUC=0.4949 BAcc=0.5037 time=7.8s
+RUN 56/128 sp500__lstm__scratch__33
+DONE AUC=0.4946 BAcc=0.4959 time=8.1s
+RUN 57/128 sp500__lstm__pytorch__33
+DONE AUC=0.4946 BAcc=0.4959 time=7.9s
+RUN 58/128 sp500__lstm__keras__33
+DONE AUC=0.4946 BAcc=0.4959 time=16.5s
+RUN 59/128 sp500__cnn8__pytorch__33
+DONE AUC=0.4961 BAcc=0.5090 time=3.9s
+RUN 60/128 sp500__cnndeep__pytorch__33
+DONE AUC=0.5104 BAcc=0.4975 time=7.5s
+RUN 61/128 sp500__rnn__pytorch__33
+DONE AUC=0.4930 BAcc=0.4985 time=9.5s
+RUN 62/128 sp500__gru__pytorch__33
+DONE AUC=0.4889 BAcc=0.4852 time=12.6s
+RUN 63/128 sp500__majority__baseline__0
+DONE AUC=0.5000 BAcc=0.5000 time=0.0s
+RUN 64/128 sp500__persistence__baseline__0
+DONE AUC=0.4929 BAcc=0.4929 time=0.0s
+RUN 65/128 vnindex__cnn4__scratch__11
+DONE AUC=0.5374 BAcc=0.5273 time=5.6s
+RUN 66/128 vnindex__cnn4__pytorch__11
+DONE AUC=0.5371 BAcc=0.5280 time=3.7s
+RUN 67/128 vnindex__cnn4__keras__11
+DONE AUC=0.5373 BAcc=0.5273 time=6.1s
+RUN 68/128 vnindex__lstm__scratch__11
+DONE AUC=0.5407 BAcc=0.5142 time=2.0s
+RUN 69/128 vnindex__lstm__pytorch__11
+DONE AUC=0.5407 BAcc=0.5142 time=2.4s
+RUN 70/128 vnindex__lstm__keras__11
+DONE AUC=0.5407 BAcc=0.5142 time=6.5s
+RUN 71/128 vnindex__cnn8__pytorch__11
+DONE AUC=0.5440 BAcc=0.5307 time=4.6s
+RUN 72/128 vnindex__cnndeep__pytorch__11
+DONE AUC=0.5305 BAcc=0.5005 time=2.8s
+RUN 73/128 vnindex__rnn__pytorch__11
+DONE AUC=0.5517 BAcc=0.5269 time=2.2s
+RUN 74/128 vnindex__gru__pytorch__11
+DONE AUC=0.5421 BAcc=0.4992 time=4.9s
+RUN 75/128 vnindex__cnn4__scratch__22
+DONE AUC=0.5500 BAcc=0.5026 time=3.7s
+RUN 76/128 vnindex__cnn4__pytorch__22
+DONE AUC=0.5500 BAcc=0.5026 time=2.4s
+RUN 77/128 vnindex__cnn4__keras__22
+DONE AUC=0.5499 BAcc=0.4988 time=4.5s
+RUN 78/128 vnindex__lstm__scratch__22
+DONE AUC=0.5373 BAcc=0.5279 time=2.0s
+RUN 79/128 vnindex__lstm__pytorch__22
+DONE AUC=0.5373 BAcc=0.5279 time=2.4s
+RUN 80/128 vnindex__lstm__keras__22
+DONE AUC=0.5373 BAcc=0.5279 time=6.4s
+RUN 81/128 vnindex__cnn8__pytorch__22
+DONE AUC=0.5485 BAcc=0.5134 time=3.1s
+RUN 82/128 vnindex__cnndeep__pytorch__22
+DONE AUC=0.5036 BAcc=0.4869 time=3.3s
+RUN 83/128 vnindex__rnn__pytorch__22
+DONE AUC=0.5482 BAcc=0.5172 time=5.4s
+RUN 84/128 vnindex__gru__pytorch__22
+DONE AUC=0.5472 BAcc=0.5350 time=5.3s
+RUN 85/128 vnindex__cnn4__scratch__33
+DONE AUC=0.5267 BAcc=0.5046 time=3.8s
+RUN 86/128 vnindex__cnn4__pytorch__33
+DONE AUC=0.5267 BAcc=0.5046 time=3.8s
+RUN 87/128 vnindex__cnn4__keras__33
+DONE AUC=0.5268 BAcc=0.5003 time=5.2s
+RUN 88/128 vnindex__lstm__scratch__33
+DONE AUC=0.5434 BAcc=0.5266 time=2.2s
+RUN 89/128 vnindex__lstm__pytorch__33
+DONE AUC=0.5434 BAcc=0.5266 time=1.9s
+RUN 90/128 vnindex__lstm__keras__33
+DONE AUC=0.5434 BAcc=0.5266 time=6.3s
+RUN 91/128 vnindex__cnn8__pytorch__33
+DONE AUC=0.5345 BAcc=0.4981 time=5.4s
+RUN 92/128 vnindex__cnndeep__pytorch__33
+DONE AUC=0.5116 BAcc=0.5000 time=3.2s
+RUN 93/128 vnindex__rnn__pytorch__33
+DONE AUC=0.5259 BAcc=0.5198 time=4.7s
+RUN 94/128 vnindex__gru__pytorch__33
+DONE AUC=0.5467 BAcc=0.4973 time=17.5s
+RUN 95/128 vnindex__majority__baseline__0
+DONE AUC=0.5000 BAcc=0.5000 time=0.0s
+RUN 96/128 vnindex__persistence__baseline__0
+DONE AUC=0.5180 BAcc=0.5180 time=0.0s
+RUN 97/128 btc__cnn4__scratch__11
+DONE AUC=0.5115 BAcc=0.4856 time=3.5s
+RUN 98/128 btc__cnn4__pytorch__11
+DONE AUC=0.5115 BAcc=0.4856 time=3.1s
+RUN 99/128 btc__cnn4__keras__11
+DONE AUC=0.5114 BAcc=0.4954 time=6.2s
+RUN 100/128 btc__lstm__scratch__11
+DONE AUC=0.5219 BAcc=0.5092 time=1.5s
+RUN 101/128 btc__lstm__pytorch__11
+DONE AUC=0.5219 BAcc=0.5092 time=2.0s
+RUN 102/128 btc__lstm__keras__11
+DONE AUC=0.5219 BAcc=0.5092 time=9.9s
+RUN 103/128 btc__cnn8__pytorch__11
+DONE AUC=0.4999 BAcc=0.5048 time=2.7s
+RUN 104/128 btc__cnndeep__pytorch__11
+DONE AUC=0.4875 BAcc=0.4960 time=3.8s
+RUN 105/128 btc__rnn__pytorch__11
+DONE AUC=0.5101 BAcc=0.5168 time=3.0s
+RUN 106/128 btc__gru__pytorch__11
+DONE AUC=0.5198 BAcc=0.5124 time=2.1s
+RUN 107/128 btc__cnn4__scratch__22
+DONE AUC=0.4932 BAcc=0.4882 time=3.2s
+RUN 108/128 btc__cnn4__pytorch__22
+DONE AUC=0.4932 BAcc=0.4882 time=1.3s
+RUN 109/128 btc__cnn4__keras__22
+DONE AUC=0.4932 BAcc=0.4897 time=3.1s
+RUN 110/128 btc__lstm__scratch__22
+DONE AUC=0.4808 BAcc=0.5011 time=0.8s
+RUN 111/128 btc__lstm__pytorch__22
+DONE AUC=0.4808 BAcc=0.5011 time=0.5s
+RUN 112/128 btc__lstm__keras__22
+DONE AUC=0.4808 BAcc=0.5011 time=4.3s
+RUN 113/128 btc__cnn8__pytorch__22
+DONE AUC=0.5016 BAcc=0.4999 time=1.2s
+RUN 114/128 btc__cnndeep__pytorch__22
+DONE AUC=0.4678 BAcc=0.4949 time=1.8s
+RUN 115/128 btc__rnn__pytorch__22
+DONE AUC=0.5066 BAcc=0.5180 time=2.2s
+RUN 116/128 btc__gru__pytorch__22
+DONE AUC=0.5234 BAcc=0.5046 time=2.0s
+RUN 117/128 btc__cnn4__scratch__33
+DONE AUC=0.5112 BAcc=0.5018 time=1.4s
+RUN 118/128 btc__cnn4__pytorch__33
+DONE AUC=0.5112 BAcc=0.5018 time=0.8s
+RUN 119/128 btc__cnn4__keras__33
+DONE AUC=0.5112 BAcc=0.5018 time=2.5s
+RUN 120/128 btc__lstm__scratch__33
+DONE AUC=0.5115 BAcc=0.5104 time=2.1s
+RUN 121/128 btc__lstm__pytorch__33
+DONE AUC=0.5115 BAcc=0.5104 time=2.0s
+RUN 122/128 btc__lstm__keras__33
+DONE AUC=0.5115 BAcc=0.5104 time=8.4s
+RUN 123/128 btc__cnn8__pytorch__33
+DONE AUC=0.4923 BAcc=0.4958 time=1.1s
+RUN 124/128 btc__cnndeep__pytorch__33
+DONE AUC=0.5128 BAcc=0.5032 time=3.9s
+RUN 125/128 btc__rnn__pytorch__33
+DONE AUC=0.5066 BAcc=0.5043 time=2.3s
+RUN 126/128 btc__gru__pytorch__33
+DONE AUC=0.5083 BAcc=0.4983 time=2.5s
+RUN 127/128 btc__majority__baseline__0
+DONE AUC=0.5000 BAcc=0.5000 time=0.0s
+RUN 128/128 btc__persistence__baseline__0
+DONE AUC=0.4846 BAcc=0.4846 time=0.0s
+COMPLETED 128 records

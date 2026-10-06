@@ -1,0 +1,63 @@
+{
+  "dataset": "sp500",
+  "kind": "persistence",
+  "framework": "baseline",
+  "seed": 0,
+  "epochs_budget": 60,
+  "patience": 8,
+  "n_train": 5010,
+  "n_val": 755,
+  "n_test": 938,
+  "representation": "sequence",
+  "architecture": "persistence",
+  "run_fingerprint": "061a5353503e24c569ad1c5c2b2354fb20bdb519ed41624002dfc4b49f41f8eb",
+  "training_seconds": 0.0,
+  "parameters": 0,
+  "history": [],
+  "metrics": {
+    "accuracy": 0.4989339019189765,
+    "balanced_accuracy": 0.49293798306956205,
+    "roc_auc": 0.49293798306956205,
+    "average_precision": 0.5509213626499792,
+    "f1": 0.5480769230769231,
+    "precision": 0.5480769230769231,
+    "recall": 0.5480769230769231,
+    "mcc": -0.014124033860875965,
+    "log_loss": 8.076231346347663,
+    "confusion_matrix": [
+      [
+        183,
+        235
+      ],
+      [
+        235,
+        285
+      ]
+    ],
+    "threshold": 0.5,
+    "accuracy_at_05": 0.4989339019189765
+  },
+  "validation_metrics": {
+    "accuracy": 0.4688741721854305,
+    "balanced_accuracy": 0.467668776371308,
+    "roc_auc": 0.467668776371308,
+    "average_precision": 0.5079961743345095,
+    "f1": 0.49304677623261695,
+    "precision": 0.49242424242424243,
+    "recall": 0.4936708860759494,
+    "mcc": -0.0646706339317546,
+    "log_loss": 8.560736942437202,
+    "confusion_matrix": [
+      [
+        159,
+        201
+      ],
+      [
+        200,
+        195
+      ]
+    ],
+    "threshold": 0.5,
+    "accuracy_at_05": 0.4688741721854305
+  }
+}

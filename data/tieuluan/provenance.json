@@ -1,0 +1,770 @@
+{
+  "raw/indices/sp500.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "^GSPC",
+    "url": "https://finance.yahoo.com/quote/^GSPC/history",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "cd1c20a965f383bac9d404e11b1e1d282e0e703ecb386efadbafae3f4bb279dc",
+    "downloaded_at": "2026-10-05T16:23:05+00:00"
+  },
+  "raw/indices/vnindex.csv": {
+    "source": "SSI iBoard (nguồn chính từ 2009-07) + DNSE Entrade (trước 2009-07 và bù các phiên SSI thiếu), đối chiếu VNDirect",
+    "symbol": "VNINDEX",
+    "url": "https://iboard.ssi.com.vn/",
+    "rows": 6367,
+    "first_date": "2000-07-28",
+    "last_date": "2026-09-30",
+    "sha256": "8e0d7d5684bb28aa1a1205e6669f4356d937ea28ee0aedfe42548f3863c4e267",
+    "downloaded_at": "2026-10-06T10:40:52+00:00"
+  },
+  "raw/indices/btc.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "BTC-USD",
+    "url": "https://finance.yahoo.com/quote/BTC-USD/history",
+    "rows": 4397,
+    "first_date": "2014-09-17",
+    "last_date": "2026-09-30",
+    "sha256": "ab6a897a1d80c6b2c520e1134604259005557712cddc53ec63610d78a7027f9a",
+    "downloaded_at": "2026-10-05T16:23:10+00:00"
+  },
+  "raw/us_stocks/AAPL.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "AAPL",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "e8a32f90777db51c8ff9fae2d1b1a581f2f06fe972b4f3e0cf90b9bf7019464a",
+    "downloaded_at": "2026-10-05T16:23:11+00:00"
+  },
+  "raw/us_stocks/AMGN.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "AMGN",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "2dc1139c7b193ad0005b7a30e9a7f3c66f8c3905c0de6ef2e7e7cfc648ffee09",
+    "downloaded_at": "2026-10-05T16:23:12+00:00"
+  },
+  "raw/us_stocks/AMZN.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "AMZN",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "3ab0130e02843dd464673eab04cde14bb8f4f3b585ecd9c058a97abb90448cdd",
+    "downloaded_at": "2026-10-05T16:23:13+00:00"
+  },
+  "raw/us_stocks/AXP.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "AXP",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "e6cf5eedcb5691ad1b2cda495bc24ccda6528fa563eda8032920d049d0a53328",
+    "downloaded_at": "2026-10-05T16:23:14+00:00"
+  },
+  "raw/us_stocks/BA.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "BA",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "3c8f3b423b6f25f877bed09157fe449bccb61116da99b57a50bfa6bbcd2f921e",
+    "downloaded_at": "2026-10-05T16:23:16+00:00"
+  },
+  "raw/us_stocks/CAT.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "CAT",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "f604dca9eee6a27db397d511fa430984b128214fbd97ab159640f3dbc4524d51",
+    "downloaded_at": "2026-10-05T16:23:17+00:00"
+  },
+  "raw/us_stocks/CRM.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "CRM",
+    "rows": 5604,
+    "first_date": "2004-06-23",
+    "last_date": "2026-09-30",
+    "sha256": "5be7831e6d2ccc6f1cdce5229da2301e267a3e2cc04c646b39f44b315bbaaee8",
+    "downloaded_at": "2026-10-05T16:23:18+00:00"
+  },
+  "raw/us_stocks/CSCO.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "CSCO",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "19644cc60877275fffb3d8eab8b420ad570f319173f74a8fe9f684f4135450e5",
+    "downloaded_at": "2026-10-05T16:23:20+00:00"
+  },
+  "raw/us_stocks/CVX.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "CVX",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "9162e8df5f8588e6efffd2f7200baa7cd3453ae7195cb3c9d7abfaf9fdfd8b76",
+    "downloaded_at": "2026-10-05T16:23:21+00:00"
+  },
+  "raw/us_stocks/DIS.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "DIS",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "8841c2ec3f4baed74908984331abe62a4c13609d56b85d5e9eb00b2f2e4c9ec9",
+    "downloaded_at": "2026-10-05T16:23:22+00:00"
+  },
+  "raw/us_stocks/GOOGL.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "GOOGL",
+    "rows": 5564,
+    "first_date": "2004-08-19",
+    "last_date": "2026-09-30",
+    "sha256": "b9821bf8fd7633811baa25fea055616e52d4ac9c077571b856f7ec98c634f6d0",
+    "downloaded_at": "2026-10-05T16:23:24+00:00"
+  },
+  "raw/us_stocks/GS.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "GS",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "4427c2bdacb04a1b7f4b03d5af5b1d9e36c9bc9cbf4599ba68cb5f81c2c863d1",
+    "downloaded_at": "2026-10-05T16:23:25+00:00"
+  },
+  "raw/us_stocks/HD.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "HD",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "2879454317bcbbc171a60c257f27f447259d51356ae767023fd5898393b49ab7",
+    "downloaded_at": "2026-10-05T16:23:27+00:00"
+  },
+  "raw/us_stocks/HON.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "HON",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "c9afca48b1227495b6423071ed2ce7597c938fa8db0a4613bf7739afd8e05863",
+    "downloaded_at": "2026-10-05T16:23:28+00:00"
+  },
+  "raw/us_stocks/IBM.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "IBM",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "801c3d19212962af96c5a78ef64ee80baa77dda3f4d273aa9af9d18b5f5c56f5",
+    "downloaded_at": "2026-10-05T16:23:30+00:00"
+  },
+  "raw/us_stocks/JNJ.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "JNJ",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "a232edbf47c46f61bf5b775a4d233c3bed7621a6e77e6ab5364df7d4d3952977",
+    "downloaded_at": "2026-10-05T16:23:31+00:00"
+  },
+  "raw/us_stocks/JPM.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "JPM",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "fdd4c0b6ecddd83f0b1a09f3889f101cf0618d56db0273a1b42b96b4a7968f0c",
+    "downloaded_at": "2026-10-05T16:23:33+00:00"
+  },
+  "raw/us_stocks/KO.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "KO",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "7ef8225cbe86f3ac8e10797f2ec14fc722a05dcdad697406d553e53e84b29da2",
+    "downloaded_at": "2026-10-05T16:23:35+00:00"
+  },
+  "raw/us_stocks/MCD.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "MCD",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "a7c43c17b0b62e452aaa3a5eae79ed147bf3641a4dd67a16dd04eb665fa0426b",
+    "downloaded_at": "2026-10-05T16:23:37+00:00"
+  },
+  "raw/us_stocks/MMM.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "MMM",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "0c14d26e3d6290c84880643c9c185b74dd73ca5e8ee51ef197332bff8fc567ee",
+    "downloaded_at": "2026-10-05T16:23:39+00:00"
+  },
+  "raw/us_stocks/MRK.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "MRK",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "b5ca1a4da6623a3654caf61b70d8e2af0f09e66f1a0243b8d941e3aa6c797446",
+    "downloaded_at": "2026-10-05T16:23:40+00:00"
+  },
+  "raw/us_stocks/MSFT.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "MSFT",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "75bf44adb560e832d5d7ffb2c83d969156bbaaaf79f1382bce27fd719ccc6ed3",
+    "downloaded_at": "2026-10-05T16:23:42+00:00"
+  },
+  "raw/us_stocks/NKE.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "NKE",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "9e53d6afa4636b8a1e98bda00e07d7687b1124c73a8694fa984372b7ab2ed904",
+    "downloaded_at": "2026-10-05T16:23:43+00:00"
+  },
+  "raw/us_stocks/NVDA.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "NVDA",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "6669eb0a4a1cbb46f5f790721e1c4755869fd9ebeada69a4b460f4886bd3aaf6",
+    "downloaded_at": "2026-10-05T16:23:44+00:00"
+  },
+  "raw/us_stocks/PG.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "PG",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "8211e44570f8351d677f197fcb62f2996a217a9c3fb8af1a6dc347a270347a58",
+    "downloaded_at": "2026-10-05T16:23:46+00:00"
+  },
+  "raw/us_stocks/SHW.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "SHW",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "418a10d1fa8b85350163e55ff93a03b84933762a4ac0df9e79eef85f24203ba8",
+    "downloaded_at": "2026-10-05T16:23:47+00:00"
+  },
+  "raw/us_stocks/TRV.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "TRV",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "6fb18efbb146f48d69c4cf91f922ff59e977987526f01c7985a426aee585e662",
+    "downloaded_at": "2026-10-05T16:23:48+00:00"
+  },
+  "raw/us_stocks/UNH.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "UNH",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "02a41d477ce149dbfb58f889424514304f4fc55e6516703cb42bd080f098a2d1",
+    "downloaded_at": "2026-10-05T16:23:51+00:00"
+  },
+  "raw/us_stocks/V.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "V",
+    "rows": 4663,
+    "first_date": "2008-03-19",
+    "last_date": "2026-09-30",
+    "sha256": "f9297d31ee3f162b8f9f778f02d8f87b63dba398b8a1760a83ed86b9073e83d7",
+    "downloaded_at": "2026-10-05T16:23:53+00:00"
+  },
+  "raw/us_stocks/WMT.csv": {
+    "source": "Yahoo Finance (yfinance, auto_adjust=True)",
+    "symbol": "WMT",
+    "rows": 6726,
+    "first_date": "2000-01-03",
+    "last_date": "2026-09-30",
+    "sha256": "87737a7af99a75c0c2645b946fd87c338a6ccdae23d2d4256fd04564753587df",
+    "downloaded_at": "2026-10-05T16:23:55+00:00"
+  },
+  "raw/vn_stocks/ACB.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "ACB",
+    "rows": 4947,
+    "first_date": "2006-11-21",
+    "last_date": "2026-09-30",
+    "sha256": "931c21e3711723fc3567768d7bef00e11a0da005e60881f18f17f193fd0181e4",
+    "downloaded_at": "2026-10-05T16:23:59+00:00"
+  },
+  "raw/vn_stocks/BID.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "BID",
+    "rows": 3159,
+    "first_date": "2014-01-24",
+    "last_date": "2026-09-30",
+    "sha256": "941b72da36b96256484804733874c4ad7df1f96e051e504b3d2cbb450def857a",
+    "downloaded_at": "2026-10-05T16:24:02+00:00"
+  },
+  "raw/vn_stocks/BSR.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "BSR",
+    "rows": 2135,
+    "first_date": "2018-03-01",
+    "last_date": "2026-09-30",
+    "sha256": "169d2558f491de31c95afbb9668ad4b74d4508f093105c00841040fbda7eba08",
+    "downloaded_at": "2026-10-05T16:24:07+00:00"
+  },
+  "raw/vn_stocks/CTG.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "CTG",
+    "rows": 4287,
+    "first_date": "2009-07-16",
+    "last_date": "2026-09-30",
+    "sha256": "10e40fdc60a9d91832db651f30ef67836d4c7b870dd13a5d4d555d23c64d84a9",
+    "downloaded_at": "2026-10-05T16:24:12+00:00"
+  },
+  "raw/vn_stocks/FPT.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "FPT",
+    "rows": 4912,
+    "first_date": "2006-12-13",
+    "last_date": "2026-09-30",
+    "sha256": "d562048917eb139dded4aec519acbd7a03dc9f09f71f32ee1a36c7deafcc62d8",
+    "downloaded_at": "2026-10-05T16:24:16+00:00"
+  },
+  "raw/vn_stocks/GAS.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "GAS",
+    "rows": 3584,
+    "first_date": "2012-05-21",
+    "last_date": "2026-09-30",
+    "sha256": "e26158e45d8c3ee2795b0198e865606ab79cbf3115ff3b710d5857f7d783959b",
+    "downloaded_at": "2026-10-05T16:24:19+00:00"
+  },
+  "raw/vn_stocks/GVR.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "GVR",
+    "rows": 2123,
+    "first_date": "2018-03-21",
+    "last_date": "2026-09-30",
+    "sha256": "de001fef04409075d0943ff577acc73d0697ad45a969bece9c7c4c9b99cbc09f",
+    "downloaded_at": "2026-10-05T16:24:22+00:00"
+  },
+  "raw/vn_stocks/HDB.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "HDB",
+    "rows": 2176,
+    "first_date": "2018-01-05",
+    "last_date": "2026-09-30",
+    "sha256": "199d123fddd4fe36eb5209304b1e2104b829911553c91678628a9feba0f47e88",
+    "downloaded_at": "2026-10-05T16:24:25+00:00"
+  },
+  "raw/vn_stocks/HPG.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "HPG",
+    "rows": 4689,
+    "first_date": "2007-11-15",
+    "last_date": "2026-09-30",
+    "sha256": "74f6894b0089ba544de5ccb94e6350ab5e7c712d83d2830275c97835bf93d78c",
+    "downloaded_at": "2026-10-05T16:24:28+00:00"
+  },
+  "raw/vn_stocks/LPB.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "LPB",
+    "rows": 2232,
+    "first_date": "2017-10-05",
+    "last_date": "2026-09-30",
+    "sha256": "8a62909abb52245f060df7faedc3619cb3983e1510b500ccbce5bfcfe3763f3b",
+    "downloaded_at": "2026-10-05T16:24:31+00:00"
+  },
+  "raw/vn_stocks/MBB.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "MBB",
+    "rows": 3718,
+    "first_date": "2011-11-01",
+    "last_date": "2026-09-30",
+    "sha256": "8cacec355a8a0fa1c97f20b9b77358d3c9da4bd95d17b529dadbc06556782826",
+    "downloaded_at": "2026-10-05T16:24:33+00:00"
+  },
+  "raw/vn_stocks/MCH.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "MCH",
+    "rows": 2408,
+    "first_date": "2017-01-05",
+    "last_date": "2026-09-30",
+    "sha256": "4b0ea92d95009225ad86b5d561bc7e0f66f01116e558749da89ac0c92e2bc3a7",
+    "downloaded_at": "2026-10-05T16:24:36+00:00"
+  },
+  "raw/vn_stocks/MSN.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "MSN",
+    "rows": 4210,
+    "first_date": "2009-11-05",
+    "last_date": "2026-09-30",
+    "sha256": "ce34a0a2783c770f5a482136e2c3cc26a3c254cf0faa84648fcfc785358a0ca6",
+    "downloaded_at": "2026-10-05T16:24:39+00:00"
+  },
+  "raw/vn_stocks/MWG.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "MWG",
+    "rows": 3049,
+    "first_date": "2014-07-14",
+    "last_date": "2026-09-30",
+    "sha256": "6d9061922735c3218a0530fa0e68f016bdfe05f60400b79e48744aa487a23276",
+    "downloaded_at": "2026-10-05T16:24:42+00:00"
+  },
+  "raw/vn_stocks/SAB.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "SAB",
+    "rows": 2448,
+    "first_date": "2016-12-06",
+    "last_date": "2026-09-30",
+    "sha256": "074ef39b00d08618ed52134a594dbfe24a974647e912e47574bcf5e870e72d99",
+    "downloaded_at": "2026-10-05T16:24:45+00:00"
+  },
+  "raw/vn_stocks/SHB.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "SHB",
+    "rows": 4352,
+    "first_date": "2009-04-20",
+    "last_date": "2026-09-30",
+    "sha256": "f79428a603247a90d11143f50e6142475ee51d760da40acccb53e8129c2a6315",
+    "downloaded_at": "2026-10-05T16:24:48+00:00"
+  },
+  "raw/vn_stocks/SSB.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "SSB",
+    "rows": 1377,
+    "first_date": "2021-03-24",
+    "last_date": "2026-09-30",
+    "sha256": "764c7dbd029c08bd4bf152c2968f00251485d89d0a6f2b0e7c098e208b81107a",
+    "downloaded_at": "2026-10-05T16:24:51+00:00"
+  },
+  "raw/vn_stocks/SSI.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "SSI",
+    "rows": 4904,
+    "first_date": "2006-12-15",
+    "last_date": "2026-09-30",
+    "sha256": "f6f89bafe75c6822647ee49fa2749cbb980a7d2689541090bfb4bc87b0b94723",
+    "downloaded_at": "2026-10-05T16:24:55+00:00"
+  },
+  "raw/vn_stocks/STB.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "STB",
+    "rows": 2637,
+    "first_date": "2006-07-12",
+    "last_date": "2026-09-30",
+    "sha256": "51d2385d36dbb2900bd4d1b2f4ad3f44edcc8d70e0897da0601d845c58e59486",
+    "downloaded_at": "2026-10-05T16:25:00+00:00"
+  },
+  "raw/vn_stocks/TCB.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "TCB",
+    "rows": 2080,
+    "first_date": "2018-06-04",
+    "last_date": "2026-09-30",
+    "sha256": "499ce794640a578b309680fae607e427a62a2187f0da50b5f54a4612eb56a084",
+    "downloaded_at": "2026-10-05T16:25:04+00:00"
+  },
+  "raw/vn_stocks/TCX.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "TCX",
+    "rows": 234,
+    "first_date": "2025-10-21",
+    "last_date": "2026-09-30",
+    "sha256": "e3019a7dc960e98507eb75e97bad2cc9f48cb57b7d8f869aefaa4cb793e48ab8",
+    "downloaded_at": "2026-10-05T16:25:07+00:00"
+  },
+  "raw/vn_stocks/VCB.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "VCB",
+    "rows": 4295,
+    "first_date": "2009-07-01",
+    "last_date": "2026-09-30",
+    "sha256": "0b839def5439d24baf1b24b42c7aae31411fb076893bd3d5233d1e2da7da7eda",
+    "downloaded_at": "2026-10-05T16:25:11+00:00"
+  },
+  "raw/vn_stocks/VHM.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "VHM",
+    "rows": 2088,
+    "first_date": "2018-05-17",
+    "last_date": "2026-09-30",
+    "sha256": "2569bf538c3acb9bbeff30e7faa8a3198d62e6cc5d4542885ae167df19284068",
+    "downloaded_at": "2026-10-05T16:25:13+00:00"
+  },
+  "raw/vn_stocks/VIB.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "VIB",
+    "rows": 2416,
+    "first_date": "2017-01-09",
+    "last_date": "2026-09-30",
+    "sha256": "1405274ab5c167863383dabe7b2dd4666508800a56e2e41bb350126d5c8a3582",
+    "downloaded_at": "2026-10-05T16:25:18+00:00"
+  },
+  "raw/vn_stocks/VIC.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "VIC",
+    "rows": 4720,
+    "first_date": "2007-09-19",
+    "last_date": "2026-09-30",
+    "sha256": "47d654c0258f85cbb1bd607e0282cd7ade83198d65aae14a2a1e8a94a0670dcc",
+    "downloaded_at": "2026-10-05T16:25:21+00:00"
+  },
+  "raw/vn_stocks/VJC.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "VJC",
+    "rows": 2392,
+    "first_date": "2017-02-28",
+    "last_date": "2026-09-30",
+    "sha256": "0255286cd6d5a9c1ded8a9a70f5458a39b94ad983d3981327437770e2f4a9d96",
+    "downloaded_at": "2026-10-05T16:25:24+00:00"
+  },
+  "raw/vn_stocks/VNM.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "VNM",
+    "rows": 5138,
+    "first_date": "2006-01-19",
+    "last_date": "2026-09-30",
+    "sha256": "47e96ce03f5ffb71cb6cc8a49d38e853b502b2309f1bfa2a3dde5bde3c2d4c46",
+    "downloaded_at": "2026-10-05T16:25:28+00:00"
+  },
+  "raw/vn_stocks/VPB.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "VPB",
+    "rows": 2274,
+    "first_date": "2017-08-17",
+    "last_date": "2026-09-30",
+    "sha256": "c75c4d646e0782fd7ebd209cf59373d9f07b5e6eae13a1f842c2295b73191189",
+    "downloaded_at": "2026-10-05T16:25:31+00:00"
+  },
+  "raw/vn_stocks/VPL.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "VPL",
+    "rows": 1291,
+    "first_date": "2008-01-31",
+    "last_date": "2026-09-30",
+    "sha256": "0a109f727a0a431bc7c514cdb7e1816fd5927ca0c9db4502e873a99c84df11b9",
+    "downloaded_at": "2026-10-05T16:25:34+00:00"
+  },
+  "raw/vn_stocks/VRE.csv": {
+    "source": "SSI iBoard (đối chiếu DNSE Entrade)",
+    "symbol": "VRE",
+    "rows": 2215,
+    "first_date": "2017-11-06",
+    "last_date": "2026-09-30",
+    "sha256": "6dc7fd520e9b06d3e66c81d725cf6786248d4d491d31c01eb07375401957cce6",
+    "downloaded_at": "2026-10-05T16:25:38+00:00"
+  },
+  "raw/crypto/BTC-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "BTC-USD",
+    "rows": 4397,
+    "first_date": "2014-09-17",
+    "last_date": "2026-09-30",
+    "sha256": "ab6a897a1d80c6b2c520e1134604259005557712cddc53ec63610d78a7027f9a",
+    "downloaded_at": "2026-10-05T16:25:39+00:00"
+  },
+  "raw/crypto/ETH-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "ETH-USD",
+    "rows": 3248,
+    "first_date": "2017-11-09",
+    "last_date": "2026-09-30",
+    "sha256": "c699dcd35542f6669f65cb03a27bf39b42daa5eefd258a1cb887e081f3c92b34",
+    "downloaded_at": "2026-10-05T16:25:40+00:00"
+  },
+  "raw/crypto/XRP-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "XRP-USD",
+    "rows": 3248,
+    "first_date": "2017-11-09",
+    "last_date": "2026-09-30",
+    "sha256": "e0da716298264adb5d266a516e911bae28f40365ce52f29a4187e8546c558161",
+    "downloaded_at": "2026-10-05T16:25:41+00:00"
+  },
+  "raw/crypto/BNB-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "BNB-USD",
+    "rows": 3248,
+    "first_date": "2017-11-09",
+    "last_date": "2026-09-30",
+    "sha256": "9e30d2c32f1bb1fa63068129832d32857681c86ab2cb1ab7d82ddc23593cb3ae",
+    "downloaded_at": "2026-10-05T16:25:42+00:00"
+  },
+  "raw/crypto/SOL-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "SOL-USD",
+    "rows": 2365,
+    "first_date": "2020-04-10",
+    "last_date": "2026-09-30",
+    "sha256": "c5c40df6dfc3199ecfb7a21e460171c1ccec97ec5e02076f595092e9ecd9e84b",
+    "downloaded_at": "2026-10-05T16:25:43+00:00"
+  },
+  "raw/crypto/DOGE-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "DOGE-USD",
+    "rows": 3248,
+    "first_date": "2017-11-09",
+    "last_date": "2026-09-30",
+    "sha256": "a914876025c5b420a8223598a4380353a91661740bc29acf2ed197286dc85a1e",
+    "downloaded_at": "2026-10-05T16:25:45+00:00"
+  },
+  "raw/crypto/ADA-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "ADA-USD",
+    "rows": 3248,
+    "first_date": "2017-11-09",
+    "last_date": "2026-09-30",
+    "sha256": "89d3e1bb9fee9eec7fb7eebd4ad019640e5846d7bae46370a66717ade646bba3",
+    "downloaded_at": "2026-10-05T16:25:46+00:00"
+  },
+  "raw/crypto/TRX-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "TRX-USD",
+    "rows": 3248,
+    "first_date": "2017-11-09",
+    "last_date": "2026-09-30",
+    "sha256": "f6a7949c4f9ab8160e23b22cc04d4a785ea79394be4ababb88115bb869b4e94f",
+    "downloaded_at": "2026-10-05T16:25:47+00:00"
+  },
+  "raw/crypto/LINK-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "LINK-USD",
+    "rows": 3248,
+    "first_date": "2017-11-09",
+    "last_date": "2026-09-30",
+    "sha256": "fd79219557b9e0190e89b491f21f8b3b070cf0860f7a1e98ba938f67737d7f48",
+    "downloaded_at": "2026-10-05T16:25:48+00:00"
+  },
+  "raw/crypto/XLM-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "XLM-USD",
+    "rows": 3248,
+    "first_date": "2017-11-09",
+    "last_date": "2026-09-30",
+    "sha256": "b7d1ab0b374cbb1fa35c9876017ec279ab8b5ab42fe99713030c28f72ab9aa16",
+    "downloaded_at": "2026-10-05T16:25:49+00:00"
+  },
+  "raw/crypto/LTC-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "LTC-USD",
+    "rows": 4397,
+    "first_date": "2014-09-17",
+    "last_date": "2026-09-30",
+    "sha256": "319ed6b589530866dde89217324f20db9c25b3430af420f5d57ff6ae619acb14",
+    "downloaded_at": "2026-10-05T16:25:50+00:00"
+  },
+  "raw/crypto/BCH-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "BCH-USD",
+    "rows": 3248,
+    "first_date": "2017-11-09",
+    "last_date": "2026-09-30",
+    "sha256": "bc0634da3e1a04333b32127cef8308f1a62817896a034e24db512af04997e17a",
+    "downloaded_at": "2026-10-05T16:25:51+00:00"
+  },
+  "raw/crypto/AVAX-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "AVAX-USD",
+    "rows": 2202,
+    "first_date": "2020-07-13",
+    "last_date": "2026-09-30",
+    "sha256": "1e6e5c2ceb728f6fd067aa63a6f3d35738262508f9dac6fa01da2f2f782c210a",
+    "downloaded_at": "2026-10-05T16:25:52+00:00"
+  },
+  "raw/crypto/DOT-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "DOT-USD",
+    "rows": 2233,
+    "first_date": "2020-08-20",
+    "last_date": "2026-09-30",
+    "sha256": "50fdf115ddd480ee28523b0d17317570693cd3c0aacf3099c30ad8493193ceba",
+    "downloaded_at": "2026-10-05T16:25:53+00:00"
+  },
+  "raw/crypto/XMR-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "XMR-USD",
+    "rows": 3248,
+    "first_date": "2017-11-09",
+    "last_date": "2026-09-30",
+    "sha256": "a9ff27cc35c0e10784e39cdc97b14ce90c8f86489be17b7620c1e5b6d41cdebe",
+    "downloaded_at": "2026-10-05T16:25:54+00:00"
+  },
+  "raw/crypto/ETC-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "ETC-USD",
+    "rows": 3248,
+    "first_date": "2017-11-09",
+    "last_date": "2026-09-30",
+    "sha256": "7d685b6f7966bf00d574858f3bb329f39be6a04813e848ddf109f8aba92006b7",
+    "downloaded_at": "2026-10-05T16:25:55+00:00"
+  },
+  "raw/crypto/HBAR-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "HBAR-USD",
+    "rows": 2571,
+    "first_date": "2019-09-17",
+    "last_date": "2026-09-30",
+    "sha256": "e39175b1a34de42391b9f2a967f6abadf068b03edc40f6ca51dc246b7aaf8c30",
+    "downloaded_at": "2026-10-05T16:25:57+00:00"
+  },
+  "raw/crypto/ATOM-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "ATOM-USD",
+    "rows": 2758,
+    "first_date": "2019-03-14",
+    "last_date": "2026-09-30",
+    "sha256": "1c727f3b4bef1fce1cdeff4446c161070cedcdb64868e570d4a1d97ac766a8e1",
+    "downloaded_at": "2026-10-05T16:25:58+00:00"
+  },
+  "raw/crypto/ALGO-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "ALGO-USD",
+    "rows": 2659,
+    "first_date": "2019-06-21",
+    "last_date": "2026-09-30",
+    "sha256": "edb619b445adfbd409293456e4683775e3bd1d1c55ba257701325898cdcce9b6",
+    "downloaded_at": "2026-10-05T16:25:59+00:00"
+  },
+  "raw/crypto/VET-USD.csv": {
+    "source": "Yahoo Finance (yfinance)",
+    "symbol": "VET-USD",
+    "rows": 2981,
+    "first_date": "2018-08-03",
+    "last_date": "2026-09-30",
+    "sha256": "1c12f9f9392a0a10bee4c7a386fc26710ad2194ca61aafffd8cff07db8ceb9c3",
+    "downloaded_at": "2026-10-05T16:26:00+00:00"
+  },
+  "raw/uci/taiwan_bankruptcy": {
+    "source": "UCI Machine Learning Repository",
+    "uci_id": 572,
+    "url": "https://archive.ics.uci.edu/static/public/572/taiwanese+bankruptcy+prediction.zip",
+    "page": "https://archive.ics.uci.edu/dataset/572/taiwanese+bankruptcy+prediction",
+    "files": [
+      "data.csv"
+    ]
+  },
+  "raw/uci/credit_default": {
+    "source": "UCI Machine Learning Repository",
+    "uci_id": 350,
+    "url": "https://archive.ics.uci.edu/static/public/350/default+of+credit+card+clients.zip",
+    "page": "https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients",
+    "files": [
+      "default of credit card clients.xls"
+    ]
+  }
+}

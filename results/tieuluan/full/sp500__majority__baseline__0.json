@@ -1,0 +1,63 @@
+{
+  "dataset": "sp500",
+  "kind": "majority",
+  "framework": "baseline",
+  "seed": 0,
+  "epochs_budget": 60,
+  "patience": 8,
+  "n_train": 5010,
+  "n_val": 755,
+  "n_test": 938,
+  "representation": "sequence",
+  "architecture": "majority",
+  "run_fingerprint": "061a5353503e24c569ad1c5c2b2354fb20bdb519ed41624002dfc4b49f41f8eb",
+  "training_seconds": 0.0,
+  "parameters": 0,
+  "history": [],
+  "metrics": {
+    "accuracy": 0.5543710021321961,
+    "balanced_accuracy": 0.5,
+    "roc_auc": 0.5,
+    "average_precision": 0.5543710021321961,
+    "f1": 0.7133058984910837,
+    "precision": 0.5543710021321961,
+    "recall": 1.0,
+    "mcc": 0.0,
+    "log_loss": 0.6879381537437439,
+    "confusion_matrix": [
+      [
+        0,
+        418
+      ],
+      [
+        0,
+        520
+      ]
+    ],
+    "threshold": 0.5,
+    "accuracy_at_05": 0.5543710021321961
+  },
+  "validation_metrics": {
+    "accuracy": 0.5231788079470199,
+    "balanced_accuracy": 0.5,
+    "roc_auc": 0.5,
+    "average_precision": 0.5231788079470199,
+    "f1": 0.6869565217391305,
+    "precision": 0.5231788079470199,
+    "recall": 1.0,
+    "mcc": 0.0,
+    "log_loss": 0.692378580570221,
+    "confusion_matrix": [
+      [
+        0,
+        360
+      ],
+      [
+        0,
+        395
+      ]
+    ],
+    "threshold": 0.5,
+    "accuracy_at_05": 0.5231788079470199
+  }
+}

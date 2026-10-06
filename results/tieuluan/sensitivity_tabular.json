@@ -1,0 +1,78 @@
+{
+ "taiwan_bankruptcy": {
+  "logistic": {
+   "auc_mean": 0.9083161157024793,
+   "auc_sd": 0.0,
+   "ensemble_ci": {
+    "auc": 0.9083161157024793,
+    "low": 0.8394662534435261,
+    "high": 0.961511492768595,
+    "p_value_auc_le_half": 0.0004997501249375312,
+    "n_boot": 2000,
+    "method": "stratified bootstrap"
+   }
+  },
+  "random_forest": {
+   "auc_mean": 0.975068870523416,
+   "auc_sd": 0.0005304036432765078,
+   "ensemble_ci": {
+    "auc": 0.9754476584022039,
+    "low": 0.95569516184573,
+    "high": 0.988827479338843,
+    "p_value_auc_le_half": 0.0004997501249375312,
+    "n_boot": 2000,
+    "method": "stratified bootstrap"
+   }
+  },
+  "mlp": {
+   "auc_mean": 0.9195965335169881,
+   "auc_sd": 0.006541013614234117,
+   "ensemble_ci": {
+    "auc": 0.9389290633608814,
+    "low": 0.8827797865013775,
+    "high": 0.9741744146005509,
+    "p_value_auc_le_half": 0.0004997501249375312,
+    "n_boot": 2000,
+    "method": "stratified bootstrap"
+   }
+  }
+ },
+ "credit_default": {
+  "logistic": {
+   "auc_mean": 0.7544252436393648,
+   "auc_sd": 0.0,
+   "ensemble_ci": {
+    "auc": 0.7544252436393648,
+    "low": 0.7383865827370788,
+    "high": 0.7699774442189099,
+    "p_value_auc_le_half": 0.0004997501249375312,
+    "n_boot": 2000,
+    "method": "stratified bootstrap"
+   }
+  },
+  "random_forest": {
+   "auc_mean": 0.7812868400743463,
+   "auc_sd": 0.00020661769293390435,
+   "ensemble_ci": {
+    "auc": 0.7815202406164999,
+    "low": 0.7662103167339964,
+    "high": 0.7955198384279102,
+    "p_value_auc_le_half": 0.0004997501249375312,
+    "n_boot": 2000,
+    "method": "stratified bootstrap"
+   }
+  },
+  "mlp": {
+   "auc_mean": 0.7795233812567753,
+   "auc_sd": 0.0011038120033358995,
+   "ensemble_ci": {
+    "auc": 0.7820503103415524,
+    "low": 0.7672155100304447,
+    "high": 0.7961221093904584,
+    "p_value_auc_le_half": 0.0004997501249375312,
+    "n_boot": 2000,
+    "method": "stratified bootstrap"
+   }
+  }
+ }
+}

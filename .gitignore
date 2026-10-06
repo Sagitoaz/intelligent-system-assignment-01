@@ -56,3 +56,14 @@ results/assignment04/full_scale/prepared/comments/test_ids.npy
 
 .DS_Store
 Thumbs.db
+
+*.docx
+*.doc
+*.pdf
+
+# Tiểu luận: sản phẩm sinh lại được hoặc chỉ dùng cục bộ
+deployment/tieuluan/hf_space/
+deployment/tieuluan/*.zip
+docs/tieuluan/_ghi_chu_noi_bo/
+docs/tieuluan/tieuluan01_*.md
+figures/tieuluan/equations/
