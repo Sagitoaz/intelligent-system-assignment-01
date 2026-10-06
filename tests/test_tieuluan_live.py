@@ -62,3 +62,27 @@ def test_failure_bounded(monkeypatch):
         fetch_market('vnindex')
     assert get.call_count == 4
     assert all(c.kwargs['timeout'] <= 10 for c in get.call_args_list)
+
+
+@pytest.mark.parametrize('source', ['SSI iBoard', 'DNSE Entrade', 'FRED'])
+def test_source_formats(source):
+    from src.tieuluan.live import parse_prices
+    response = Mock()
+    if source == 'FRED':
+        response.text = 'observation_date,SP500\n2026-10-01,100\n2026-10-02,.\n'
+        assert parse_prices(response, source, 'sp500').iloc[0]['close'] == '100'
+    else:
+        data = {'t':[int(pd.Timestamp('2026-10-05T18:00Z').timestamp())], 'c':[1750.]}
+        response.json.return_value = {'data':data} if source == 'SSI iBoard' else data
+        result = parse_prices(response, source, 'vnindex')
+        assert str(result.date.iloc[0]) == '2026-10-06'
+        assert result.close.iloc[0] == 1750.
+
+
+def test_bad_payload_and_insufficient_fallback(monkeypatch):
+    empty = Mock(); empty.json.return_value = {'chart': {'result': None}}
+    short = Mock(); short.json.return_value = [[1, 1, 1, 1, 1, 1]]
+    get = Mock(side_effect=[empty,empty,short,short])
+    monkeypatch.setattr(requests,'get',get)
+    with pytest.raises(LiveDataError): fetch_market('btc')
+    assert get.call_count == 4

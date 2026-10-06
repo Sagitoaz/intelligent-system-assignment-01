@@ -12,7 +12,7 @@ import streamlit as st
 CODE_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(CODE_ROOT))
 from src.tieuluan.live import fetch_market, market_features, load_model, predict_probability, LiveDataError
-from src.tieuluan.credit import preprocess_credit, LABELS, CATEGORIES, PAY_CODES
+from src.tieuluan.credit import preprocess_credit, parse_amount, risk_level, LABELS, CATEGORIES, PAY_CODES
 
 ROOT = Path(os.environ.get('TIEULUAN_ROOT', str(CODE_ROOT)))
 RESULTS = ROOT / 'results/tieuluan/full'
@@ -87,6 +87,20 @@ def guide(text):
     st.info('**Cách đọc:** ' + text)
 
 
+def price_chart(frame, ylabel='Giá đóng cửa'):
+    """Ngày và số trên trục/ô gợi ý dùng định dạng Việt Nam."""
+    import altair as alt
+    long = frame.rename_axis('Ngày').reset_index().melt('Ngày', var_name='Đường', value_name='Giá trị').dropna()
+    long['Ngày hiển thị'] = long['Ngày'].map(day)
+    long['Giá trị hiển thị'] = long['Giá trị'].map(lambda v: vn(v,2))
+    chart = alt.Chart(long).mark_line(strokeWidth=2).encode(
+        x=alt.X('Ngày:T',axis=alt.Axis(format='%d/%m/%Y',title='Ngày')),
+        y=alt.Y('Giá trị:Q',scale=alt.Scale(zero=False),axis=alt.Axis(title=ylabel,labelExpr="replace(format(datum.value, ',.0f'), /,/g, '.')")),
+        color=alt.Color('Đường:N',legend=alt.Legend(title=None,orient='bottom')),
+        tooltip=[alt.Tooltip('Đường:N'),alt.Tooltip('Ngày hiển thị:N',title='Ngày'),alt.Tooltip('Giá trị hiển thị:N',title=ylabel)])
+    st.altair_chart(chart.properties(height=270),width='stretch')
+
+
 def history(records, dataset, kind, analysis=None, seed=None):
     runs = [r for r in records if r['dataset'] == dataset and r['kind'] == kind and r['framework'] == 'scratch'
             and (seed is None or r['seed'] == seed)]
@@ -157,7 +171,7 @@ def demo(records, analysis, metadata):
         index = dates.index(selected)
         frame = read_prices(str(ASSETS / f'{dataset}_prices.csv'))
         window = frame[frame.date <= pd.Timestamp(selected)].tail(20)
-        st.line_chart(window.set_index('date').rename(columns={'close':'Giá đóng cửa'}), x_label='Ngày', y_label='Giá đóng cửa')
+        price_chart(window.set_index('date').rename(columns={'close':'Giá đóng cửa'}))
         st.caption('CNN4 đọc ảnh giá; LSTM đọc 20 mức thay đổi giá liên tiếp, cần thêm một giá ngay trước cửa sổ này.')
     else:
         key = 'sample_'+dataset
@@ -209,7 +223,7 @@ def live_tab(records, analysis):
         if latest['fallback']: st.caption('Đang dùng nguồn dự phòng; giá có thể khác nhẹ nguồn huấn luyện.')
         if latest['stale']: st.warning(f"Phiên cuối đã cách {vn(latest['age_days'],0)} ngày. Dự báo dựa trên dữ liệu cũ, không được coi là dự báo cập nhật cho phiên sắp tới.")
         f['20 phiên mô hình dùng'] = f.close.where(f.index >= f.index[-20])
-        st.line_chart(f.set_index('date').rename(columns={'close':'Giá đóng cửa'}), x_label='Ngày', y_label='Giá đóng cửa')
+        price_chart(f.set_index('date').rename(columns={'close':'Giá đóng cửa'}))
         params = read_npz(str(ASSETS / f'{market}.npz'), ())
         features = market_features(latest['frame'].close.to_numpy(), params['scaler_mean'], params['scaler_scale'])
         for col, kind, rep in zip(st.columns(2), ('lstm','cnn4'), ('sequence','image')):
@@ -235,14 +249,14 @@ def credit_tab(records, metadata):
     pay_names = ['PAY_0','PAY_2','PAY_3','PAY_4','PAY_5','PAY_6']
     if st.session_state.get('credit_preset') != preset:
         for name in names:
-            st.session_state['credit_'+name] = int(initial[name]) if name in CATEGORIES or name == 'AGE' or name in pay_names else float(initial[name])
+            st.session_state['credit_'+name] = int(initial[name]) if name in CATEGORIES or name == 'AGE' or name in pay_names else vn(initial[name],0)
         st.session_state['credit_preset'] = preset; st.session_state.pop('credit_result',None)
     credit_notes(); values = {}
     def field(name):
         mapping = PAY_CODES if name in pay_names else CATEGORIES.get(name)
         if mapping: values[name] = st.selectbox(LABELS[name],list(mapping),format_func=mapping.get,key='credit_'+name)
         elif name == 'AGE': values[name] = st.number_input(LABELS[name],18,120,step=1,key='credit_'+name)
-        else: values[name] = st.number_input(LABELS[name],min_value=None if name.startswith('BILL') else 0.,step=100.,key='credit_'+name)
+        else: values[name] = st.text_input(LABELS[name],key='credit_'+name,help='Ví dụ: 130.000 hoặc 130.000,50. Dư nợ có thể âm khi trả thừa.')
     primary = ['LIMIT_BAL','AGE']+pay_names+['BILL_AMT1','PAY_AMT1']
     with st.form('credit_form'):
         cols = st.columns(2)
@@ -254,11 +268,23 @@ def credit_tab(records, metadata):
                 with cols[i%2]: field(name)
         submitted = st.form_submit_button('Chấm điểm hồ sơ',type='primary')
     if submitted:
-        x = preprocess_credit([[values[n] for n in names]],params)
-        st.session_state['credit_result'] = infer('credit_default','mlp',x,(11,22,33))
+        try:
+            for name in names:
+                if name not in CATEGORIES and name != 'AGE' and name not in pay_names:
+                    values[name] = parse_amount(values[name])
+                    if not name.startswith('BILL') and values[name] < 0:
+                        raise ValueError('Hạn mức và số tiền đã trả không được âm.')
+            x = preprocess_credit([[values[n] for n in names]],params)
+            st.session_state['credit_result'] = infer('credit_default','mlp',x,(11,22,33))
+        except ValueError as error:
+            st.session_state.pop('credit_result',None)
+            st.warning(str(error))
     if 'credit_result' in st.session_state:
         p = st.session_state['credit_result']; threshold = info['threshold']
         st.metric('Xác suất vỡ nợ tháng tới',pct(p,2))
+        st.write('Mức rủi ro minh họa: **'+risk_level(p,threshold)+'**')
+        st.caption(f'Thấp: dưới {pct(threshold/2)}; trung bình: từ {pct(threshold/2)} đến dưới {pct(threshold)}; cao: từ {pct(threshold)}. '
+                   'Ba mức là quy ước minh họa quanh ngưỡng, chưa được kiểm định như một thang tín dụng.')
         st.write('Phân loại theo ngưỡng: **'+('Có rủi ro' if p >= threshold else 'Chưa thuộc nhóm rủi ro')+'**')
         st.caption(f'Ngưỡng {pct(threshold)} tối ưu trên trung bình dự báo validation của ba hạt giống. Kết quả thuộc lần bấm chấm điểm gần nhất.')
         st.write(f"Tỷ lệ vỡ nợ chung trong bộ dữ liệu: **{pct(info['base_rate'])}**.")
@@ -278,7 +304,7 @@ def comparison(records):
             'Độ chính xác cân bằng':float(np.mean([r['metrics']['balanced_accuracy'] for r in group]))})
     import altair as alt
     frame = pd.DataFrame(rows)
-    bars = alt.Chart(frame).mark_bar().encode(x=alt.X('Mô hình:N',sort=None),y=alt.Y('ROC-AUC:Q',scale=alt.Scale(domain=[0,1])),color='Cài đặt:N',xOffset='Cài đặt:N')
+    bars = alt.Chart(frame).mark_bar().encode(x=alt.X('Mô hình:N',sort=None),y=alt.Y('ROC-AUC:Q',scale=alt.Scale(domain=[0,1]),axis=alt.Axis(labelExpr="replace(format(datum.value, '.1f'), '.', ',')")),color='Cài đặt:N',xOffset='Cài đặt:N')
     ref = pd.DataFrame({'mức':[.5],'nhãn':['0,5 · đoán mò']})
     rule = alt.Chart(ref).mark_rule(strokeDash=[5,4],color='#b42318').encode(y='mức:Q')
     label = alt.Chart(ref).mark_text(align='left',dy=-9,color='#b42318').encode(y='mức:Q',text='nhãn:N',x=alt.value(5))
@@ -301,7 +327,7 @@ def backtest(analysis):
     st.caption('Vốn quy đổi để dễ hình dung; mô phỏng theo biến động chỉ số, không tính tỷ giá, không khẳng định có thể mua trực tiếp chỉ số.')
     if picked:
         frame = pd.DataFrame({STRATEGIES[k]:np.array(curves[k])*100 for k in picked},index=pd.to_datetime(curves['dates']))
-        st.line_chart(frame,x_label='Ngày',y_label='Triệu đồng sau phí')
+        price_chart(frame,'Triệu đồng sau phí')
     rows = []
     for key,item in analysis['backtest'][market].items():
         final = item.get('final_wealth',curves.get(key,[float('nan')])[-1])

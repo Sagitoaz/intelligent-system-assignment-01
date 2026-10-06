@@ -1,5 +1,22 @@
 """Tiền xử lý tín dụng bằng tham số đã học; tên và giải thích dùng chung cho giao diện."""
 import numpy as np
+import re
+
+
+def parse_amount(text):
+    """Nhập tiền theo định dạng Việt Nam: 130.000 hoặc 130.000,50."""
+    value = str(text).strip()
+    if not re.fullmatch(r'-?(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d+)?', value):
+        raise ValueError('Nhập tiền dạng 130.000 hoặc 130.000,50; dùng dấu phẩy cho phần thập phân.')
+    amount = float(value.replace('.', '').replace(',', '.'))
+    if not np.isfinite(amount):
+        raise ValueError('Số tiền phải hữu hạn.')
+    return amount
+
+
+def risk_level(probability, threshold):
+    """Ba mức minh họa quanh ngưỡng nhị phân, không phải thang tín dụng đã kiểm định."""
+    return 'Thấp' if probability < threshold / 2 else ('Trung bình' if probability < threshold else 'Cao')
 
 PAY_CODES = {-2: 'Không phát sinh chi tiêu (diễn giải phổ biến)', -1: 'Trả đủ',
              0: 'Chỉ trả tối thiểu (diễn giải phổ biến)',

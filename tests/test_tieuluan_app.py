@@ -96,3 +96,29 @@ def test_live_network_error_is_friendly(monkeypatch):
     next(b for b in app.button if b.label == 'Tải lại dữ liệu mới nhất').click().run(timeout=30)
     assert not app.exception
     assert any('Chưa tải được' in w.value for w in app.warning)
+
+
+def test_successful_live_ensemble_and_threshold(monkeypatch):
+    import pandas as pd
+    from src.tieuluan import live
+    monkeypatch.delenv('TIEULUAN_ROOT', raising=False)
+    root = APP.parents[2]
+    frame = pd.read_csv(root / 'data/tieuluan/app/sp500_prices.csv', parse_dates=['date']).tail(60)
+    monkeypatch.setattr(live, 'fetch_market', lambda market: {
+        'frame': frame, 'source': 'Nguồn kiểm thử', 'updated_at': '2026-10-06T08:00:00+00:00',
+        'stale': False, 'fallback': False, 'age_days': 1})
+    st.cache_data.clear()
+    app = AppTest.from_file(str(APP)).run(timeout=30)
+    next(b for b in app.button if b.label == 'Tải lại dữ liệu mới nhất').click().run(timeout=30)
+    assert not app.exception
+    with np.load(root / 'data/tieuluan/app/sp500.npz') as d:
+        features = live.market_features(frame.close, d['scaler_mean'], d['scaler_scale'])
+    expected = []
+    analysis = json.loads((root / 'results/tieuluan/full/analysis.json').read_text())
+    for kind, rep in [('lstm','sequence'), ('cnn4','image')]:
+        models = [live.load_model(root, 'sp500', kind, features[rep].shape[1:], seed) for seed in (11,22,33)]
+        p = live.predict_probability(models, features[rep])[0]
+        expected.append(f'{p:.2%}'.replace('.', ','))
+        label = 'Nghiêng về tăng' if p >= analysis['backtest']['sp500'][kind]['threshold'] else 'Nghiêng về không tăng'
+        assert any(label in m.value for m in app.markdown)
+    assert [m.value for m in app.metric if m.label == 'Xác suất tăng'] == expected
