@@ -79,10 +79,11 @@ app_port: 7860
 pinned: false
 ---
 
-# Minh họa AI tài chính trên dữ liệu lịch sử
+# Hiểu AI qua dữ liệu tài chính
 
-Ứng dụng kiểm tra mô hình NumPy trên các mẫu test giữ riêng. Không phải khuyến nghị giao dịch.
-Ngày chốt dữ liệu thị trường: 30/09/2026. Xem UPLOAD_GUIDE.md để chạy và tải lên Space.
+Ứng dụng đối chiếu mô hình NumPy trên tập kiểm tra, tải giá mới để dự báo phiên tới và nhận hồ sơ tín dụng.
+Không phải khuyến nghị đầu tư. Dữ liệu thực nghiệm chốt 30/09/2026; giá trực tiếp có ngày cập nhật riêng.
+Xem UPLOAD_GUIDE.md để chạy và tải lên Space.
 Gói được chuẩn bị cục bộ, chưa xuất bản. Xem DATA_SOURCES.md trước khi chia sẻ công khai.
 SHA256_MANIFEST.json ghi hash của từng tệp tại thời điểm đóng gói.
 ''', encoding='utf-8')

@@ -73,6 +73,7 @@ def main():
         for preset in ['Ít rủi ro hơn · phân vị 10%','Ở giữa · phân vị 50%','Nhiều rủi ro hơn · phân vị 90%']:
             choose('Hồ sơ mẫu theo xác suất trong tập kiểm tra',preset)
             page.get_by_role('button',name='Chấm điểm hồ sơ',exact=True).click(); ready()
+            page.get_by_text('Xác suất vỡ nợ tháng tới',exact=True).wait_for()
             assert 'Xác suất vỡ nợ tháng tới' in page.locator('body').inner_text()
         capture('credit')
         tab('So sánh mô hình')

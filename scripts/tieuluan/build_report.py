@@ -141,6 +141,10 @@ def market_frame(key):
 
 def compute_values(res: Results) -> dict:
     v = {}
+    app_assets = json.loads((ROOT / 'data/tieuluan/app/metadata.json').read_text(encoding='utf-8'))
+    v['app.credit.threshold'] = vn_pct(app_assets['datasets']['credit_default']['threshold'])
+    app_check = json.loads((ROOT / 'data/tieuluan/app/verification.json').read_text(encoding='utf-8'))
+    v['app.peak_memory_mb'] = vn(app_check['peak_working_set_mb'], 1)
     inv, an = res.inventory, res.analysis
     for key in MARKETS + TABULAR:
         s = inv[key]["splits"]
@@ -1141,7 +1145,9 @@ class Writer:
         p.paragraph_format.page_break_before = True
         self.table([["Viết tắt", "Tiếng Anh", "Nghĩa tiếng Việt"]] + abbreviations)
 
-    def references_section(self):
+    def references_section(self, following_text=""):
+        # Phụ lục nằm sau danh mục nhưng nguồn của nó vẫn cần có trong danh mục.
+        self.resolve_citations(following_text)
         self.heading("TÀI LIỆU THAM KHẢO", 1, new_page=True)
         for n, key in enumerate(self.cited, 1):
             p = self.doc.add_paragraph()
@@ -1218,7 +1224,7 @@ def build():
             appendix_text = text
             continue
         w.markdown(text, first_heading_new_page=(path != files[0]))
-    w.references_section()
+    w.references_section(appendix_text or "")
     if appendix_text:
         w.markdown(appendix_text)
     out = DOCS / f"{NAME}.docx"

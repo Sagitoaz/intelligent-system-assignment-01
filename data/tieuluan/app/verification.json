@@ -1,0 +1,14 @@
+{
+  "code_commit": "808d69da3fcf5475086780d4889f3e05bf675c9b",
+  "render_requirements_only": true,
+  "working_set_mb": 176.96,
+  "peak_working_set_mb": 178.41,
+  "browser_checks": 37,
+  "browser_passed": true,
+  "live_sources": [
+    "Nguồn thực tế: Yahoo Finance · Phiên cuối: 05/10/2026",
+    "Nguồn thực tế: Yahoo Finance · Phiên cuối: 05/10/2026",
+    "Nguồn thực tế: SSI iBoard · Phiên cuối: 06/10/2026"
+  ],
+  "files_changed_since_run": []
+}

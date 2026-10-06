@@ -44,6 +44,24 @@ Ngưỡng tín dụng được sinh riêng từ trung bình validation NumPy. T�
 Các nguồn công khai có thể chậm, chặn truy cập hoặc đổi định dạng. Việc tải được trên máy cá nhân
 không bảo đảm cùng nguồn luôn truy cập được từ Render. Mô hình không tự học từ dữ liệu mới.
 
+## Kiểm chứng và ảnh báo cáo
+
+`data/tieuluan/app/verification.json` ghi commit ứng dụng đã thử bằng `git archive`, nguồn mạng thực tế
+và số đo RAM của môi trường chỉ cài requirements. Đây là bằng chứng trên máy Windows, không phải cam kết
+tài nguyên cho mọi lượng truy cập trên Render. Gói Space được kiểm tra thêm bằng Streamlit AppTest.
+
+Để thử giao diện bằng Edge và chụp lại ảnh (dùng venv phát triển có Playwright và Pillow):
+
+```powershell
+.venv\Scripts\python.exe -m streamlit run deployment/tieuluan/app.py --server.port 8517 --client.toolbarMode minimal
+.venv\Scripts\python.exe -m scripts.tieuluan.check_app_browser --url http://localhost:8517 --live --screenshots
+```
+
+Lệnh trình duyệt gọi mạng thật khi có `--live`; các kiểm thử pytest đều giả lập tải mạng.
+Biểu mẫu dùng dấu chấm phân cách hàng nghìn, dấu phẩy thập phân. Ba mức tín dụng là quy ước minh họa
+quanh ngưỡng validation: dưới nửa ngưỡng, từ nửa ngưỡng đến dưới ngưỡng, từ ngưỡng trở lên;
+không phải thang tín dụng đã kiểm định.
+
 ## Triển khai miễn phí trên Render (cách đang dùng)
 
 Render lấy mã thẳng từ kho GitHub công khai, không cần đóng gói hay tải file lên.
