@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 import numpy as np
+import streamlit as st
 from streamlit.testing.v1 import AppTest
 
 from src.tieuluan.experiment_models import scratch_model
@@ -14,7 +15,7 @@ def test_missing_artifacts_is_informative(monkeypatch, tmp_path):
     monkeypatch.setenv('TIEULUAN_ROOT', str(tmp_path))
     app = AppTest.from_file(str(APP)).run(timeout=30)
     assert not app.exception
-    assert len(app.tabs) == 4
+    assert len(app.tabs) == 7
     assert any('Chưa có' in message.value for message in app.info)
 
 
@@ -38,11 +39,12 @@ def test_saved_model_inference_and_label_separation(monkeypatch, tmp_path):
     (results / f'{stem}.json').write_text(json.dumps(record))
     app = AppTest.from_file(str(APP)).run(timeout=30)
     assert not app.exception
-    assert len(app.tabs) == 4
-    assert app.metric[0].value == f'{p[0]:.2%}'
+    assert len(app.tabs) == 7
+    assert app.metric[0].value == f'{p[0]:.2%}'.replace('.', ',')
     first_probability = app.metric[0].value
     np.savez(data / 'taiwan_bankruptcy.npz', test_tabular=x, test_y=[1, 0])
     # Labels are read only for display; changing them cannot change inference.
+    st.cache_data.clear()
     app.run(timeout=30)
     assert not app.exception
     assert app.metric[0].value == first_probability
@@ -59,5 +61,38 @@ def test_backtest_tab_reads_saved_analysis(monkeypatch, tmp_path):
     (results / 'analysis.json').write_text(json.dumps(analysis))
     app = AppTest.from_file(str(APP)).run(timeout=30)
     assert not app.exception
-    assert len(app.tabs) == 4
+    assert len(app.tabs) == 7
     assert any('Mua và giữ' in str(frame.value.values) for frame in app.dataframe)
+
+
+def test_real_app_choices_and_credit(monkeypatch):
+    monkeypatch.delenv('TIEULUAN_ROOT', raising=False)
+    app = AppTest.from_file(str(APP)).run(timeout=30)
+    assert not app.exception
+    def choose(label, value):
+        next(s for s in app.selectbox if s.label == label).set_value(value)
+        app.run(timeout=30)
+        assert not app.exception
+    for dataset in ['sp500', 'vnindex', 'btc', 'credit_default', 'taiwan_bankruptcy']:
+        choose('Bộ dữ liệu kiểm tra', dataset)
+        for kind in (['lstm','cnn4'] if dataset in ['sp500','vnindex','btc'] else ['mlp']):
+            choose('Mô hình kiểm tra', kind)
+            assert any('Đã đối chiếu với dự báo đã lưu' in c.value for c in app.caption)
+    for preset in range(3):
+        choose('Hồ sơ mẫu theo xác suất trong tập kiểm tra', preset)
+        next(b for b in app.button if b.label == 'Chấm điểm hồ sơ').click().run(timeout=30)
+        assert not app.exception
+        assert any(m.label == 'Xác suất vỡ nợ tháng tới' for m in app.metric)
+
+
+def test_live_network_error_is_friendly(monkeypatch):
+    from src.tieuluan import live
+    monkeypatch.delenv('TIEULUAN_ROOT', raising=False)
+    def fail(*args, **kwargs):
+        raise live.LiveDataError('Chưa tải được dữ liệu. Vui lòng thử lại sau.')
+    monkeypatch.setattr(live, 'fetch_market', fail)
+    st.cache_data.clear()
+    app = AppTest.from_file(str(APP)).run(timeout=30)
+    next(b for b in app.button if b.label == 'Tải lại dữ liệu mới nhất').click().run(timeout=30)
+    assert not app.exception
+    assert any('Chưa tải được' in w.value for w in app.warning)

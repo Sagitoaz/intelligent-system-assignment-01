@@ -34,7 +34,7 @@ def main():
     copy(DEPLOY / 'README.md', Path('UPLOAD_GUIDE.md'))
     for source in (ROOT / 'data/tieuluan/processed').glob('*.npz'):
         with np.load(source, allow_pickle=False) as data:
-            payload = {key: data[key] for key in data.files if key.startswith('test_') or key == 'feature_names'}
+            payload = {key: data[key] for key in data.files if key.startswith(('test_', 'scaler_', 'imputer_')) or key == 'feature_names'}
         if not payload:
             continue
         destination = TARGET / source.relative_to(ROOT)
@@ -49,7 +49,10 @@ def main():
         destination = TARGET / inventory.relative_to(ROOT)
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(json.dumps(contents, ensure_ascii=False, indent=2), encoding='utf-8')
-    for source in (ROOT / 'models/tieuluan/full').glob('*__scratch__11.npz'):
+    for source in (ROOT / 'data/tieuluan/app').glob('*'):
+        if source.is_file():
+            copy(source)
+    for source in (ROOT / 'models/tieuluan/full').glob('*__scratch__*.npz'):
         copy(source)
     skipped = []
     for source in (ROOT / 'results/tieuluan/full').glob('*'):
@@ -97,7 +100,8 @@ Dữ liệu rủi ro nguồn UCI Machine Learning Repository:
 - Default of credit card clients: https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients
 Kiểm tra trang nguồn và điều kiện ghi công trước khi phân phối. Không bổ sung danh tính khách hàng.
 
-Chỉ các mảng test_* và feature_names được giữ trong dữ liệu processed; loại train/validation và raw.
+Các mảng test_*, scaler_*, imputer_* và feature_names được giữ trong processed; loại train/validation.
+Tài nguyên app chứa giá lịch sử và dòng test UCI ở dạng gốc để hiển thị và thử nhập hồ sơ.
 Kết quả predictions có thể chứa nhãn/xác suất validation để đối chiếu thực nghiệm, không chứa đặc trưng khách hàng gốc.
 inventory.json giữ thông tin provenance và hash dữ liệu nguồn, đã bỏ raw_sample.
 ''', encoding='utf-8')

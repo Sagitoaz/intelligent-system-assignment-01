@@ -20,6 +20,8 @@ Thứ ba, **hiểu nền tảng giúp phát hiện lỗi tinh vi**. Việc tự 
 
 ## 3. Hạn chế
 
+Dự báo trực tiếp chỉ áp dụng trọng số cũ lên giá mới, phụ thuộc độ trễ và tính sẵn có của nguồn dữ liệu; việc cập nhật giá không bảo đảm mô hình còn phù hợp với thị trường hiện tại.
+
 - **Thông tin đầu vào hẹp.** Các mô hình thị trường chỉ dùng giá đóng cửa của ba chỉ số; chưa dùng khối lượng, tin tức, dữ liệu vĩ mô hay dữ liệu từng cổ phiếu.
 - **Mô hình nhỏ và không tinh chỉnh siêu tham số một cách hệ thống.** Đây là lựa chọn có chủ đích, để giảm nguy cơ "học thuộc" tập validation vốn nhỏ, nhưng có thể chưa khai thác hết khả năng của từng kiến trúc.
 - **Kiểm định nhiều mô hình cùng lúc.** Với 18 cặp mô hình – thị trường, nếu không có tín hiệu thật, trung bình vẫn có khoảng một kết quả "có ý nghĩa" ở mức 5% chỉ do ngẫu nhiên [@harvey2016]. Tiểu luận vì thế báo cáo toàn bộ kết quả thay vì chọn mô hình tốt nhất trên tập test [@bailey2014]. Kết luận về VN-Index đáng tin hơn một phát hiện đơn lẻ vì nó nhất quán qua cả sáu kiến trúc (ROC-AUC của dự báo trung bình từ {{v:ciauc.vnindex.cnn4}} đến {{v:ciauc.vnindex.gru}}) và được giải thích bởi một đặc điểm độc lập của dữ liệu là tự tương quan dương.

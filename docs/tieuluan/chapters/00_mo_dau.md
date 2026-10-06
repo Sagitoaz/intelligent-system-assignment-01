@@ -46,7 +46,7 @@ Toàn bộ thực nghiệm tuân thủ năm nguyên tắc: (i) dữ liệu theo 
 - Xây dựng bộ dữ liệu VN-Index được **kiểm chứng chéo giữa ba nguồn** (SSI, DNSE, VNDirect). Quá trình này phát hiện và xử lý ba vấn đề: {{v:vnq.close_disagreements_ssi_vs_dnse}} phiên lệch giá giữa các nguồn, một lỗ hổng {{v:vnq.gap2009}} phiên năm 2009 tạo ra mức "tăng 23%" không có thật, và giai đoạn giá bị làm tròn trước năm 2009.
 - Tự cài đặt một thư viện học sâu nhỏ bằng NumPy (lớp kết nối đầy đủ, tích chập, gộp, SimpleRNN, LSTM, GRU, Adam). Thư viện được kiểm tra gradient bằng sai phân và đối chiếu với Keras, PyTorch khi dùng **cùng trọng số khởi tạo, cùng thứ tự dữ liệu**.
 - Đưa ra kết quả trung thực, có kiểm định thống kê: mô hình phân biệt rủi ro tín dụng rất tốt trên dữ liệu bảng; với thị trường, chỉ VN-Index cho thấy khả năng dự báo nhỏ nhưng có ý nghĩa thống kê, còn S&P 500 và Bitcoin thì không; và sau phí giao dịch, không chiến lược nào vượt rõ chiến lược mua và giữ.
-- Đóng gói các mô hình thành ứng dụng web minh họa (Streamlit), triển khai miễn phí lên Internet bằng dịch vụ Render, lấy mã trực tiếp từ kho GitHub của tiểu luận.
+- Đóng gói mô hình thành ứng dụng web Streamlit trên Render: đối chiếu dự báo theo ngày, tải giá mới để dự báo phiên tới, nhập hồ sơ tín dụng và xem mô phỏng bằng tiền; giải thích kết quả và giới hạn cho người không chuyên.
 
 ## 7. Cấu trúc tiểu luận
 

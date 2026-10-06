@@ -1,9 +1,11 @@
 # Ứng dụng minh họa của tiểu luận
 
-Ứng dụng Streamlit gồm bốn tab: **Thử mô hình** (chạy mô hình NumPy tự viết trên một mẫu của tập test),
-**So sánh thực nghiệm** (128 bản ghi, ba cách cài đặt, ba hạt giống), **Backtest** (giá trị danh mục có tính phí)
-và **Dữ liệu và giới hạn**. Ứng dụng chỉ đọc kết quả đã lưu: không tải TensorFlow/PyTorch, không huấn luyện,
-không chọn lại ngưỡng. Chỉ cần ba thư viện trong `requirements.txt` (NumPy, pandas, Streamlit).
+Ứng dụng Streamlit có bảy tab: **Giới thiệu**, **Thử trên dữ liệu kiểm tra**, **Dự báo phiên tới**,
+**Tự chấm điểm tín dụng**, **So sánh mô hình**, **Backtest**, **Dữ liệu và giới hạn**.
+Chọn ngày để đối chiếu giá, dự báo và kết quả thật; nhập hồ sơ tín dụng để chạy MLP;
+xem mô phỏng 100 triệu đồng trước và sau phí. Câu chữ dành cho người chưa học tài chính.
+Ứng dụng chỉ suy luận bằng NumPy, không huấn luyện lại, không đổi kết quả thực nghiệm.
+Ba thư viện trực tiếp trong requirements giữ nguyên; requests và Altair là phụ thuộc của Streamlit.
 
 ## Chạy tại máy
 
@@ -12,11 +14,35 @@ Từ thư mục gốc dự án:
 ```powershell
 .venv\Scripts\python.exe -m pip install -r deployment/tieuluan/requirements.txt
 .venv\Scripts\python.exe -m streamlit run deployment/tieuluan/app.py
-.venv\Scripts\python.exe -m pytest tests/test_tieuluan_app.py -q
+.venv\Scripts\python.exe -m scripts.tieuluan.prepare_app_assets
+.venv\Scripts\python.exe -m pytest tests/test_tieuluan.py tests/test_tieuluan_app.py tests/test_tieuluan_live.py tests/test_tieuluan_credit.py -q
 ```
 
-Ứng dụng đọc `results/tieuluan/full`, `models/tieuluan/full` (các file `*__scratch__11.npz`) và
-`data/tieuluan/processed`. Biến môi trường `TIEULUAN_ROOT` cho phép trỏ tới một thư mục khác có cùng cấu trúc.
+Ứng dụng đọc `results/tieuluan/full`, `models/tieuluan/full` (hạt giống 11, 22, 33),
+`data/tieuluan/processed` và `data/tieuluan/app`. Biến `TIEULUAN_ROOT` cho phép đổi thư mục tài nguyên.
+Chạy `prepare_app_assets` bằng venv đầy đủ khi cần sinh lại tài nguyên: script đọc Excel/CSV gốc theo
+`test_ids`, lưu tham số, hồ sơ thật ở phân vị 10/50/90% và chọn ngưỡng tín dụng từ validation.
+Không chạy script chuẩn bị dữ liệu hoặc huấn luyện khi triển khai ứng dụng.
+
+## Dự báo bằng giá mới
+
+| Thị trường | Nguồn chính | Dự phòng |
+|---|---|---|
+| S&P 500 | Yahoo Finance chart, ^GSPC | FRED SP500 |
+| Bitcoin | Yahoo Finance chart, BTC-USD | Coinbase Exchange BTC-USD |
+| VN-Index | SSI iBoard | DNSE Entrade |
+
+Chỉ tải khi bấm nút; cache 30 phút, nút tải lại xóa cache. Mỗi nguồn có timeout 9 giây,
+tối đa một lần thử lại. Nguồn và thời điểm thực tế luôn hiển thị; không thay dữ liệu lỗi bằng dữ liệu giả.
+Bỏ phiên VN-Index trước 15:00 giờ Việt Nam, S&P 500 trước 16:30 giờ New York, và nến Bitcoin ngày UTC hiện tại.
+Cần 21 giá hợp lệ; cảnh báo khi phiên cuối cũ hơn 5 ngày (chứng khoán) hoặc 2 ngày (Bitcoin).
+LSTM dùng 20 lợi suất log chuẩn hóa với tham số cũ; CNN4 dùng ảnh GASF của 20 giá.
+Dự báo mới là trung bình xác suất ba hạt giống. Ngưỡng thị trường và khoảng tin cậy lấy từ
+`analysis.json` (phân tích trung bình ba bản PyTorch); độ chính xác cân bằng lấy từ ba bản NumPy.
+Ngưỡng tín dụng được sinh riêng từ trung bình validation NumPy. Tất cả xác suất chưa được hiệu chuẩn.
+
+Các nguồn công khai có thể chậm, chặn truy cập hoặc đổi định dạng. Việc tải được trên máy cá nhân
+không bảo đảm cùng nguồn luôn truy cập được từ Render. Mô hình không tự học từ dữ liệu mới.
 
 ## Triển khai miễn phí trên Render (cách đang dùng)
 

@@ -1,0 +1,112 @@
+{
+  "snapshot_end": "2026-09-30",
+  "seeds": [
+    11,
+    22,
+    33
+  ],
+  "datasets": {
+    "taiwan_bankruptcy": {
+      "history": {
+        "mlp": {
+          "accuracy": 0.8983382209188661,
+          "balanced_accuracy": 0.8779040404040405,
+          "recall": 0.856060606060606,
+          "roc_auc": 0.9263515840220385
+        }
+      },
+      "display_labels": {
+        " ROA(A) before interest and % after tax": "ROA: khả năng tạo lợi nhuận từ tài sản",
+        " Debt ratio %": "Tỷ lệ nợ: phần tài sản được tài trợ bằng nợ",
+        " Net Income to Total Assets": "Lãi ròng trên tổng tài sản",
+        " Current Ratio": "Khả năng dùng tài sản ngắn hạn trả nợ ngắn hạn",
+        " Cash/Total Assets": "Tiền mặt trên tổng tài sản",
+        " Net worth/Assets": "Vốn chủ sở hữu trên tổng tài sản"
+      },
+      "base_rate": 0.03226279513125092
+    },
+    "credit_default": {
+      "history": {
+        "mlp": {
+          "accuracy": 0.7533888888888889,
+          "balanced_accuracy": 0.7124487313024906,
+          "recall": 0.6390354182366239,
+          "roc_auc": 0.7781844996345524
+        }
+      },
+      "base_rate": 0.2212,
+      "threshold": 0.20999999999999996,
+      "presets": [
+        5032,
+        224,
+        5938
+      ],
+      "preset_probabilities": [
+        0.06890219665601954,
+        0.15599764100580962,
+        0.5667767434981265
+      ]
+    },
+    "sp500": {
+      "history": {
+        "cnn4": {
+          "accuracy": 0.49964463397299214,
+          "balanced_accuracy": 0.5019476137897191,
+          "recall": 0.4807692307692308,
+          "roc_auc": 0.5146822475769844,
+          "threshold": 0.49999999999999994
+        },
+        "lstm": {
+          "accuracy": 0.5390902629708599,
+          "balanced_accuracy": 0.4946647650595019,
+          "recall": 0.9032051282051282,
+          "roc_auc": 0.496175315912158,
+          "threshold": 0.4699999999999999
+        }
+      }
+    },
+    "vnindex": {
+      "history": {
+        "cnn4": {
+          "accuracy": 0.5346250448510944,
+          "balanced_accuracy": 0.510580927828585,
+          "recall": 0.7082533589251438,
+          "roc_auc": 0.5191154516829125,
+          "threshold": 0.5399999999999999
+        },
+        "lstm": {
+          "accuracy": 0.5206315034086831,
+          "balanced_accuracy": 0.5404552896014452,
+          "recall": 0.37747920665387075,
+          "roc_auc": 0.5442556421160915,
+          "threshold": 0.58
+        }
+      }
+    },
+    "btc": {
+      "history": {
+        "cnn4": {
+          "accuracy": 0.49317738791423005,
+          "balanced_accuracy": 0.49277691805670737,
+          "recall": 0.629737609329446,
+          "roc_auc": 0.4870578730025734,
+          "threshold": 0.6
+        },
+        "lstm": {
+          "accuracy": 0.5058479532163743,
+          "balanced_accuracy": 0.506895342971709,
+          "recall": 0.14868804664723032,
+          "roc_auc": 0.5047465152797609,
+          "threshold": 0.5299999999999999
+        }
+      }
+    }
+  },
+  "source_sha256": {
+    "data\\tieuluan\\processed\\taiwan_bankruptcy.npz": "93de7ca057f9d9f3ae0d5442f8381c9782467b08d39dcfb127691ad204e2c329",
+    "data\\tieuluan\\processed\\credit_default.npz": "6c86cef5e1c50f693b2aec44ffa1314e6e65736c48da29de2040e34b20d30a09",
+    "data\\tieuluan\\processed\\sp500.npz": "7af19f7b9156847f8741e87cdb41799e4372ac01962f6f8a3bf6ceaf25a6dbe4",
+    "data\\tieuluan\\processed\\vnindex.npz": "824585deaa8f71ab38bf204c47ee213379e0b4c56590f03d703962254e014162",
+    "data\\tieuluan\\processed\\btc.npz": "ebe3d8a6aa611de75889cf7f63f141ec5afb80d229f22499a8c916bc2e9979a1"
+  }
+}
