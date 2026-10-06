@@ -121,7 +121,7 @@ def study_design():
             ("BIỂU DIỄN", ["Bảng chỉ tiêu\n(Chương 2)", "Ảnh GASF 20×20\n(Chương 3)", "Chuỗi 20 lợi suất\n(Chương 4)"]),
             ("MÔ HÌNH", ["Logistic, RF,\nMLP", "CNN4, CNN8,\nCNN sâu", "SimpleRNN,\nLSTM, GRU"]),
             ("CÀI ĐẶT", ["NumPy\ntự viết", "Keras\n(TensorFlow)", "PyTorch"]),
-            ("ĐÁNH GIÁ &\nTRIỂN KHAI", ["AUC, AP, F1,\nBalanced acc.", "Bootstrap CI,\nbacktest có phí", "Demo Streamlit\n(Hugging Face)"])]
+            ("ĐÁNH GIÁ &\nTRIỂN KHAI", ["AUC, AP, F1,\nBalanced acc.", "Bootstrap CI,\nbacktest có phí", "Demo Streamlit\n(Render)"])]
     fills = [LIGHT_BLUE, LIGHT_AQUA, LIGHT_YELLOW, LIGHT_ORANGE, BOX]
     w, gap, h = 1.2, 0.2, 0.56
     for i, ((title, items), fc) in enumerate(zip(cols, fills)):

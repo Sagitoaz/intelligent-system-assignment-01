@@ -121,5 +121,7 @@
  "bailey2014": "D. H. Bailey, J. M. Borwein, M. López de Prado, and Q. J. Zhu, \"Pseudo-mathematics and financial charlatanism: The effects of backtest overfitting on out-of-sample performance,\" *Notices of the American Mathematical Society*, vol. 61, no. 5, pp. 458–471, 2014.",
  "hogan2021kg": "A. Hogan *et al.*, \"Knowledge graphs,\" *ACM Computing Surveys*, vol. 54, no. 4, pp. 71:1–71:37, 2021.",
  "lewis2020rag": "P. Lewis *et al.*, \"Retrieval-augmented generation for knowledge-intensive NLP tasks,\" in *Advances in Neural Information Processing Systems*, vol. 33, 2020, pp. 9459–9474.",
- "kipf2017gcn": "T. N. Kipf and M. Welling, \"Semi-supervised classification with graph convolutional networks,\" in *Proc. Int. Conf. Learning Representations (ICLR)*, 2017."
+ "kipf2017gcn": "T. N. Kipf and M. Welling, \"Semi-supervised classification with graph convolutional networks,\" in *Proc. Int. Conf. Learning Representations (ICLR)*, 2017.",
+ "render_free": "Render, \"Deploy for free,\" *Render Documentation*, truy cập 06/10/2026. [Online]. Available: https://render.com/docs/free",
+ "hf_spaces2026": "Hugging Face, \"Spaces overview,\" *Hugging Face Hub Documentation*, truy cập 06/10/2026. [Online]. Available: https://huggingface.co/docs/hub/en/spaces-overview"
 }

@@ -45,11 +45,16 @@ Bước 3 chạy trên CPU; tổng thời gian huấn luyện của {{v:n_traine
 
 ![Hình B.2. Thẻ "Backtest": giá trị danh mục trên tập test của VN-Index và bảng chỉ số trước, sau phí.](../../figures/tieuluan/appendix_demo_backtest.png)
 
-Ứng dụng được đóng gói thành Docker Space để chạy trên Hugging Face Spaces, nền tảng lưu trữ ứng dụng học máy miễn phí ở cấu hình CPU cơ bản. Các bước triển khai:
+Ứng dụng được triển khai thành một dịch vụ web miễn phí trên Render [@render_free]. Render lấy mã trực tiếp từ kho GitHub công khai của tiểu luận, và tự cài đặt, khởi động lại ứng dụng mỗi khi có mã mới trên nhánh `main`. Gói miễn phí có 512 MB bộ nhớ; dịch vụ tự "ngủ" sau 15 phút không có truy cập và mất khoảng một phút để thức dậy ở lượt truy cập kế tiếp. Các bước triển khai:
 
-1. Chạy `.venv\Scripts\python.exe -m scripts.tieuluan.package_demo` để tạo gói `deployment/tieuluan/tieuluan_hf_space.zip`. Gói chỉ chứa mã suy luận, trọng số NumPy, kết quả đánh giá và phần test của dữ liệu đã xử lý.
-2. Đăng nhập huggingface.co, chọn **New → Space**, đặt tên, chọn **SDK: Docker → Blank**, phần cứng **CPU basic**.
-3. Trong Space vừa tạo, chọn **Files → Add file → Upload files**, kéo toàn bộ nội dung đã giải nén của gói vào rồi bấm **Commit**.
-4. Chờ trạng thái chuyển từ *Building* sang *Running* rồi mở thẻ **App**.
+1. Đăng nhập render.com, chọn **New → Web Service**, chọn thẻ **Public Git Repository**, dán địa chỉ kho mã GitHub của tiểu luận rồi bấm **Connect**.
+2. Chọn **Language: Python 3**, **Branch: main**, gói **Free**. Phiên bản Python 3.12 được khai báo sẵn trong file `.python-version` ở gốc kho mã.
+3. **Build Command:** `pip install -r deployment/tieuluan/requirements.txt` (chỉ gồm NumPy, pandas và Streamlit).
+4. **Start Command:** `streamlit run deployment/tieuluan/app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true`.
+5. Bấm **Create Web Service**, chờ trạng thái **Live** rồi mở địa chỉ dạng `https://<tên-dịch-vụ>.onrender.com`.
 
-Cũng có thể chạy tại máy bằng lệnh `.venv\Scripts\python.exe -m streamlit run deployment/tieuluan/app.py` rồi mở địa chỉ http://localhost:8501.
+Trước khi triển khai, ứng dụng được chạy thử trong một môi trường Python sạch chỉ có ba thư viện trên, từ đúng nội dung đã đẩy lên GitHub: cả tám lựa chọn mô hình và bốn thẻ đều hoạt động, bộ nhớ sử dụng dưới 200 MB. Kho mã vẫn giữ gói Docker cho Hugging Face Spaces (`scripts.tieuluan.package_demo`), nhưng từ tháng 7/2026 Space dạng Docker chỉ tạo được với tài khoản trả phí [@hf_spaces2026]. Để chạy tại máy, dùng lệnh dưới đây rồi mở địa chỉ http://localhost:8501:
+
+```text
+.venv\Scripts\python.exe -m streamlit run deployment/tieuluan/app.py
+```

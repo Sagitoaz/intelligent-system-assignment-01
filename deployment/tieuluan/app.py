@@ -28,9 +28,12 @@ STRATEGIES = {'buy_hold': 'Mua và giữ', 'persistence': 'Lặp lại hướng 
               'cnndeep': 'CNN sâu', 'rnn': 'SimpleRNN', 'lstm': 'LSTM', 'gru': 'GRU'}
 
 
-def read_records():
+# Kết quả đã lưu không đổi khi ứng dụng chạy, nên được đọc một lần rồi giữ trong bộ nhớ đệm:
+# máy chủ miễn phí chỉ có khoảng 0,1 CPU, đọc lại 128 file ở mỗi lần bấm sẽ rất chậm.
+@st.cache_data(show_spinner=False)
+def read_records(folder):
     records = []
-    for path in sorted(RESULTS.glob('*__*.json')):
+    for path in sorted(Path(folder).glob('*__*.json')):
         try:
             record = json.loads(path.read_text(encoding='utf-8'))
             if isinstance(record, dict) and 'metrics' in record:
@@ -40,11 +43,20 @@ def read_records():
     return records
 
 
-def read_analysis():
+@st.cache_data(show_spinner=False)
+def read_analysis(folder):
     try:
-        return json.loads((RESULTS / 'analysis.json').read_text(encoding='utf-8'))
+        return json.loads((Path(folder) / 'analysis.json').read_text(encoding='utf-8'))
     except (OSError, ValueError):
         return None
+
+
+@st.cache_data(show_spinner=False)
+def read_test_split(path, representation):
+    with np.load(path, allow_pickle=False) as archive:
+        return (archive[f'test_{representation}'], archive['test_y'],
+                archive['test_date'] if 'test_date' in archive else None,
+                archive['test_target_date'] if 'test_target_date' in archive else None)
 
 
 def stem_for(record):
@@ -68,11 +80,7 @@ def demo(records):
         st.info('Chưa có đủ dữ liệu kiểm tra và trọng số cho lựa chọn này.')
         return
     try:
-        with np.load(path, allow_pickle=False) as archive:
-            features = archive[f"test_{record['representation']}"]
-            labels = archive['test_y']
-            dates = archive['test_date'] if 'test_date' in archive else None
-            target_dates = archive['test_target_date'] if 'test_target_date' in archive else None
+        features, labels, dates, target_dates = read_test_split(str(path), record['representation'])
         if len(features) == 0 or len(features) != len(labels):
             raise ValueError('Kích thước tập kiểm tra không hợp lệ.')
         index = int(st.number_input('Số thứ tự mẫu trong tập kiểm tra (bắt đầu từ 0)',
@@ -183,14 +191,14 @@ def main():
     st.write('Minh họa các mô hình của tiểu luận trên dữ liệu lịch sử: rủi ro doanh nghiệp, rủi ro tín dụng '
              'và hướng đi ngày kế tiếp của S&P 500, VN-Index, Bitcoin.')
     st.info('Dữ liệu thị trường chốt ngày 30/09/2026. Đây là kiểm tra hồi cứu, không phải dự báo trực tiếp hay khuyến nghị đầu tư.')
-    records = read_records()
+    records = read_records(str(RESULTS))
     tabs = st.tabs(['Thử mô hình', 'So sánh thực nghiệm', 'Backtest', 'Dữ liệu và giới hạn'])
     with tabs[0]:
         demo(records)
     with tabs[1]:
         comparison(records)
     with tabs[2]:
-        backtest(read_analysis())
+        backtest(read_analysis(str(RESULTS)))
     with tabs[3]:
         st.markdown('- **Dữ liệu bảng:** phá sản doanh nghiệp Đài Loan (UCI 572) và vỡ nợ thẻ tín dụng Đài Loan (UCI 350), '
                     'chia ngẫu nhiên phân tầng 60/20/20.\n'
