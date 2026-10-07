@@ -1,5 +1,7 @@
 # Ứng dụng minh họa của tiểu luận
 
+Ứng dụng trực tuyến: [financial-investment-ai.onrender.com](https://financial-investment-ai.onrender.com/).
+
 Ứng dụng Streamlit có bảy tab: **Giới thiệu**, **Thử trên dữ liệu kiểm tra**, **Dự báo phiên tới**,
 **Tự chấm điểm tín dụng**, **So sánh mô hình**, **Backtest**, **Dữ liệu và giới hạn**.
 Chọn ngày để đối chiếu giá, dự báo và kết quả thật; nhập hồ sơ tín dụng để chạy MLP;

@@ -63,7 +63,7 @@ LSTM nhận 20 lợi suất logarit, tức thay đổi giá trên thang logarit,
 
 Ứng dụng đã được thử từ bản git archive trong môi trường Python sạch chỉ cài requirements triển khai: Edge đi qua các thẻ, lựa chọn mô hình, hồ sơ mẫu và dự báo mạng thật; đỉnh bộ nhớ tiến trình máy chủ đo bằng Get-Process là {{v:app.peak_memory_mb}} MB. Đây là phép đo trên Windows, không phải cam kết bộ nhớ cho mọi mức truy cập trên Render.
 
-Render lấy mã trực tiếp từ GitHub và tự triển khai khi nhánh main được cập nhật [@render_free]. Các bước:
+Ứng dụng trực tuyến: [financial-investment-ai.onrender.com](https://financial-investment-ai.onrender.com/). Render lấy mã trực tiếp từ GitHub và tự triển khai khi nhánh main được cập nhật [@render_free]. Các bước:
 
 1. Đăng nhập render.com, chọn **New → Web Service → Public Git Repository**, dán địa chỉ kho mã ở Phụ lục A rồi bấm **Connect**.
 2. Chọn **Language: Python 3**, **Branch: main**, gói **Free**; Python 3.12 khai báo tại `.python-version`.
