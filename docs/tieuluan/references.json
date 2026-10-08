@@ -128,5 +128,12 @@
  "coinbase_live2026": "Coinbase, \"Get product candles,\" Coinbase Exchange API, truy cập 06/10/2026. [Online]. Available: https://docs.cdp.coinbase.com/api-reference/exchange-api/rest-api/products/get-product-candles",
  "yahoo_live2026": "Yahoo Finance, \"Chart API: S&P 500 và BTC-USD, dữ liệu ngày,\" truy cập 06/10/2026. [Online]. Available: https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?range=6mo&interval=1d",
  "ssi_live2026": "SSI, \"iBoard: lịch sử chỉ số VNINDEX, độ phân giải ngày,\" truy cập 06/10/2026. [Online]. Available: https://iboard-api.ssi.com.vn/statistics/charts/history",
- "dnse_live2026": "DNSE Entrade, \"Chart API: dữ liệu chỉ số theo ngày,\" truy cập 06/10/2026. [Online]. Available: https://services.entrade.com.vn/chart-api/v2/ohlcs/index"
+ "dnse_live2026": "DNSE Entrade, \"Chart API: dữ liệu chỉ số theo ngày,\" truy cập 06/10/2026. [Online]. Available: https://services.entrade.com.vn/chart-api/v2/ohlcs/index",
+ "ioffe2015": "S. Ioffe and C. Szegedy, \"Batch normalization: Accelerating deep network training by reducing internal covariate shift,\" in *Proc. 32nd Int. Conf. Machine Learning (ICML)*, 2015, pp. 448–456.",
+ "srivastava2014": "N. Srivastava, G. Hinton, A. Krizhevsky, I. Sutskever, and R. Salakhutdinov, \"Dropout: A simple way to prevent neural networks from overfitting,\" *Journal of Machine Learning Research*, vol. 15, no. 56, pp. 1929–1958, 2014.",
+ "shorten2019": "C. Shorten and T. M. Khoshgoftaar, \"A survey on image data augmentation for deep learning,\" *Journal of Big Data*, vol. 6, art. no. 60, 2019.",
+ "yosinski2014": "J. Yosinski, J. Clune, Y. Bengio, and H. Lipson, \"How transferable are features in deep neural networks?,\" in *Advances in Neural Information Processing Systems 27*, 2014, pp. 3320–3328.",
+ "schuster1997": "M. Schuster and K. K. Paliwal, \"Bidirectional recurrent neural networks,\" *IEEE Transactions on Signal Processing*, vol. 45, no. 11, pp. 2673–2681, 1997.",
+ "sutskever2014": "I. Sutskever, O. Vinyals, and Q. V. Le, \"Sequence to sequence learning with neural networks,\" in *Advances in Neural Information Processing Systems 27*, 2014, pp. 3104–3112.",
+ "bahdanau2015": "D. Bahdanau, K. Cho, and Y. Bengio, \"Neural machine translation by jointly learning to align and translate,\" in *Proc. Int. Conf. Learning Representations (ICLR)*, 2015."
 }

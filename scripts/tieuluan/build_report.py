@@ -168,6 +168,13 @@ def compute_values(res: Results) -> dict:
         up = (r > 0).to_numpy()
         v[f"pupup.{key}"] = vn_pct(up[1:][up[:-1]].mean())
         v[f"pupdown.{key}"] = vn_pct(up[1:][~up[:-1]].mean())
+        # Mẫu đầu ra của Chương 4: cửa sổ 20 lợi suất đầu tiên của tập test (khôi phục về đơn vị lợi suất gốc)
+        with np.load(OUT / f"{key}.npz", allow_pickle=False) as d:
+            first = d["test_sequence"][0, :, 0] * d["scaler_scale"][0] + d["scaler_mean"][0]
+            v[f"seqhead.{key}"] = "; ".join(vn(100 * float(x), 2) + "%" for x in first[:5])
+            v[f"seqdate.{key}"] = vn_date(d["test_date"][0])
+            v[f"seqnext.{key}"] = vn(100 * float(d["test_return"][0]), 2) + "%"
+            v[f"seqlabel.{key}"] = "tăng" if float(d["test_y"][0]) == 1 else "không tăng"
     v["vol_ratio"] = vn(vol["btc"] / max(vol["sp500"], vol["vnindex"]), 1)
     for key in TABULAR:
         v[f"rows.{key}"] = vn_int(inv[key]["raw_rows"])

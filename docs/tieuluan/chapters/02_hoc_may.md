@@ -118,8 +118,8 @@ Một mô hình "luôn đoán an toàn" trong ví dụ trên đạt accuracy 90%
 
 Chương này dùng hai bộ dữ liệu công khai của kho UCI, đều đại diện cho các quyết định đầu tư có thật (Bảng 2.4; Bảng 2.5 trích ba dòng đầu của mỗi bộ).
 
-- **Phá sản doanh nghiệp Đài Loan** [@uci572]: 95 chỉ số tài chính (khả năng sinh lời, đòn bẩy, thanh khoản, dòng tiền…) của các doanh nghiệp niêm yết giai đoạn 1999–2009; nhãn 1 nếu doanh nghiệp phá sản theo quy định của Sở Giao dịch Chứng khoán Đài Loan [@liang2016]. Đây là bài toán **sàng lọc cổ phiếu và trái phiếu** của nhà đầu tư theo phân tích cơ bản.
-- **Vỡ nợ thẻ tín dụng Đài Loan** [@uci350]: 23 đặc trưng của 30.000 khách hàng (hạn mức, nhân khẩu học, trạng thái trả nợ 6 tháng, dư nợ và số tiền đã trả); nhãn 1 nếu vỡ nợ ở tháng kế tiếp [@yeh2009]. Đây là bài toán **đầu tư tín dụng**: ngân hàng hay nhà đầu tư cho vay ngang hàng cần biết khoản vay nào rủi ro.
+- **Phá sản doanh nghiệp Đài Loan** ([archive.ics.uci.edu/dataset/572](https://archive.ics.uci.edu/dataset/572/taiwanese+bankruptcy+prediction)) [@uci572]: 95 chỉ số tài chính (khả năng sinh lời, đòn bẩy, thanh khoản, dòng tiền…) của các doanh nghiệp niêm yết giai đoạn 1999–2009; nhãn 1 nếu doanh nghiệp phá sản theo quy định của Sở Giao dịch Chứng khoán Đài Loan [@liang2016]. Đây là bài toán **sàng lọc cổ phiếu và trái phiếu** của nhà đầu tư theo phân tích cơ bản.
+- **Vỡ nợ thẻ tín dụng Đài Loan** ([archive.ics.uci.edu/dataset/350](https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients)) [@uci350]: 23 đặc trưng của 30.000 khách hàng (hạn mức, nhân khẩu học, trạng thái trả nợ 6 tháng, dư nợ và số tiền đã trả); nhãn 1 nếu vỡ nợ ở tháng kế tiếp [@yeh2009]. Đây là bài toán **đầu tư tín dụng**: ngân hàng hay nhà đầu tư cho vay ngang hàng cần biết khoản vay nào rủi ro.
 
 {{t:ch2_datasets:2.4}}
 

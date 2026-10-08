@@ -78,7 +78,15 @@ Bảng 4.2. So sánh SimpleRNN, LSTM và GRU (số tham số tính với d = 1, 
 | Phụ thuộc dài hạn | Khó học | Tốt | Tốt |
 | Chi phí tính toán | Thấp nhất | Cao nhất | Trung bình |
 
-## 4.6. Chuẩn bị chuỗi tài chính cho mạng hồi quy
+**Các mở rộng thường gặp.** RNN có thể **chồng nhiều lớp**: chuỗi trạng thái của lớp dưới là đầu vào của lớp trên, giúp học mẫu hình phức tạp hơn nhưng khó huấn luyện hơn. **RNN hai chiều** đọc chuỗi theo cả hai hướng rồi ghép kết quả [@schuster1997]; kỹ thuật này hiệu quả trong xử lý ngôn ngữ nhưng **không dùng được để dự báo tài chính**, vì hướng ngược lại chính là nhìn vào tương lai. **Mô hình chuỗi sang chuỗi** (sequence-to-sequence) dùng một RNN mã hóa chuỗi vào thành một vector rồi một RNN khác giải mã thành chuỗi ra, như trong dịch máy [@sutskever2014]. Vì một vector khó chứa hết một câu dài, **cơ chế chú ý** (attention) cho bộ giải mã "nhìn lại" mọi trạng thái của bộ mã hóa [@bahdanau2015]; đây là tiền đề của Transformer được nhắc ở mục 4.10 [@vaswani2017].
+
+## 4.6. Dữ liệu và cách chuẩn bị chuỗi tài chính cho mạng hồi quy
+
+Mạng hồi quy dùng lại ba chuỗi giá ngày ở mục 1.8 với cùng cách chia theo thời gian của Chương 3 (Bảng 3.4), nhưng đầu vào là **chuỗi 20 lợi suất logarit** thay vì ảnh GASF:
+
+- **S&P 500.** *Liên kết:* [Yahoo Finance, mã ^GSPC](https://finance.yahoo.com/quote/%5EGSPC/history/) [@yahoo2026]. *Kích thước:* {{v:n.sp500.total}} chuỗi ({{v:n.sp500.train}} train, {{v:n.sp500.val}} validation, {{v:n.sp500.test}} test), mỗi chuỗi gồm 20 số. *Mẫu đầu ra:* chuỗi đầu tiên của tập test kết thúc ngày {{v:seqdate.sp500}}, năm lợi suất đầu là {{v:seqhead.sp500}}; phiên kế tiếp thay đổi {{v:seqnext.sp500}} nên nhãn là "{{v:seqlabel.sp500}}". *Phân bố:* lợi suất ngày có đuôi béo (Hình 1.3); nhãn "tăng" chiếm {{v:pos.sp500.train}} / {{v:pos.sp500.val}} / {{v:pos.sp500.test}} ở ba tập. *Nhận xét:* bộ nhiều dữ liệu nhất nhưng tự tương quan âm ({{v:ac1.sp500}}), nên quy luật "tăng rồi tăng tiếp" không tồn tại.
+- **VN-Index.** *Liên kết:* [SSI iBoard](https://iboard.ssi.com.vn/), bổ sung bằng DNSE Entrade, đối chiếu VNDirect [@ssi2026]. *Kích thước:* {{v:n.vnindex.total}} chuỗi ({{v:n.vnindex.train}} / {{v:n.vnindex.val}} / {{v:n.vnindex.test}}). *Mẫu đầu ra:* chuỗi đầu tiên của tập test kết thúc ngày {{v:seqdate.vnindex}}, năm lợi suất đầu là {{v:seqhead.vnindex}}; phiên kế tiếp thay đổi {{v:seqnext.vnindex}}, nhãn "{{v:seqlabel.vnindex}}". *Phân bố:* nhãn "tăng" chiếm {{v:pos.vnindex.train}} / {{v:pos.vnindex.val}} / {{v:pos.vnindex.test}}. *Nhận xét:* tự tương quan dương ({{v:ac1.vnindex}}) là nguồn của tín hiệu nhỏ được phân tích ở mục 4.8.
+- **Bitcoin.** *Liên kết:* [Yahoo Finance, mã BTC-USD](https://finance.yahoo.com/quote/BTC-USD/history/) [@yahoo2026]. *Kích thước:* {{v:n.btc.total}} chuỗi ({{v:n.btc.train}} / {{v:n.btc.val}} / {{v:n.btc.test}}). *Mẫu đầu ra:* chuỗi đầu tiên của tập test kết thúc ngày {{v:seqdate.btc}}, năm lợi suất đầu là {{v:seqhead.btc}}; phiên kế tiếp thay đổi {{v:seqnext.btc}}, nhãn "{{v:seqlabel.btc}}". *Phân bố:* nhãn "tăng" chiếm {{v:pos.btc.train}} / {{v:pos.btc.val}} / {{v:pos.btc.test}}. *Nhận xét:* biến động {{v:vol.btc}} mỗi năm nên có nhiều lợi suất ngoại lai; sau khi chuẩn hóa bằng thống kê của tập train, chuỗi vẫn chứa những giá trị rất lớn.
 
 **Dự báo lợi suất, không dự báo mức giá.** Một sai lầm phổ biến là cho mạng dự báo trực tiếp giá đóng cửa ngày mai rồi khoe hệ số xác định R² rất cao. Vì giá hôm nay đã rất gần giá ngày mai, ngay cả dự báo "ngây thơ" Ĉ(t+1) = C(t) – không học gì – cũng đạt R² = {{v:naive_r2.sp500}} trên tập test của S&P 500 (và {{v:naive_r2.vnindex}} với VN-Index). R² cao khi dự báo mức giá vì thế không chứng minh mô hình có khả năng dự báo. Tiểu luận dùng **lợi suất logarit** rₜ = ln(Cₜ/Cₜ₋₁), đại lượng có thang đo ổn định theo thời gian, và đặt bài toán là đoán **hướng** của phiên kế tiếp. Đây cũng chính là bài toán của Chương 3, nên có thể so sánh trực tiếp CNN với RNN.
 
@@ -88,7 +96,7 @@ Bảng 4.2. So sánh SimpleRNN, LSTM và GRU (số tham số tính với d = 1, 
 
 ## 4.7. Cài đặt bằng ba cách
 
-Mô hình đại diện của chương là LSTM với 8 phần tử trạng thái: chuỗi 20 × 1 → LSTM(8) → trạng thái cuối → lớp kết nối đầy đủ → logit, tổng cộng {{v:params.sp500.lstm.pytorch}} tham số học. Bản NumPy tự viết toàn bộ lan truyền xuôi (4.4)–(4.5) và BPTT, với bố cục trọng số và thứ tự cổng (i, f, g, o) trùng PyTorch. Nhờ đó có thể chép nguyên trọng số giữa ba bản cài đặt; riêng GRU của Keras xếp cổng theo thứ tự (z, r, n) nên phải hoán vị khi chép. PyTorch có hai vector bias cộng dồn (b_ih + b_hh) còn Keras chỉ có một, nên ở SimpleRNN và LSTM, vector b_hh dư thừa được cố định bằng 0, để ba bản có cùng số tham số học. Đoạn mã dưới là một bước của LSTM tự viết:
+Mô hình đại diện của chương là LSTM với 8 phần tử trạng thái: chuỗi 20 × 1 → LSTM(8) → trạng thái cuối → lớp kết nối đầy đủ → logit, tổng cộng {{v:params.sp500.lstm.pytorch}} tham số học. Bản NumPy tự viết toàn bộ lan truyền xuôi (4.4)–(4.5) và BPTT, với bố cục trọng số và thứ tự cổng (i, f, g, o) trùng PyTorch. Nhờ đó có thể chép nguyên trọng số giữa ba bản cài đặt; riêng GRU của Keras xếp cổng theo thứ tự (z, r, n) nên phải hoán vị khi chép. PyTorch có hai vector bias cộng dồn (b_ih + b_hh) còn Keras chỉ có một, nên ở SimpleRNN và LSTM, vector b_hh dư thừa được cố định bằng 0, để ba bản có cùng số tham số học. Đoạn mã dưới là một bước của LSTM tự viết, tiếp theo là cùng mô hình trong PyTorch và Keras:
 
 ```python
 z = xw[:, t] + h @ self.weight_hh.value.T + self.bias_hh.value   # 4 khối cổng cùng lúc
@@ -97,6 +105,24 @@ g, o = np.tanh(z[:, 2*H:3*H]), sigmoid(z[:, 3*H:])               # ứng viên, 
 c = f * c + i * g                                                 # cập nhật ô nhớ (4.5)
 h = o * np.tanh(c)                                                # trạng thái ẩn mới
 ```
+
+```python
+# PyTorch: nn.LSTM đọc cả chuỗi, lấy trạng thái ở bước cuối rồi qua lớp Linear
+class LSTMNet(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.lstm = nn.LSTM(input_size=1, hidden_size=8, batch_first=True)
+        self.out = nn.Linear(8, 1)
+    def forward(self, x):                      # x: [batch, 20, 1]
+        sequence, _ = self.lstm(x)
+        return self.out(sequence[:, -1])       # logit của bước cuối
+# Keras: LSTM(8) mặc định chỉ trả về trạng thái ở bước cuối
+inputs = keras.Input(shape=(20, 1))
+outputs = keras.layers.Dense(1)(keras.layers.LSTM(8)(inputs))
+model = keras.Model(inputs, outputs)
+```
+
+Hai thư viện chỉ cần vài dòng vì đã cài sẵn ô LSTM và tự tính đạo hàm; bản NumPy ở trên là phép tính mà chúng thực hiện bên trong.
 
 Kiểm tra gradient cho sai số tương đối lớn nhất {{v:gc.rnn}} với SimpleRNN, {{v:gc.lstm}} với LSTM và {{v:gc.gru}} với GRU. Mức 10⁻⁵ của LSTM đến từ một số thành phần gradient rất nhỏ, nơi sai số làm tròn của phép sai phân trở nên đáng kể; tính trên toàn vector gradient, sai số tương đối chỉ còn {{v:gcnorm.lstm}}. Trước huấn luyện, logit của ba bản cài đặt lệch nhau tối đa {{v:parity.lstm}}.
 

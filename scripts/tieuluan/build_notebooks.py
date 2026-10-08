@@ -49,6 +49,7 @@ PROCESSED = ROOT / 'data/tieuluan/processed'
 RESULTS = ROOT / 'results/tieuluan/full'
 inventory = json.loads((PROCESSED / 'inventory.json').read_text(encoding='utf-8'))
 analysis = json.loads((RESULTS / 'analysis.json').read_text(encoding='utf-8'))
+provenance = json.loads((ROOT / 'data/tieuluan/provenance.json').read_text(encoding='utf-8'))
 records = [json.loads(p.read_text(encoding='utf-8')) for p in sorted(RESULTS.glob('*__*.json'))]
 NAMES = {'taiwan_bankruptcy': 'Phá sản DN (UCI 572)', 'credit_default': 'Vỡ nợ thẻ (UCI 350)',
          'sp500': 'S&P 500', 'vnindex': 'VN-Index', 'btc': 'Bitcoin'}
@@ -110,6 +111,151 @@ display(table)
 """
 
 
+INVENTORY = json.loads((ROOT / 'data/tieuluan/processed/inventory.json').read_text(encoding='utf-8'))
+ANALYSIS = json.loads((ROOT / 'results/tieuluan/full/analysis.json').read_text(encoding='utf-8'))
+NAMES_VN = {'taiwan_bankruptcy': 'phá sản doanh nghiệp', 'credit_default': 'vỡ nợ thẻ tín dụng',
+            'sp500': 'S&P 500', 'vnindex': 'VN-Index', 'btc': 'Bitcoin'}
+MODEL_VN = {'cnn4': 'CNN4', 'cnn8': 'CNN8', 'cnndeep': 'CNN sâu', 'rnn': 'SimpleRNN', 'lstm': 'LSTM', 'gru': 'GRU'}
+PAGES = {'taiwan_bankruptcy': 'https://archive.ics.uci.edu/dataset/572/taiwanese+bankruptcy+prediction',
+         'credit_default': 'https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients',
+         'sp500': 'https://finance.yahoo.com/quote/%5EGSPC/history/ (Yahoo Finance, ^GSPC)',
+         'vnindex': 'https://iboard.ssi.com.vn/ (SSI iBoard; bổ sung DNSE Entrade, đối chiếu VNDirect)',
+         'btc': 'https://finance.yahoo.com/quote/BTC-USD/history/ (Yahoo Finance, BTC-USD)'}
+SCRATCH_CLASSES = {
+    'tabular': ['layers.Dense', 'layers.ReLU', 'losses.BCEWithLogitsLoss', 'optim.Adam'],
+    'image': ['layers.Conv2d', 'layers.MaxPool2d', 'layers.Flatten', 'losses.BCEWithLogitsLoss'],
+    'sequence': ['recurrent.LSTM', 'recurrent.LastStep', 'layers.Dense', 'optim.Adam'],
+}
+
+LINKS_BODY = """
+rows_l = []
+for name in DATASETS:
+    key = f'raw/uci/{name}' if name in ('taiwan_bankruptcy', 'credit_default') else f'raw/indices/{name}.csv'
+    meta = provenance.get(key, {})
+    rows_l.append({'Bộ dữ liệu': NAMES[name], 'Liên kết nguồn': PAGES[name],
+                   'Tải về lúc (UTC)': str(meta.get('downloaded_at', ''))[:19].replace('T', ' ')})
+pd.set_option('display.max_colwidth', 120)
+display(pd.DataFrame(rows_l))
+"""
+
+SCRATCH_INTRO = """
+### 2.1. Mã nguồn tự viết bằng NumPy
+
+Ô dưới in mã của các lớp tự viết mà mô hình của chương sử dụng. Mỗi lớp tự cài `forward` (lan truyền xuôi) và
+`backward` (lan truyền ngược) bằng công thức đạo hàm; không có autograd nào được dùng. Thư viện đầy đủ nằm ở
+`src/tieuluan/scratch/` (còn có Conv2d, MaxPool2d, BatchNorm, Dropout, SimpleRNN, LSTM, GRU, SGD, Adam).
+"""
+
+TRAINER_INTRO = """
+### 2.2. Bước huấn luyện của ba cách cài đặt
+
+Mỗi cách có một lớp huấn luyện với phương thức `step` thực hiện một bước cập nhật trên một mini-batch: NumPy gọi
+`backward` tự viết rồi `Adam` tự viết; PyTorch dùng `loss.backward()` và `torch.optim.Adam`; Keras dùng
+`train_on_batch`. Cả ba cùng dùng Adam và cắt chuẩn gradient toàn cục ở mức 1,0.
+"""
+
+TRAINER_CELL = """
+import src.tieuluan.experiment_models as em
+for cls in (em.ScratchTrainer, em.TorchTrainer, em.KerasTrainer):
+    print(inspect.getsource(cls))
+"""
+
+
+def scratch_cell(representation):
+    return f"""
+import importlib
+CLASSES = {SCRATCH_CLASSES[representation]!r}
+for path in CLASSES:
+    module, name = path.split('.')
+    print(inspect.getsource(getattr(importlib.import_module('src.tieuluan.scratch.' + module), name)))
+"""
+
+
+def _vn(x, nd=3):
+    return f"{x:,.{nd}f}".replace(",", "§").replace(".", ",").replace("§", ".").replace("-", "−")
+
+
+def _pct(x, nd=1):
+    return _vn(100 * x, nd) + "%"
+
+
+def _n(x):
+    return f"{int(x):,}".replace(",", ".")
+
+
+def data_comment(representation, datasets):
+    if representation == 'tabular':
+        parts = []
+        for name in datasets:
+            info = INVENTORY[name]
+            rate = info['positive'] / info['raw_rows']
+            parts.append(f"{NAMES_VN[name]}: lớp 1 chiếm {_pct(rate, 2)} ({_n(info['positive'])} trên {_n(info['raw_rows'])} dòng; "
+                         f"luôn đoán lớp 0 đã đúng {_pct(1 - rate, 2)})")
+        return ("**Nhận xét về dữ liệu.** Cả hai bộ đều mất cân bằng: " + "; ".join(parts) + ". Vì vậy accuracy dễ gây hiểu lầm, "
+                "và báo cáo dùng ROC-AUC, AP, balanced accuracy. Dữ liệu được chia ngẫu nhiên phân tầng 60/20/20 nên tỉ lệ lớp "
+                "gần như bằng nhau ở ba tập. Bộ phá sản còn có 24 trong 95 chỉ số trộn hai thang đo (giá trị trong [0, 1] xen lẫn "
+                "giá trị rất lớn), được kiểm tra riêng ở mục 2.11 của báo cáo.")
+    parts = []
+    for name in datasets:
+        sp = INVENTORY[name]['splits']
+        parts.append(f"{NAMES_VN[name]} {_pct(sp['train']['positive'] / sp['train']['n'])} / "
+                     f"{_pct(sp['val']['positive'] / sp['val']['n'])} / {_pct(sp['test']['positive'] / sp['test']['n'])}")
+    return ("**Nhận xét về dữ liệu.** Tỉ lệ nhãn “tăng” ở train / validation / test lần lượt là " + "; ".join(parts) + ". "
+            "Các tỉ lệ đều trên 50%, nên một mô hình “luôn đoán tăng” đã đạt accuracy trên 50% mà không học gì; đó là lý do "
+            "báo cáo dùng ROC-AUC và so với đường cơ sở. Dữ liệu chia theo thời gian nên tập test (2023 đến 09/2026) là giai "
+            "đoạn mô hình chưa từng thấy, và mẫu có nhãn vượt ranh giới giữa các tập đã bị loại.")
+
+
+def results_comment(chapter, datasets):
+    if chapter == 2:
+        lines = []
+        for name in datasets:
+            u = ANALYSIS['uci'][name]
+            lines.append(f"{NAMES_VN[name]}: logistic {_vn(u['logistic']['auc'])}, rừng ngẫu nhiên "
+                         f"{_vn(u['random_forest']['auc'])}, MLP {_vn(u['mlp']['auc'])}")
+        d1 = ANALYSIS['uci']['taiwan_bankruptcy']['rf_minus_mlp']
+        d2 = ANALYSIS['uci']['credit_default']['mlp_minus_logistic']
+
+        def verdict(d):
+            return ("khoảng tin cậy chứa 0 nên chưa đủ bằng chứng để khẳng định mô hình nào hơn" if d['low'] <= 0 <= d['high']
+                    else "khoảng tin cậy không chứa 0 nên khác biệt có ý nghĩa thống kê")
+
+        n_pos = INVENTORY['taiwan_bankruptcy']['splits']['test']['positive']
+        return ("**Nhận xét kết quả.** ROC-AUC trên test: " + "; ".join(lines) + ". Cả ba mô hình đều vượt xa mức 0,5 của đoán "
+                f"ngẫu nhiên. Ở bộ phá sản, hiệu AUC giữa rừng ngẫu nhiên và MLP là {_vn(d1['difference'])} (CI 95% "
+                f"[{_vn(d1['low'])}; {_vn(d1['high'])}]): {verdict(d1)} (tập test chỉ có {n_pos} ca phá sản). Ở bộ vỡ nợ, MLP "
+                f"hơn hồi quy logistic {_vn(d2['difference'])} (CI 95% [{_vn(d2['low'])}; {_vn(d2['high'])}]): {verdict(d2)}. "
+                "Ba bản cài đặt (NumPy, PyTorch, Keras) cho ROC-AUC gần như đồng nhất ở mục 3.")
+    kinds = ['cnn4', 'cnn8', 'cnndeep'] if chapter == 3 else ['rnn', 'lstm', 'gru']
+    lines = []
+    for name in datasets:
+        c = ANALYSIS['auc_ci'][name]
+        best = max(kinds, key=lambda k: c[k]['auc'])
+        sig = [MODEL_VN[k] for k in kinds if c[k]['low'] > .5]
+        text = (f"{NAMES_VN[name]}: tốt nhất là {MODEL_VN[best]} với ROC-AUC {_vn(c[best]['auc'])} (CI 95% "
+                f"[{_vn(c[best]['low'])}; {_vn(c[best]['high'])}]), đường cơ sở “lặp lại hướng phiên trước” "
+                f"{_vn(c['persistence']['auc'])}; ")
+        text += ("CI nằm hoàn toàn trên 0,5 ở " + ", ".join(sig) if sig
+                 else "không mô hình nào có CI nằm trên 0,5, tức chưa hơn đoán ngẫu nhiên")
+        lines.append(text)
+    return ("**Nhận xét kết quả.** " + ". ".join(lines) + ". Khi kiểm định nhiều mô hình cùng lúc, một khoảng tin cậy nằm trên 0,5 vẫn "
+            "có thể xuất hiện do may mắn, nên đây chỉ là tín hiệu yếu. Với VN-Index, tín hiệu nhỏ có thể giải thích bằng quán tính "
+            "ngắn hạn của chỉ số (tự tương quan bậc một dương), không cần đến một quy luật phức tạp.")
+
+
+def backtest_comment():
+    lines = []
+    for name in ('sp500', 'vnindex', 'btc'):
+        b = ANALYSIS['backtest'][name]
+        k = max(('lstm', 'gru', 'rnn'), key=lambda x: b[x]['annual_return'])
+        lines.append(f"{NAMES_VN[name]}: mua và giữ {_pct(b['buy_hold']['annual_return'])} mỗi năm; mạng hồi quy tốt nhất là "
+                     f"{MODEL_VN[k]} với {_pct(b[k]['annual_return_gross'])} trước phí và {_pct(b[k]['annual_return'])} sau phí")
+    return ("**Nhận xét kết quả backtest.** " + "; ".join(lines) + ". Sau phí giao dịch không chiến lược nào thắng mua và giữ một "
+            "cách thuyết phục: ở S&P 500 mô hình tốt nhất gần như luôn nắm giữ nên chỉ ngang mua và giữ; ở VN-Index lợi thế trước "
+            "phí bị phí giao dịch lấy đi; ở Bitcoin mọi mạng hồi quy đều thua mua và giữ ngay cả trước phí. ROC-AUC cao hơn 0,5 "
+            "một chút chưa đủ để sinh lời.")
+
+
 def notebook(chapter, title, intro, datasets, kind, kinds, representation, demo):
     cells = [md(f"""
     # Chương {chapter}. {title}
@@ -127,7 +273,7 @@ def notebook(chapter, title, intro, datasets, kind, kinds, representation, demo)
 
     Kích thước và phân bố lớp đọc trực tiếp từ mảng đã lưu (không chép tay). Bộ tiền xử lý (chuẩn hóa,
     điền khuyết) chỉ học trên tập train rồi áp dụng nguyên cho validation và test.
-    """), code(DATA_TABLE)]
+    """), code(DATA_TABLE), code("PAGES = " + repr({k: PAGES[k] for k in datasets}) + "\n" + LINKS_BODY)]
     if representation == 'tabular':
         cells += [md("""
         **Dòng dữ liệu gốc và phân bố lớp.** Hai bộ dữ liệu đều mất cân bằng: lớp 1 (phá sản, vỡ nợ) là thiểu số,
@@ -190,7 +336,7 @@ def notebook(chapter, title, intro, datasets, kind, kinds, representation, demo)
                 ax.set_xlabel('Phiên trong cửa sổ'); ax.set_ylabel('Lợi suất log (%)')
             plt.tight_layout(); plt.show()
             """)]
-    cells += [md("""
+    cells += [md(data_comment(representation, datasets)), md("""
     ## 2. Một mô hình, ba cách cài đặt
 
     Mã nguồn đầy đủ nằm trong `src/tieuluan/experiment_models.py` (hàm `scratch_model`, `torch_model`, `keras_model`)
@@ -207,7 +353,7 @@ def notebook(chapter, title, intro, datasets, kind, kinds, representation, demo)
     display(pd.DataFrame(logits).round(6))
     base = logits['NumPy tự viết']
     print({k: float(np.max(np.abs(v - base))) for k, v in logits.items()}, '← lệch tuyệt đối lớn nhất so với NumPy')
-    """), md(f"""
+    """), md(SCRATCH_INTRO), code(scratch_cell(representation)), md(TRAINER_INTRO), code(TRAINER_CELL), md(f"""
     ## 3. Huấn luyện lại bằng ba cách ({demo}, hạt giống 11)
 
     Cả ba bản dùng cùng trọng số khởi tạo, cùng thứ tự mini-batch (batch 64), Adam với tốc độ học 0,001, cắt chuẩn
@@ -234,6 +380,7 @@ def notebook(chapter, title, intro, datasets, kind, kinds, representation, demo)
                 for name in DATASETS for key, item in analysis['auc_ci'][name].items() if key in KINDS]
         display(pd.DataFrame(rows))
         """)]
+    cells += [md(results_comment(chapter, datasets))]
     if chapter == 4:
         cells += [md("""
         ## 5. Backtest có phí giao dịch
@@ -258,7 +405,7 @@ def notebook(chapter, title, intro, datasets, kind, kinds, representation, demo)
             ax.set_title(NAMES[name]); ax.grid(alpha=.3)
         axes[0].set_ylabel('Giá trị danh mục'); axes[0].legend()
         plt.tight_layout(); plt.show()
-        """)]
+        """), md(backtest_comment())]
     nb = nbf.v4.new_notebook(cells=cells)
     nb.metadata['kernelspec'] = {'display_name': 'Python 3', 'language': 'python', 'name': 'python3'}
     nb.metadata['language_info'] = {'name': 'python', 'version': sys.version.split()[0]}

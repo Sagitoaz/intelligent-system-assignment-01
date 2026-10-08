@@ -75,7 +75,7 @@ Nhìn lại, mỗi làn sóng AI đều nhanh chóng được thử nghiệm tro
 
 Theo yêu cầu của tiểu luận, mỗi chương đều gắn với dữ liệu thật. Chương này giới thiệu ba chuỗi chỉ số được dùng xuyên suốt ở Chương 3 và Chương 4; hai bộ dữ liệu bảng được giới thiệu ở Chương 2.
 
-**Nguồn và cách thu thập.** S&P 500 (mã ^GSPC, đại diện 500 doanh nghiệp lớn của Mỹ) và Bitcoin (mã BTC-USD) được tải từ Yahoo Finance [@yahoo2026]. VN-Index (chỉ số của Sở Giao dịch Chứng khoán TP. Hồ Chí Minh) không có trên Yahoo Finance nên được tải từ API biểu đồ công khai của ba công ty chứng khoán SSI, DNSE và VNDirect [@ssi2026]. Mỗi file đều được lưu kèm thời điểm tải và mã băm SHA-256 để có thể kiểm tra lại. Dữ liệu chốt đến ngày 30/09/2026.
+**Nguồn và cách thu thập.** S&P 500 (mã ^GSPC, đại diện 500 doanh nghiệp lớn của Mỹ) và Bitcoin (mã BTC-USD) được tải từ [Yahoo Finance](https://finance.yahoo.com/) [@yahoo2026]. VN-Index (chỉ số của Sở Giao dịch Chứng khoán TP. Hồ Chí Minh) không có trên Yahoo Finance nên được tải từ API biểu đồ công khai của ba công ty chứng khoán SSI, DNSE và VNDirect [@ssi2026]. Mỗi file đều được lưu kèm thời điểm tải và mã băm SHA-256 để có thể kiểm tra lại. Dữ liệu chốt đến ngày 30/09/2026.
 
 **Kiểm chứng chéo VN-Index.** Khi đặt các nguồn cạnh nhau, tiểu luận phát hiện ba vấn đề:
 
