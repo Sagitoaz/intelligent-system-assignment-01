@@ -17,7 +17,7 @@ KINDS = {'tabular': ('logistic','svm','mlp'),
          'image': ('cnn4','cnn8','cnndeep'), 'sequence': ('rnn','lstm','gru')}
 
 
-def scratch_model(kind, shape, seed=11):
+def scratch_model(kind, shape, seed=11, n_classes=10):
     rng = np.random.default_rng(seed)
     if kind in ('rnn','lstm','gru'):
         return recurrent_scratch(kind, shape, seed)
@@ -31,10 +31,10 @@ def scratch_model(kind, shape, seed=11):
     if kind == 'cnndeep':
         layers += [Conv2d(filters,8,3,rng=rng), ReLU(), MaxPool2d(2)]
         filters, side = 8, (side-2)//2
-    return Sequential(*layers, Flatten(), Dense(filters*side*side,10,rng=rng))
+    return Sequential(*layers, Flatten(), Dense(filters*side*side,n_classes,rng=rng))
 
 
-def torch_model(kind, shape):
+def torch_model(kind, shape, n_classes=10):
     import torch
     from torch import nn
     torch.set_num_threads(2)
@@ -50,10 +50,10 @@ def torch_model(kind, shape):
     if kind == 'cnndeep':
         layers += [nn.Conv2d(filters,8,3), nn.ReLU(), nn.MaxPool2d(2)]
         filters, side = 8, (side-2)//2
-    return nn.Sequential(*layers,nn.Flatten(),nn.Linear(filters*side*side,10))
+    return nn.Sequential(*layers,nn.Flatten(),nn.Linear(filters*side*side,n_classes))
 
 
-def keras_model(kind, shape):
+def keras_model(kind, shape, n_classes=10):
     import keras
     import tensorflow as tf
     try:
@@ -76,17 +76,17 @@ def keras_model(kind, shape):
             z = keras.layers.MaxPooling2D(2)(z)
         z = keras.layers.Permute((3,1,2))(z)
         z = keras.layers.Flatten()(z)
-    return keras.Model(x,keras.layers.Dense(10 if kind.startswith('cnn') else 1)(z))
+    return keras.Model(x,keras.layers.Dense(n_classes if kind.startswith('cnn') else 1)(z))
 
 
-def build_models(kind, shape, seed=11, frameworks=('scratch','keras','pytorch')):
-    source = scratch_model(kind,shape,seed)
+def build_models(kind, shape, seed=11, frameworks=('scratch','keras','pytorch'), n_classes=10):
+    source = scratch_model(kind,shape,seed,n_classes)
     models = {'scratch':source}
     if 'pytorch' in frameworks:
-        models['pytorch'] = torch_model(kind,shape)
+        models['pytorch'] = torch_model(kind,shape,n_classes)
         copy_weights_to_torch(source,models['pytorch'],kind)
     if 'keras' in frameworks:
-        models['keras'] = keras_model(kind,shape)
+        models['keras'] = keras_model(kind,shape,n_classes)
         copy_weights_to_keras(source,models['keras'],kind)
     return {fw:models[fw] for fw in frameworks}
 

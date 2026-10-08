@@ -1,5 +1,7 @@
 # Kế hoạch sửa tiểu luận theo yêu cầu môn học
 
+> Kế hoạch tập nhỏ này đã được thay thế theo yêu cầu tiếp theo của người dùng: mỗi train trên 100.000 mẫu, đọc CSV, người dùng tự chạy notebook, tạm gác deploy. Xem `COURSE_LARGE_HANDOFF.md` và `notebooks/tieuluan/README.md`. Không dùng kết quả tập nhỏ cho báo cáo mới.
+
 ## Mục tiêu và mốc bảo toàn
 
 Bản tài chính đã lưu trên `origin/main` tại `f7bd064`. Không ghi đè dữ liệu, mã hoặc kết quả nằm trong manifest thực nghiệm cũ. Bản mới chỉ trình bày Mở đầu và Chương 1–4; tài liệu tham khảo và hướng dẫn triển khai là phần bổ trợ. Người dùng đã giao quyền chọn dữ liệu, tải dữ liệu, sửa báo cáo, chạy thực nghiệm và commit.
