@@ -1,0 +1,51 @@
+{
+  "dataset_name": "stock",
+  "metadata": {
+    "name": "Apple Inc. (AAPL) Daily Stock Price",
+    "source": "Yahoo Finance (via yfinance API / local archive)",
+    "asset_class": "Equities (Tech Sector)",
+    "primary_target": "Close (Next-day closing price in USD)",
+    "features": "Open, High, Low, Close, Volume",
+    "time_horizon": "2014-01-02 to 2023-12-29 (10 years daily trading)",
+    "description": "Historical daily stock prices of Apple Inc. (AAPL), representing one of the most liquid and actively traded technology assets in the world."
+  },
+  "hyperparameters": {
+    "seq_len": 30,
+    "hidden_size": 64,
+    "num_layers": 1,
+    "epochs": 40,
+    "learning_rate": 0.001,
+    "batch_size": 32,
+    "patience": 8
+  },
+  "split_sizes": {
+    "total_records": 2516,
+    "train_samples": 1731,
+    "val_samples": 377,
+    "test_samples": 378
+  },
+  "pytorch": {
+    "metrics": {
+      "MAE": 2.796306848526001,
+      "RMSE": 3.3946382881031174,
+      "R2": 0.9672975540161133,
+      "MAPE": 1.7216427326202393
+    },
+    "stopped_epoch": 40,
+    "best_val_loss": 0.0007190392148836617,
+    "training_time": 153.22607398033142,
+    "model_path": "models\\assignment06\\stock_rnn_pytorch.pt"
+  },
+  "keras": {
+    "metrics": {
+      "MAE": 7.673877239227295,
+      "RMSE": 9.760145337632977,
+      "R2": 0.7296627163887024,
+      "MAPE": 4.4172539710998535
+    },
+    "stopped_epoch": 36,
+    "best_val_loss": 0.001800496131181717,
+    "training_time": 59.346434354782104,
+    "model_path": "models\\assignment06\\stock_rnn_keras.keras"
+  }
+}

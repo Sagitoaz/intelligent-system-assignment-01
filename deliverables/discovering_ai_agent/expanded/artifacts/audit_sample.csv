@@ -1,0 +1,3 @@
+event_id,actor,tool,code,request_key
+1,U001,refund,INVALID_TOOL_CALL,bad-key
+2,U001,execute_sql,INVALID_TOOL_CALL,

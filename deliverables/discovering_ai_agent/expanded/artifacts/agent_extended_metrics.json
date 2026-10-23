@@ -1,0 +1,314 @@
+{
+  "evaluation_requests": 400,
+  "orders": 360,
+  "functional_checks": 31,
+  "checks": [
+    {
+      "test": "normal",
+      "result": "PASS"
+    },
+    {
+      "test": "large",
+      "result": "PASS"
+    },
+    {
+      "test": "expired",
+      "result": "PASS"
+    },
+    {
+      "test": "shipping",
+      "result": "PASS"
+    },
+    {
+      "test": "wrong_owner",
+      "result": "PASS"
+    },
+    {
+      "test": "wrong_tenant",
+      "result": "PASS"
+    },
+    {
+      "test": "missing",
+      "result": "PASS"
+    },
+    {
+      "test": "unknown_intent",
+      "result": "PASS"
+    },
+    {
+      "test": "extra flag",
+      "result": "PASS"
+    },
+    {
+      "test": "customer approval",
+      "result": "PASS"
+    },
+    {
+      "test": "budget",
+      "result": "PASS"
+    },
+    {
+      "test": "invalid id",
+      "result": "PASS"
+    },
+    {
+      "test": "manager approval",
+      "result": "PASS"
+    },
+    {
+      "test": "approved large refund",
+      "result": "PASS"
+    },
+    {
+      "test": "boundary 500000/30",
+      "result": "PASS"
+    },
+    {
+      "test": "boundary 500001/30",
+      "result": "PASS"
+    },
+    {
+      "test": "boundary 500000/31",
+      "result": "PASS"
+    },
+    {
+      "test": "rollback",
+      "result": "PASS"
+    },
+    {
+      "test": "retry rollback",
+      "result": "PASS"
+    },
+    {
+      "test": "same key",
+      "result": "PASS"
+    },
+    {
+      "test": "new key same order",
+      "result": "PASS"
+    },
+    {
+      "test": "key conflict",
+      "result": "PASS"
+    },
+    {
+      "test": "persist reopen",
+      "result": "PASS"
+    },
+    {
+      "test": "recheck status",
+      "result": "PASS"
+    },
+    {
+      "test": "note cannot approve",
+      "result": "PASS"
+    },
+    {
+      "test": "no unauthorized write",
+      "result": "PASS"
+    },
+    {
+      "test": "cross tenant approval",
+      "result": "PASS"
+    },
+    {
+      "test": "clarify không hoàn tiền DH00101",
+      "result": "PASS"
+    },
+    {
+      "test": "clarify đừng hoàn tiền DH00101",
+      "result": "PASS"
+    },
+    {
+      "test": "clarify hoàn tiền và trạng thái DH00101",
+      "result": "PASS"
+    },
+    {
+      "test": "no write on guarded inputs",
+      "result": "PASS"
+    }
+  ],
+  "benchmark": [
+    {
+      "mode": "full",
+      "n": 400,
+      "accuracy": 1.0,
+      "committed": 120,
+      "tools": 2.1,
+      "events": 2.4,
+      "median_ms": 0.39644999196752906
+    },
+    {
+      "mode": "naive",
+      "n": 400,
+      "accuracy": 0.4,
+      "committed": 0,
+      "tools": 0.0,
+      "events": 0.0,
+      "median_ms": 0.014599994756281376
+    },
+    {
+      "mode": "no_retry",
+      "n": 400,
+      "accuracy": 0.8,
+      "committed": 80,
+      "tools": 2.1,
+      "events": 2.2,
+      "median_ms": 0.3829500055871904
+    }
+  ],
+  "groups": [
+    {
+      "group": "expired",
+      "full": 1.0,
+      "naive": 0.0,
+      "no_retry": 1.0
+    },
+    {
+      "group": "large",
+      "full": 1.0,
+      "naive": 0.0,
+      "no_retry": 1.0
+    },
+    {
+      "group": "missing",
+      "full": 1.0,
+      "naive": 1.0,
+      "no_retry": 1.0
+    },
+    {
+      "group": "normal",
+      "full": 1.0,
+      "naive": 1.0,
+      "no_retry": 1.0
+    },
+    {
+      "group": "shipping",
+      "full": 1.0,
+      "naive": 0.0,
+      "no_retry": 1.0
+    },
+    {
+      "group": "timeout_after",
+      "full": 1.0,
+      "naive": 1.0,
+      "no_retry": 0.0
+    },
+    {
+      "group": "timeout_before",
+      "full": 1.0,
+      "naive": 1.0,
+      "no_retry": 0.0
+    },
+    {
+      "group": "unknown_intent",
+      "full": 1.0,
+      "naive": 0.0,
+      "no_retry": 1.0
+    },
+    {
+      "group": "wrong_owner",
+      "full": 1.0,
+      "naive": 0.0,
+      "no_retry": 1.0
+    },
+    {
+      "group": "wrong_tenant",
+      "full": 1.0,
+      "naive": 0.0,
+      "no_retry": 1.0
+    }
+  ],
+  "intent": {
+    "train_n": 54,
+    "test_n": 27,
+    "accuracy": 1.0,
+    "labels": [
+      "other",
+      "refund",
+      "status"
+    ],
+    "confusion_matrix": [
+      [
+        9,
+        0,
+        0
+      ],
+      [
+        0,
+        9,
+        0
+      ],
+      [
+        0,
+        0,
+        9
+      ]
+    ],
+    "thresholds": [
+      {
+        "threshold": 0.0,
+        "accepted": 27,
+        "coverage": 1.0,
+        "accuracy_accepted": 1.0
+      },
+      {
+        "threshold": 0.45,
+        "accepted": 27,
+        "coverage": 1.0,
+        "accuracy_accepted": 1.0
+      },
+      {
+        "threshold": 0.6,
+        "accepted": 16,
+        "coverage": 0.5925925925925926,
+        "accuracy_accepted": 1.0
+      },
+      {
+        "threshold": 0.75,
+        "accepted": 6,
+        "coverage": 0.2222222222222222,
+        "accuracy_accepted": 1.0
+      }
+    ]
+  },
+  "vacuum": [
+    {
+      "memory": false,
+      "clean_cases": 8,
+      "mean_actions": 10,
+      "stopped_cases": 0
+    },
+    {
+      "memory": true,
+      "clean_cases": 8,
+      "mean_actions": 3,
+      "stopped_cases": 8
+    }
+  ],
+  "route_choices": [
+    {
+      "value_time": 0.5,
+      "chosen": "R2",
+      "cost": 17.5
+    },
+    {
+      "value_time": 2.0,
+      "chosen": "R3",
+      "cost": 60.0
+    },
+    {
+      "value_time": 10.0,
+      "chosen": "R1",
+      "cost": 240.0
+    }
+  ],
+  "limitations": [
+    "synthetic data",
+    "demo identity registry",
+    "no external payment service",
+    "rule-based planner",
+    "uncalibrated intent probabilities",
+    "no LLM"
+  ]
+}

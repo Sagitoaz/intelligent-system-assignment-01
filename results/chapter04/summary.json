@@ -1,0 +1,91 @@
+{
+  "uci": {
+    "rows": 101766,
+    "columns": 50,
+    "unique_patients": 71518,
+    "readmitted": {
+      "NO": 54864,
+      ">30": 35545,
+      "<30": 11357
+    },
+    "missing_question_mark": {
+      "encounter_id": 0,
+      "patient_nbr": 0,
+      "race": 2273,
+      "gender": 0,
+      "age": 0,
+      "weight": 98569,
+      "admission_type_id": 0,
+      "discharge_disposition_id": 0,
+      "admission_source_id": 0,
+      "time_in_hospital": 0,
+      "payer_code": 40256,
+      "medical_specialty": 49949,
+      "num_lab_procedures": 0,
+      "num_procedures": 0,
+      "num_medications": 0,
+      "number_outpatient": 0,
+      "number_emergency": 0,
+      "number_inpatient": 0,
+      "diag_1": 21,
+      "diag_2": 358,
+      "diag_3": 1423,
+      "number_diagnoses": 0,
+      "max_glu_serum": 0,
+      "A1Cresult": 0,
+      "metformin": 0,
+      "repaglinide": 0,
+      "nateglinide": 0,
+      "chlorpropamide": 0,
+      "glimepiride": 0,
+      "acetohexamide": 0,
+      "glipizide": 0,
+      "glyburide": 0,
+      "tolbutamide": 0,
+      "pioglitazone": 0,
+      "rosiglitazone": 0,
+      "acarbose": 0,
+      "miglitol": 0,
+      "troglitazone": 0,
+      "tolazamide": 0,
+      "examide": 0,
+      "citoglipton": 0,
+      "insulin": 0,
+      "glyburide-metformin": 0,
+      "glipizide-metformin": 0,
+      "glimepiride-pioglitazone": 0,
+      "metformin-rosiglitazone": 0,
+      "metformin-pioglitazone": 0,
+      "change": 0,
+      "diabetesMed": 0,
+      "readmitted": 0
+    }
+  },
+  "finqa_splits": {
+    "train": 6251,
+    "dev": 883,
+    "test": 1147
+  },
+  "diabetes_chunks": 183,
+  "finqa_dev_chunks": 9177,
+  "finqa_dev_reports": 299,
+  "retrieval": {
+    "global": {
+      "questions": 883,
+      "hit_at_1": 0.32389580973952437,
+      "hit_at_5": 0.5198187995469988,
+      "recall_at_5": 0.4033799816642398,
+      "mrr_at_5": 0.3975651189127969,
+      "seconds": 24.937918599986006
+    },
+    "report_filtered": {
+      "questions": 883,
+      "hit_at_1": 0.49263873159682897,
+      "hit_at_5": 0.8097395243488109,
+      "recall_at_5": 0.6769481745132934,
+      "mrr_at_5": 0.6089845224613055,
+      "seconds": 3.7838462999789044
+    }
+  },
+  "scope": "Retrieval only; no LLM generation, no clinical validation, no stock prediction."
+}

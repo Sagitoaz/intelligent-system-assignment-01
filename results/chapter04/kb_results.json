@@ -1,0 +1,85 @@
+{
+  "profile": [
+    {
+      "Dataset": "UCI",
+      "Số dòng/mẫu": 101766,
+      "Số cột": 50.0,
+      "Bệnh nhân khác nhau": 71518.0
+    },
+    {
+      "Dataset": "FinQA train",
+      "Số dòng/mẫu": 6251,
+      "Số cột": "",
+      "Bệnh nhân khác nhau": ""
+    },
+    {
+      "Dataset": "FinQA dev",
+      "Số dòng/mẫu": 883,
+      "Số cột": "",
+      "Bệnh nhân khác nhau": ""
+    },
+    {
+      "Dataset": "FinQA test",
+      "Số dòng/mẫu": 1147,
+      "Số cột": "",
+      "Bệnh nhân khác nhau": ""
+    },
+    {
+      "Dataset": "NIDDK chunks",
+      "Số dòng/mẫu": 183,
+      "Số cột": "",
+      "Bệnh nhân khác nhau": ""
+    }
+  ],
+  "graphs": [
+    {
+      "graph": "encounters_sample5000",
+      "nodes": 10405,
+      "edges": 24650,
+      "node_types": {
+        "Encounter": 5000,
+        "Patient": 4862,
+        "DiagnosisCode": 542,
+        "Dataset": 1
+      }
+    },
+    {
+      "graph": "diabetes_documents",
+      "nodes": 187,
+      "edges": 183,
+      "node_types": {
+        "Passage": 183,
+        "Document": 4
+      }
+    },
+    {
+      "graph": "finance",
+      "nodes": 9573,
+      "edges": 9476,
+      "node_types": {
+        "Passage": 7276,
+        "TableRow": 1901,
+        "Report": 299,
+        "Company": 97
+      }
+    }
+  ],
+  "encounter_sample_size": 5000,
+  "seed": 42,
+  "sample_readmitted_under30": 570,
+  "full_dataset_rows": 101766,
+  "finance_chunks": 9177,
+  "environment": {
+    "python": "3.12.0",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "numpy": "2.5.2",
+      "pandas": "3.0.5",
+      "networkx": "3.6.1",
+      "torch": "2.13.0",
+      "transformers": "4.57.6",
+      "nbclient": "0.11.0",
+      "fastapi": "0.141.1"
+    }
+  }
+}

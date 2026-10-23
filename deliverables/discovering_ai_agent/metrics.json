@@ -1,0 +1,37 @@
+{
+  "q_learning": [
+    {
+      "seed": 0,
+      "success": true,
+      "steps": 8,
+      "return": 13
+    },
+    {
+      "seed": 1,
+      "success": true,
+      "steps": 8,
+      "return": 13
+    },
+    {
+      "seed": 2,
+      "success": true,
+      "steps": 8,
+      "return": 13
+    },
+    {
+      "seed": 3,
+      "success": true,
+      "steps": 8,
+      "return": 13
+    },
+    {
+      "seed": 4,
+      "success": true,
+      "steps": 8,
+      "return": 13
+    }
+  ],
+  "random_success_rate": 0.09,
+  "random_mean_return": -76.33,
+  "bfs_steps": 8
+}

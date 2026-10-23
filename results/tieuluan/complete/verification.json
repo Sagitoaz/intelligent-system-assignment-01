@@ -1,0 +1,235 @@
+{
+  "scope": "Synthetic mini-batch verification, not market evaluation",
+  "python": "3.12.0",
+  "models": [
+    {
+      "kind": "cnn",
+      "framework": "scratch",
+      "trainable_layers": 6,
+      "parameters": 10301,
+      "output_shape": [
+        4,
+        1
+      ],
+      "loss_first": 0.7069863634969452,
+      "loss_third": 0.6709802221565869,
+      "initial_logit_max_error": 0.0,
+      "scratch_torch_gradient_max_error": 4.0978193283081055e-08
+    },
+    {
+      "kind": "cnn",
+      "framework": "pytorch",
+      "trainable_layers": 6,
+      "parameters": 10301,
+      "output_shape": [
+        4,
+        1
+      ],
+      "loss_first": 0.7069863080978394,
+      "loss_third": 0.6709802150726318,
+      "initial_logit_max_error": 3.725290298461914e-08,
+      "scratch_torch_gradient_max_error": 4.0978193283081055e-08
+    },
+    {
+      "kind": "cnn",
+      "framework": "keras",
+      "trainable_layers": 6,
+      "parameters": 10301,
+      "output_shape": [
+        4,
+        1
+      ],
+      "loss_first": 0.7069863677024841,
+      "loss_third": 0.6709815263748169,
+      "initial_logit_max_error": 3.725290298461914e-08,
+      "scratch_torch_gradient_max_error": 4.0978193283081055e-08
+    },
+    {
+      "kind": "rnn",
+      "framework": "scratch",
+      "trainable_layers": 6,
+      "parameters": 633,
+      "output_shape": [
+        4,
+        1
+      ],
+      "loss_first": 0.566422977644786,
+      "loss_third": 0.4970025309015081,
+      "initial_logit_max_error": 0.0,
+      "scratch_torch_gradient_max_error": 1.7881393432617188e-07
+    },
+    {
+      "kind": "rnn",
+      "framework": "pytorch",
+      "trainable_layers": 6,
+      "parameters": 633,
+      "output_shape": [
+        4,
+        1
+      ],
+      "loss_first": 0.5664229989051819,
+      "loss_third": 0.4970025420188904,
+      "initial_logit_max_error": 1.341104507446289e-07,
+      "scratch_torch_gradient_max_error": 1.7881393432617188e-07
+    },
+    {
+      "kind": "rnn",
+      "framework": "keras",
+      "trainable_layers": 6,
+      "parameters": 633,
+      "output_shape": [
+        4,
+        1
+      ],
+      "loss_first": 0.5664230585098267,
+      "loss_third": 0.4970034956932068,
+      "initial_logit_max_error": 4.6193599700927734e-07,
+      "scratch_torch_gradient_max_error": 1.7881393432617188e-07
+    },
+    {
+      "kind": "lstm",
+      "framework": "scratch",
+      "trainable_layers": 6,
+      "parameters": 2505,
+      "output_shape": [
+        4,
+        1
+      ],
+      "loss_first": 0.6925578258604272,
+      "loss_third": 0.6921455051540777,
+      "initial_logit_max_error": 0.0,
+      "scratch_torch_gradient_max_error": 1.5832483768463135e-08
+    },
+    {
+      "kind": "lstm",
+      "framework": "pytorch",
+      "trainable_layers": 6,
+      "parameters": 2505,
+      "output_shape": [
+        4,
+        1
+      ],
+      "loss_first": 0.6925578117370605,
+      "loss_third": 0.6921454668045044,
+      "initial_logit_max_error": 1.6298145055770874e-09,
+      "scratch_torch_gradient_max_error": 1.5832483768463135e-08
+    },
+    {
+      "kind": "lstm",
+      "framework": "keras",
+      "trainable_layers": 6,
+      "parameters": 2505,
+      "output_shape": [
+        4,
+        1
+      ],
+      "loss_first": 0.6925578117370605,
+      "loss_third": 0.6921467185020447,
+      "initial_logit_max_error": 2.0954757928848267e-09,
+      "scratch_torch_gradient_max_error": 1.5832483768463135e-08
+    }
+  ],
+  "multi_agent": [
+    {
+      "domain": "diabetes",
+      "question": "How many encounters are in the dataset?",
+      "answer": "2",
+      "status": "generated_unverified",
+      "evidence_ids": [
+        "symptoms-causes:121",
+        "symptoms-causes:104",
+        "managing-diabetes:94"
+      ],
+      "graph_matches": 0,
+      "messages": [
+        {
+          "sender": "retrieval",
+          "receiver": "graph",
+          "payload": {
+            "ids": [
+              "symptoms-causes:121",
+              "symptoms-causes:104",
+              "managing-diabetes:94"
+            ]
+          }
+        },
+        {
+          "sender": "graph",
+          "receiver": "writer",
+          "payload": {
+            "matched": 0
+          }
+        },
+        {
+          "sender": "writer",
+          "receiver": "verifier",
+          "payload": {
+            "answer": "2"
+          }
+        },
+        {
+          "sender": "verifier",
+          "receiver": "coordinator",
+          "payload": {
+            "citation_ids_valid": true,
+            "semantic_support_checked": false,
+            "status": "generated_unverified"
+          }
+        }
+      ]
+    },
+    {
+      "domain": "finance",
+      "question": "What is the percentage change in revenue?",
+      "answer": "unknown",
+      "status": "generated_unverified",
+      "evidence_ids": [
+        "ETR/2004/page_213.pdf:d81f966dc19b::text_6",
+        "ETR/2008/page_377.pdf:26c3c754ec34::text_6",
+        "ETR/2011/page_341.pdf:ce32d713fc20::text_2"
+      ],
+      "graph_matches": 3,
+      "messages": [
+        {
+          "sender": "retrieval",
+          "receiver": "graph",
+          "payload": {
+            "ids": [
+              "ETR/2004/page_213.pdf:d81f966dc19b::text_6",
+              "ETR/2008/page_377.pdf:26c3c754ec34::text_6",
+              "ETR/2011/page_341.pdf:ce32d713fc20::text_2"
+            ]
+          }
+        },
+        {
+          "sender": "graph",
+          "receiver": "writer",
+          "payload": {
+            "matched": 3
+          }
+        },
+        {
+          "sender": "writer",
+          "receiver": "verifier",
+          "payload": {
+            "answer": "unknown"
+          }
+        },
+        {
+          "sender": "verifier",
+          "receiver": "coordinator",
+          "payload": {
+            "citation_ids_valid": true,
+            "semantic_support_checked": false,
+            "status": "generated_unverified"
+          }
+        }
+      ]
+    }
+  ],
+  "empty_evidence_status": "insufficient_evidence",
+  "invalid_request_checks": [
+    "rejected",
+    "rejected"
+  ]
+}

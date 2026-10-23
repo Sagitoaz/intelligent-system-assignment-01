@@ -1,0 +1,34 @@
+[
+  {
+    "notebook": "02_diabetes_rag.ipynb",
+    "seconds": 167.72211800000514,
+    "code_cells": 6,
+    "output_cells": 6,
+    "sha256": "77621ff2f9498dc5549777d6e3e0af8e2b09d413b1735e372f0200a2d996e853",
+    "interpreter": "E:\\WINDOW\\Project\\intelligent-system-assignment-01\\.venv\\Scripts\\python.exe"
+  },
+  {
+    "notebook": "01_kb_kg.ipynb",
+    "seconds": 26.784404100006213,
+    "code_cells": 6,
+    "output_cells": 6,
+    "sha256": "47809d9f311f7eb142a1726a59a335ae134cdbcbd2b9c1f0966f39d486008c60",
+    "interpreter": "E:\\WINDOW\\Project\\intelligent-system-assignment-01\\.venv\\Scripts\\python.exe"
+  },
+  {
+    "notebook": "03_finance_rag.ipynb",
+    "seconds": 313.75171240000054,
+    "code_cells": 7,
+    "output_cells": 7,
+    "sha256": "422826b98efd2196482b38bfc3e84995013a297e4331f5595338c8125f0d3b3f",
+    "interpreter": "E:\\WINDOW\\Project\\intelligent-system-assignment-01\\.venv\\Scripts\\python.exe"
+  },
+  {
+    "notebook": "04_agent_deployment.ipynb",
+    "seconds": 141.66646999999648,
+    "code_cells": 4,
+    "output_cells": 4,
+    "sha256": "60e60619600d7bf304e95e37a708543fdead6cd1ab8f339ed534463016654b10",
+    "interpreter": "E:\\WINDOW\\Project\\intelligent-system-assignment-01\\.venv\\Scripts\\python.exe"
+  }
+]

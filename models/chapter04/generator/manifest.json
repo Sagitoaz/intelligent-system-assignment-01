@@ -1,0 +1,55 @@
+{
+  "repo": "google/flan-t5-small",
+  "revision": "0fc9ddf78a1e988dac52e2dac162b0ede4fd74ab",
+  "files": [
+    {
+      "file": "config.json",
+      "url": "https://huggingface.co/google/flan-t5-small/resolve/0fc9ddf78a1e988dac52e2dac162b0ede4fd74ab/config.json",
+      "bytes": 1401,
+      "sha256": "439aa0fecf5a5546a1def68b1fc45e538e2c94528ce805378daf091e2bf6e4de"
+    },
+    {
+      "file": "tokenizer_config.json",
+      "url": "https://huggingface.co/google/flan-t5-small/resolve/0fc9ddf78a1e988dac52e2dac162b0ede4fd74ab/tokenizer_config.json",
+      "bytes": 2539,
+      "sha256": "fcde0f79bffda3688119c94330866a8fbf8de20ae65a8c492c9bd47c704655a0"
+    },
+    {
+      "file": "tokenizer.json",
+      "url": "https://huggingface.co/google/flan-t5-small/resolve/0fc9ddf78a1e988dac52e2dac162b0ede4fd74ab/tokenizer.json",
+      "bytes": 2424064,
+      "sha256": "fe2ebbbbde2985be723e0ce18217853e4020c5e9d35bd07be2c27ab9d3ead57a"
+    },
+    {
+      "file": "special_tokens_map.json",
+      "url": "https://huggingface.co/google/flan-t5-small/resolve/0fc9ddf78a1e988dac52e2dac162b0ede4fd74ab/special_tokens_map.json",
+      "bytes": 2201,
+      "sha256": "5c87151ef0f72a99d1f766a4c418bd2a1f90aaa30a8e22fe5eca9641daebb64f"
+    },
+    {
+      "file": "spiece.model",
+      "url": "https://huggingface.co/google/flan-t5-small/resolve/0fc9ddf78a1e988dac52e2dac162b0ede4fd74ab/spiece.model",
+      "bytes": 791656,
+      "sha256": "d60acb128cf7b7f2536e8f38a5b18a05535c9e14c7a355904270e15b0945ea86"
+    },
+    {
+      "file": "generation_config.json",
+      "url": "https://huggingface.co/google/flan-t5-small/resolve/0fc9ddf78a1e988dac52e2dac162b0ede4fd74ab/generation_config.json",
+      "bytes": 147,
+      "sha256": "f5a1c7e2be8092018d8835128987edf0111637dd98e90599cc80310fef75d95a"
+    },
+    {
+      "file": "model.safetensors",
+      "url": "https://huggingface.co/google/flan-t5-small/resolve/0fc9ddf78a1e988dac52e2dac162b0ede4fd74ab/model.safetensors",
+      "bytes": 307867048,
+      "sha256": "495fa51e204676f1a857a9fc13c4c89f3f5ba9f480b898cebca02add25e6d749"
+    },
+    {
+      "file": "README.md",
+      "url": "https://huggingface.co/google/flan-t5-small/resolve/0fc9ddf78a1e988dac52e2dac162b0ede4fd74ab/README.md",
+      "bytes": 10820,
+      "sha256": "6cc6dc3d056aaeda9549dc685ca51600d600ab5b87c73c12e7165d8eff6b0c51"
+    }
+  ],
+  "accessed": "2026-10-13"
+}

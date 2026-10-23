@@ -1,0 +1,32 @@
+[
+  {
+    "notebook": "notebooks\\tieuluan\\complete\\03_cnn_6_layers.ipynb",
+    "code_cells": 12,
+    "executed": true,
+    "seconds": 193.21812120001414
+  },
+  {
+    "notebook": "notebooks\\tieuluan\\complete\\04a_rnn_6_layers.ipynb",
+    "code_cells": 12,
+    "executed": true,
+    "seconds": 158.77512740000384
+  },
+  {
+    "notebook": "notebooks\\tieuluan\\complete\\04b_lstm_6_layers.ipynb",
+    "code_cells": 12,
+    "executed": true,
+    "seconds": 168.81623399999808
+  },
+  {
+    "notebook": "notebooks\\tieuluan\\complete\\05_knowledge_rag.ipynb",
+    "code_cells": 6,
+    "executed": true,
+    "seconds": 160.7369772999955
+  },
+  {
+    "notebook": "notebooks\\tieuluan\\complete\\06_multi_agent.ipynb",
+    "code_cells": 6,
+    "executed": true,
+    "seconds": 76.84977939998498
+  }
+]

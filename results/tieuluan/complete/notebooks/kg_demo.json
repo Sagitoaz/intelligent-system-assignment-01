@@ -1,0 +1,10 @@
+{
+  "question": "What are the symptoms of diabetes?",
+  "answer": "NIDDK-funded research",
+  "status": "generated_unverified",
+  "evidence_ids": [
+    "symptoms-causes:112",
+    "symptoms-causes:114",
+    "symptoms-causes:107"
+  ]
+}

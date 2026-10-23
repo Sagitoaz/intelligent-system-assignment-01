@@ -1,0 +1,49 @@
+﻿id,question,mode,answer,references,exact_match,token_f1,evidence_ids,seconds
+DM01,What organ makes insulin?,no_context,insulin,"['pancreas', 'the pancreas']",False,0.0,[],0.4026072000269778
+DM01,What organ makes insulin?,hybrid_rag,pancreas,"['pancreas', 'the pancreas']",True,1.0,"['what-is-diabetes:14', 'symptoms-causes:54', 'what-is-diabetes:9']",1.2682627000031061
+DM01,What organ makes insulin?,gold_context_oracle,pancreas,"['pancreas', 'the pancreas']",True,1.0,['what-is-diabetes:9'],1.0819102000095882
+DM02,Which hormone helps glucose enter cells?,no_context,Glucose,['insulin'],False,0.0,[],0.602932099980535
+DM02,Which hormone helps glucose enter cells?,hybrid_rag,insulin,['insulin'],True,1.0,"['what-is-diabetes:9', 'symptoms-causes:51', 'symptoms-causes:69']",0.7766546999919228
+DM02,Which hormone helps glucose enter cells?,gold_context_oracle,insulin,['insulin'],True,1.0,['what-is-diabetes:9'],0.5773588999873027
+DM03,What is the most common type of diabetes?,no_context,diabetes,"['type 2 diabetes', 'type 2']",False,0.5,[],0.31715680001070723
+DM03,What is the most common type of diabetes?,hybrid_rag,Type 2 diabetes,"['type 2 diabetes', 'type 2']",True,1.0,"['what-is-diabetes:12', 'what-is-diabetes:16', 'symptoms-causes:54']",0.885084099980304
+DM03,What is the most common type of diabetes?,gold_context_oracle,Type 2 diabetes,"['type 2 diabetes', 'type 2']",True,1.0,['what-is-diabetes:16'],0.6474408000067342
+DM04,When does gestational diabetes develop?,no_context,onset of adolescence,"['during pregnancy', 'pregnancy']",False,0.0,[],0.9225995999877341
+DM04,When does gestational diabetes develop?,hybrid_rag,when you are pregnant,"['during pregnancy', 'pregnancy']",False,0.0,"['symptoms-causes:47', 'symptoms-causes:70', 'symptoms-causes:68']",0.8193840000021737
+DM04,When does gestational diabetes develop?,gold_context_oracle,during pregnancy,"['during pregnancy', 'pregnancy']",True,1.0,['what-is-diabetes:19'],0.5052022000018042
+DM05,Are glucose levels in prediabetes above normal?,no_context,no,"['yes', 'higher than normal']",False,0.0,[],0.2869199000124354
+DM05,Are glucose levels in prediabetes above normal?,hybrid_rag,hyperglycemia,"['yes', 'higher than normal']",False,0.0,"['what-is-diabetes:21', 'symptoms-causes:55', 'managing-diabetes:66']",1.0960315999982413
+DM05,Are glucose levels in prediabetes above normal?,gold_context_oracle,no,"['yes', 'higher than normal']",False,0.0,['what-is-diabetes:21'],0.5527002000017092
+DM06,What attacks insulin-producing cells in type 1 diabetes?,no_context,insulin,"['the immune system', 'immune system']",False,0.0,[],0.25080029998207465
+DM06,What attacks insulin-producing cells in type 1 diabetes?,hybrid_rag,immune system,"['the immune system', 'immune system']",True,1.0,"['symptoms-causes:50', 'what-is-diabetes:14', 'what-is-diabetes:9']",0.7149665000033565
+DM06,What attacks insulin-producing cells in type 1 diabetes?,gold_context_oracle,immune system,"['the immune system', 'immune system']",True,1.0,['what-is-diabetes:14'],0.5466685999999754
+DM07,What causes monogenic diabetes?,no_context,diabetes,"['a change in a single gene', 'single gene mutation']",False,0.0,[],0.22592470000381581
+DM07,What causes monogenic diabetes?,hybrid_rag,genetic testing,"['a change in a single gene', 'single gene mutation']",False,0.0,"['symptoms-causes:82', 'tests-diagnosis:60', 'tests-diagnosis:58']",0.8299900999991223
+DM07,What causes monogenic diabetes?,gold_context_oracle,a change in a single gene,"['a change in a single gene', 'single gene mutation']",True,1.0,['what-is-diabetes:23'],1.1020622000214644
+DM08,How many months are reflected in an A1C blood test?,no_context,2,"['3 months', 'the last 3 months', 'three months']",False,0.0,[],0.2502329999988433
+DM08,How many months are reflected in an A1C blood test?,hybrid_rag,3,"['3 months', 'the last 3 months', 'three months']",False,0.6666666666666666,"['managing-diabetes:21', 'tests-diagnosis:41', 'tests-diagnosis:43']",0.7811489999876358
+DM08,How many months are reflected in an A1C blood test?,gold_context_oracle,3,"['3 months', 'the last 3 months', 'three months']",False,0.6666666666666666,['tests-diagnosis:41'],0.609709499985911
+DM09,How many hours should a person fast before the fasting plasma glucose test?,no_context,3,"['at least 8 hours', '8 hours']",False,0.0,[],0.23317399999359623
+DM09,How many hours should a person fast before the fasting plasma glucose test?,hybrid_rag,8,"['at least 8 hours', '8 hours']",False,0.6666666666666666,"['tests-diagnosis:50', 'tests-diagnosis:39', 'tests-diagnosis:45']",0.7635968000104185
+DM09,How many hours should a person fast before the fasting plasma glucose test?,gold_context_oracle,8,"['at least 8 hours', '8 hours']",False,0.6666666666666666,['tests-diagnosis:39'],0.6527483999961987
+DM10,Can an over-the-counter blood glucose meter diagnose diabetes?,no_context,No,['no'],True,1.0,[],0.4770905999757815
+DM10,Can an over-the-counter blood glucose meter diagnose diabetes?,hybrid_rag,No,['no'],True,1.0,"['tests-diagnosis:14', 'managing-diabetes:48', 'tests-diagnosis:13']",0.7622816000075545
+DM10,Can an over-the-counter blood glucose meter diagnose diabetes?,gold_context_oracle,No,['no'],True,1.0,['tests-diagnosis:14'],0.35826280000037514
+DM11,During which pregnancy weeks is gestational diabetes screening recommended?,no_context,pregnancy,"['24 to 28 weeks', 'between 24 and 28 weeks']",False,0.0,[],0.17593590001342818
+DM11,During which pregnancy weeks is gestational diabetes screening recommended?,hybrid_rag,24 and 28 weeks,"['24 to 28 weeks', 'between 24 and 28 weeks']",False,0.888888888888889,"['tests-diagnosis:34', 'tests-diagnosis:32', 'what-is-diabetes:19']",0.7177175999968313
+DM11,During which pregnancy weeks is gestational diabetes screening recommended?,gold_context_oracle,24 and 28,"['24 to 28 weeks', 'between 24 and 28 weeks']",False,0.7499999999999999,['tests-diagnosis:34'],0.5612608000228647
+DM12,Which health measure corresponds to B in the diabetes ABCs?,no_context,a syringe,['blood pressure'],False,0.0,[],0.6367792999953963
+DM12,Which health measure corresponds to B in the diabetes ABCs?,hybrid_rag,CGM,['blood pressure'],False,0.0,"['managing-diabetes:19', 'managing-diabetes:59', 'tests-diagnosis:12']",0.7272211999807041
+DM12,Which health measure corresponds to B in the diabetes ABCs?,gold_context_oracle,"a blood pressure goal below 130/80 mm Hg. 2,3",['blood pressure'],False,0.3076923076923077,['managing-diabetes:23'],1.7141743999964092
+DM13,Which health measure corresponds to C in the diabetes ABCs?,no_context,a syringe,['cholesterol'],False,0.0,[],0.892548000003444
+DM13,Which health measure corresponds to C in the diabetes ABCs?,hybrid_rag,CGM,['cholesterol'],False,0.0,"['managing-diabetes:19', 'managing-diabetes:59', 'tests-diagnosis:12']",0.7197119999909773
+DM13,Which health measure corresponds to C in the diabetes ABCs?,gold_context_oracle,cholesterol,['cholesterol'],True,1.0,['managing-diabetes:25'],0.634250000002794
+DM14,How many minutes of moderate activity per week does this source suggest?,no_context,7.5,"['150 minutes', 'at least 150 minutes']",False,0.0,[],0.5594192999997176
+DM14,How many minutes of moderate activity per week does this source suggest?,hybrid_rag,150,"['150 minutes', 'at least 150 minutes']",False,0.6666666666666666,"['managing-diabetes:34', 'tests-diagnosis:56', 'symptoms-causes:118']",1.5479352000111248
+DM14,How many minutes of moderate activity per week does this source suggest?,gold_context_oracle,150,"['150 minutes', 'at least 150 minutes']",False,0.6666666666666666,['managing-diabetes:34'],0.3301276999991387
+DM15,How many hours of sleep per night should most adults aim for according to this source?,no_context,a day,"['7 to 8 hours', 'about 7 to 8 hours']",False,0.0,[],0.24830259999725968
+DM15,How many hours of sleep per night should most adults aim for according to this source?,hybrid_rag,7 to 8,"['7 to 8 hours', 'about 7 to 8 hours']",False,0.8571428571428571,"['managing-diabetes:38', 'managing-diabetes:120', 'tests-diagnosis:56']",0.3869802000117488
+DM15,How many hours of sleep per night should most adults aim for according to this source?,gold_context_oracle,7 to 8,"['7 to 8 hours', 'about 7 to 8 hours']",False,0.8571428571428571,['managing-diabetes:38'],0.2931328999984544
+DM16,Can type 2 diabetes occur during childhood?,no_context,Type 2 diabetes is a condition that occurs during the onset of a syphilis.,['yes'],False,0.0,[],1.0855550999986008
+DM16,Can type 2 diabetes occur during childhood?,hybrid_rag,age 35 or older,['yes'],False,0.0,"['what-is-diabetes:16', 'symptoms-causes:58', 'managing-diabetes:114']",0.7645527999848127
+DM16,Can type 2 diabetes occur during childhood?,gold_context_oracle,yes,['yes'],True,1.0,['what-is-diabetes:16'],0.5518688000156544

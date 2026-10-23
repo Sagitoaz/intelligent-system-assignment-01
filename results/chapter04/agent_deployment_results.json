@@ -1,0 +1,263 @@
+{
+  "health": {
+    "status": "ok",
+    "mode": "local CPU",
+    "generator": "google/flan-t5-small",
+    "agent": "deterministic tool router"
+  },
+  "swagger_status": 200,
+  "requests": [
+    {
+      "request": {
+        "domain": "diabetes",
+        "question": "How many encounters were readmitted within 30 days?",
+        "task": "statistics"
+      },
+      "http_status": 200,
+      "response": {
+        "answer": "11357",
+        "value": 11357,
+        "status": "computed",
+        "citations": [
+          {
+            "id": "uci296",
+            "url": "https://archive.ics.uci.edu/dataset/296/diabetes+130-us+hospitals+for+years+1999-2008"
+          }
+        ],
+        "trace": [
+          {
+            "tool": "dataset_statistics",
+            "result": 11357
+          }
+        ],
+        "api_seconds": 0.3561111000017263
+      },
+      "round_trip_seconds": 0.3928482999908738
+    },
+    {
+      "request": {
+        "domain": "finance",
+        "question": "Revenue growth",
+        "task": "calculate",
+        "operation": "growth",
+        "values": [
+          100,
+          120
+        ],
+        "units": [
+          "USD",
+          "USD"
+        ]
+      },
+      "http_status": 200,
+      "response": {
+        "value": 20.0,
+        "formula": "(120.0 - 100.0) / 100.0 × 100%",
+        "unit": "%",
+        "answer": "20.0",
+        "status": "computed",
+        "trace": [
+          {
+            "tool": "financial_calculator",
+            "inputs": {
+              "operation": "growth",
+              "values": [
+                100.0,
+                120.0
+              ],
+              "units": [
+                "USD",
+                "USD"
+              ]
+            },
+            "result": {
+              "value": 20.0,
+              "formula": "(120.0 - 100.0) / 100.0 × 100%",
+              "unit": "%"
+            }
+          }
+        ],
+        "citations": [],
+        "note": "User-supplied operands; not extracted automatically from reports.",
+        "api_seconds": 0.0008842000097502023
+      },
+      "round_trip_seconds": 0.01820009999210015
+    },
+    {
+      "request": {
+        "domain": "finance",
+        "question": "Find Visa reports",
+        "task": "graph",
+        "company": "V"
+      },
+      "http_status": 200,
+      "response": {
+        "status": "queried",
+        "answer": "2 reports in indexed collection",
+        "reports": [
+          {
+            "node": "report:V/2008/page_17.pdf:b3ccd5299889",
+            "type": "Report",
+            "year": "2008",
+            "filename": "V/2008/page_17.pdf",
+            "source_url": "https://github.com/czyssrs/FinQA"
+          },
+          {
+            "node": "report:V/2013/page_41.pdf:2a5664623797",
+            "type": "Report",
+            "year": "2013",
+            "filename": "V/2013/page_41.pdf",
+            "source_url": "https://github.com/czyssrs/FinQA"
+          }
+        ],
+        "citations": [],
+        "trace": [
+          {
+            "tool": "query_graph",
+            "company": "V",
+            "reports": 2
+          }
+        ],
+        "api_seconds": 0.00016990001313388348
+      },
+      "round_trip_seconds": 0.029896699998062104
+    },
+    {
+      "request": {
+        "domain": "diabetes",
+        "question": "What organ makes insulin?",
+        "task": "rag"
+      },
+      "http_status": 200,
+      "response": {
+        "answer": "pancreas",
+        "status": "generated_unverified",
+        "citations": [
+          {
+            "id": "what-is-diabetes:14",
+            "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/what-is-diabetes",
+            "locator": "what-is-diabetes:14"
+          },
+          {
+            "id": "symptoms-causes:54",
+            "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/symptoms-causes",
+            "locator": "symptoms-causes:54"
+          },
+          {
+            "id": "what-is-diabetes:9",
+            "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/what-is-diabetes",
+            "locator": "what-is-diabetes:9"
+          }
+        ],
+        "evidence": [
+          {
+            "id": "what-is-diabetes:14",
+            "text": "If you have type 1 diabetes , your body makes little or no insulin. Your immune system attacks and destroys the cells in your pancreas that make insulin. Type 1 diabetes is usually diagnosed in children and young adults, although it can appear at any age. People with type 1 diabetes need to take insulin every day to stay alive.",
+            "source_url": "https://www.niddk.nih.gov/health-information/diabetes/overview/what-is-diabetes",
+            "domain": "diabetes",
+            "language": "en",
+            "accessed": "2026-10-13",
+            "score": 0.47077786922454834
+          },
+          {
+            "id": "symptoms-causes:54",
+            "text": "Type 2 diabetes is the most common form of diabetes. Type 2 diabetes develops when your pancreas doesn’t produce enough insulin, and your body has trouble using insulin, a condition called insulin resistance . Insulin resistance is when the cells in your muscles, fat, and liver don’t respond well to insulin. When there isn’t enough insulin to balance blood glucose levels, they begin to rise.",
+            "source_url": "https://www.niddk.nih.gov/health-information/diabetes/overview/symptoms-causes",
+            "domain": "diabetes",
+            "language": "en",
+            "accessed": "2026-10-13",
+            "score": 0.45334649085998535
+          },
+          {
+            "id": "what-is-diabetes:9",
+            "text": "Insulin is a hormone made by the pancreas that helps glucose get into your cells to be used for energy. If you have diabetes, your body doesn’t make enough—or any—insulin, or doesn’t use insulin properly. Glucose then stays in your blood and doesn’t reach your cells.",
+            "source_url": "https://www.niddk.nih.gov/health-information/diabetes/overview/what-is-diabetes",
+            "domain": "diabetes",
+            "language": "en",
+            "accessed": "2026-10-13",
+            "score": 0.6245509386062622
+          }
+        ],
+        "seconds": 1.0032428000122309,
+        "model": "google/flan-t5-small",
+        "trace": [
+          {
+            "tool": "search_documents",
+            "domain": "diabetes",
+            "count": 3
+          },
+          {
+            "tool": "local_generator",
+            "model": "google/flan-t5-small"
+          },
+          {
+            "tool": "verify_citation_ids",
+            "valid": true,
+            "semantic_support_checked": false
+          }
+        ],
+        "citation_ids_valid": true,
+        "api_seconds": 119.45066110001062
+      },
+      "round_trip_seconds": 119.4627072000003
+    },
+    {
+      "request": {
+        "domain": "finance",
+        "question": "Invalid divide",
+        "task": "calculate",
+        "operation": "divide",
+        "values": [
+          1,
+          0
+        ]
+      },
+      "http_status": 422,
+      "response": {
+        "detail": "Division by zero"
+      },
+      "round_trip_seconds": 0.009304099978180602
+    },
+    {
+      "request": {
+        "domain": "invalid",
+        "question": "wrong domain"
+      },
+      "http_status": 422,
+      "response": {
+        "detail": [
+          {
+            "type": "literal_error",
+            "loc": [
+              "body",
+              "domain"
+            ],
+            "msg": "Input should be 'diabetes' or 'finance'",
+            "input": "invalid",
+            "ctx": {
+              "expected": "'diabetes' or 'finance'"
+            }
+          }
+        ]
+      },
+      "round_trip_seconds": 0.0077991999860387295
+    }
+  ],
+  "deployment": "real local uvicorn HTTP process, stopped after verification",
+  "host": "127.0.0.1",
+  "port": 65360,
+  "agent_type": "deterministic bounded tool router",
+  "environment": {
+    "python": "3.12.0",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "numpy": "2.5.2",
+      "pandas": "3.0.5",
+      "networkx": "3.6.1",
+      "torch": "2.13.0",
+      "transformers": "4.57.6",
+      "nbclient": "0.11.0",
+      "fastapi": "0.141.1"
+    }
+  }
+}

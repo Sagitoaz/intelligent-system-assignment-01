@@ -1,0 +1,402 @@
+[
+  {
+    "bookmark": "cover",
+    "title": "DISCOVERING AI AGENT",
+    "planned_page": 1
+  },
+  {
+    "bookmark": "abstract",
+    "title": "TÓM TẮT, PHƯƠNG PHÁP VÀ CÁCH ĐỌC",
+    "planned_page": 2
+  },
+  {
+    "bookmark": "contents",
+    "title": "MỤC LỤC ĐỊNH HƯỚNG",
+    "planned_page": 3
+  },
+  {
+    "bookmark": "glossary",
+    "title": "THUẬT NGỮ VÀ QUY ƯỚC THỰC NGHIỆM",
+    "planned_page": 4
+  },
+  {
+    "bookmark": "core1",
+    "title": "TỔNG HỢP CỐT LÕI — 1. AI Agent là gì? Hiểu từ mục tiêu và hành động",
+    "planned_page": 5
+  },
+  {
+    "bookmark": "core2",
+    "title": "TỔNG HỢP CỐT LÕI — 2. Kiến trúc và vòng lặp hoạt động của agent",
+    "planned_page": 6
+  },
+  {
+    "bookmark": "core3",
+    "title": "TỔNG HỢP CỐT LÕI — 3. Các loại agent và cách lựa chọn phù hợp",
+    "planned_page": 7
+  },
+  {
+    "bookmark": "core4",
+    "title": "TỔNG HỢP CỐT LÕI — 4. Learning agent và học tăng cường",
+    "planned_page": 8
+  },
+  {
+    "bookmark": "core5",
+    "title": "TỔNG HỢP CỐT LÕI — 5. Ứng dụng thực tế và cách đánh giá giá trị",
+    "planned_page": 9
+  },
+  {
+    "bookmark": "core6",
+    "title": "TỔNG HỢP CỐT LÕI — 6. Rủi ro, kiểm soát và nhận định sau bài đọc",
+    "planned_page": 10
+  },
+  {
+    "bookmark": "deep1",
+    "title": "7. Tác tử hợp lý: từ hàm hành vi đến mục tiêu có ràng buộc",
+    "planned_page": 11
+  },
+  {
+    "bookmark": "deep2",
+    "title": "8. Môi trường tác nghiệp, khả năng quan sát và PEAS",
+    "planned_page": 12
+  },
+  {
+    "bookmark": "deep3",
+    "title": "9. Lập kế hoạch và phản ứng: chọn mức linh hoạt cần thiết",
+    "planned_page": 13
+  },
+  {
+    "bookmark": "deep4",
+    "title": "10. Hợp đồng công cụ và xác thực đầu vào, đầu ra",
+    "planned_page": 14
+  },
+  {
+    "bookmark": "deep5",
+    "title": "11. Bộ nhớ, truy xuất và học: ba cơ chế cần tách biệt",
+    "planned_page": 15
+  },
+  {
+    "bookmark": "deep6",
+    "title": "12. RAG và bằng chứng: từ tìm được tài liệu đến kết luận được phép",
+    "planned_page": 16
+  },
+  {
+    "bookmark": "deep7",
+    "title": "13. Vai trò và giới hạn của LLM trong một hệ thống agent",
+    "planned_page": 17
+  },
+  {
+    "bookmark": "deep8",
+    "title": "14. ReAct, ReWOO và Reflexion: hiểu cơ chế trước khi chọn tên",
+    "planned_page": 18
+  },
+  {
+    "bookmark": "deep9",
+    "title": "15. Hệ nhiều agent: phối hợp có thể kiểm tra và chi phí phát sinh",
+    "planned_page": 19
+  },
+  {
+    "bookmark": "deep10",
+    "title": "16. MCP và khả năng liên thông: giao thức không thay chính sách",
+    "planned_page": 20
+  },
+  {
+    "bookmark": "deep11",
+    "title": "17. Mô hình đe dọa và bảo vệ đường hành động",
+    "planned_page": 21
+  },
+  {
+    "bookmark": "deep12",
+    "title": "18. Đánh giá agent: benchmark, mẫu thử và bất định thống kê",
+    "planned_page": 22
+  },
+  {
+    "bookmark": "deep13",
+    "title": "19. Độ tin cậy tác nghiệp và ngữ nghĩa giao dịch",
+    "planned_page": 23
+  },
+  {
+    "bookmark": "deep14",
+    "title": "20. Giám sát con người và triển khai trong tổ chức",
+    "planned_page": 24
+  },
+  {
+    "bookmark": "case1",
+    "title": "21. Tình huống mở rộng: yêu cầu và phạm vi hệ thống hoàn tiền",
+    "planned_page": 25
+  },
+  {
+    "bookmark": "case2",
+    "title": "22. Thiết kế dữ liệu và chất lượng thông tin đầu vào",
+    "planned_page": 26
+  },
+  {
+    "bookmark": "case3",
+    "title": "23. Phân quyền và thứ tự ưu tiên của chính sách",
+    "planned_page": 27
+  },
+  {
+    "bookmark": "case4",
+    "title": "24. Máy trạng thái hoàn tiền và bằng chứng chuyển trạng thái",
+    "planned_page": 28
+  },
+  {
+    "bookmark": "case5",
+    "title": "25. Lỗi, thử lại và chống trùng trong tình huống hoàn tiền",
+    "planned_page": 29
+  },
+  {
+    "bookmark": "case6",
+    "title": "26. Thiết kế đánh giá tình huống và baseline đối chứng",
+    "planned_page": 30
+  },
+  {
+    "bookmark": "cell1",
+    "title": "THỰC HÀNH 01 — Môi trường, cấu hình và khả năng tái lập",
+    "planned_page": 31
+  },
+  {
+    "bookmark": "cell2",
+    "title": "THỰC HÀNH 02 — Agent phản xạ và mô hình nội bộ",
+    "planned_page": 32
+  },
+  {
+    "bookmark": "cell3",
+    "title": "THỰC HÀNH 03 — Mục tiêu, tiện ích và ràng buộc cứng",
+    "planned_page": 33
+  },
+  {
+    "bookmark": "cell4",
+    "title": "THỰC HÀNH 04 — Danh tính phiên và quyền tác nghiệp",
+    "planned_page": 34
+  },
+  {
+    "bookmark": "cell5",
+    "title": "THỰC HÀNH 05 — Kho chính sách và truy xuất bằng chứng",
+    "planned_page": 35
+  },
+  {
+    "bookmark": "cell6",
+    "title": "THỰC HÀNH 06 — Sinh dữ liệu đánh giá và nhãn mong đợi",
+    "planned_page": 36
+  },
+  {
+    "bookmark": "cell7",
+    "title": "THỰC HÀNH 07 — Hồ sơ dữ liệu và kiểm tra miền giá trị",
+    "planned_page": 37
+  },
+  {
+    "bookmark": "cell8",
+    "title": "THỰC HÀNH 08 — SQLite: lược đồ và ràng buộc chống trùng",
+    "planned_page": 38
+  },
+  {
+    "bookmark": "cell9",
+    "title": "THỰC HÀNH 09 — Tra cứu có kiểm soát và chính sách thực thi",
+    "planned_page": 39
+  },
+  {
+    "bookmark": "cell10",
+    "title": "THỰC HÀNH 10 — Phê duyệt có nguồn gốc từ vai trò quản lý",
+    "planned_page": 40
+  },
+  {
+    "bookmark": "cell11",
+    "title": "THỰC HÀNH 11 — Hoàn tiền nguyên tử và khóa yêu cầu",
+    "planned_page": 41
+  },
+  {
+    "bookmark": "cell12",
+    "title": "THỰC HÀNH 12 — Dispatcher và nhật ký hoạt động tối thiểu",
+    "planned_page": 42
+  },
+  {
+    "bookmark": "cell13",
+    "title": "THỰC HÀNH 13 — Yêu cầu tiếng Việt theo quy tắc và điểm làm rõ",
+    "planned_page": 43
+  },
+  {
+    "bookmark": "cell14",
+    "title": "THỰC HÀNH 14 — Retry hữu hạn và timeout sau commit",
+    "planned_page": 44
+  },
+  {
+    "bookmark": "cell15",
+    "title": "THỰC HÀNH 15 — Planner tác nghiệp và ngân sách công cụ",
+    "planned_page": 45
+  },
+  {
+    "bookmark": "cell16",
+    "title": "THỰC HÀNH 16 — Kiểm tra hợp đồng và ranh giới quyền",
+    "planned_page": 46
+  },
+  {
+    "bookmark": "cell17",
+    "title": "THỰC HÀNH 17 — Rollback, phát lại và xung đột khóa",
+    "planned_page": 47
+  },
+  {
+    "bookmark": "cell18",
+    "title": "THỰC HÀNH 18 — Lưu bền vững và đọc lại khi trạng thái thay đổi",
+    "planned_page": 48
+  },
+  {
+    "bookmark": "cell19",
+    "title": "THỰC HÀNH 19 — Dữ liệu ghi chú không thể tự cấp quyền",
+    "planned_page": 49
+  },
+  {
+    "bookmark": "cell20",
+    "title": "THỰC HÀNH 20 — Benchmark 400 yêu cầu và ba cấu hình",
+    "planned_page": 50
+  },
+  {
+    "bookmark": "cell21",
+    "title": "THỰC HÀNH 21 — Lỗi theo nhóm và khoảng Wilson mô tả",
+    "planned_page": 51
+  },
+  {
+    "bookmark": "cell22",
+    "title": "THỰC HÀNH 22 — Độ trễ cục bộ và định nghĩa đơn vị đo",
+    "planned_page": 52
+  },
+  {
+    "bookmark": "cell23",
+    "title": "THỰC HÀNH 23 — Tập ý định tiếng Việt tách theo họ mẫu câu",
+    "planned_page": 53
+  },
+  {
+    "bookmark": "cell24",
+    "title": "THỰC HÀNH 24 — TF-IDF ký tự và Logistic Regression",
+    "planned_page": 54
+  },
+  {
+    "bookmark": "cell25",
+    "title": "THỰC HÀNH 25 — Đánh đổi coverage và độ chính xác phần chấp nhận",
+    "planned_page": 55
+  },
+  {
+    "bookmark": "cell26",
+    "title": "THỰC HÀNH 26 — Ghép bộ phân loại vào luồng công cụ",
+    "planned_page": 56
+  },
+  {
+    "bookmark": "cell27",
+    "title": "THỰC HÀNH 27 — Xuất số đo, nhật ký và bằng chứng thực nghiệm",
+    "planned_page": 57
+  },
+  {
+    "bookmark": "cell28",
+    "title": "THỰC HÀNH 28 — RL 01 — Ba bản đồ và cấu hình tái lập",
+    "planned_page": 58
+  },
+  {
+    "bookmark": "cell29",
+    "title": "THỰC HÀNH 29 — RL 02 — Chuyển trạng thái, thưởng và kiểm tra môi trường",
+    "planned_page": 59
+  },
+  {
+    "bookmark": "cell30",
+    "title": "THỰC HÀNH 30 — RL 03 — Oracle BFS tìm đường an toàn ngắn nhất",
+    "planned_page": 60
+  },
+  {
+    "bookmark": "cell31",
+    "title": "THỰC HÀNH 31 — RL 04 — Hàm huấn luyện Q-learning và lịch epsilon",
+    "planned_page": 61
+  },
+  {
+    "bookmark": "cell32",
+    "title": "THỰC HÀNH 32 — RL 05 — Bộ đánh giá tách biệt và khoảng Wilson",
+    "planned_page": 62
+  },
+  {
+    "bookmark": "cell33",
+    "title": "THỰC HÀNH 33 — RL 06 — Huấn luyện 30 mô hình chuẩn và đo hiệu năng",
+    "planned_page": 63
+  },
+  {
+    "bookmark": "cell34",
+    "title": "THỰC HÀNH 34 — RL 07 — Baseline ngẫu nhiên và bảng so sánh với oracle",
+    "planned_page": 64
+  },
+  {
+    "bookmark": "cell35",
+    "title": "THỰC HÀNH 35 — RL 08 — Ablation bỏ epsilon và bỏ chiết khấu tương lai",
+    "planned_page": 65
+  },
+  {
+    "bookmark": "cell36",
+    "title": "THỰC HÀNH 36 — RL 09 — Độ bền khi 10% hành động bị trượt",
+    "planned_page": 66
+  },
+  {
+    "bookmark": "cell37",
+    "title": "THỰC HÀNH 37 — RL 10 — Đọc bảng Q và đường đi của một mô hình",
+    "planned_page": 67
+  },
+  {
+    "bookmark": "cell38",
+    "title": "THỰC HÀNH 38 — RL 11 — Đồ thị học qua episode trên cả ba bản đồ",
+    "planned_page": 68
+  },
+  {
+    "bookmark": "cell39",
+    "title": "THỰC HÀNH 39 — RL 12 — Trực quan bản đồ, oracle và đường đi đã học",
+    "planned_page": 69
+  },
+  {
+    "bookmark": "cell40",
+    "title": "THỰC HÀNH 40 — RL 13 — So sánh phương pháp, ablation và phân bố độ bền",
+    "planned_page": 70
+  },
+  {
+    "bookmark": "cell41",
+    "title": "THỰC HÀNH 41 — RL 14 — Lưu Q heatmap, bảng dữ liệu và hồ sơ thí nghiệm",
+    "planned_page": 71
+  },
+  {
+    "bookmark": "result1",
+    "title": "PHÂN TÍCH KẾT QUẢ — Tác nghiệp và khôi phục lỗi",
+    "planned_page": 72
+  },
+  {
+    "bookmark": "result2",
+    "title": "PHÂN TÍCH KẾT QUẢ — Ý định tiếng Việt và điểm làm rõ",
+    "planned_page": 73
+  },
+  {
+    "bookmark": "result3",
+    "title": "PHÂN TÍCH KẾT QUẢ — Q-learning, baseline và ablation",
+    "planned_page": 74
+  },
+  {
+    "bookmark": "result4",
+    "title": "PHÂN TÍCH KẾT QUẢ — Độ bền và rủi ro còn lại",
+    "planned_page": 75
+  },
+  {
+    "bookmark": "conclusion",
+    "title": "KẾT LUẬN — Những điều đã hiểu và đã chứng minh",
+    "planned_page": 76
+  },
+  {
+    "bookmark": "refs1",
+    "title": "TÀI LIỆU THAM KHẢO (1/3)",
+    "planned_page": 77
+  },
+  {
+    "bookmark": "refs2",
+    "title": "TÀI LIỆU THAM KHẢO (2/3)",
+    "planned_page": 78
+  },
+  {
+    "bookmark": "refs3",
+    "title": "TÀI LIỆU THAM KHẢO (3/3)",
+    "planned_page": 79
+  },
+  {
+    "bookmark": "guide",
+    "title": "HƯỚNG DẪN CHẠY LẠI VÀ HOÀN THIỆN BÀI NỘP",
+    "planned_page": 80
+  }
+]

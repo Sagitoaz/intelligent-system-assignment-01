@@ -1,0 +1,72 @@
+{
+  "chapters": [
+    "CHƯƠNG 1. LỊCH SỬ PHÁT TRIỂN CỦA TRÍ TUỆ NHÂN TẠO",
+    "CHƯƠNG 2. CÁC KỸ THUẬT HỌC MÁY CƠ BẢN",
+    "CHƯƠNG 3. MẠNG NƠ-RON TÍCH CHẬP (CNN)",
+    "CHƯƠNG 4. MẠNG NƠ-RON HỒI QUY RNN VÀ LSTM",
+    "CHƯƠNG 5. KNOWLEDGE GRAPH VÀ RAG",
+    "CHƯƠNG 6. HỆ ĐA AGENT"
+  ],
+  "tables": 49,
+  "captions": 39,
+  "inline_shapes": 52,
+  "embedded_notebook_cells": 11,
+  "file_bytes": 3055063,
+  "total_pages": 115,
+  "headings": [
+    {
+      "title": "MỞ ĐẦU",
+      "page": 13
+    },
+    {
+      "title": "CHƯƠNG 1. LỊCH SỬ PHÁT TRIỂN CỦA TRÍ TUỆ NHÂN TẠO",
+      "page": 17
+    },
+    {
+      "title": "CHƯƠNG 2. CÁC KỸ THUẬT HỌC MÁY CƠ BẢN",
+      "page": 25
+    },
+    {
+      "title": "CHƯƠNG 3. MẠNG NƠ-RON TÍCH CHẬP (CNN)",
+      "page": 37
+    },
+    {
+      "title": "CHƯƠNG 4. MẠNG NƠ-RON HỒI QUY RNN VÀ LSTM",
+      "page": 53
+    },
+    {
+      "title": "CHƯƠNG 5. KNOWLEDGE GRAPH VÀ RAG",
+      "page": 71
+    },
+    {
+      "title": "CHƯƠNG 6. HỆ ĐA AGENT",
+      "page": 82
+    },
+    {
+      "title": "KẾT LUẬN",
+      "page": 91
+    },
+    {
+      "title": "TÀI LIỆU THAM KHẢO",
+      "page": 95
+    },
+    {
+      "title": "PHỤ LỤC",
+      "page": 104
+    }
+  ],
+  "preview_errors": [],
+  "preview_images": [
+    "E:\\WINDOW\\Project\\intelligent-system-assignment-01\\deliverables\\tieuluan_hoan_chinh_6_chuong\\previews_notebook\\page_001.png",
+    "E:\\WINDOW\\Project\\intelligent-system-assignment-01\\deliverables\\tieuluan_hoan_chinh_6_chuong\\previews_notebook\\page_002.png",
+    "E:\\WINDOW\\Project\\intelligent-system-assignment-01\\deliverables\\tieuluan_hoan_chinh_6_chuong\\previews_notebook\\page_037.png",
+    "E:\\WINDOW\\Project\\intelligent-system-assignment-01\\deliverables\\tieuluan_hoan_chinh_6_chuong\\previews_notebook\\page_050.png",
+    "E:\\WINDOW\\Project\\intelligent-system-assignment-01\\deliverables\\tieuluan_hoan_chinh_6_chuong\\previews_notebook\\page_053.png",
+    "E:\\WINDOW\\Project\\intelligent-system-assignment-01\\deliverables\\tieuluan_hoan_chinh_6_chuong\\previews_notebook\\page_071.png",
+    "E:\\WINDOW\\Project\\intelligent-system-assignment-01\\deliverables\\tieuluan_hoan_chinh_6_chuong\\previews_notebook\\page_079.png",
+    "E:\\WINDOW\\Project\\intelligent-system-assignment-01\\deliverables\\tieuluan_hoan_chinh_6_chuong\\previews_notebook\\page_082.png",
+    "E:\\WINDOW\\Project\\intelligent-system-assignment-01\\deliverables\\tieuluan_hoan_chinh_6_chuong\\previews_notebook\\page_086.png",
+    "E:\\WINDOW\\Project\\intelligent-system-assignment-01\\deliverables\\tieuluan_hoan_chinh_6_chuong\\previews_notebook\\page_104.png"
+  ],
+  "matching_function_explanations": 11
+}

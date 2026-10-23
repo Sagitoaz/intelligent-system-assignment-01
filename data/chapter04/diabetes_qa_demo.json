@@ -1,0 +1,190 @@
+[
+  {
+    "id": "DM01",
+    "question": "What organ makes insulin?",
+    "references": [
+      "pancreas",
+      "the pancreas"
+    ],
+    "gold_ids": [
+      "what-is-diabetes:9"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  },
+  {
+    "id": "DM02",
+    "question": "Which hormone helps glucose enter cells?",
+    "references": [
+      "insulin"
+    ],
+    "gold_ids": [
+      "what-is-diabetes:9"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  },
+  {
+    "id": "DM03",
+    "question": "What is the most common type of diabetes?",
+    "references": [
+      "type 2 diabetes",
+      "type 2"
+    ],
+    "gold_ids": [
+      "what-is-diabetes:16"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  },
+  {
+    "id": "DM04",
+    "question": "When does gestational diabetes develop?",
+    "references": [
+      "during pregnancy",
+      "pregnancy"
+    ],
+    "gold_ids": [
+      "what-is-diabetes:19"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  },
+  {
+    "id": "DM05",
+    "question": "Are glucose levels in prediabetes above normal?",
+    "references": [
+      "yes",
+      "higher than normal"
+    ],
+    "gold_ids": [
+      "what-is-diabetes:21"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  },
+  {
+    "id": "DM06",
+    "question": "What attacks insulin-producing cells in type 1 diabetes?",
+    "references": [
+      "the immune system",
+      "immune system"
+    ],
+    "gold_ids": [
+      "what-is-diabetes:14"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  },
+  {
+    "id": "DM07",
+    "question": "What causes monogenic diabetes?",
+    "references": [
+      "a change in a single gene",
+      "single gene mutation"
+    ],
+    "gold_ids": [
+      "what-is-diabetes:23"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  },
+  {
+    "id": "DM08",
+    "question": "How many months are reflected in an A1C blood test?",
+    "references": [
+      "3 months",
+      "the last 3 months",
+      "three months"
+    ],
+    "gold_ids": [
+      "tests-diagnosis:41"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  },
+  {
+    "id": "DM09",
+    "question": "How many hours should a person fast before the fasting plasma glucose test?",
+    "references": [
+      "at least 8 hours",
+      "8 hours"
+    ],
+    "gold_ids": [
+      "tests-diagnosis:39"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  },
+  {
+    "id": "DM10",
+    "question": "Can an over-the-counter blood glucose meter diagnose diabetes?",
+    "references": [
+      "no"
+    ],
+    "gold_ids": [
+      "tests-diagnosis:14"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  },
+  {
+    "id": "DM11",
+    "question": "During which pregnancy weeks is gestational diabetes screening recommended?",
+    "references": [
+      "24 to 28 weeks",
+      "between 24 and 28 weeks"
+    ],
+    "gold_ids": [
+      "tests-diagnosis:34"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  },
+  {
+    "id": "DM12",
+    "question": "Which health measure corresponds to B in the diabetes ABCs?",
+    "references": [
+      "blood pressure"
+    ],
+    "gold_ids": [
+      "managing-diabetes:23"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  },
+  {
+    "id": "DM13",
+    "question": "Which health measure corresponds to C in the diabetes ABCs?",
+    "references": [
+      "cholesterol"
+    ],
+    "gold_ids": [
+      "managing-diabetes:25"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  },
+  {
+    "id": "DM14",
+    "question": "How many minutes of moderate activity per week does this source suggest?",
+    "references": [
+      "150 minutes",
+      "at least 150 minutes"
+    ],
+    "gold_ids": [
+      "managing-diabetes:34"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  },
+  {
+    "id": "DM15",
+    "question": "How many hours of sleep per night should most adults aim for according to this source?",
+    "references": [
+      "7 to 8 hours",
+      "about 7 to 8 hours"
+    ],
+    "gold_ids": [
+      "managing-diabetes:38"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  },
+  {
+    "id": "DM16",
+    "question": "Can type 2 diabetes occur during childhood?",
+    "references": [
+      "yes"
+    ],
+    "gold_ids": [
+      "what-is-diabetes:16"
+    ],
+    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+  }
+]

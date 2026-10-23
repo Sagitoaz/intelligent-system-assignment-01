@@ -1,0 +1,51 @@
+{
+  "dataset_name": "commodity",
+  "metadata": {
+    "name": "Gold Futures (GC=F) Daily Price",
+    "source": "Yahoo Finance / COMEX (via yfinance API / local archive)",
+    "asset_class": "Commodities (Precious Metals)",
+    "primary_target": "Close (Next-day settlement price in USD/troy oz)",
+    "features": "Open, High, Low, Close, Volume",
+    "time_horizon": "2014-01-02 to 2023-12-29 (10 years daily settlement)",
+    "description": "Continuous front-month COMEX Gold Futures prices, serving as the benchmark safe-haven commodity tracking global macroeconomic and inflationary shifts."
+  },
+  "hyperparameters": {
+    "seq_len": 30,
+    "hidden_size": 64,
+    "num_layers": 1,
+    "epochs": 40,
+    "learning_rate": 0.001,
+    "batch_size": 32,
+    "patience": 8
+  },
+  "split_sizes": {
+    "total_records": 2514,
+    "train_samples": 1729,
+    "val_samples": 377,
+    "test_samples": 378
+  },
+  "pytorch": {
+    "metrics": {
+      "MAE": 15.032296180725098,
+      "RMSE": 19.26694367065527,
+      "R2": 0.9735899567604065,
+      "MAPE": 0.7973894476890564
+    },
+    "stopped_epoch": 40,
+    "best_val_loss": 0.0003184838558143296,
+    "training_time": 81.1823832988739,
+    "model_path": "models\\assignment06\\commodity_rnn_pytorch.pt"
+  },
+  "keras": {
+    "metrics": {
+      "MAE": 17.4940128326416,
+      "RMSE": 22.039673838339592,
+      "R2": 0.9654415845870972,
+      "MAPE": 0.9263249039649963
+    },
+    "stopped_epoch": 28,
+    "best_val_loss": 0.00035352312261238694,
+    "training_time": 35.941415548324585,
+    "model_path": "models\\assignment06\\commodity_rnn_keras.keras"
+  }
+}

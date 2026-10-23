@@ -67,3 +67,25 @@ deployment/tieuluan/*.zip
 docs/tieuluan/_ghi_chu_noi_bo/
 docs/tieuluan/tieuluan01_*.md
 figures/tieuluan/equations/
+
+# Local downloads, tensor caches and pretrained weights (rebuild/download with scripts)
+.jupyter/
+data/mnist/*.npz
+data/fashion_mnist/*.npz
+data/tieuluan/course_large/csv_cache/
+data/chapter04/finqa_*.json
+data/chapter04/diabetic_data.csv
+models/chapter04/**/model.safetensors
+results/chapter04/finance_embeddings.npy
+deliverables/chapter04/CHUONG04_DATASET.zip
+
+# Temporary Word layout checks; retain notebook screenshots and final deliverables
+deliverables/**/layout_*.png
+deliverables/**/layout_*.jpg
+deliverables/**/rendered_page_text.json
+deliverables/**/page_text.json
+deliverables/**/previews/
+deliverables/**/previews_notebook/
+~$*
+
+# Personal report documents remain local; publish source/notebooks after privacy review.

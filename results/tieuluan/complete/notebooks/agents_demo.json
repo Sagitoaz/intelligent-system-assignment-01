@@ -1,0 +1,71 @@
+{
+  "finance_trace": [
+    {
+      "agent": "RetrievalAgent",
+      "evidence": 3,
+      "graph": 0,
+      "answer": "",
+      "status": "pending"
+    },
+    {
+      "agent": "GraphAgent",
+      "evidence": 3,
+      "graph": 3,
+      "answer": "",
+      "status": "pending"
+    },
+    {
+      "agent": "WriterAgent",
+      "evidence": 3,
+      "graph": 3,
+      "answer": "unknown",
+      "status": "pending"
+    },
+    {
+      "agent": "VerifierAgent",
+      "evidence": 3,
+      "graph": 3,
+      "answer": "unknown",
+      "status": "generated_unverified"
+    }
+  ],
+  "messages": [
+    {
+      "sender": "retrieval",
+      "receiver": "graph",
+      "payload": {
+        "ids": [
+          "ETR/2004/page_213.pdf:d81f966dc19b::text_6",
+          "ETR/2008/page_377.pdf:26c3c754ec34::text_6",
+          "ETR/2011/page_341.pdf:ce32d713fc20::text_2"
+        ]
+      }
+    },
+    {
+      "sender": "graph",
+      "receiver": "writer",
+      "payload": {
+        "matched": 3
+      }
+    },
+    {
+      "sender": "writer",
+      "receiver": "verifier",
+      "payload": {
+        "answer": "unknown"
+      }
+    },
+    {
+      "sender": "verifier",
+      "receiver": "coordinator",
+      "payload": {
+        "citation_ids_valid": true,
+        "semantic_support_checked": false,
+        "status": "generated_unverified"
+      }
+    }
+  ],
+  "generated_count": "2",
+  "computed_count": "101766",
+  "missing_status": "insufficient_evidence"
+}

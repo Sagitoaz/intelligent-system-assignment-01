@@ -1,0 +1,13 @@
+# Requirements for Assignment 06: RNN - Recurrent Neural Network
+numpy>=1.26.0
+pandas>=2.0.0
+scikit-learn>=1.4.0
+matplotlib>=3.8.0
+torch>=2.0.0
+tensorflow>=2.16.0
+keras>=3.0.0
+streamlit>=1.30.0
+yfinance>=0.2.0
+pytest>=8.0.0
+jupyter>=1.0.0
+ipykernel>=6.0.0

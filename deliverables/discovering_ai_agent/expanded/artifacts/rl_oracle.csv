@@ -1,0 +1,4 @@
+﻿map,shortest_safe_steps,oracle_return
+A_open,8,9.65
+B_detour,12,9.45
+C_risky,8,9.65

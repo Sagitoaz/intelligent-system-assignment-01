@@ -1,0 +1,65 @@
+[
+  {
+    "file": "uci_diabetes.zip",
+    "url": "https://archive.ics.uci.edu/static/public/296/diabetes+130-us+hospitals+for+years+1999-2008.zip",
+    "bytes": 3170254,
+    "sha256": "f82ac129da2ddd2299391ff6fbae3a6a58b3edcf59ac9d7bd480c00fe453112a",
+    "accessed": "2026-10-13"
+  },
+  {
+    "file": "finqa_train.json",
+    "url": "https://raw.githubusercontent.com/czyssrs/FinQA/main/dataset/train.json",
+    "bytes": 78216616,
+    "sha256": "49f237eb9779b569473b26b08048867d04635a7cc39ad6a7a5664c55bb428db6",
+    "accessed": "2026-10-13"
+  },
+  {
+    "file": "finqa_dev.json",
+    "url": "https://raw.githubusercontent.com/czyssrs/FinQA/main/dataset/dev.json",
+    "bytes": 10954658,
+    "sha256": "a847fb7e0d61a3125a1e2909852df6b89f1ee64d2c5ff1bf689e332214deee51",
+    "accessed": "2026-10-13"
+  },
+  {
+    "file": "finqa_test.json",
+    "url": "https://raw.githubusercontent.com/czyssrs/FinQA/main/dataset/test.json",
+    "bytes": 14395143,
+    "sha256": "831dbfb2e785dbc227f895ce3f24046433467aec67b09db2bd6ac7692a8a30dc",
+    "accessed": "2026-10-13"
+  },
+  {
+    "file": "FINQA_LICENSE.txt",
+    "url": "https://raw.githubusercontent.com/czyssrs/FinQA/main/LICENSE",
+    "bytes": 1067,
+    "sha256": "92c0e67bd762c15c07ba60de09558338315a8ebf99aac4f51f487179809ac087",
+    "accessed": "2026-10-13"
+  },
+  {
+    "file": "what-is-diabetes.html",
+    "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/what-is-diabetes",
+    "bytes": 51669,
+    "sha256": "d2ca2ccb76e50d59eceddfdefb036d98ebda9a6b41702a912b24c3c1ec79f872",
+    "accessed": "2026-10-13"
+  },
+  {
+    "file": "symptoms-causes.html",
+    "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/symptoms-causes",
+    "bytes": 64922,
+    "sha256": "24aae6b757c040a603a7dfaae529a1741102f66696c0678d8c69b430e673c750",
+    "accessed": "2026-10-13"
+  },
+  {
+    "file": "tests-diagnosis.html",
+    "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/tests-diagnosis",
+    "bytes": 56927,
+    "sha256": "be2dea9aa89fa62e1e038ebedbbdc068d8d962d6071171c3047bd37153ed7f67",
+    "accessed": "2026-10-13"
+  },
+  {
+    "file": "managing-diabetes.html",
+    "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/managing-diabetes",
+    "bytes": 71246,
+    "sha256": "1a35d97d2a8d68fd01c80a57c05c78266986e1f142d337a5fc356452b5316b89",
+    "accessed": "2026-10-13"
+  }
+]

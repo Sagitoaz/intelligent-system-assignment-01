@@ -1,0 +1,289 @@
+[
+  {
+    "index": 1,
+    "title": "Môi trường, cấu hình và khả năng tái lập",
+    "explanation": "Notebook chạy cục bộ. Bộ phân loại ý định có huấn luyện học máy; planner tác nghiệp vẫn là chương trình tường minh.",
+    "discussion": "Các hạt giống cố định cho dữ liệu và thí nghiệm; thời gian thực đo vẫn phụ thuộc máy. Không dùng độ trễ này làm cam kết cho dịch vụ thật. Không cần API key, GPU hoặc dịch vụ trả phí.",
+    "lines": 18
+  },
+  {
+    "index": 2,
+    "title": "Agent phản xạ và mô hình nội bộ",
+    "explanation": "So sánh trên cùng môi trường hai phòng: world thuộc môi trường; known thuộc agent.",
+    "discussion": "Agent có mô hình chỉ dừng khi biết cả hai phòng sạch. Số hành động gồm STOP. Chưa mô phỏng bẩn tái xuất hiện hoặc cảm biến sai; bộ nhớ chỉ đúng với giả định môi trường đang xét.",
+    "lines": 23
+  },
+  {
+    "index": 3,
+    "title": "Mục tiêu, tiện ích và ràng buộc cứng",
+    "explanation": "Loại phương án không đạt mục tiêu hoặc vượt ngưỡng rủi ro trước khi tối ưu chi phí.",
+    "discussion": "R5 nhanh và rẻ nhưng vi phạm ràng buộc giả lập. Trọng số thời gian có đơn vị nghìn đồng/phút; thay đổi trọng số làm lựa chọn chuyển R2, R3, R1. Đây là độ nhạy ưu tiên, chưa phải học.",
+    "lines": 14
+  },
+  {
+    "index": 4,
+    "title": "Danh tính phiên và quyền tác nghiệp",
+    "explanation": "Registry mô phỏng nguồn danh tính tin cậy; chưa triển khai đăng nhập hoặc JWT thật.",
+    "discussion": "Vai trò duyệt tách khỏi quyền hoàn. Nhân viên hỗ trợ được đọc trong cùng tenant nhưng không được hoàn thay khách. Người dùng không thể tự cấp role qua tham số công cụ.",
+    "lines": 21
+  },
+  {
+    "index": 5,
+    "title": "Kho chính sách và truy xuất bằng chứng",
+    "explanation": "Truy xuất bằng điểm Jaccard của tập từ đã chuẩn hóa dấu; có mã tài liệu để truy vết.",
+    "discussion": "Đây là lexical retrieval, chưa có embedding hoặc sinh câu trả lời. Văn bản hỗ trợ giải thích; chính sách bắt buộc được kiểm tra bằng chương trình. Điểm tìm kiếm không phải xác suất tài liệu đúng.",
+    "lines": 18
+  },
+  {
+    "index": 6,
+    "title": "Sinh dữ liệu đánh giá và nhãn mong đợi",
+    "explanation": "400 yêu cầu thuộc 10 nhóm cân bằng; 360 đơn tồn tại. Nhãn kỳ vọng được gán theo kịch bản trước khi gọi hệ thống.",
+    "discussion": "Mỗi yêu cầu dùng mã đơn riêng, tránh ảnh hưởng chéo do hoàn trước. Đây là dữ liệu kiểm thử tổng hợp theo đặc tả, không đại diện tỷ lệ lỗi hoặc nhu cầu của khách hàng thực.",
+    "lines": 24
+  },
+  {
+    "index": 7,
+    "title": "Hồ sơ dữ liệu và kiểm tra miền giá trị",
+    "explanation": "Kiểm tra khóa duy nhất, dữ liệu thiếu, số tiền và tuổi đơn trước khi thực hiện chính sách.",
+    "discussion": "Phân phối được tạo theo nhóm kiểm thử chứ không suy ra từ thị trường. CSV lưu lại từng đơn và từng nhãn để người đọc kiểm tra độc lập, thay vì chỉ nhìn chỉ số tổng hợp.",
+    "lines": 13
+  },
+  {
+    "index": 8,
+    "title": "SQLite: lược đồ và ràng buộc chống trùng",
+    "explanation": "Khóa request_key ngăn phát lại cùng yêu cầu; UNIQUE(order_id) ngăn dùng khóa mới để hoàn lại cùng đơn.",
+    "discussion": "Ràng buộc cơ sở dữ liệu bổ sung cho kiểm tra ứng dụng. Giao dịch chỉ bao phủ SQLite cục bộ, chưa có cổng thanh toán bên ngoài. Tính bền vững sẽ được kiểm tra bằng tệp và kết nối mở lại.",
+    "lines": 20
+  },
+  {
+    "index": 9,
+    "title": "Tra cứu có kiểm soát và chính sách thực thi",
+    "explanation": "SQL truyền tham số qua dấu ?; mã đơn phải đúng định dạng. Kiểm tra quyền trước trạng thái, thời gian và phê duyệt.",
+    "discussion": "Thứ tự giúp hạn chế tiết lộ chi tiết cho người không có quyền. Mã FORBIDDEN dùng cho sai chủ và khác tenant. Chính sách sẽ được gọi lại trong giao dịch để tránh dựa vào một lần đọc đã cũ.",
+    "lines": 22
+  },
+  {
+    "index": 10,
+    "title": "Phê duyệt có nguồn gốc từ vai trò quản lý",
+    "explanation": "Khách hàng không thể truyền một cờ approved để tự duyệt. Bản ghi duyệt xuất phát từ phiên approver và tenant tương ứng.",
+    "discussion": "Đây vẫn là mô phỏng danh tính. Hệ thống thật còn cần thời hạn phê duyệt, phạm vi số tiền, hủy duyệt, người chịu trách nhiệm và quyền đọc nhật ký; notebook chưa triển khai các yếu tố đó.",
+    "lines": 11
+  },
+  {
+    "index": 11,
+    "title": "Hoàn tiền nguyên tử và khóa yêu cầu",
+    "explanation": "Kiểm tra hiện trạng và ghi dữ liệu nằm trong BEGIN IMMEDIATE; lỗi trước commit phải rollback.",
+    "discussion": "Khóa cũ chỉ hợp lệ khi gắn cùng actor và order. Mã này kiểm soát dữ liệu cục bộ, chưa giải quyết nguyên tử giữa cơ sở dữ liệu và dịch vụ thanh toán. Không gọi đây là dịch vụ hoàn tiền sẵn sàng triển khai.",
+    "lines": 24
+  },
+  {
+    "index": 12,
+    "title": "Dispatcher và nhật ký hoạt động tối thiểu",
+    "explanation": "Chỉ bốn công cụ và tập khóa tham số đã định nghĩa được phép thực thi. Không có SQL tùy ý hoặc mã do người dùng gửi.",
+    "discussion": "Audit giữ actor, công cụ, mã kết quả và mã yêu cầu, không sao chép toàn bộ ghi chú đơn. Tối thiểu hóa log không thay thế phân quyền đọc, thời gian lưu và bảo vệ tính toàn vẹn nhật ký.",
+    "lines": 16
+  },
+  {
+    "index": 13,
+    "title": "Yêu cầu tiếng Việt theo quy tắc và điểm làm rõ",
+    "explanation": "Miền câu lệnh hạn chế, có trường hợp làm rõ khi nhiều đơn hoặc nhiều ý định.",
+    "discussion": "Đây không phải hiểu ngôn ngữ tổng quát. Các cách diễn đạt khác có thể bị bỏ sót. Mô hình phân loại học máy phía sau sẽ được thử trên mẫu câu tách biệt; cả hai cách đều phải qua kiểm soát công cụ.",
+    "lines": 18
+  },
+  {
+    "index": 14,
+    "title": "Retry hữu hạn và timeout sau commit",
+    "explanation": "Chèn lỗi trước hành động hoặc sau commit; lần thử lại giữ đúng khóa. Không tạo thời gian giả bằng sleep.",
+    "discussion": "ALREADY_APPLIED cho thấy yêu cầu cũ đã được ghi. Retry chỉ bao phủ hai kiểu lỗi định nghĩa, chưa thay thế backoff, deadline, circuit breaker và phân loại lỗi trong ứng dụng thật.",
+    "lines": 19
+  },
+  {
+    "index": 15,
+    "title": "Planner tác nghiệp và ngân sách công cụ",
+    "explanation": "Planner điều phối theo quan sát; trình tự nghiệp vụ do lập trình viên xác định, không có LLM.",
+    "discussion": "Ngân sách đếm lần gọi công cụ logic; mỗi công cụ có tối đa hai attempt. Trace phân biệt hai mức này. Không mô tả một workflow nhỏ có nhánh thành khả năng tự lập kế hoạch mở trên mọi nhiệm vụ.",
+    "lines": 23
+  },
+  {
+    "index": 16,
+    "title": "Kiểm tra hợp đồng và ranh giới quyền",
+    "explanation": "Kiểm tra kết quả tác nghiệp của cả nhánh cho phép, từ chối và chuyển duyệt, không chỉ kiểm tra tên hàm gọi.",
+    "discussion": "Một lần thử chuỗi giống SQL không tương đương đánh giá mọi SQL injection; kiểm tra cờ approved cũng không đánh giá mọi cách giả mạo danh tính. Kết luận cần gắn với tập kiểm tra thực sự đã thực hiện.",
+    "lines": 25
+  },
+  {
+    "index": 17,
+    "title": "Rollback, phát lại và xung đột khóa",
+    "explanation": "Lỗi xảy ra sau INSERT và trước commit. Kiểm tra trạng thái còn lại rồi thử lại bằng đúng khóa.",
+    "discussion": "Bằng chứng là dữ liệu sau lỗi chứ không chỉ exception. Khóa gắn với actor và order, và mỗi order chỉ có một bản ghi hoàn. Giới hạn giao dịch cục bộ vẫn cần được nêu khi chuyển sang hệ thống nhiều dịch vụ.",
+    "lines": 10
+  },
+  {
+    "index": 18,
+    "title": "Lưu bền vững và đọc lại khi trạng thái thay đổi",
+    "explanation": "Mở lại tệp bằng kết nối mới để xác nhận dữ liệu bền vững; thay đổi trạng thái giữa đọc và ghi để kiểm tra quyết định không dùng snapshot cũ.",
+    "discussion": "Đây là mô phỏng thay đổi theo thứ tự, chưa phải benchmark nhiều tiến trình đồng thời. Không đánh đồng việc dùng SQLite với bảo đảm hoạt động phân tán hoặc chịu tải cao.",
+    "lines": 13
+  },
+  {
+    "index": 19,
+    "title": "Dữ liệu ghi chú không thể tự cấp quyền",
+    "explanation": "Ghi chú không tin cậy được lưu như dữ liệu; planner không diễn dịch nó thành lệnh.",
+    "discussion": "Kết quả kiểm tra ranh giới trong chương trình theo quy tắc, chưa chứng minh khả năng chống prompt injection của LLM. Nếu bổ sung LLM, vẫn cần giữ quyền và hợp đồng thực thi ngoài mô hình.",
+    "lines": 11
+  },
+  {
+    "index": 20,
+    "title": "Benchmark 400 yêu cầu và ba cấu hình",
+    "explanation": "naive chỉ dự đoán hoàn nếu đơn tồn tại; không ghi giao dịch. no_retry và full dùng cùng kiến trúc, khác số attempt tối đa.",
+    "discussion": "Đánh giá chuẩn hóa REFUNDED và ALREADY_APPLIED thành hoàn tất. Baseline cố ý đơn giản không đại diện sản phẩm khác; chỉ ablation no_retry/full mới tách riêng tác động retry trong kiến trúc này.",
+    "lines": 24
+  },
+  {
+    "index": 21,
+    "title": "Lỗi theo nhóm và khoảng Wilson mô tả",
+    "explanation": "Tách theo nhóm để không che lỗi bằng trung bình. Khoảng Wilson mang ý nghĩa mô tả dưới giả định Bernoulli, không sửa được thiên lệch chọn mẫu.",
+    "discussion": "Tập tổng hợp có cấu trúc và không đại diện tổng thể khách hàng. Điểm 100% trên các nhánh đã viết không có nghĩa hệ thống sẽ không gặp lỗi mới. Tỷ lệ vận hành lệch nhóm cần cách đo và trọng số tương ứng.",
+    "lines": 14
+  },
+  {
+    "index": 22,
+    "title": "Độ trễ cục bộ và định nghĩa đơn vị đo",
+    "explanation": "Độ trễ đo bằng đồng hồ thực nhưng chưa có mạng hoặc LLM. Số sự kiện không đồng nhất với số lần API thanh toán thực hiện.",
+    "discussion": "Lỗi sau commit có thể ghi cả outcome và timeout trong một attempt, nên event count lớn hơn số lần thử. Cần định nghĩa đại lượng trước khi diễn giải bảng chi phí; kết quả cục bộ không phải SLA.",
+    "lines": 10
+  },
+  {
+    "index": 23,
+    "title": "Tập ý định tiếng Việt tách theo họ mẫu câu",
+    "explanation": "Chia theo mẫu gốc, không chỉ thay mã đơn để tạo tập kiểm tra giả mới. Mỗi lớp có 6 mẫu train và 3 mẫu test, mỗi mẫu ba tiền tố.",
+    "discussion": "27 câu test chỉ tương ứng 9 họ mẫu có tương quan, chưa đánh giá tiếng Việt ngoài đời. Đây là thành phần có học thực sự; không phải mô hình ngôn ngữ lớn và không tự cấp quyền cho công cụ.",
+    "lines": 23
+  },
+  {
+    "index": 24,
+    "title": "TF-IDF ký tự và Logistic Regression",
+    "explanation": "TF-IDF biểu diễn n-gram ký tự; mô hình học trọng số từ nhãn. Chỉ số được lấy trên mẫu câu chưa fit.",
+    "discussion": "Dù phân loại đúng ý định, công cụ vẫn kiểm tra quyền và chính sách. Xác suất mô hình chưa được calibration, không thể diễn giải trực tiếp thành mức chắc chắn đúng trong vận hành.",
+    "lines": 13
+  },
+  {
+    "index": 25,
+    "title": "Đánh đổi coverage và độ chính xác phần chấp nhận",
+    "explanation": "Tăng ngưỡng có thể làm giảm tự động hóa. Nếu không chấp nhận mẫu nào, accuracy ghi None thay vì gán 100%.",
+    "discussion": "Không dùng cùng tập kiểm tra để chọn ngưỡng tối ưu rồi báo lại như đánh giá độc lập. Triển khai cần validation riêng, chi phí sai quyết định và kiểm định calibration.",
+    "lines": 14
+  },
+  {
+    "index": 26,
+    "title": "Ghép bộ phân loại vào luồng công cụ",
+    "explanation": "Mô hình chỉ gợi ý ý định, mã đơn vẫn phải duy nhất và hành động vẫn qua dispatcher.",
+    "discussion": "Kết quả còn phụ thuộc chủ đơn, tenant, thời hạn và duyệt. Luồng kết hợp thành phần có học với planner tường minh này là một kiến trúc khả kiểm tra, chưa phải agent dùng LLM tự lập kế hoạch.",
+    "lines": 22
+  },
+  {
+    "index": 27,
+    "title": "Xuất số đo, nhật ký và bằng chứng thực nghiệm",
+    "explanation": "Bảng báo cáo được dựng từ các số đo đã lưu, không nhập kết quả bằng tay. CSV giữ từng dự đoán để kiểm tra lại.",
+    "discussion": "Giữ rõ phạm vi: dữ liệu tổng hợp, danh tính mô phỏng, chưa có LLM hoặc thanh toán thật. Kết quả trên đặc tả hữu hạn chưa chứng minh năng lực tác nghiệp tổng quát.",
+    "lines": 17
+  },
+  {
+    "index": 28,
+    "title": "RL 01 — Ba bản đồ và cấu hình tái lập",
+    "explanation": "S là điểm xuất phát, G là đích, H là hố kết thúc thất bại, # là tường, dấu chấm là ô an toàn. A có nhiều lối đi; B buộc đi vòng; C đặt hố gần đường đi. Cấu hình và bản đồ được lưu cùng kết quả để kiểm tra lại thí nghiệm.",
+    "discussion": "Ba bản đồ là ba bài toán hữu hạn được chọn trước, không phải ba mẫu ngẫu nhiên đại diện cho mọi môi trường. Mỗi seed thay đổi chuỗi khám phá và phá hòa khi hành động có cùng giá trị. Mười seed giúp quan sát độ nhạy của quá trình học trong từng bản đồ; chúng không thay thế kiểm tra trên bản đồ mới. Giữ nguyên điểm đầu và điểm đích còn làm nhiệm vụ đơn giản hơn bài toán định vị tổng quát. Mọi kết luận sau đây vì vậy gắn với đúng cấu hình được công bố.",
+    "lines": 22
+  },
+  {
+    "index": 29,
+    "title": "RL 02 — Chuyển trạng thái, thưởng và kiểm tra môi trường",
+    "explanation": "Trượt hành động xảy ra với xác suất slip: hành động dự định được thay bằng một trong ba hành động còn lại, xác suất bằng nhau. Trong huấn luyện, slip = 0. Mọi phép phá hòa chọn ngẫu nhiên giữa các hành động cùng tốt, tránh thiên lệch do thứ tự up/right/down/left.",
+    "discussion": "Phân biệt kết thúc tự nhiên và ngắt do giới hạn bước là điều kiện để cập nhật đúng. Khi chạm G hoặc H, mục tiêu TD chỉ còn phần thưởng vừa nhận, không cộng giá trị tương lai. Khi chạm tường, agent vẫn ở trạng thái cũ và tiếp tục tương tác. Phạt va chạm lớn hơn phạt bước thường nhằm khuyến khích di chuyển hữu ích. Đây là lựa chọn thiết kế phần thưởng; thay mức phạt có thể đổi tốc độ học và hành vi, nên các giá trị được ghi rõ thay vì xem như thuộc tính tất yếu của Q-learning.",
+    "lines": 23
+  },
+  {
+    "index": 30,
+    "title": "RL 03 — Oracle BFS tìm đường an toàn ngắn nhất",
+    "explanation": "BFS được phép biết toàn bộ bản đồ và loại hố khỏi đồ thị. Vì mỗi bước có cùng độ dài, BFS cung cấp số bước an toàn ngắn nhất. Giá trị này là mốc kiểm tra khả năng giải và chất lượng đường đi, không phải kết quả học từ trải nghiệm.",
+    "discussion": "Oracle và agent có quyền truy cập thông tin khác nhau: BFS đọc bản đồ, còn bảng Q được cải thiện bằng tương tác. So sánh số bước với oracle cho biết chính sách đã học có đi vòng hay không, nhưng không chứng minh agent tự suy luận được cấu trúc bản đồ. Trong môi trường xác định này, đường an toàn ngắn nhất cũng tối ưu hóa tổng thưởng đã chọn. Khi có trượt, một đường dài hơn nhưng xa hố có thể tốt hơn; đường BFS xác định không còn mặc nhiên là chính sách tối ưu cho bài toán nhiễu.",
+    "lines": 23
+  },
+  {
+    "index": 31,
+    "title": "RL 04 — Hàm huấn luyện Q-learning và lịch epsilon",
+    "explanation": "Cập nhật dùng Q(s,a) ← Q(s,a) + α[r + γ max Q(s′,a′) − Q(s,a)]. Nhánh terminal bỏ hoàn toàn bootstrap. Giới hạn 60 bước là ngắt thu thập dữ liệu của nhiệm vụ tiếp diễn, không phải trạng thái hấp thụ; vì thế bước cuối vẫn bootstrap nếu chưa gặp đích hoặc hố.",
+    "discussion": "Epsilon giảm tuyến tính từ 1 xuống 0,05 trong 70% đầu quá trình, rồi giữ nguyên. Alpha cố định giúp minh họa dễ đọc nhưng không thỏa trực tiếp mọi giả thiết hội tụ tiệm cận trong định lý Q-learning cổ điển. Báo cáo vì vậy đo chất lượng sau ngân sách hữu hạn, không khẳng định hội tụ lý thuyết. NO_EXPLORATION chỉ bỏ nhánh chọn hành động epsilon; phá hòa vẫn ngẫu nhiên và khởi tạo Q bằng 0 vẫn có thể tạo khám phá gián tiếp khi phần thưởng bước là âm.",
+    "lines": 29
+  },
+  {
+    "index": 32,
+    "title": "RL 05 — Bộ đánh giá tách biệt và khoảng Wilson",
+    "explanation": "Một rollout không cập nhật Q. Khi không truyền bảng Q, hành động được chọn đều ngẫu nhiên. Số bước trung bình chỉ tính trên lượt thành công; nếu không lượt nào thành công, kết quả là None. Tổng thưởng tính trên tất cả lượt, nên vẫn phản ánh thất bại và hết thời gian.",
+    "discussion": "Khoảng Wilson mô tả bất định nhị thức của các lượt đánh giá dưới một chính sách đã cố định và cơ chế ngẫu nhiên cụ thể. Nó không bao trùm mọi bất định do chọn bản đồ, thiết kế phần thưởng hay huấn luyện. Khi gộp nhiều seed, các chính sách khác nhau tạo ra phân bố hỗn hợp; khoảng gộp chỉ là tóm tắt mô tả. Vì vậy cần đọc thêm độ phân tán giữa các seed, nhất là trong thử nghiệm trượt. Tỷ lệ thành công cao không đủ để kết luận đường đi ngắn nếu bỏ qua cột số bước.",
+    "lines": 32
+  },
+  {
+    "index": 33,
+    "title": "RL 06 — Huấn luyện 30 mô hình chuẩn và đo hiệu năng",
+    "explanation": "Mỗi bản đồ có 10 lần huấn luyện độc lập và mỗi mô hình được kiểm tra bằng 50 lượt với seed đánh giá riêng. Các dòng theo seed được giữ lại để không che mất trường hợp một lần học thất bại. Thời gian đo gồm huấn luyện và đánh giá, phụ thuộc máy thực thi.",
+    "discussion": "Chính sách được kiểm tra trên đúng môi trường đã huấn luyện, với điểm xuất phát không đổi. Đây là đo mức học thuộc một nhiệm vụ điều khiển hữu hạn, không phải bằng chứng tổng quát hóa. Trong môi trường xác định, nhiều lượt đánh giá có thể trùng hoàn toàn nếu không còn hành động đồng hạng. Khi đó tăng số lượt không bổ sung nhiều thông tin bằng tăng số seed huấn luyện hoặc đổi điều kiện môi trường. Các cột min và max theo seed giúp nhận diện phần nào hạn chế này trước khi diễn giải giá trị trung bình.",
+    "lines": 15
+  },
+  {
+    "index": 34,
+    "title": "RL 07 — Baseline ngẫu nhiên và bảng so sánh với oracle",
+    "explanation": "Random có 200 rollout trên mỗi bản đồ. BFS là một đường đi tính toán xác định nên được ghi n = 1 và không gán khoảng tin cậy giả. Các trung bình gộp của mô hình học được tính theo số lượt, còn số bước thành công được cân theo số lần thành công.",
+    "discussion": "Một baseline ngẫu nhiên giúp kiểm tra nhiệm vụ có quá dễ hay không và lượng cải thiện thu được từ học. Tuy nhiên Random cũng bị giới hạn 60 bước, vì thế tỷ lệ thành công phụ thuộc ngân sách này. BFS có lợi thế biết toàn bản đồ và không cần chi phí học, nên cột này là cận tham chiếu đường đi an toàn. Các hàng có n khác nhau phải được đọc cùng ngữ cảnh; n = 500 lượt Q-learning không có nghĩa có 500 mô hình độc lập, mà chỉ có 10 mô hình được đánh giá lặp lại.",
+    "lines": 28
+  },
+  {
+    "index": 35,
+    "title": "RL 08 — Ablation bỏ epsilon và bỏ chiết khấu tương lai",
+    "explanation": "Mỗi ablation giữ cùng bản đồ, ngân sách và danh sách seed. NO_EXPLORATION đặt epsilon bằng 0 nhưng vẫn phá hòa ngẫu nhiên; GAMMA_ZERO giữ lịch epsilon và đặt gamma = 0. Cùng seed là một thiết kế ghép cặp theo định danh; sau khi chính sách khác nhau, chuỗi trạng thái và mức tiêu thụ số ngẫu nhiên cũng khác.",
+    "discussion": "Gamma bằng 0 chỉ tối ưu phần thưởng tức thời: ngoài vùng gần đích, nhiều hành động an toàn có cùng mức thưởng bước nên khó truyền thông tin về đích về điểm đầu. Ngược lại, bỏ epsilon chưa chắc gây thất bại trên môi trường nhỏ vì Q khởi tạo 0 lạc quan so với thưởng âm và phá hòa ngẫu nhiên vẫn đưa agent sang ô mới. Thí nghiệm không ép kết quả theo kỳ vọng. Nếu NO_EXPLORATION đạt tốt, kết luận đúng là cấu hình này chưa chứng minh epsilon thiết yếu, không phải khám phá vô ích trong mọi bài toán.",
+    "lines": 16
+  },
+  {
+    "index": 36,
+    "title": "RL 09 — Độ bền khi 10% hành động bị trượt",
+    "explanation": "Mỗi chính sách chuẩn được giữ nguyên và chạy 100 lượt có slip = 0,1. Bảng đầu gộp 1.000 lượt trên mỗi bản đồ; bảng sau cho phân bố tỷ lệ thành công của 10 seed. So sánh với điều kiện xác định để quan sát ảnh hưởng của sai lệch cơ cấu chấp hành.",
+    "discussion": "Đây là kiểm tra chuyển điều kiện động lực học trên bản đồ cũ, không phải kiểm tra trên bản đồ chưa thấy. Một hành động trượt có thể rơi vào hố, chạm tường hoặc chỉ tăng số bước; bố trí vật cản quyết định mức suy giảm. Khoảng Wilson gộp không phản ánh đầy đủ biến thiên giữa mô hình học, nên báo cáo thêm min, trung vị, max và độ lệch chuẩn của tỷ lệ theo seed. Chính sách không được học trong nhiễu; kết quả cũng không cho biết huấn luyện có nhiễu sẽ cải thiện đến mức nào.",
+    "lines": 13
+  },
+  {
+    "index": 37,
+    "title": "RL 10 — Đọc bảng Q và đường đi của một mô hình",
+    "explanation": "Bảng trình bày đủ bốn giá trị hành động tại mỗi ô an toàn của C, seed 0. Cột best_actions liệt kê mọi hành động đồng hạng theo giá trị thực, không dựa trên số đã làm tròn. Đường đi minh họa dùng seed đánh giá riêng và không được dùng để chọn mô hình.",
+    "discussion": "Giá trị Q lớn gợi ý tổng thưởng chiết khấu tốt dưới trải nghiệm đã có, không phải xác suất hành động đúng hay xác suất sống sót. Các ô ít ghé thăm có thể chứa ước lượng kém dù đường đi từ điểm đầu đã tốt. Làm tròn số chỉ phục vụ đọc bảng và không tham gia chọn hành động. Một bảng của seed 0 giúp giải thích cơ chế, nhưng không đại diện thay cho phân bố 10 seed. Khi đánh giá có trượt, chính sách vẫn đọc bảng này nên rủi ro thay đổi mà các giá trị không tự điều chỉnh.",
+    "lines": 15
+  },
+  {
+    "index": 38,
+    "title": "RL 11 — Đồ thị học qua episode trên cả ba bản đồ",
+    "explanation": "Hai cột là thành công và tổng thưởng trong huấn luyện; mỗi hàng là một bản đồ. Cửa sổ trượt 50 episode giảm nhiễu. Đường giữa là trung bình 10 seed, dải màu là phân vị 10–90% giữa seed sau khi làm trơn, không phải khoảng tin cậy.",
+    "discussion": "Đồ thị huấn luyện có thể duy trì tỷ lệ thất bại dù chính sách greedy kiểm tra đạt tốt, vì epsilon cuối vẫn bằng 0,05 và hành động ngẫu nhiên có thể rơi vào hố. Không nên so trực tiếp một điểm trên đường học với tỷ lệ đánh giá rồi kết luận số liệu mâu thuẫn. Cửa sổ 50 episode còn làm mờ các thay đổi nhanh ở giai đoạn đầu. Dải phân vị hẹp trên 10 seed chỉ mô tả mức dao động quan sát được trong thiết kế này, không chứng minh ổn định đối với bản đồ hoặc phân bố nhiệm vụ khác.",
+    "lines": 24
+  },
+  {
+    "index": 39,
+    "title": "RL 12 — Trực quan bản đồ, oracle và đường đi đã học",
+    "explanation": "Đường nét đứt là BFS; đường xanh là rollout của Q-learning seed 0. Hai đường được lệch tọa độ nhẹ để nhìn thấy khi trùng nhau. Nhãn báo số bước thực tế. Các vị trí ô không thay đổi; đường vẽ chỉ là minh họa của một rollout xác định.",
+    "discussion": "Hình bản đồ giúp giải thích vì sao cùng tỷ lệ thành công có thể đi kèm độ bền khác nhau: tường chặn chuyển động còn hố kết thúc lượt ngay. Một đường bám sát hố vẫn tốt trong động lực học xác định nhưng dễ hỏng khi hành động trượt. Đường seed 0 được chọn cố định từ đầu, tránh chọn hình đẹp nhất sau khi xem kết quả. Nếu đường học trùng BFS, đó là bằng chứng cụ thể về số bước tối ưu trên bản đồ này; kết luận không mở rộng sang các trạng thái đầu khác hoặc môi trường chưa được huấn luyện.",
+    "lines": 26
+  },
+  {
+    "index": 40,
+    "title": "RL 13 — So sánh phương pháp, ablation và phân bố độ bền",
+    "explanation": "Hình gồm tỷ lệ thành công khi đánh giá xác định, hiệu quả 100 episode huấn luyện đầu và phân bố tỷ lệ khi trượt. Chấm giữa chỉ báo từng seed/bản đồ; gạch đen là trung bình. Ở ô phải, chấm là từng seed và thanh lỗi là Wilson gộp có ý nghĩa mô tả đã nêu.",
+    "discussion": "Hiệu suất cuối và tốc độ học trả lời hai câu hỏi khác nhau. Một phương pháp đạt tỷ lệ cuối tương đương vẫn có thể cần nhiều tương tác ban đầu hơn hoặc ngược lại. Ô giữa gộp 30 cặp seed–bản đồ nên chỉ cho cái nhìn tổng quan, không là phép kiểm định độc lập 30 nhiệm vụ. Các cấu hình cùng seed cũng không tạo ra cùng quỹ đạo. Đồ thị không dùng dấu sao ý nghĩa thống kê hay tuyên bố nhân quả rộng; bảng theo seed và bản đồ được lưu để người đọc có thể phân tích lại với giả thiết phù hợp.",
+    "lines": 35
+  },
+  {
+    "index": 41,
+    "title": "RL 14 — Lưu Q heatmap, bảng dữ liệu và hồ sơ thí nghiệm",
+    "explanation": "Heatmap dùng cùng thang −10 đến 10 để so bốn hành động. Ô hố, tường và đích được che. CSV chứa kết quả gộp, từng seed, oracle, bảng Q minh họa và toàn bộ lịch sử 135.000 episode. JSON dùng null cho số bước thành công không xác định và từ chối NaN bằng allow_nan=False.",
+    "discussion": "Lưu cấu hình và dữ liệu theo seed giúp kiểm chứng các số trong báo cáo, nhưng chưa đủ để tái lập tuyệt đối trên mọi nền tảng nếu phiên bản thư viện thay đổi. Các hình chỉ là cách trình bày, CSV và JSON mới giữ số chưa làm tròn. Bảng Q minh họa không thay thế toàn bộ mô hình; quy trình tái lập chính là chạy lại notebook theo thứ tự với seed đã ghi. Kết quả thực nghiệm nên được đọc cùng giới hạn: ba bản đồ nhỏ, điểm đầu cố định, thưởng do người thiết kế và nhiễu chỉ ở giai đoạn đánh giá.",
+    "lines": 34
+  }
+]

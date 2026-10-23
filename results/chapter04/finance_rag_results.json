@@ -1,0 +1,1409 @@
+{
+  "retrieval": [
+    {
+      "questions": 883,
+      "hit_at_1": 0.32389580973952437,
+      "hit_at_5": 0.5198187995469988,
+      "recall_at_5": 0.4033799816642398,
+      "mrr_at_5": 0.3975651189127969,
+      "complete_at_5": 0.3057757644394111,
+      "method": "bm25_raw",
+      "scope": "global",
+      "seconds": 40.86133920002612
+    },
+    {
+      "questions": 883,
+      "hit_at_1": 0.49263873159682897,
+      "hit_at_5": 0.8097395243488109,
+      "recall_at_5": 0.6769481745132934,
+      "mrr_at_5": 0.6089845224613055,
+      "complete_at_5": 0.5526613816534541,
+      "method": "bm25_raw",
+      "scope": "oracle_report",
+      "seconds": 9.199800200003665
+    },
+    {
+      "questions": 883,
+      "hit_at_1": 0.4099660249150623,
+      "hit_at_5": 0.6194790486976217,
+      "recall_at_5": 0.5093768537992772,
+      "mrr_at_5": 0.4902982257455638,
+      "complete_at_5": 0.4088335220838052,
+      "method": "bm25_headers",
+      "scope": "global",
+      "seconds": 40.621954600006575
+    },
+    {
+      "questions": 883,
+      "hit_at_1": 0.5877689694224235,
+      "hit_at_5": 0.8946772366930917,
+      "recall_at_5": 0.7837944237717732,
+      "mrr_at_5": 0.7062476406191018,
+      "complete_at_5": 0.6738391845979615,
+      "method": "bm25_headers",
+      "scope": "oracle_report",
+      "seconds": 9.739736799994716
+    },
+    {
+      "questions": 883,
+      "hit_at_1": 0.42355605889014725,
+      "hit_at_5": 0.6217440543601359,
+      "recall_at_5": 0.5050153696812812,
+      "mrr_at_5": 0.50126462816157,
+      "complete_at_5": 0.3952434881087203,
+      "method": "dense",
+      "scope": "global",
+      "seconds": 22.231744199991226
+    },
+    {
+      "questions": 883,
+      "hit_at_1": 0.6217440543601359,
+      "hit_at_5": 0.9139297848244621,
+      "recall_at_5": 0.7980221646982687,
+      "mrr_at_5": 0.7397508493771238,
+      "complete_at_5": 0.6715741789354474,
+      "method": "dense",
+      "scope": "oracle_report",
+      "seconds": 4.405809199990472
+    },
+    {
+      "questions": 883,
+      "hit_at_1": 0.44620611551528877,
+      "hit_at_5": 0.6828992072480181,
+      "recall_at_5": 0.5607169821495981,
+      "mrr_at_5": 0.534899962249905,
+      "complete_at_5": 0.44847112117780297,
+      "method": "hybrid",
+      "scope": "global",
+      "seconds": 63.87970590000623
+    },
+    {
+      "questions": 883,
+      "hit_at_1": 0.6308040770101925,
+      "hit_at_5": 0.9263873159682899,
+      "recall_at_5": 0.8199738445774682,
+      "mrr_at_5": 0.7511136277840698,
+      "complete_at_5": 0.7055492638731596,
+      "method": "hybrid",
+      "scope": "oracle_report",
+      "seconds": 13.904102900007274
+    }
+  ],
+  "generation": [
+    {
+      "mode": "gold_context_oracle",
+      "questions": 24,
+      "numeric_accuracy": 0.0,
+      "mean_seconds": 0.44428102083838894
+    },
+    {
+      "mode": "hybrid_rag_oracle_report",
+      "questions": 24,
+      "numeric_accuracy": 0.0,
+      "mean_seconds": 0.5591449416654845
+    },
+    {
+      "mode": "no_context",
+      "questions": 24,
+      "numeric_accuracy": 0.0,
+      "mean_seconds": 0.6096508499989189
+    }
+  ],
+  "generation_sample_size": 24,
+  "generation_sample_indices": [
+    25,
+    27,
+    30,
+    32,
+    89,
+    95,
+    104,
+    114,
+    142,
+    223,
+    228,
+    238,
+    250,
+    281,
+    432,
+    517,
+    558,
+    604,
+    616,
+    654,
+    692,
+    754,
+    758,
+    759
+  ],
+  "generation_outputs": [
+    {
+      "id": "PNC/2009/page_46.pdf-2",
+      "mode": "no_context",
+      "question": "share of total securities rated bbb/baa or below changed by how many percentage point between 2008 and 2009?",
+      "answer": "0.8",
+      "reference": "-1",
+      "exe_ans": -1.0,
+      "numeric_prediction": 0.8,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.7475498999992851
+    },
+    {
+      "id": "PNC/2009/page_46.pdf-2",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "share of total securities rated bbb/baa or below changed by how many percentage point between 2008 and 2009?",
+      "answer": "0",
+      "reference": "-1",
+      "exe_ans": -1.0,
+      "numeric_prediction": 0.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "PNC/2009/page_46.pdf:a8581e4d946c::table_4",
+        "PNC/2009/page_46.pdf:a8581e4d946c::table_5",
+        "PNC/2009/page_46.pdf:a8581e4d946c::text_4"
+      ],
+      "seconds": 0.511890299996594
+    },
+    {
+      "id": "PNC/2009/page_46.pdf-2",
+      "mode": "gold_context_oracle",
+      "question": "share of total securities rated bbb/baa or below changed by how many percentage point between 2008 and 2009?",
+      "answer": "3",
+      "reference": "-1",
+      "exe_ans": -1.0,
+      "numeric_prediction": 3.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "PNC/2009/page_46.pdf:a8581e4d946c::table_4"
+      ],
+      "seconds": 0.279640599997947
+    },
+    {
+      "id": "HOLX/2015/page_98.pdf-2",
+      "mode": "no_context",
+      "question": "what is the expected growth rate in amortization expense from 2016 to 2017?",
+      "answer": "4.5%",
+      "reference": "-3.0%",
+      "exe_ans": -0.03024,
+      "numeric_prediction": 4.5,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.2553269000200089
+    },
+    {
+      "id": "HOLX/2015/page_98.pdf-2",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "what is the expected growth rate in amortization expense from 2016 to 2017?",
+      "answer": "377.0: $ 365.6",
+      "reference": "-3.0%",
+      "exe_ans": -0.03024,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "HOLX/2015/page_98.pdf:23c0dbb1c5a7::text_0",
+        "HOLX/2015/page_98.pdf:23c0dbb1c5a7::table_1",
+        "HOLX/2015/page_98.pdf:23c0dbb1c5a7::text_8"
+      ],
+      "seconds": 0.6663032000069506
+    },
+    {
+      "id": "HOLX/2015/page_98.pdf-2",
+      "mode": "gold_context_oracle",
+      "question": "what is the expected growth rate in amortization expense from 2016 to 2017?",
+      "answer": "365.6",
+      "reference": "-3.0%",
+      "exe_ans": -0.03024,
+      "numeric_prediction": 365.6,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "HOLX/2015/page_98.pdf:23c0dbb1c5a7::table_1"
+      ],
+      "seconds": 0.3055422000179533
+    },
+    {
+      "id": "AES/2016/page_191.pdf-3",
+      "mode": "no_context",
+      "question": "for the period ending in 2016 , what was the average amount of settlements , in millions?",
+      "answer": "a total of .",
+      "reference": "11.3",
+      "exe_ans": -11.33333,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [],
+      "seconds": 0.48802389999036677
+    },
+    {
+      "id": "AES/2016/page_191.pdf-3",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "for the period ending in 2016 , what was the average amount of settlements , in millions?",
+      "answer": "$ 32 million",
+      "reference": "11.3",
+      "exe_ans": -11.33333,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [
+        "AES/2016/page_191.pdf:a59d98b7633e::table_6",
+        "AES/2016/page_191.pdf:a59d98b7633e::text_0",
+        "AES/2016/page_191.pdf:a59d98b7633e::text_21"
+      ],
+      "seconds": 0.6350098999973852
+    },
+    {
+      "id": "AES/2016/page_191.pdf-3",
+      "mode": "gold_context_oracle",
+      "question": "for the period ending in 2016 , what was the average amount of settlements , in millions?",
+      "answer": "2",
+      "reference": "11.3",
+      "exe_ans": -11.33333,
+      "numeric_prediction": 2.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [
+        "AES/2016/page_191.pdf:a59d98b7633e::table_6"
+      ],
+      "seconds": 0.32497120002517477
+    },
+    {
+      "id": "MAS/2012/page_70.pdf-1",
+      "mode": "no_context",
+      "question": "what was the percentage change in total net goodwill between 2010 and 2011?",
+      "answer": "5%",
+      "reference": "-21%",
+      "exe_ans": -0.20646,
+      "numeric_prediction": 5.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [],
+      "seconds": 0.3043519999773707
+    },
+    {
+      "id": "MAS/2012/page_70.pdf-1",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "what was the percentage change in total net goodwill between 2010 and 2011?",
+      "answer": "-29",
+      "reference": "-21%",
+      "exe_ans": -0.20646,
+      "numeric_prediction": -29.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [
+        "MAS/2012/page_70.pdf:cc0aaec3f911::table_6",
+        "MAS/2012/page_70.pdf:cc0aaec3f911::table_0",
+        "MAS/2012/page_70.pdf:cc0aaec3f911::table_3"
+      ],
+      "seconds": 0.9420987000048626
+    },
+    {
+      "id": "MAS/2012/page_70.pdf-1",
+      "mode": "gold_context_oracle",
+      "question": "what was the percentage change in total net goodwill between 2010 and 2011?",
+      "answer": "-29",
+      "reference": "-21%",
+      "exe_ans": -0.20646,
+      "numeric_prediction": -29.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [
+        "MAS/2012/page_70.pdf:cc0aaec3f911::table_6"
+      ],
+      "seconds": 0.695482200011611
+    },
+    {
+      "id": "HWM/2017/page_41.pdf-1",
+      "mode": "no_context",
+      "question": "considering the reverse stock split , what was the percentual reduction of the common stock outstanding shares?",
+      "answer": "5%",
+      "reference": "69.24%",
+      "exe_ans": 0.69231,
+      "numeric_prediction": 5.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.36415979999583215
+    },
+    {
+      "id": "HWM/2017/page_41.pdf-1",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "considering the reverse stock split , what was the percentual reduction of the common stock outstanding shares?",
+      "answer": "0.6 billion shares",
+      "reference": "69.24%",
+      "exe_ans": 0.69231,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "HWM/2017/page_41.pdf:59b2ba33b693::text_4",
+        "HWM/2017/page_41.pdf:59b2ba33b693::text_5",
+        "HWM/2017/page_41.pdf:59b2ba33b693::text_6"
+      ],
+      "seconds": 0.6773238000168931
+    },
+    {
+      "id": "HWM/2017/page_41.pdf-1",
+      "mode": "gold_context_oracle",
+      "question": "considering the reverse stock split , what was the percentual reduction of the common stock outstanding shares?",
+      "answer": "0.6 billion shares",
+      "reference": "69.24%",
+      "exe_ans": 0.69231,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "HWM/2017/page_41.pdf:59b2ba33b693::text_5"
+      ],
+      "seconds": 0.6354486999916844
+    },
+    {
+      "id": "AAPL/2008/page_78.pdf-2",
+      "mode": "no_context",
+      "question": "what was the average change in unrealized gains on derivative instruments?",
+      "answer": "averaging",
+      "reference": "5",
+      "exe_ans": 5.0,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.3562833000032697
+    },
+    {
+      "id": "AAPL/2008/page_78.pdf-2",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "what was the average change in unrealized gains on derivative instruments?",
+      "answer": "2 million",
+      "reference": "5",
+      "exe_ans": 5.0,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "AAPL/2008/page_78.pdf:1ab81b89d890::table_3",
+        "AAPL/2008/page_78.pdf:1ab81b89d890::text_1",
+        "AAPL/2008/page_78.pdf:1ab81b89d890::table_2"
+      ],
+      "seconds": 0.5318843999993987
+    },
+    {
+      "id": "AAPL/2008/page_78.pdf-2",
+      "mode": "gold_context_oracle",
+      "question": "what was the average change in unrealized gains on derivative instruments?",
+      "answer": "$ 19",
+      "reference": "5",
+      "exe_ans": 5.0,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "AAPL/2008/page_78.pdf:1ab81b89d890::table_3"
+      ],
+      "seconds": 0.42608629999449477
+    },
+    {
+      "id": "PM/2018/page_24.pdf-2",
+      "mode": "no_context",
+      "question": "what was the difference in percentage return for pmi common stock compared to the s&p 500 index for the five years ended 2018?",
+      "answer": "0.8",
+      "reference": "53.8%",
+      "exe_ans": 0.538,
+      "numeric_prediction": 0.8,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.3942154000105802
+    },
+    {
+      "id": "PM/2018/page_24.pdf-2",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "what was the difference in percentage return for pmi common stock compared to the s&p 500 index for the five years ended 2018?",
+      "answer": "1",
+      "reference": "53.8%",
+      "exe_ans": 0.538,
+      "numeric_prediction": 1.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "PM/2018/page_24.pdf:d1815a031fe8::text_0",
+        "PM/2018/page_24.pdf:d1815a031fe8::text_2",
+        "PM/2018/page_24.pdf:d1815a031fe8::table_0"
+      ],
+      "seconds": 0.4034017999947537
+    },
+    {
+      "id": "PM/2018/page_24.pdf-2",
+      "mode": "gold_context_oracle",
+      "question": "what was the difference in percentage return for pmi common stock compared to the s&p 500 index for the five years ended 2018?",
+      "answer": "96.50",
+      "reference": "53.8%",
+      "exe_ans": 0.538,
+      "numeric_prediction": 96.5,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "PM/2018/page_24.pdf:d1815a031fe8::table_1",
+        "PM/2018/page_24.pdf:d1815a031fe8::table_6"
+      ],
+      "seconds": 0.5278870000038296
+    },
+    {
+      "id": "IPG/2009/page_85.pdf-3",
+      "mode": "no_context",
+      "question": "what percentage of amounts expensed in 2009 came from discretionary company contributions?",
+      "answer": "5%",
+      "reference": "10.83%",
+      "exe_ans": 10.82621,
+      "numeric_prediction": 5.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.20182079999358393
+    },
+    {
+      "id": "IPG/2009/page_85.pdf-3",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "what percentage of amounts expensed in 2009 came from discretionary company contributions?",
+      "answer": "3.8",
+      "reference": "10.83%",
+      "exe_ans": 10.82621,
+      "numeric_prediction": 3.8,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "IPG/2009/page_85.pdf:b6a1ebe93726::text_20",
+        "IPG/2009/page_85.pdf:b6a1ebe93726::text_15",
+        "IPG/2009/page_85.pdf:b6a1ebe93726::text_23"
+      ],
+      "seconds": 0.5239293999911752
+    },
+    {
+      "id": "IPG/2009/page_85.pdf-3",
+      "mode": "gold_context_oracle",
+      "question": "what percentage of amounts expensed in 2009 came from discretionary company contributions?",
+      "answer": "3.9",
+      "reference": "10.83%",
+      "exe_ans": 10.82621,
+      "numeric_prediction": 3.9,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "IPG/2009/page_85.pdf:b6a1ebe93726::text_14",
+        "IPG/2009/page_85.pdf:b6a1ebe93726::text_15"
+      ],
+      "seconds": 0.5403023000108078
+    },
+    {
+      "id": "PNC/2015/page_159.pdf-2",
+      "mode": "no_context",
+      "question": "for 2015 and 2014 , what was the average in millions for provision recapture for purchased impaired loans?",
+      "answer": "59.8",
+      "reference": "86.5",
+      "exe_ans": 86.5,
+      "numeric_prediction": 59.8,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.4788004999863915
+    },
+    {
+      "id": "PNC/2015/page_159.pdf-2",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "for 2015 and 2014 , what was the average in millions for provision recapture for purchased impaired loans?",
+      "answer": "91",
+      "reference": "86.5",
+      "exe_ans": 86.5,
+      "numeric_prediction": 91.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "PNC/2015/page_159.pdf:a81156b01586::text_0",
+        "PNC/2015/page_159.pdf:a81156b01586::text_2",
+        "PNC/2015/page_159.pdf:a81156b01586::text_4"
+      ],
+      "seconds": 0.7237444999918807
+    },
+    {
+      "id": "PNC/2015/page_159.pdf-2",
+      "mode": "gold_context_oracle",
+      "question": "for 2015 and 2014 , what was the average in millions for provision recapture for purchased impaired loans?",
+      "answer": "91",
+      "reference": "86.5",
+      "exe_ans": 86.5,
+      "numeric_prediction": 91.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "PNC/2015/page_159.pdf:a81156b01586::text_0"
+      ],
+      "seconds": 0.43253079999703914
+    },
+    {
+      "id": "MSI/2006/page_61.pdf-4",
+      "mode": "no_context",
+      "question": "what was the average rental expense , net of sublease income from 2004 to 2006 in millions",
+      "answer": "$80",
+      "reference": "232",
+      "exe_ans": 349.5,
+      "numeric_prediction": 80.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [],
+      "seconds": 0.27798970000003465
+    },
+    {
+      "id": "MSI/2006/page_61.pdf-4",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "what was the average rental expense , net of sublease income from 2004 to 2006 in millions",
+      "answer": "2.3 billion",
+      "reference": "232",
+      "exe_ans": 349.5,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [
+        "MSI/2006/page_61.pdf:9ff6c77971f4::text_12",
+        "MSI/2006/page_61.pdf:9ff6c77971f4::text_11",
+        "MSI/2006/page_61.pdf:9ff6c77971f4::text_8"
+      ],
+      "seconds": 0.6250143999932334
+    },
+    {
+      "id": "MSI/2006/page_61.pdf-4",
+      "mode": "gold_context_oracle",
+      "question": "what was the average rental expense , net of sublease income from 2004 to 2006 in millions",
+      "answer": "$21 million",
+      "reference": "232",
+      "exe_ans": 349.5,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [
+        "MSI/2006/page_61.pdf:9ff6c77971f4::text_12"
+      ],
+      "seconds": 0.45984920000773855
+    },
+    {
+      "id": "BDX/2019/page_45.pdf-1",
+      "mode": "no_context",
+      "question": "in 2019 what was the percent of the financing structure that was based on the equity",
+      "answer": "0.8",
+      "reference": "44.4%",
+      "exe_ans": -44.6,
+      "numeric_prediction": 0.8,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [],
+      "seconds": 0.29964479999034666
+    },
+    {
+      "id": "BDX/2019/page_45.pdf-1",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "in 2019 what was the percent of the financing structure that was based on the equity",
+      "answer": "2.25",
+      "reference": "44.4%",
+      "exe_ans": -44.6,
+      "numeric_prediction": 2.25,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [
+        "BDX/2019/page_45.pdf:5cf9365855d7::text_1",
+        "BDX/2019/page_45.pdf:5cf9365855d7::text_17",
+        "BDX/2019/page_45.pdf:5cf9365855d7::text_7"
+      ],
+      "seconds": 0.4664173000201117
+    },
+    {
+      "id": "BDX/2019/page_45.pdf-1",
+      "mode": "gold_context_oracle",
+      "question": "in 2019 what was the percent of the financing structure that was based on the equity",
+      "answer": "57.5%",
+      "reference": "44.4%",
+      "exe_ans": -44.6,
+      "numeric_prediction": 57.5,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [
+        "BDX/2019/page_45.pdf:5cf9365855d7::table_4"
+      ],
+      "seconds": 0.5021047999907751
+    },
+    {
+      "id": "DRE/2009/page_72.pdf-1",
+      "mode": "no_context",
+      "question": "what was the value of the rsu's granted",
+      "answer": "a rsu",
+      "reference": "14759301.12",
+      "exe_ans": 14759301.12,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.4760474000067916
+    },
+    {
+      "id": "DRE/2009/page_72.pdf-1",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "what was the value of the rsu's granted",
+      "answer": "$ 9.32",
+      "reference": "14759301.12",
+      "exe_ans": 14759301.12,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "DRE/2009/page_72.pdf:9ab557a4f0cd::text_2",
+        "DRE/2009/page_72.pdf:9ab557a4f0cd::table_2",
+        "DRE/2009/page_72.pdf:9ab557a4f0cd::table_0"
+      ],
+      "seconds": 0.5025180999946315
+    },
+    {
+      "id": "DRE/2009/page_72.pdf-1",
+      "mode": "gold_context_oracle",
+      "question": "what was the value of the rsu's granted",
+      "answer": "$ 9.32",
+      "reference": "14759301.12",
+      "exe_ans": 14759301.12,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "DRE/2009/page_72.pdf:9ab557a4f0cd::table_2"
+      ],
+      "seconds": 0.40460939999320544
+    },
+    {
+      "id": "MSI/2009/page_65.pdf-1",
+      "mode": "no_context",
+      "question": "in 2009 what was the company 2019s consolidated net sales in billions",
+      "answer": "a total of $1 billion",
+      "reference": "22.19",
+      "exe_ans": 22.1875,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.6349507000122685
+    },
+    {
+      "id": "MSI/2009/page_65.pdf-1",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "in 2009 what was the company 2019s consolidated net sales in billions",
+      "answer": "net sales",
+      "reference": "22.19",
+      "exe_ans": 22.1875,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "MSI/2009/page_65.pdf:bf6c4929bfe4::text_10",
+        "MSI/2009/page_65.pdf:bf6c4929bfe4::text_8",
+        "MSI/2009/page_65.pdf:bf6c4929bfe4::text_11"
+      ],
+      "seconds": 0.4984591999964323
+    },
+    {
+      "id": "MSI/2009/page_65.pdf-1",
+      "mode": "gold_context_oracle",
+      "question": "in 2009 what was the company 2019s consolidated net sales in billions",
+      "answer": "net sales",
+      "reference": "22.19",
+      "exe_ans": 22.1875,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "MSI/2009/page_65.pdf:bf6c4929bfe4::text_10",
+        "MSI/2009/page_65.pdf:bf6c4929bfe4::text_11"
+      ],
+      "seconds": 0.475069700012682
+    },
+    {
+      "id": "ETR/2002/page_24.pdf-3",
+      "mode": "no_context",
+      "question": "what is the percent change in earnings for non-utility nuclear from 2001 to 2002?",
+      "answer": "0.8",
+      "reference": "57.0%",
+      "exe_ans": 0.57031,
+      "numeric_prediction": 0.8,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.2594837000069674
+    },
+    {
+      "id": "ETR/2002/page_24.pdf-3",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "what is the percent change in earnings for non-utility nuclear from 2001 to 2002?",
+      "answer": "0.1",
+      "reference": "57.0%",
+      "exe_ans": 0.57031,
+      "numeric_prediction": 0.1,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "ETR/2002/page_24.pdf:af5ae986ae8e::text_5",
+        "ETR/2002/page_24.pdf:af5ae986ae8e::text_6",
+        "ETR/2002/page_24.pdf:af5ae986ae8e::text_7"
+      ],
+      "seconds": 0.500631799979601
+    },
+    {
+      "id": "ETR/2002/page_24.pdf-3",
+      "mode": "gold_context_oracle",
+      "question": "what is the percent change in earnings for non-utility nuclear from 2001 to 2002?",
+      "answer": "201",
+      "reference": "57.0%",
+      "exe_ans": 0.57031,
+      "numeric_prediction": 201.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "ETR/2002/page_24.pdf:af5ae986ae8e::text_4",
+        "ETR/2002/page_24.pdf:af5ae986ae8e::text_5",
+        "ETR/2002/page_24.pdf:af5ae986ae8e::text_6"
+      ],
+      "seconds": 0.7901802000124007
+    },
+    {
+      "id": "EW/2016/page_94.pdf-4",
+      "mode": "no_context",
+      "question": "what is the percent change in the fair value per share between 2014 and 2016?",
+      "answer": "5%",
+      "reference": "163%",
+      "exe_ans": 1.6383,
+      "numeric_prediction": 5.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.2739204000099562
+    },
+    {
+      "id": "EW/2016/page_94.pdf-4",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "what is the percent change in the fair value per share between 2014 and 2016?",
+      "answer": "31%",
+      "reference": "163%",
+      "exe_ans": 1.6383,
+      "numeric_prediction": 31.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "EW/2016/page_94.pdf:d46d6b336d25::table_5",
+        "EW/2016/page_94.pdf:d46d6b336d25::text_13",
+        "EW/2016/page_94.pdf:d46d6b336d25::table_3"
+      ],
+      "seconds": 0.4656494999944698
+    },
+    {
+      "id": "EW/2016/page_94.pdf-4",
+      "mode": "gold_context_oracle",
+      "question": "what is the percent change in the fair value per share between 2014 and 2016?",
+      "answer": "31 %",
+      "reference": "163%",
+      "exe_ans": 1.6383,
+      "numeric_prediction": 31.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "EW/2016/page_94.pdf:d46d6b336d25::table_3",
+        "EW/2016/page_94.pdf:d46d6b336d25::table_5"
+      ],
+      "seconds": 0.4469344000099227
+    },
+    {
+      "id": "LMT/2015/page_54.pdf-3",
+      "mode": "no_context",
+      "question": "in 2015 what was the ratio of the net sales to the backlog",
+      "answer": "1.2",
+      "reference": "0.44",
+      "exe_ans": 0.43677,
+      "numeric_prediction": 1.2,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.3728076000115834
+    },
+    {
+      "id": "LMT/2015/page_54.pdf-3",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "in 2015 what was the ratio of the net sales to the backlog",
+      "answer": "5%",
+      "reference": "0.44",
+      "exe_ans": 0.43677,
+      "numeric_prediction": 5.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "LMT/2015/page_54.pdf:0dfd12851de3::table_1",
+        "LMT/2015/page_54.pdf:0dfd12851de3::text_8",
+        "LMT/2015/page_54.pdf:0dfd12851de3::table_4"
+      ],
+      "seconds": 0.4227521999855526
+    },
+    {
+      "id": "LMT/2015/page_54.pdf-3",
+      "mode": "gold_context_oracle",
+      "question": "in 2015 what was the ratio of the net sales to the backlog",
+      "answer": "14300",
+      "reference": "0.44",
+      "exe_ans": 0.43677,
+      "numeric_prediction": 14300.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "LMT/2015/page_54.pdf:0dfd12851de3::table_1",
+        "LMT/2015/page_54.pdf:0dfd12851de3::table_4"
+      ],
+      "seconds": 0.3720069999981206
+    },
+    {
+      "id": "UA/2015/page_71.pdf-2",
+      "mode": "no_context",
+      "question": "what was the ratio of the acquisition related costs recognized in 2015 to 2014",
+      "answer": "5%",
+      "reference": "0.75",
+      "exe_ans": 0.75,
+      "numeric_prediction": 5.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.24782419999246486
+    },
+    {
+      "id": "UA/2015/page_71.pdf-2",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "what was the ratio of the acquisition related costs recognized in 2015 to 2014",
+      "answer": "0.8",
+      "reference": "0.75",
+      "exe_ans": 0.75,
+      "numeric_prediction": 0.8,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "UA/2015/page_71.pdf:902aed2c5238::text_5",
+        "UA/2015/page_71.pdf:902aed2c5238::text_10",
+        "UA/2015/page_71.pdf:902aed2c5238::text_6"
+      ],
+      "seconds": 0.5238140000146814
+    },
+    {
+      "id": "UA/2015/page_71.pdf-2",
+      "mode": "gold_context_oracle",
+      "question": "what was the ratio of the acquisition related costs recognized in 2015 to 2014",
+      "answer": "0.8",
+      "reference": "0.75",
+      "exe_ans": 0.75,
+      "numeric_prediction": 0.8,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "UA/2015/page_71.pdf:902aed2c5238::text_0",
+        "UA/2015/page_71.pdf:902aed2c5238::text_5"
+      ],
+      "seconds": 0.4035252000030596
+    },
+    {
+      "id": "ETFC/2011/page_82.pdf-4",
+      "mode": "no_context",
+      "question": "as of december 312011 what was the ratio of the good will reported in the capital markets to the retail bank",
+      "answer": "a yearly rate of                             ",
+      "reference": "3.51",
+      "exe_ans": 3.50739,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 3.1632399999944028
+    },
+    {
+      "id": "ETFC/2011/page_82.pdf-4",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "as of december 312011 what was the ratio of the good will reported in the capital markets to the retail bank",
+      "answer": "142.4",
+      "reference": "3.51",
+      "exe_ans": 3.50739,
+      "numeric_prediction": 142.4,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "ETFC/2011/page_82.pdf:6851b9ff7504::table_2",
+        "ETFC/2011/page_82.pdf:6851b9ff7504::table_3",
+        "ETFC/2011/page_82.pdf:6851b9ff7504::text_5"
+      ],
+      "seconds": 0.3915463000012096
+    },
+    {
+      "id": "ETFC/2011/page_82.pdf-4",
+      "mode": "gold_context_oracle",
+      "question": "as of december 312011 what was the ratio of the good will reported in the capital markets to the retail bank",
+      "answer": "142.4",
+      "reference": "3.51",
+      "exe_ans": 3.50739,
+      "numeric_prediction": 142.4,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "ETFC/2011/page_82.pdf:6851b9ff7504::table_2",
+        "ETFC/2011/page_82.pdf:6851b9ff7504::table_3"
+      ],
+      "seconds": 0.3209099000087008
+    },
+    {
+      "id": "PNC/2013/page_112.pdf-1",
+      "mode": "no_context",
+      "question": "in these equity investment balances , what is the percent of unfunded commitments at december 31 , 2013?",
+      "answer": "0.8",
+      "reference": "7.5%",
+      "exe_ans": 0.07521,
+      "numeric_prediction": 0.8,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.25886639999225736
+    },
+    {
+      "id": "PNC/2013/page_112.pdf-1",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "in these equity investment balances , what is the percent of unfunded commitments at december 31 , 2013?",
+      "answer": "3.0",
+      "reference": "7.5%",
+      "exe_ans": 0.07521,
+      "numeric_prediction": 3.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "PNC/2013/page_112.pdf:62202763f29b::text_18",
+        "PNC/2013/page_112.pdf:62202763f29b::text_19",
+        "PNC/2013/page_112.pdf:62202763f29b::text_17"
+      ],
+      "seconds": 0.4806380999798421
+    },
+    {
+      "id": "PNC/2013/page_112.pdf-1",
+      "mode": "gold_context_oracle",
+      "question": "in these equity investment balances , what is the percent of unfunded commitments at december 31 , 2013?",
+      "answer": "685",
+      "reference": "7.5%",
+      "exe_ans": 0.07521,
+      "numeric_prediction": 685.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "PNC/2013/page_112.pdf:62202763f29b::table_6",
+        "PNC/2013/page_112.pdf:62202763f29b::text_14",
+        "PNC/2013/page_112.pdf:62202763f29b::text_18"
+      ],
+      "seconds": 0.4322597999998834
+    },
+    {
+      "id": "AON/2014/page_47.pdf-2",
+      "mode": "no_context",
+      "question": "considering the years 2013 and 2014 , what is the basis point variation observed in the operating margin?",
+      "answer": "averaging",
+      "reference": "360",
+      "exe_ans": 3.6,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [],
+      "seconds": 0.33776329999091104
+    },
+    {
+      "id": "AON/2014/page_47.pdf-2",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "considering the years 2013 and 2014 , what is the basis point variation observed in the operating margin?",
+      "answer": "an increase of 120 basis points",
+      "reference": "360",
+      "exe_ans": 3.6,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [
+        "AON/2014/page_47.pdf:f6c992eeb88c::table_3",
+        "AON/2014/page_47.pdf:f6c992eeb88c::text_2",
+        "AON/2014/page_47.pdf:f6c992eeb88c::table_2"
+      ],
+      "seconds": 0.7888034000061452
+    },
+    {
+      "id": "AON/2014/page_47.pdf-2",
+      "mode": "gold_context_oracle",
+      "question": "considering the years 2013 and 2014 , what is the basis point variation observed in the operating margin?",
+      "answer": "2013",
+      "reference": "360",
+      "exe_ans": 3.6,
+      "numeric_prediction": 2013.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [
+        "AON/2014/page_47.pdf:f6c992eeb88c::table_3"
+      ],
+      "seconds": 0.28526800000690855
+    },
+    {
+      "id": "HII/2017/page_124.pdf-1",
+      "mode": "no_context",
+      "question": "what portion of the equity compensation plan approved by security holders is to be issued upon the exercise of options warrants and rights?",
+      "answer": "a reversal of the reversal of the reversal of the reversal of the reversal of the reversal of the reversal of the reversal of the reversal of the reversal of the re",
+      "reference": "9.9%",
+      "exe_ans": 0.09895,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 3.5038810999831185
+    },
+    {
+      "id": "HII/2017/page_124.pdf-1",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "what portion of the equity compensation plan approved by security holders is to be issued upon the exercise of options warrants and rights?",
+      "answer": "1",
+      "reference": "9.9%",
+      "exe_ans": 0.09895,
+      "numeric_prediction": 1.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "HII/2017/page_124.pdf:d89ed4329e14::text_1",
+        "HII/2017/page_124.pdf:d89ed4329e14::table_1",
+        "HII/2017/page_124.pdf:d89ed4329e14::table_0"
+      ],
+      "seconds": 0.76247830002103
+    },
+    {
+      "id": "HII/2017/page_124.pdf-1",
+      "mode": "gold_context_oracle",
+      "question": "what portion of the equity compensation plan approved by security holders is to be issued upon the exercise of options warrants and rights?",
+      "answer": "1",
+      "reference": "9.9%",
+      "exe_ans": 0.09895,
+      "numeric_prediction": 1.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "HII/2017/page_124.pdf:d89ed4329e14::table_1"
+      ],
+      "seconds": 0.4034305000095628
+    },
+    {
+      "id": "AMT/2004/page_81.pdf-2",
+      "mode": "no_context",
+      "question": "what was the percent of the decrease in the other intangible assets net from 2003 to 2004\\\\n",
+      "answer": "5%",
+      "reference": "-3.4%",
+      "exe_ans": -0.03378,
+      "numeric_prediction": 5.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.2623096000170335
+    },
+    {
+      "id": "AMT/2004/page_81.pdf-2",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "what was the percent of the decrease in the other intangible assets net from 2003 to 2004\\\\n",
+      "answer": "94.6",
+      "reference": "-3.4%",
+      "exe_ans": -0.03378,
+      "numeric_prediction": 94.6,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "AMT/2004/page_81.pdf:9de989a0ebb7::table_6",
+        "AMT/2004/page_81.pdf:9de989a0ebb7::text_11",
+        "AMT/2004/page_81.pdf:9de989a0ebb7::text_9"
+      ],
+      "seconds": 0.44053229998098686
+    },
+    {
+      "id": "AMT/2004/page_81.pdf-2",
+      "mode": "gold_context_oracle",
+      "question": "what was the percent of the decrease in the other intangible assets net from 2003 to 2004\\\\n",
+      "answer": "1019749",
+      "reference": "-3.4%",
+      "exe_ans": -0.03378,
+      "numeric_prediction": 1019749.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "AMT/2004/page_81.pdf:9de989a0ebb7::table_6"
+      ],
+      "seconds": 0.34934690000955015
+    },
+    {
+      "id": "LMT/2010/page_42.pdf-3",
+      "mode": "no_context",
+      "question": "what is the net change in cash in 2010?",
+      "answer": "net change in cash",
+      "reference": "-135",
+      "exe_ans": -135.0,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [],
+      "seconds": 0.3081549000053201
+    },
+    {
+      "id": "LMT/2010/page_42.pdf-3",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "what is the net change in cash in 2010?",
+      "answer": "operating activities",
+      "reference": "-135",
+      "exe_ans": -135.0,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "LMT/2010/page_42.pdf:5581eace0039::table_1",
+        "LMT/2010/page_42.pdf:5581eace0039::table_2",
+        "LMT/2010/page_42.pdf:5581eace0039::table_3"
+      ],
+      "seconds": 0.4708229000098072
+    },
+    {
+      "id": "LMT/2010/page_42.pdf-3",
+      "mode": "gold_context_oracle",
+      "question": "what is the net change in cash in 2010?",
+      "answer": "operating activities",
+      "reference": "-135",
+      "exe_ans": -135.0,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": true,
+      "evidence_ids": [
+        "LMT/2010/page_42.pdf:5581eace0039::table_1",
+        "LMT/2010/page_42.pdf:5581eace0039::table_2",
+        "LMT/2010/page_42.pdf:5581eace0039::table_3"
+      ],
+      "seconds": 0.4652999000099953
+    },
+    {
+      "id": "JPM/2007/page_147.pdf-1",
+      "mode": "no_context",
+      "question": "in 2007 what was the percent of the retained interest of the total principal amount of beneficial interests",
+      "answer": "59.8",
+      "reference": "2.1%",
+      "exe_ans": 20460.0,
+      "numeric_prediction": 59.8,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [],
+      "seconds": 0.36420409998390824
+    },
+    {
+      "id": "JPM/2007/page_147.pdf-1",
+      "mode": "hybrid_rag_oracle_report",
+      "question": "in 2007 what was the percent of the retained interest of the total principal amount of beneficial interests",
+      "answer": "412",
+      "reference": "2.1%",
+      "exe_ans": 20460.0,
+      "numeric_prediction": 412.0,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [
+        "JPM/2007/page_147.pdf:15f813ee6a34::table_2",
+        "JPM/2007/page_147.pdf:15f813ee6a34::text_19",
+        "JPM/2007/page_147.pdf:15f813ee6a34::text_15"
+      ],
+      "seconds": 0.46381479999399744
+    },
+    {
+      "id": "JPM/2007/page_147.pdf-1",
+      "mode": "gold_context_oracle",
+      "question": "in 2007 what was the percent of the retained interest of the total principal amount of beneficial interests",
+      "answer": "$ 20048",
+      "reference": "2.1%",
+      "exe_ans": 20460.0,
+      "numeric_prediction": null,
+      "numeric_accuracy": false,
+      "gold_execution_consistent": false,
+      "evidence_ids": [
+        "JPM/2007/page_147.pdf:15f813ee6a34::table_2",
+        "JPM/2007/page_147.pdf:15f813ee6a34::table_3"
+      ],
+      "seconds": 0.3840582999982871
+    }
+  ],
+  "gold_audit": [
+    {
+      "id": "PNC/2009/page_46.pdf-2",
+      "reference": "-1",
+      "exe_ans": -1.0,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "HOLX/2015/page_98.pdf-2",
+      "reference": "-3.0%",
+      "exe_ans": -0.03024,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "AES/2016/page_191.pdf-3",
+      "reference": "11.3",
+      "exe_ans": -11.33333,
+      "gold_execution_consistent": false
+    },
+    {
+      "id": "MAS/2012/page_70.pdf-1",
+      "reference": "-21%",
+      "exe_ans": -0.20646,
+      "gold_execution_consistent": false
+    },
+    {
+      "id": "HWM/2017/page_41.pdf-1",
+      "reference": "69.24%",
+      "exe_ans": 0.69231,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "AAPL/2008/page_78.pdf-2",
+      "reference": "5",
+      "exe_ans": 5.0,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "PM/2018/page_24.pdf-2",
+      "reference": "53.8%",
+      "exe_ans": 0.538,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "IPG/2009/page_85.pdf-3",
+      "reference": "10.83%",
+      "exe_ans": 10.82621,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "PNC/2015/page_159.pdf-2",
+      "reference": "86.5",
+      "exe_ans": 86.5,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "MSI/2006/page_61.pdf-4",
+      "reference": "232",
+      "exe_ans": 349.5,
+      "gold_execution_consistent": false
+    },
+    {
+      "id": "BDX/2019/page_45.pdf-1",
+      "reference": "44.4%",
+      "exe_ans": -44.6,
+      "gold_execution_consistent": false
+    },
+    {
+      "id": "DRE/2009/page_72.pdf-1",
+      "reference": "14759301.12",
+      "exe_ans": 14759301.12,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "MSI/2009/page_65.pdf-1",
+      "reference": "22.19",
+      "exe_ans": 22.1875,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "ETR/2002/page_24.pdf-3",
+      "reference": "57.0%",
+      "exe_ans": 0.57031,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "EW/2016/page_94.pdf-4",
+      "reference": "163%",
+      "exe_ans": 1.6383,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "LMT/2015/page_54.pdf-3",
+      "reference": "0.44",
+      "exe_ans": 0.43677,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "UA/2015/page_71.pdf-2",
+      "reference": "0.75",
+      "exe_ans": 0.75,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "ETFC/2011/page_82.pdf-4",
+      "reference": "3.51",
+      "exe_ans": 3.50739,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "PNC/2013/page_112.pdf-1",
+      "reference": "7.5%",
+      "exe_ans": 0.07521,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "AON/2014/page_47.pdf-2",
+      "reference": "360",
+      "exe_ans": 3.6,
+      "gold_execution_consistent": false
+    },
+    {
+      "id": "HII/2017/page_124.pdf-1",
+      "reference": "9.9%",
+      "exe_ans": 0.09895,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "AMT/2004/page_81.pdf-2",
+      "reference": "-3.4%",
+      "exe_ans": -0.03378,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "LMT/2010/page_42.pdf-3",
+      "reference": "-135",
+      "exe_ans": -135.0,
+      "gold_execution_consistent": true
+    },
+    {
+      "id": "JPM/2007/page_147.pdf-1",
+      "reference": "2.1%",
+      "exe_ans": 20460.0,
+      "gold_execution_consistent": false
+    }
+  ],
+  "questions": 883,
+  "chunks": 9177,
+  "reports": 299,
+  "calculator_example": {
+    "value": 127.4,
+    "formula": "637.0 / 5.0",
+    "unit": "unspecified"
+  },
+  "environment": {
+    "python": "3.12.0",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "numpy": "2.5.2",
+      "pandas": "3.0.5",
+      "networkx": "3.6.1",
+      "torch": "2.13.0",
+      "transformers": "4.57.6",
+      "nbclient": "0.11.0",
+      "fastapi": "0.141.1"
+    }
+  },
+  "limitations": [
+    "oracle report filter",
+    "closed dev corpus",
+    "English",
+    "small generation sample",
+    "no trading validation"
+  ]
+}
