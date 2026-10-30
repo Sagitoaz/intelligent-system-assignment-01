@@ -1,0 +1,4 @@
+alpha,rl_mean_reward_per_step,rl_discount_action_rate
+0.01,35.2475,0.0
+0.1,35.2475,0.0
+0.5,28.5085,0.4052

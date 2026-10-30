@@ -1,0 +1,28 @@
+text,expected,predicted
+trả lại tiền giao dịch DH00100,refund,refund
+"bạn ơi, trả lại tiền giao dịch DH00100",refund,refund
+vui lòng trả lại tiền giao dịch DH00100,refund,refund
+cho tôi lấy lại khoản đã trả của DH00100,refund,refund
+"bạn ơi, cho tôi lấy lại khoản đã trả của DH00100",refund,refund
+vui lòng cho tôi lấy lại khoản đã trả của DH00100,refund,refund
+tôi đề nghị hoàn khoản tiền đơn DH00100,refund,refund
+"bạn ơi, tôi đề nghị hoàn khoản tiền đơn DH00100",refund,refund
+vui lòng tôi đề nghị hoàn khoản tiền đơn DH00100,refund,refund
+kiểm tra trạng thái giao hàng DH00100,status,status
+"bạn ơi, kiểm tra trạng thái giao hàng DH00100",status,status
+vui lòng kiểm tra trạng thái giao hàng DH00100,status,status
+xem giúp hành trình giao đơn DH00100,status,status
+"bạn ơi, xem giúp hành trình giao đơn DH00100",status,status
+vui lòng xem giúp hành trình giao đơn DH00100,status,status
+tra cứu tiến độ đơn DH00100,status,status
+"bạn ơi, tra cứu tiến độ đơn DH00100",status,status
+vui lòng tra cứu tiến độ đơn DH00100,status,status
+tôi muốn mua sản phẩm khác,other,other
+"bạn ơi, tôi muốn mua sản phẩm khác",other,other
+vui lòng tôi muốn mua sản phẩm khác,other,other
+hướng dẫn đăng nhập,other,other
+"bạn ơi, hướng dẫn đăng nhập",other,other
+vui lòng hướng dẫn đăng nhập,other,other
+đăng ký nhận thông báo,other,other
+"bạn ơi, đăng ký nhận thông báo",other,other
+vui lòng đăng ký nhận thông báo,other,other

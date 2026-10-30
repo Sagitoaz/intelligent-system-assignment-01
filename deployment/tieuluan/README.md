@@ -1,7 +1,5 @@
 # Ứng dụng minh họa của tiểu luận
 
-Ứng dụng trực tuyến: [financial-investment-ai.onrender.com](https://financial-investment-ai.onrender.com/).
-
 Ứng dụng Streamlit có bảy tab: **Giới thiệu**, **Thử trên dữ liệu kiểm tra**, **Dự báo phiên tới**,
 **Tự chấm điểm tín dụng**, **So sánh mô hình**, **Backtest**, **Dữ liệu và giới hạn**.
 Chọn ngày để đối chiếu giá, dự báo và kết quả thật; nhập hồ sơ tín dụng để chạy MLP;
@@ -15,7 +13,7 @@ Từ thư mục gốc dự án:
 
 ```powershell
 .venv\Scripts\python.exe -m pip install -r deployment/tieuluan/requirements.txt
-.venv\Scripts\python.exe -m streamlit run deployment/tieuluan/app.py
+.venv\Scripts\python.exe -m streamlit run deployment/tieuluan/app.py --server.port 8502
 .venv\Scripts\python.exe -m scripts.tieuluan.prepare_app_assets
 .venv\Scripts\python.exe -m pytest tests/test_tieuluan.py tests/test_tieuluan_app.py tests/test_tieuluan_live.py tests/test_tieuluan_credit.py -q
 ```
@@ -44,52 +42,16 @@ Dự báo mới là trung bình xác suất ba hạt giống. Ngưỡng thị tr
 Ngưỡng tín dụng được sinh riêng từ trung bình validation NumPy. Tất cả xác suất chưa được hiệu chuẩn.
 
 Các nguồn công khai có thể chậm, chặn truy cập hoặc đổi định dạng. Việc tải được trên máy cá nhân
-không bảo đảm cùng nguồn luôn truy cập được từ Render. Mô hình không tự học từ dữ liệu mới.
+không bảo đảm cùng nguồn luôn truy cập được ở mọi lúc. Mô hình không tự học từ dữ liệu mới.
 
 ## Kiểm chứng và ảnh báo cáo
 
 `data/tieuluan/app/verification.json` ghi commit ứng dụng đã thử bằng `git archive`, nguồn mạng thực tế
-và số đo RAM của môi trường chỉ cài requirements. Đây là bằng chứng trên máy Windows, không phải cam kết
-tài nguyên cho mọi lượng truy cập trên Render. Gói Space được kiểm tra thêm bằng Streamlit AppTest.
+và số đo RAM của môi trường chỉ cài requirements. Đây là bằng chứng trên máy Windows.
 
-Để thử giao diện bằng Edge và chụp lại ảnh (dùng venv phát triển có Playwright và Pillow):
-
-```powershell
-.venv\Scripts\python.exe -m streamlit run deployment/tieuluan/app.py --server.port 8517 --client.toolbarMode minimal
-.venv\Scripts\python.exe -m scripts.tieuluan.check_app_browser --url http://localhost:8517 --live --screenshots
-```
-
-Lệnh trình duyệt gọi mạng thật khi có `--live`; các kiểm thử pytest đều giả lập tải mạng.
+Các kiểm thử pytest giả lập tải mạng; ứng dụng chỉ gọi mạng thật khi bấm nút tải giá.
 Biểu mẫu dùng dấu chấm phân cách hàng nghìn, dấu phẩy thập phân. Ba mức tín dụng là quy ước minh họa
 quanh ngưỡng validation: dưới nửa ngưỡng, từ nửa ngưỡng đến dưới ngưỡng, từ ngưỡng trở lên;
 không phải thang tín dụng đã kiểm định.
 
-## Triển khai miễn phí trên Render (cách đang dùng)
-
-Render lấy mã thẳng từ kho GitHub công khai, không cần đóng gói hay tải file lên.
-
-1. Đăng nhập <https://render.com> (có thể đăng nhập bằng tài khoản GitHub).
-2. **New → Web Service** → thẻ **Public Git Repository** → dán
-   `https://github.com/Sagitoaz/intelligent-system-assignment-01` → **Connect**.
-3. Điền:
-   - **Name:** tên tùy chọn, ví dụ `ai-dau-tu-tai-chinh` (thành địa chỉ `https://ai-dau-tu-tai-chinh.onrender.com`).
-   - **Language:** `Python 3`; **Branch:** `main`; **Region:** `Singapore` (gần Việt Nam nhất); **Root Directory:** để trống.
-   - **Build Command:** `pip install -r deployment/tieuluan/requirements.txt`
-   - **Start Command:**
-     `streamlit run deployment/tieuluan/app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true`
-   - **Instance Type:** `Free`.
-4. Bấm **Create Web Service**, chờ log báo build xong và trạng thái **Live** (lần đầu vài phút).
-
-Python 3.12 được khai báo trong file `.python-version` ở gốc kho mã nên không cần đặt biến `PYTHON_VERSION`.
-Gói Free có 512 MB RAM, 0,1 CPU; dịch vụ ngủ sau 15 phút không có truy cập và mất khoảng một phút để thức dậy,
-nên hãy mở link trước khi trình bày khoảng một phút. Mỗi lần push lên `main`, Render tự build lại.
-
-## Phương án khác
-
-- **Streamlit Community Cloud** (miễn phí, chuyên cho Streamlit): đăng nhập <https://share.streamlit.io> bằng GitHub →
-  **Create app** → chọn repo `Sagitoaz/intelligent-system-assignment-01`, nhánh `main`,
-  file `deployment/tieuluan/app.py` → **Advanced settings**: Python 3.12 → **Deploy**.
-- **Hugging Face Spaces (Docker)**: từ tháng 7/2026 Hugging Face chỉ cho tài khoản PRO (hoặc Team/Enterprise) tạo Space
-  dạng Docker/Gradio; tài khoản miễn phí chỉ tạo được Space tĩnh. Nếu có tài khoản trả phí, chạy
-  `.venv\Scripts\python.exe -m scripts.tieuluan.package_demo` để tạo `deployment/tieuluan/tieuluan_hf_space.zip`
-  (Dockerfile, cổng 7860, người dùng UID 1000), tạo Space **Docker → Blank** rồi tải toàn bộ nội dung đã giải nén lên.
+Giao diện sáng và cấu hình localhost nằm trong `.streamlit/config.toml` ở thư mục gốc. Xem `RUN.md` để biết mọi lệnh chạy.

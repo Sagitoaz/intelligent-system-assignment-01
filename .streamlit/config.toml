@@ -1,0 +1,18 @@
+# Giao diện sáng và chỉ chạy trên máy cá nhân (localhost) cho mọi ứng dụng Streamlit của dự án.
+[server]
+address = "localhost"
+headless = false
+
+[client]
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+base = "light"
+primaryColor = "#f0603a"
+backgroundColor = "#f2f8fd"
+secondaryBackgroundColor = "#dcefff"
+textColor = "#101828"
+font = "sans serif"

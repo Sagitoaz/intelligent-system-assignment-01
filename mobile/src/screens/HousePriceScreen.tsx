@@ -30,9 +30,9 @@ export function HousePriceScreen() {
 }
 
 const styles = StyleSheet.create({
-  label: { color: '#a9d8ce', textTransform: 'uppercase', letterSpacing: 1.3, fontSize: 11, fontWeight: '700' },
+  label: { color: '#d6ecff', textTransform: 'uppercase', letterSpacing: 1.3, fontSize: 11, fontWeight: '700' },
   value: { color: 'white', fontSize: 39, lineHeight: 45, fontWeight: '700', letterSpacing: -1, marginTop: spacing.xs },
-  unit: { color: '#c2ddd7', fontSize: 17, marginTop: 1 },
+  unit: { color: '#e6f3ff', fontSize: 17, marginTop: 1 },
   model: { alignSelf: 'flex-start', color: colors.ink, backgroundColor: colors.paleGreen, overflow: 'hidden', borderRadius: 10, paddingHorizontal: 9, paddingVertical: 4, fontSize: 10, fontWeight: '700', marginTop: spacing.md },
-  disclaimer: { color: '#c2ddd7', fontSize: 12, lineHeight: 18, marginTop: spacing.md },
+  disclaimer: { color: '#e6f3ff', fontSize: 12, lineHeight: 18, marginTop: spacing.md },
 })

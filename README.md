@@ -1,143 +1,73 @@
-# Intelligent System Development Assignment 02
+# Intelligent System Development: bài tập, chương và tiểu luận
 
-From Data Representation to a Deployable Intelligent System. This repository contains three reproducible machine-learning applications, a FastAPI backend, a responsive React web client, and an Expo mobile client. The released web application runs on Vercel and calls the released backend on Render.
+Kho mã của môn Phát triển Hệ thống Thông minh (PTIT). Mọi ứng dụng chạy **trên máy cá nhân (localhost)**, giao diện nền sáng.
+**Muốn chạy phần nào, xem [RUN.md](RUN.md)** (lệnh, cổng, cách xử lý lỗi).
 
-## Three applications
+## Các phần của dự án
 
-1. **Diabetes Prediction** — binary classification from six raw patient attributes; persisted Random Forest Pipeline.
-2. **Vietnam House Price Prediction** — regression from 11 mixed property attributes; persisted Random Forest Pipeline.
-3. **E-commerce Customer Preference** — rating-derived binary preference classification from review text and helpfulness values; persisted TF-IDF + Logistic Regression Pipeline.
+| Phần | Nội dung | Báo cáo | Chạy thử |
+|---|---|---|---|
+| Assignment 01–02 | Ba hệ thống: Diabetes, House Price, E-commerce (FastAPI + React + Expo) | `docs/report_assignment_02/`, `docs/archive/assignment_01/` | RUN.md mục 2 |
+| Assignment 03 | Mạng nơ-ron (MLP) trên ba bài toán | `docs/report_assignment_03/` | notebook |
+| Assignment 04 | CNN NumPy, PyTorch, TensorFlow | `docs/report_assignment_04/` | notebook |
+| Assignment 05 | Bốn kiến trúc CNN trên MNIST, Fashion-MNIST, Diabetes | `docs/report_assignment_05/` | notebook |
+| Assignment 06 | RNN dự báo giá AAPL và vàng | `docs/report_assignment_06/` | RUN.md mục 4 |
+| Chương 4 | Knowledge Graph, RAG và agent dùng công cụ | `docs/report_chapter_04/` | RUN.md mục 5 |
+| Tiểu luận | AI trong đầu tư tài chính (6 chương) | `docs/tieuluan/`, `deliverables/tieuluan_hoan_chinh_6_chuong/` | RUN.md mục 6 |
+| Agent 01, Agent 02 | AI agent, RL so với rule-based (mèo đuổi chuột, hai người bán) | `agents/agent01/`, `agents/agent02/` | RUN.md mục 1 |
 
-## Dataset sources
+Báo cáo là file Word (`.docx`) là bản chính; file PDF nộp bài do tác giả tự xuất.
 
-- Diabetes: [Kaggle Pima Indians Diabetes Database](https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database), local `data/diabetes/diabetes.csv` (768 rows). The original A1 notebook recorded Kaggle but did not preserve its dataset-card URL; this widely used card matches the local schema.
-- House price: [Kaggle Vietnam Housing Dataset 2024](https://www.kaggle.com/datasets/nguyentiennhan/vietnam-housing-dataset-2024), local `data/house_price/vietnam_housing_dataset.csv` (30,229 rows).
-- E-commerce: [Kaggle Amazon Product Reviews](https://www.kaggle.com/datasets/arhamrumi/amazon-product-reviews), actual local file `data/ecommerce/Reviews.csv` (568,454 rows, 10 columns).
-
-The 300+ MB Ecommerce CSV is intentionally excluded from Git. To reproduce the notebook, download `Reviews.csv` from the Kaggle link above and place it at exactly `data/ecommerce/Reviews.csv`. The deployed backend does not need this training CSV because it loads the persisted fitted Pipeline.
-
-## Representation and results
-
-| Application | Raw representation | Final numerical representation | Saved model | Held-out result |
-|---|---|---|---|---|
-| Diabetes | 6 CSV values | median-imputed, scaled `B × 6` | Random Forest Classifier | Accuracy 0.7468; F1 0.6061 |
-| House | 11 mixed values | imputed/scaled/one-hot `B × 83` | Random Forest Regressor | MAE 1.2529; RMSE 1.6018; R² 0.4738 |
-| E-commerce | Summary, Text, 2 helpfulness counts | TF-IDF `V=12,000` + 5 engineered values = `B × 12,005` | Logistic Regression | Accuracy 0.9566; F1 0.9746; ROC-AUC 0.9842 |
-
-E-commerce uses Score only to derive `Score 4–5 → Positive`, `Score 1–2 → Negative`; neutral Score 3 is removed. Score, target, Id, ProductId, UserId and ProfileName are excluded from model input. Of 568,454 source rows, 524,983 are usable after neutral, invalid-helpfulness and duplicate-review removal. A reproducible stratified 120,000-row subset is split 70/15/15.
-
-## Repository structure
+## Cấu trúc thư mục
 
 ```text
-data/                    Three local datasets
-notebooks/               Three final notebooks plus experiments/
-models/                  Three fitted joblib Pipelines and Ecommerce evidence
-figures/                 Evaluation/representation figures by application
-shared_ml/               Importable Ecommerce custom transformers
-scripts/                 Reproducible training/notebook/audit utilities
-backend/                 FastAPI, schemas, metadata, services and pytest
-web/                     React/Vite/TypeScript responsive application
-mobile/                  Expo React Native/TypeScript demonstration
-knowledge_graph/         Optional Diabetes Neo4j bonus
-docs/                    API, architecture, final A2 report and archived A1 report
+agents/        Agent 01 và Agent 02: báo cáo, notebook, và demo localhost (agents/demo_app)
+backend/       API FastAPI của Assignment 02
+web/  mobile/  Ứng dụng React/Vite và Expo của Assignment 02
+deployment/    Ứng dụng Streamlit/FastAPI của Assignment 06, Chương 4 và tiểu luận
+notebooks/     Notebook theo từng bài (assignment03..06, chapter04, tieuluan, ...)
+src/           Mã dùng chung của các bài (assignment03..06, chapter04, tieuluan)
+scripts/       Chuẩn bị dữ liệu, huấn luyện, chạy thí nghiệm
+data/          Dữ liệu (CSV, npz, corpus)
+models/        Mô hình đã huấn luyện (joblib, npz, trọng số)
+results/       Kết quả thí nghiệm đã lưu (JSON, CSV)
+figures/       Hình đánh giá và hình minh họa
+docs/          Báo cáo Word và tài liệu API/kiến trúc
+deliverables/  Bản tiểu luận 6 chương và notebook kèm theo
+tests/         Kiểm thử tự động
+.streamlit/    Giao diện sáng và cấu hình localhost cho Streamlit
+RUN.md         Lệnh chạy tất cả các phần
 ```
 
-See [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) for the exact final tree and [docs/ASSIGNMENT_02_COMPARISON.md](docs/ASSIGNMENT_02_COMPARISON.md) for the cross-application discussion.
+## Assignment 01–02: ba hệ thống
 
-## Final Assignment 02 report
+1. **Diabetes**: phân loại nhị phân từ 6 chỉ số bệnh nhân; Random Forest Pipeline đã lưu.
+2. **Vietnam House Price**: hồi quy từ 11 thuộc tính nhà đất; Random Forest Pipeline đã lưu.
+3. **E-commerce**: phân loại mức yêu thích từ nội dung đánh giá và số lượt hữu ích; TF-IDF + Logistic Regression Pipeline đã lưu.
 
-- [Editable report source](docs/report_assignment_02/ASSIGNMENT_02_REPORT.md)
-- [Final editable Microsoft Word report](docs/report_assignment_02/ASSIGNMENT_02_REPORT.docx)
+| Hệ thống | Dữ liệu gốc | Biểu diễn số cuối cùng | Mô hình | Kết quả trên tập kiểm tra |
+|---|---|---|---|---|
+| Diabetes | 6 giá trị CSV | điền khuyết trung vị, chuẩn hóa, `B × 6` | Random Forest Classifier | Accuracy 0,7468; F1 0,6061 |
+| House | 11 giá trị hỗn hợp | điền khuyết, chuẩn hóa, one-hot, `B × 83` | Random Forest Regressor | MAE 1,2529; RMSE 1,6018; R² 0,4738 |
+| E-commerce | Summary, Text, 2 số lượt hữu ích | TF-IDF `V=12.000` + 5 đặc trưng = `B × 12.005` | Logistic Regression | Accuracy 0,9566; F1 0,9746; ROC-AUC 0,9842 |
 
-The report is written in Vietnamese, uses executed notebook code/output and persisted results, and includes real production Web and Expo screenshots. DOCX is the final editable deliverable; PDF export is intentionally left to the author. Rebuild the DOCX and report assets with `python docs/report_assignment_02/build_report.py`.
+Nguồn dữ liệu: [Kaggle Pima Indians Diabetes](https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database),
+[Kaggle Vietnam Housing Dataset 2024](https://www.kaggle.com/datasets/nguyentiennhan/vietnam-housing-dataset-2024),
+[Kaggle Amazon Product Reviews](https://www.kaggle.com/datasets/arhamrumi/amazon-product-reviews).
+Tệp `Reviews.csv` của E-commerce rất lớn (hơn 300 MB) nên không đưa vào Git; tải về và đặt đúng tại `data/ecommerce/Reviews.csv` nếu muốn chạy lại notebook.
+API đã nạp sẵn Pipeline đã lưu nên không cần tệp này.
 
-## Setup and notebook execution
+Các endpoint chính của API (Swagger tại http://localhost:8000/docs, chi tiết trong [docs/API.md](docs/API.md)):
+`POST /api/v1/diabetes/predict`, `POST /api/v1/house-price/predict`, `POST /api/v1/ecommerce/predict`, `GET /api/v1/models`.
 
-Python 3.12 and Node.js 20+ are recommended. The saved artifacts use scikit-learn 1.9.0.
+## Chạy kiểm thử
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-python -m jupyter nbconvert --to notebook --execute notebooks/ecommerce/03_ecommerce_interest_system.ipynb --inplace --ExecutePreprocessor.timeout=600
+.\.venv\Scripts\python.exe -m pytest backend/tests -q
 ```
 
-The Ecommerce experiment can be reproduced with `python -m scripts.train_ecommerce`. It keeps TF-IDF sparse, uses `random_state=42`, records A/B/C representation results and six-model validation timings, persists the full Pipeline, and verifies fresh-load predictions. Diabetes and House preserve their valid 80/20 plus training-only CV methodology.
+## Giới hạn cần nhớ
 
-## Backend and API
-
-```powershell
-python -m pip install -r backend\requirements.txt
-$env:PYTHONPATH = "backend;."
-uvicorn app.main:app --host 0.0.0.0 --port 8000
-```
-
-Render-compatible native build/start configuration from the repository root:
-
-```sh
-pip install -r backend/requirements.txt
-PYTHONPATH=backend:. uvicorn app.main:app --host 0.0.0.0 --port "$PORT"
-```
-
-Alternatively, `backend/Dockerfile` copies `backend/`, all three `models/`, and `shared_ml/` into the Linux image. Configure production `CORS_ORIGINS`, model/Neo4j settings, and secrets in the hosting platform rather than committing an `.env` file.
-
-Endpoints:
-
-- `GET /health`
-- `GET /api/v1/models`
-- `GET /api/v1/models/{diabetes|house-price|ecommerce}`
-- `POST /api/v1/diabetes/predict`
-- `POST /api/v1/house-price/predict`
-- `POST /api/v1/ecommerce/predict`
-- `GET /api/v1/diabetes/knowledge-graph` (optional bonus; Neo4j failure is non-fatal)
-
-Swagger UI is at `http://localhost:8000/docs`. Full payloads are in [docs/API.md](docs/API.md).
-
-## Web
-
-Production: [https://intelligent-system-assignment-01.vercel.app](https://intelligent-system-assignment-01.vercel.app)
-
-```powershell
-Set-Location web
-npm install
-npm run dev
-npm run lint
-npm run build
-```
-
-Set `VITE_API_BASE_URL`. Routes are `/`, `/diabetes`, `/house-price`, `/ecommerce`, `/diabetes/knowledge-graph`, and `/about`. Responsive rules cover 360, 390, 412, 768 and 1024+ px layouts.
-
-## Mobile
-
-```powershell
-Set-Location mobile
-npm install
-npm run typecheck
-npx expo start
-npx expo export --platform android
-```
-
-Set `EXPO_PUBLIC_API_BASE_URL`; no hosted URL is hard-coded. Primary screens are Home, Diabetes, House Price, E-commerce and About.
-
-## Tests and persisted models
-
-```powershell
-$env:PYTHONPATH = "backend;."
-.\.venv\Scripts\python.exe -m pytest
-```
-
-Models live at:
-
-- `models/diabetes/diabetes_model.joblib`
-- `models/house_price/house_price_model.joblib`
-- `models/ecommerce/ecommerce_interest_model.joblib`
-
-Tests validate contracts, invalid payloads, direct-versus-HTTP equality, fresh loading, absence of inference-time `fit`, and independence from Neo4j.
-
-## Reproducibility, deployment status, and limitations
-
-Preprocessors are fitted only on training data; held-out test data is not used for tuning. Exact duplicate Ecommerce reviews are removed before splitting. The full fitted transformations and estimators are serialized together.
-
-Production backend: [https://intelligent-system-assignment-01.onrender.com](https://intelligent-system-assignment-01.onrender.com). Production web: [https://intelligent-system-assignment-01.vercel.app](https://intelligent-system-assignment-01.vercel.app). The mobile application remains an Expo demonstration and is not published as a store application.
-
-Diabetes is not diagnosis; House is not professional valuation; Ecommerce predicts a rating-derived proxy rather than independently observed intention. Class imbalance, listing-price bias, small medical data, and near-duplicate/user/product dependencies remain limitations.
+Diabetes không phải chẩn đoán y khoa; House không phải định giá chuyên nghiệp; E-commerce dự đoán một nhãn suy ra từ điểm đánh giá chứ không đo ý định mua thật.
+Bộ tiền xử lý chỉ được fit trên tập huấn luyện, tập kiểm tra không dùng để chỉnh tham số. Ứng dụng tiểu luận và Chương 4 chỉ minh họa kỹ thuật,
+không phải khuyến nghị đầu tư hay lời khuyên y tế.

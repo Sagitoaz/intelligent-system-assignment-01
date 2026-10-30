@@ -1,0 +1,11 @@
+seed,agent,mean_reward_per_step,discount_action_rate
+11,RL,34.744,0.0
+11,Rule-based,34.8265,0.0
+22,RL,35.325,0.0
+22,Rule-based,35.2945,0.0
+33,RL,34.6725,0.0
+33,Rule-based,34.7115,0.0
+44,RL,35.1165,0.0
+44,Rule-based,35.0835,0.0
+55,RL,34.6015,0.0
+55,Rule-based,34.7445,0.0

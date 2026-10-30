@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo Agent 01 & 02</title>
+<style>
+:root{--bg:#eaf3fc;--card:#fff;--ink:#101828;--mute:#3d4c63;--line:#a9c2da;--accent:#f0603a;--accent2:#0d9f8f;--sky:#2589e0;--violet:#7060d8;--amber:#e8a317;--wall:#4b5b86;--floor:#ffffff;--floor2:#d9e9f8}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#d8ebfc 0,#eaf3fc 240px,#f1f7fd 100%) fixed;color:var(--ink);font:15px/1.5 "Segoe UI",system-ui,sans-serif}
+header{padding:18px 24px 0;display:flex;flex-wrap:wrap;gap:16px;align-items:end;justify-content:space-between}
+header h1{margin:0;font-size:26px;font-weight:800;background:linear-gradient(90deg,#e8502c,#6a58dc 55%,#1b7fdc);-webkit-background-clip:text;background-clip:text;color:transparent} header p{margin:2px 0 0;color:var(--mute);font-size:14px}
+.tabs{display:flex;gap:8px}
+.tabs button,.btn{border:1.5px solid var(--line);font-weight:600;background:var(--card);color:var(--ink);padding:8px 14px;border-radius:8px;cursor:pointer;font:inherit}
+.tabs button.on,.btn.primary{background:linear-gradient(135deg,#f0603a,#f58a3c);border-color:transparent;color:#fff;box-shadow:0 3px 10px rgba(240,96,58,.35)}
+.tabs button:nth-child(2).on{background:linear-gradient(135deg,#0d9f8f,#2589e0);box-shadow:0 3px 10px rgba(20,184,166,.3)}
+.btn:hover,nav button:hover{border-color:var(--sky)}
+.btn:disabled{opacity:.5;cursor:wait}
+main{display:grid;grid-template-columns:230px 1fr;gap:18px;padding:18px 24px 40px;max-width:1280px;margin:auto}
+nav{display:flex;flex-direction:column;gap:8px}
+nav button{text-align:left;border:1.5px solid var(--line);font-weight:600;background:var(--card);color:var(--ink);padding:10px 12px;border-radius:10px;cursor:pointer;font:inherit}
+nav button{border-left:6px solid var(--c,var(--sky))}
+nav button:nth-child(5n+1){--c:var(--accent)}nav button:nth-child(5n+2){--c:var(--accent2)}nav button:nth-child(5n+3){--c:var(--violet)}nav button:nth-child(5n+4){--c:var(--amber)}
+nav button.on{background:color-mix(in srgb,var(--c) 18%,#fff);border-color:var(--c)}
+nav button small{display:block;color:var(--mute);font-size:12.5px;font-weight:400;margin-top:3px}
+section.panel{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:20px;min-width:0;box-shadow:0 6px 24px rgba(56,163,245,.10)}
+section.panel h2{margin:0 0 4px;font-size:21px;font-weight:800} .desc{color:var(--mute);margin:0 0 14px;font-size:15px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:12px}
+.row label{display:flex;flex-direction:column;font-size:13px;font-weight:600;color:var(--mute);gap:3px}
+select,input{font:inherit;padding:6px 8px;border:1.5px solid #8fb0cf;border-radius:6px;background:#fff;color:var(--ink)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+canvas{max-width:100%;border:1.5px solid var(--line);border-radius:8px;background:var(--floor)}
+table{border-collapse:collapse;width:100%;font-size:14px} th,td{border-bottom:1px solid #c9d9e8;padding:6px 10px;text-align:left;white-space:nowrap}
+th{color:#0e3a66;font-weight:700;position:sticky;top:0;background:#cfe5f9}
+tr:hover td{background:#eaf4ff}
+.scroll{overflow:auto;max-height:420px;border:1.5px solid var(--line);border-radius:8px}
+.stat{display:inline-block;margin-right:18px}.stat b{font-size:26px;font-weight:800;display:block;color:var(--accent)}.stat:nth-child(2n) b{color:var(--accent2)}.stat:nth-child(3n) b{color:var(--violet)}.stat span{font-size:13px;color:var(--mute)}
+.note{font-size:13px;color:var(--mute);margin-top:8px}.err{color:#b3261e;font-weight:600}
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;background:#d3f3ee;color:#07685d;border:1.5px solid #6fd0c3;font-size:13px;font-weight:700}
+.box{color:var(--ink);background:#fff1d6;border:1.5px solid #f0c46a;border-radius:12px;padding:12px 16px;margin:10px 0}.box.blue{background:#dcefff;border-color:#8ec3f2}.box.green{background:#d6f5ec;border-color:#7fd6c0}.box.violet{background:#e8e3ff;border-color:#b3a6f2}
+.good{color:#07755f;font-weight:700}
+@media(max-width:760px){main{grid-template-columns:1fr}nav{flex-direction:row;overflow:auto}nav button{min-width:170px}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1 id="title">Demo Agent</h1><p id="subtitle"></p></div>
+  <div class="tabs" id="agentTabs"></div>
+</header>
+<main><nav id="nav"></nav><section class="panel" id="panel"></section></main>
+<script src="app.js"></script>
+</body>
+</html>

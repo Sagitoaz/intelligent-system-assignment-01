@@ -138,7 +138,7 @@ function Field({ field, value, isLast, onChange, onFocus, setInputRef }: {
       onChangeText={onChange}
       onFocus={onFocus}
       placeholder={field.nullable ? 'Leave blank if unknown' : 'Required'}
-      placeholderTextColor="#8a9691"
+      placeholderTextColor="#667792"
       selectTextOnFocus={!field.multiline}
     />}
     <Text style={styles.help}>{field.description}</Text>
@@ -168,16 +168,16 @@ const styles = StyleSheet.create({
   label: { flex: 1, color: colors.ink, fontSize: 14, fontWeight: '700', paddingRight: spacing.sm },
   unit: { color: colors.muted, fontWeight: '400' },
   optional: { color: colors.teal, backgroundColor: colors.paleGreen, borderRadius: 9, paddingHorizontal: 7, paddingVertical: 2, fontSize: 10, fontWeight: '700', textTransform: 'uppercase' },
-  input: { minHeight: 48, borderColor: '#cbd5ce', borderWidth: 1, borderRadius: 10, paddingHorizontal: 13, paddingVertical: 10, backgroundColor: 'white', color: colors.ink, fontSize: 16 },
+  input: { minHeight: 48, borderColor: '#8fb0cf', borderWidth: 1, borderRadius: 10, paddingHorizontal: 13, paddingVertical: 10, backgroundColor: 'white', color: colors.ink, fontSize: 16 },
   multilineInput: { minHeight: 132, textAlignVertical: 'top' },
-  pickerWrap: { minHeight: 50, borderColor: '#cbd5ce', borderWidth: 1, borderRadius: 10, overflow: 'hidden', backgroundColor: 'white', justifyContent: 'center' },
+  pickerWrap: { minHeight: 50, borderColor: '#8fb0cf', borderWidth: 1, borderRadius: 10, overflow: 'hidden', backgroundColor: 'white', justifyContent: 'center' },
   picker: { color: colors.ink, minHeight: 50 },
   help: { color: colors.muted, fontSize: 11, lineHeight: 16, marginTop: 4 },
   buttonLoading: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   formDisclaimer: { marginTop: spacing.sm, marginBottom: spacing.md },
   pressed: { opacity: 0.82 },
   disabled: { opacity: 0.68 },
-  error: { backgroundColor: '#f8e4df', borderColor: '#ebc2b8', borderWidth: 1, borderRadius: 13, padding: 16, marginTop: spacing.md },
+  error: { backgroundColor: '#fde3da', borderColor: '#f4b3a2', borderWidth: 1, borderRadius: 13, padding: 16, marginTop: spacing.md },
   errorTitle: { color: colors.error, fontWeight: '700', marginBottom: 5 },
   errorText: { color: colors.error, lineHeight: 20 },
   result: { backgroundColor: colors.teal, borderRadius: 18, padding: 20, marginTop: spacing.md },

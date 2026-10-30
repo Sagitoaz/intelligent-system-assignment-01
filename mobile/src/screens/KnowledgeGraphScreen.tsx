@@ -193,7 +193,7 @@ function formatValue(value: unknown) {
 const styles = StyleSheet.create({
   loading: { alignItems: 'center', paddingVertical: spacing.xxl },
   loadingText: { color: colors.muted, fontSize: 13, marginTop: spacing.sm },
-  errorCard: { backgroundColor: '#f8e4df', borderColor: '#ebc2b8', borderWidth: 1, borderRadius: 16, padding: spacing.lg },
+  errorCard: { backgroundColor: '#fde3da', borderColor: '#f4b3a2', borderWidth: 1, borderRadius: 16, padding: spacing.lg },
   errorTitle: { color: colors.error, fontSize: 17, fontWeight: '700' },
   errorText: { color: colors.error, lineHeight: 20, marginTop: spacing.xs },
   errorNote: { color: colors.muted, fontSize: 12, lineHeight: 18, marginTop: spacing.sm },
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   summaryRow: { flexDirection: 'row', gap: spacing.sm, marginBottom: spacing.md },
   summaryCard: { flex: 1, minHeight: 90, borderRadius: 16, padding: spacing.md, justifyContent: 'center', backgroundColor: colors.teal },
   summaryValue: { color: 'white', fontSize: 30, lineHeight: 34, fontWeight: '800' },
-  summaryLabel: { color: '#c2ddd7', fontSize: 12, marginTop: 2 },
+  summaryLabel: { color: '#e6f3ff', fontSize: 12, marginTop: 2 },
   sectionTitle: { color: colors.ink, fontSize: 18, fontWeight: '700', marginBottom: spacing.md },
   legend: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   legendItem: { minWidth: '46%', flexGrow: 1, flexDirection: 'row', alignItems: 'center', borderColor: colors.line, borderWidth: 1, borderRadius: 10, paddingHorizontal: spacing.sm, paddingVertical: 9 },

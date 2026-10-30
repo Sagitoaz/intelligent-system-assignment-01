@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 4: Knowledge &amp; RAG Agent</title>
+<style>
+:root{--bg:#eaf3fc;--ink:#101828;--mute:#3d4c63;--line:#a9c2da;--coral:#f0603a;--teal:#0d9f8f;--sky:#2589e0;--violet:#7060d8}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#d8ebfc,#eaf3fc 240px,#f1f7fd);color:var(--ink);font:15px/1.55 "Segoe UI",system-ui,sans-serif}
+header{padding:22px 28px 0}
+h1{margin:0;font-size:26px;font-weight:800;background:linear-gradient(90deg,#e8502c,#6a58dc 55%,#1b7fdc);-webkit-background-clip:text;background-clip:text;color:transparent}
+header p{margin:4px 0 0;color:var(--mute)}
+main{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:18px;padding:18px 28px 40px;max-width:1200px;margin:auto}
+section{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 6px 24px rgba(56,163,245,.10)}
+label{display:block;font-weight:600;font-size:13px;color:var(--mute);margin:12px 0 4px}
+select,textarea,input{width:100%;font:inherit;padding:8px 10px;border:1.5px solid #8fb0cf;border-radius:8px;background:#fff;color:var(--ink)}
+textarea{min-height:92px;resize:vertical}
+button{margin-top:16px;border:0;border-radius:10px;padding:11px 20px;font:inherit;font-weight:700;color:#fff;cursor:pointer;background:linear-gradient(135deg,#f0603a,#f58a3c);box-shadow:0 3px 10px rgba(240,96,58,.35)}
+button:disabled{opacity:.6;cursor:wait}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:99px;padding:5px 12px;font-size:13px;cursor:pointer;margin:0;box-shadow:none;font-weight:600}
+.chip:hover{border-color:var(--sky)}
+.answer{background:#d6f5ec;border:1.5px solid #7fd6c0;border-radius:12px;padding:14px 16px;font-size:16px;margin-bottom:14px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.badge{background:#dbeeff;border:1.5px solid #8ec3f2;color:#0e3a66;border-radius:99px;padding:2px 10px;font-size:12px;font-weight:700}
+pre{background:#f3f6fa;border:1.5px solid var(--line);border-radius:10px;padding:12px;overflow:auto;max-height:420px;font:12.5px/1.45 Consolas,monospace}
+.err{background:#fde3da;border:1.5px solid #f4b3a2;color:#a8311a;border-radius:12px;padding:12px 14px;font-weight:600}
+@media(max-width:800px){main{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>Chương 4 · Knowledge &amp; RAG Agent</h1><p>Chạy hoàn toàn trên máy cá nhân (localhost), không cần API key. Tài liệu Swagger: <a href="/docs">/docs</a></p></header>
+<main>
+<section>
+  <label for="domain">Lĩnh vực</label>
+  <select id="domain"><option value="diabetes">Bệnh tiểu đường (diabetes)</option><option value="finance">Tài chính (finance)</option></select>
+  <label for="task">Cách xử lý</label>
+  <select id="task"><option value="auto">Tự chọn (auto)</option><option value="rag">RAG: truy xuất rồi sinh câu trả lời</option><option value="statistics">Thống kê CSV</option><option value="calculate">Tính toán</option><option value="graph">Tra đồ thị tri thức</option></select>
+  <label for="q">Câu hỏi</label>
+  <textarea id="q">Triệu chứng thường gặp của bệnh tiểu đường là gì?</textarea>
+  <div class="chips" id="chips"></div>
+  <button id="go">Hỏi agent</button>
+</section>
+<section id="out"><p style="color:var(--mute)">Kết quả sẽ hiện ở đây. Lần hỏi RAG đầu tiên có thể mất vài chục giây để nạp mô hình.</p></section>
+</main>
+<script>
+const examples=[["diabetes","Triệu chứng thường gặp của bệnh tiểu đường là gì?","auto"],["diabetes","Tỉ lệ tái nhập viện trong dữ liệu UCI là bao nhiêu?","statistics"],["finance","Doanh thu tăng trưởng thế nào so với năm trước?","auto"]];
+const $=id=>document.getElementById(id);
+examples.forEach(([d,q,t])=>{const b=document.createElement('button');b.className='chip';b.textContent=q;b.onclick=()=>{$('domain').value=d;$('q').value=q;$('task').value=t;go()};$('chips').append(b)});
+async function go(){
+  const btn=$('go');btn.disabled=true;$('out').innerHTML='<p style="color:#3d4c63">Đang xử lý...</p>';
+  try{
+    const r=await fetch('/api/v1/knowledge/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:$('domain').value,question:$('q').value,task:$('task').value})});
+    const j=await r.json();
+    if(!r.ok) throw new Error(typeof j.detail==='string'?j.detail:JSON.stringify(j.detail));
+    const ans=j.answer||j.result||j.response||'';
+    $('out').innerHTML='';
+    const meta=document.createElement('div');meta.className='meta';
+    [['xử lý',j.task],['thời gian',j.api_seconds?j.api_seconds.toFixed(2)+' s':null]].forEach(([k,v])=>{if(v){const s=document.createElement('span');s.className='badge';s.textContent=k+': '+v;meta.append(s)}});
+    $('out').append(meta);
+    if(ans){const a=document.createElement('div');a.className='answer';a.textContent=typeof ans==='string'?ans:JSON.stringify(ans);$('out').append(a)}
+    const pre=document.createElement('pre');pre.textContent=JSON.stringify(j,null,2);$('out').append(pre);
+  }catch(e){$('out').innerHTML='';const d=document.createElement('div');d.className='err';d.textContent='Lỗi: '+e.message;$('out').append(d)}
+  btn.disabled=false;
+}
+$('go').onclick=go;
+</script>
+</body>
+</html>

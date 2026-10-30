@@ -1,16 +1,16 @@
 import { StyleSheet } from 'react-native'
 
 export const colors = {
-  ink: '#18312c',
-  muted: '#64736e',
-  surface: '#f7f8f4',
-  canvas: '#f2f4ef',
-  line: '#d9e0da',
-  teal: '#1d5a54',
-  orange: '#ee9b5a',
-  paleGreen: '#dcebe5',
-  palePeach: '#f5e3d1',
-  error: '#8f382a',
+  ink: '#101828',
+  muted: '#3d4c63',
+  surface: '#ffffff',
+  canvas: '#eaf3fc',
+  line: '#b9cde0',
+  teal: '#0d9f8f',
+  orange: '#f0603a',
+  paleGreen: '#d3f3ee',
+  palePeach: '#ffe6d9',
+  error: '#a8311a',
 }
 
 export const spacing = { xs: 6, sm: 10, md: 16, lg: 22, xl: 28, xxl: 36 }

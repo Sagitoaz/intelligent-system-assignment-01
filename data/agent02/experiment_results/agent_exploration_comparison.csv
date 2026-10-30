@@ -1,0 +1,4 @@
+exploration_setting,epsilon_start,epsilon_min,epsilon_decay,rl_mean_reward_per_step,rl_discount_action_rate
+low,0.05,0.02,0.999,35.1045,0.0
+baseline,0.2,0.02,0.995,35.1045,0.0
+high,0.5,0.05,0.995,35.1045,0.0

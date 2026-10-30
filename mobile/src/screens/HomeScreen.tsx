@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   systemCard: { minHeight: 164, borderRadius: 18, padding: 20, marginBottom: 14 },
   teal: { backgroundColor: colors.paleGreen },
   orange: { backgroundColor: colors.palePeach },
-  violet: { backgroundColor: '#eae5f2' },
+  violet: { backgroundColor: '#e6e1ff' },
   cardTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   number: { color: colors.muted, fontSize: 12, fontWeight: '700', letterSpacing: 0.5 },
   task: { overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.68)', borderRadius: 14, paddingHorizontal: 10, paddingVertical: 5, color: colors.ink, fontSize: 10, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.85 },

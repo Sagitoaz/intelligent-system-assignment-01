@@ -4,8 +4,8 @@ import { api } from '../api'
 import type { GraphData, GraphEdge, GraphNode } from '../types'
 
 const colors: Record<string, string> = {
-  System: '#1d5a54', Model: '#ee9b5a', Feature: '#49a59a', Target: '#d76850',
-  PipelineStep: '#7b75b4', Dataset: '#3b6d9a', Experiment: '#b07b38', Metric: '#73864a',
+  System: '#0d9f8f', Model: '#f0603a', Feature: '#14b8a6', Target: '#e8503a',
+  PipelineStep: '#7060d8', Dataset: '#2589e0', Experiment: '#e8a317', Metric: '#3aa05a',
 }
 
 export function KnowledgeGraphPage() {
@@ -80,7 +80,7 @@ export function KnowledgeGraphPage() {
   function paintNode(node: GraphNode, context: CanvasRenderingContext2D, globalScale: number) {
     if (node.x == null || node.y == null) return
     const semanticLabel = node.labels.find((label) => colors[label])
-    const color = semanticLabel ? colors[semanticLabel] : '#65717a'
+    const color = semanticLabel ? colors[semanticLabel] : '#667792'
     const active = node.id === selected?.id
     const isHovered = node.id === hovered?.id
     const radius = active ? 9 : isHovered ? 8 : 7
@@ -90,7 +90,7 @@ export function KnowledgeGraphPage() {
     context.fillStyle = color
     context.fill()
     context.lineWidth = (active ? 3 : 1.5) / globalScale
-    context.strokeStyle = active ? '#18312c' : '#ffffff'
+    context.strokeStyle = active ? '#101828' : '#ffffff'
     context.stroke()
 
     if (!active && !isHovered) return
@@ -104,7 +104,7 @@ export function KnowledgeGraphPage() {
     const boxY = node.y + radius + 4 / globalScale
     context.fillStyle = 'rgba(251, 252, 248, 0.95)'
     context.fillRect(node.x - textWidth / 2 - 5 / globalScale, boxY, textWidth + 10 / globalScale, boxHeight)
-    context.fillStyle = '#18312c'
+    context.fillStyle = '#101828'
     context.fillText(label, node.x, boxY + boxHeight / 2)
   }
 
@@ -145,7 +145,7 @@ export function KnowledgeGraphPage() {
               nodeRelSize={7}
               linkLabel={(link) => (link as unknown as GraphEdge).type}
               linkPointerAreaPaint={() => undefined}
-              linkColor={() => '#9ca9a4'}
+              linkColor={() => '#8fb0cf'}
               linkWidth={1.15}
               linkCurvature={0.06}
               linkDirectionalArrowLength={5}

@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Literal
 import json,time
 from fastapi import FastAPI,HTTPException
+from fastapi.responses import FileResponse
 from pydantic import BaseModel,Field
 from src.chapter04.agent import ToolAgent
 from src.chapter04.knowledge import load_graph
@@ -31,6 +32,10 @@ def agent():
 def rag():
     corpora={d:[json.loads(line) for line in (ROOT/f'data/chapter04/{d}_corpus.jsonl').read_text(encoding='utf-8').splitlines()] for d in ['diabetes','finance']}
     return RAGEngine(corpora,ROOT/'models/chapter04',ROOT/'results/chapter04')
+
+@app.get('/',include_in_schema=False)
+def home():
+    return FileResponse(Path(__file__).parent/'ui.html')
 
 @app.get('/health')
 def health():
