@@ -9,7 +9,7 @@
   var ZONES = Clinic.ZONES;
 
   var S = { meta: null, agents: {}, values: {}, persona: null, shirt: SHIRTS[0], avName: '', kg: null, mode: 'consult', consult: null,
-    fast: false, playToken: 0, playing: false, life: null, glbWebgl: true };
+    fast: false, paused: false, playToken: 0, playing: false, life: null, glbWebgl: true };
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
@@ -239,24 +239,75 @@
     log.appendChild(d); log.scrollTop = log.scrollHeight; $('#panel').scrollTop = 0;
   }
 
+  /* ---------- giọng nói (Azure TTS qua máy chủ) và phụ đề ---------- */
+  var Voice = { available: false, on: true, cache: {}, audio: null };
+  try { Voice.on = localStorage.getItem('clinic.voice') !== 'off'; } catch (e) {}
+  function voiceFetch(ev) {
+    var k = ev.agent + '|' + ev.text; if (Voice.cache[k]) return Voice.cache[k];
+    Voice.cache[k] = fetch('/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: ev.text, agent: ev.agent }) })
+      .then(function (r) { if (!r.ok) throw new Error('tts'); return r.blob(); })
+      .then(function (b) { return URL.createObjectURL(b); })
+      .catch(function () { return null; });
+    return Voice.cache[k];
+  }
+  function voicePrefetch(events, from) { if (!Voice.available || !Voice.on) return; for (var j = from; j < Math.min(events.length, from + 3); j++) voiceFetch(events[j]); }
+  function loadAudio(url) {
+    return new Promise(function (res) {
+      var a = new Audio(url), done = false; function fin(v) { if (!done) { done = true; res(v); } }
+      a.addEventListener('loadedmetadata', function () { fin(a); }); a.addEventListener('error', function () { fin(null); }); setTimeout(function () { fin(null); }, 4000);
+    });
+  }
+  function stopVoice() { if (Voice.audio) { try { Voice.audio.pause(); } catch (e) {} Voice.audio = null; } }
+  function syncVoiceButton() {
+    var b = $('#btnVoice'); b.hidden = !Voice.available; b.classList.toggle('voice-off', !Voice.on); b.textContent = Voice.on ? '🔊 Giọng nói' : '🔇 Đã tắt tiếng';
+  }
+  var capTimer = null;
+  function showCaption(ev, typeMs) {
+    var el = $('#hudCaption'); if (capTimer) { clearInterval(capTimer); capTimer = null; }
+    el.style.setProperty('--c', agentColor(ev.agent)); el.classList.add('on');
+    var text = ev.text, i = 0, step = 30, per = Math.max(1, Math.ceil(text.length / Math.max(1, typeMs / step)));
+    function paint(n) { el.innerHTML = '<b>' + esc(agentName(ev.agent)) + '</b>' + esc(text.slice(0, n)); }
+    paint(0);
+    capTimer = setInterval(function () { if (S.paused) return; i += per; paint(i); if (i >= text.length) { clearInterval(capTimer); capTimer = null; } }, step);
+  }
+  function hideCaption() { if (capTimer) { clearInterval(capTimer); capTimer = null; } $('#hudCaption').classList.remove('on'); }
+  function shortText(t) { return t.length > 64 ? t.slice(0, 61).replace(/\s+\S*$/, '') + '…' : t; }
+  async function waitResume(token) { while (S.paused && token === S.playToken) await sleep(150); }
+  function setPaused(p) {
+    S.paused = !!p; $('#btnPause').textContent = S.paused ? '▶ Tiếp tục' : '⏸ Tạm dừng'; $('#btnPause').style.background = S.paused ? '#ffe9a8' : '';
+    if (Voice.audio) { if (S.paused) Voice.audio.pause(); else Voice.audio.play().catch(function () {}); }
+  }
+
   async function playConsult(data) {
     var token = ++S.playToken; S.playing = true;
     $('#consultForm').hidden = true; $('#consultRun').hidden = false; $('#consultResult').innerHTML = ''; $('#chatLog').innerHTML = '';
     $('#hud').hidden = false; $('#btnReplay').disabled = true;
     $('#hudDots').innerHTML = data.events.map(function (e) { return '<i style="--c:' + agentColor(e.agent) + '"></i>'; }).join('');
     var dots = $$('#hudDots i'); Clinic.highlightKg(null);
+    setPaused(false); voicePrefetch(data.events, 0);
     for (var i = 0; i < data.events.length; i++) {
       var ev = data.events[i]; if (token !== S.playToken) return;
-      var sp = S.fast ? 2.6 : 1, ms = Math.max(600, (ev.ms || 2000)) / sp, col = agentColor(ev.agent);
+      await waitResume(token); if (token !== S.playToken) return;
+      var sp = S.fast ? 2.6 : 1, col = agentColor(ev.agent);
+      voicePrefetch(data.events, i + 1);
+      // giọng nói quyết định nhịp: nói xong mới sang câu tiếp; không có tiếng thì cho đủ thời gian đọc (~60 ms/ký tự)
+      var audio = null;
+      if (Voice.available && Voice.on && !S.fast) { var url = await voiceFetch(ev); if (token !== S.playToken) return; audio = url ? await loadAudio(url) : null; if (token !== S.playToken) return; }
+      var voiceMs = audio && isFinite(audio.duration) ? audio.duration * 1000 : 0;
+      var ms = Math.max(Math.max(600, (ev.ms || 2000)) / sp, voiceMs ? voiceMs + 500 : Math.max(2000, ev.text.length * 60) / sp);
       dots.forEach(function (d, j) { d.className = j < i ? 'done' : j === i ? 'cur' : ''; });
       addChat(ev); Clinic.speak(ev.agent, true);
-      Clinic.say(ev.agent, ev.text, { typeMs: Math.min(ms * 0.75, ev.text.length * 34 / sp) });
+      Clinic.hideAllBubbles(); Clinic.say(ev.agent, shortText(ev.text), { mini: true });
+      showCaption(ev, voiceMs ? voiceMs * 0.9 : ms * 0.8);
+      stopVoice(); if (audio) { Voice.audio = audio; audio.play().catch(function () {}); }
       if (ev.type === 'handoff' && ev.to) { Clinic.flyToChar(ev.agent, 700 / sp); Clinic.beam(ev.agent, ev.to, col, ms * 0.9); setTimeout(function (to, t) { if (t === S.playToken) Clinic.flyToChar(to, 800 / sp); }, ms * 0.5, ev.to, token); }
       else if (ev.type === 'cite') { Clinic.flyToBoard(1100 / sp); Clinic.highlightKg((ev.payload && ev.payload.kg_nodes) || []); }
       else Clinic.flyToChar(ev.focus || ev.agent, 1100 / sp);
       if (ev.type === 'tool') Clinic.work(ev.agent, true);
       if (ev.type === 'alert') Clinic.alert(ev.level || 'warn', ms);
       await sleep(ms); if (token !== S.playToken) return;
+      await waitResume(token); if (token !== S.playToken) return;
+      if (audio && !audio.ended && !audio.paused) await new Promise(function (res) { audio.onended = res; setTimeout(res, 4000); });
       Clinic.work(ev.agent, false);
     }
     if (token !== S.playToken) return;
@@ -265,11 +316,11 @@
 
   function skipConsult(silent) {
     if (!S.playing) return;
-    S.playToken++; wakeAll(); Clinic.stopAll(); Clinic.hideAllBubbles(); finishConsult(S.consult, true, silent);
+    S.playToken++; wakeAll(); stopVoice(); hideCaption(); Clinic.stopAll(); Clinic.hideAllBubbles(); finishConsult(S.consult, true, silent);
   }
 
   function finishConsult(data, skipped, silent) {
-    S.playing = false; Clinic.speak(null, false); Clinic.stopAll(); Clinic.patientAtSpot();
+    S.playing = false; stopVoice(); hideCaption(); setPaused(false); Clinic.speak(null, false); Clinic.stopAll(); Clinic.patientAtSpot();
     var last = data.events[data.events.length - 1]; Clinic.hideAllBubbles();
     $$('#hudDots i').forEach(function (d) { d.className = 'done'; }); $('#btnReplay').disabled = false;
     if (skipped) { $('#chatLog').innerHTML = ''; data.events.forEach(addChat); }
@@ -496,8 +547,11 @@
     $$('.tab').forEach(function (t) { t.onclick = function () { switchMode(t.dataset.mode); }; });
     $('#btnConsult').onclick = startConsult; $('#btnLifeStart').onclick = startLife;
     $('#btnSkip').onclick = function () { skipConsult(false); };
+    $('#btnPause').onclick = function () { setPaused(!S.paused); };
+    $('#btnVoice').onclick = function () { Voice.on = !Voice.on; try { localStorage.setItem('clinic.voice', Voice.on ? 'on' : 'off'); } catch (e) {} if (!Voice.on) stopVoice(); syncVoiceButton(); };
+    fetch('/api/tts/status').then(function (r) { return r.json(); }).then(function (j) { Voice.available = !!j.enabled; syncVoiceButton(); }, function () { syncVoiceButton(); });
     $('#btnFast').onclick = function () { S.fast = !S.fast; $('#btnFast').textContent = S.fast ? '⏩ Tốc độ x2,6' : '⏩ Tua nhanh'; $('#btnFast').style.background = S.fast ? '#ffe9a8' : ''; };
-    $('#btnReplay').onclick = function () { if (S.consult) { S.playToken++; wakeAll(); Clinic.stopAll(); Clinic.hideAllBubbles(); playConsult(S.consult); } };
+    $('#btnReplay').onclick = function () { if (S.consult) { S.playToken++; wakeAll(); stopVoice(); hideCaption(); Clinic.stopAll(); Clinic.hideAllBubbles(); playConsult(S.consult); } };
     $('#kgForm').onsubmit = function (e) { e.preventDefault(); kgSearch($('#kgQ').value); };
     $('#kgEdgeToggle').onchange = function (e) { Clinic.kgEdgeLabels(e.target.checked); };
     $('#helpBtn').onclick = function () { $('#helpModal').hidden = false; }; $('#helpClose').onclick = function () { $('#helpModal').hidden = true; };
@@ -507,6 +561,7 @@
       var k = e.key.toLowerCase();
       if (k === '1') switchMode('consult'); else if (k === '2') switchMode('life'); else if (k === '3') switchMode('kg');
       else if (k === '?' ) $('#helpModal').hidden = false; else if (k === 'escape') $('#helpModal').hidden = true;
+      else if (k === ' ' && S.playing) { e.preventDefault(); setPaused(!S.paused); } else if (k === 'v' && Voice.available) $('#btnVoice').click();
       else if (k === 's') skipConsult(false); else if (k === 'f' && !$('#hud').hidden) $('#btnFast').click(); else if (k === 'r' && !$('#hud').hidden && !$('#btnReplay').disabled) $('#btnReplay').click();
       else if (k === 'h') Clinic[S.mode === 'life' ? 'flyLife' : 'flyHome'](900);
       else if (k === 'enter') { if (S.mode === 'consult' && !$('#consultForm').hidden) startConsult(); else if (S.mode === 'life' && !$('#lifeIntro').hidden) startLife(); }

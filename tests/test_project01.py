@@ -59,3 +59,10 @@ def test_consult_script_contract(clinic):
     assert r["summary"]["level"] == "cao" and r["summary"]["red_flags"]
     assert len(r["report"]["figures"]) == 3 and all(f["png_base64"] for f in r["report"]["figures"])
     assert [e["i"] for e in r["events"]] == list(range(len(r["events"])))
+
+
+def test_tts_text_cleaning_and_voice_map():
+    from project01.mas.tts import Speaker, VOICES
+    assert Speaker.clean("Chào 😀 bạn!  Xem https://x.org/a ok") == "Chào bạn! Xem ok"
+    assert len(Speaker.clean("a" * 1000)) <= 320
+    assert set(VOICES) == {"doctor", "predictor", "knowledge", "coach", "guardian", "reporter"}

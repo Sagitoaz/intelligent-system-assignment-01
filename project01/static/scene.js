@@ -656,7 +656,7 @@
     opt = opt || {}; var b = getBubble(id), info = charInfo(id);
     if (b.timer) { clearInterval(b.timer); b.timer = null; }
     b.el.style.display = 'block'; b.el.style.setProperty('--c', info.color); b.nameEl.textContent = info.name; b.el.classList.toggle('sticky', !!opt.sticky);
-    b.el.classList.toggle('compact', !!opt.compact);
+    b.el.classList.toggle('compact', !!opt.compact); b.el.classList.toggle('mini', !!opt.mini);
     var typeMs = opt.typeMs == null ? 0 : opt.typeMs, i = 0;
     if (!typeMs) { b.textEl.textContent = text; }
     else {
@@ -678,7 +678,9 @@
       var bw = b.el.offsetWidth, bh = b.el.offsetHeight;
       var x = (tmpV.x * 0.5 + 0.5) * W, y = (-tmpV.y * 0.5 + 0.5) * H;
       x = clamp(x, bw / 2 + 8, W - bw / 2 - 8); y = clamp(y, bh + 14, H - 10);
-      placed.forEach(function (p) { if (Math.abs(p.x - x) < (p.w + bw) / 2 && Math.abs(p.y - y) < (p.h + 8) && y <= p.y + 8) y = p.y - p.h - 10; });
+      // tránh chồng nhau: đẩy xuống nếu hết chỗ phía trên, luôn giữ bong bóng trong khung nhìn
+      placed.forEach(function (p) { if (Math.abs(p.x - x) < (p.w + bw) / 2 && Math.abs(p.y - y) < (p.h + 8)) { var up = p.y - p.h - 10; y = up >= bh + 14 ? up : p.y + bh + 10; } });
+      y = clamp(y, bh + 14, H - 10);
       placed.push({ x: x, y: y, w: bw, h: bh });
       b.el.style.visibility = 'visible'; b.el.style.transform = 'translate(' + Math.round(x - bw / 2) + 'px,' + Math.round(y - bh) + 'px)';
     });

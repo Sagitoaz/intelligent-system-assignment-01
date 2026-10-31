@@ -21,10 +21,12 @@ from urllib.parse import urlparse
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(HERE))
 from project01.mas import rl  # noqa: E402
+from project01.mas.tts import Speaker  # noqa: E402
 from project01.mas.orchestrator import Clinic  # noqa: E402
 
 STATIC = os.path.join(HERE, "static")
 CLINIC: Clinic | None = None
+SPEAKER = Speaker()
 
 
 def life_start(body: dict) -> dict:
@@ -99,6 +101,8 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         if path == "/api/meta":
             return self._json(200, CLINIC.meta())
+        if path == "/api/tts/status":
+            return self._json(200, dict(enabled=SPEAKER.enabled))
         if path == "/api/kg":
             return self._json(200, CLINIC.kb.graph())
         rel = "index.html" if path in ("", "/") else path.lstrip("/")
@@ -114,8 +118,26 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
+    def _tts(self):
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+            body = json.loads(self.rfile.read(length) or b"{}")
+            audio = SPEAKER.synthesize(str(body.get("text", "")), str(body.get("agent", "doctor")))
+        except ValueError as exc:
+            return self._json(400, dict(error=str(exc)))
+        except RuntimeError as exc:
+            return self._json(503, dict(error=str(exc)))
+        self.send_response(200)
+        self.send_header("Content-Type", "audio/mpeg")
+        self.send_header("Content-Length", str(len(audio)))
+        self.send_header("Cache-Control", "private, max-age=3600")
+        self.end_headers()
+        self.wfile.write(audio)
+
     def do_POST(self):
         path = urlparse(self.path).path
+        if path == "/api/tts":
+            return self._tts()
         fn = ROUTES_POST.get(path)
         if not fn:
             return self._json(404, dict(error="Không có API này"))

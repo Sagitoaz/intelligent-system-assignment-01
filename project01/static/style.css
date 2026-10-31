@@ -115,8 +115,12 @@ input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,1
 .bubble::after{content:"";position:absolute;left:50%;bottom:-11px;margin-left:-9px;border:9px solid transparent;border-top-color:var(--c);border-bottom:0}
 .bubble-name{font-size:12px;font-weight:900;color:var(--c);text-transform:uppercase;letter-spacing:.03em;margin-bottom:1px}
 .bubble.compact{font-size:13px;max-width:240px}
+.bubble.mini{max-width:200px;min-width:90px;font-size:12.5px;padding:5px 10px 6px}
 .hud{position:absolute;left:12px;right:12px;bottom:12px;z-index:6;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
-.hud-caption{max-width:760px;background:rgba(20,32,61,.9);color:#fff;border-radius:14px;padding:8px 16px;font-weight:700;font-size:15px;display:none;border:2px solid var(--c,#2589e0)}
+.hud-caption{max-width:min(820px,100%);background:rgba(20,32,61,.94);color:#fff;border-radius:16px;padding:10px 18px 12px;font-weight:700;font-size:17px;line-height:1.5;display:none;border:3px solid var(--c,#2589e0);max-height:34vh;overflow-y:auto;pointer-events:auto}
+.hud-caption b{display:block;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--c,#7cc4ff);margin-bottom:2px}
+.hud-bar{flex-wrap:wrap;justify-content:center}
+.btn.voice-off{opacity:.65;text-decoration:line-through}
 .hud-caption.on{display:block}
 .hud-bar{display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.95);border:2px solid #cfe0fa;border-radius:999px;padding:6px 10px;pointer-events:auto;box-shadow:var(--shadow)}
 .hud-dots{display:flex;gap:5px;margin-right:6px}

@@ -40,6 +40,8 @@ python project01/train/train_dl.py ; python project01/train/build_kg.py ; python
 
 Thêm `?mock=1` vào địa chỉ để xem dữ liệu mẫu khi chưa chạy máy chủ API.
 
+Giọng nói (tùy chọn): đặt `API_MODEL_TTS` (khóa Azure Speech) và `TTS_ENDPOINT` (địa chỉ khu vực, ví dụ `https://southeastasia.api.cognitive.microsoft.com/`) trong tệp `.env` ở thư mục gốc (tệp này đã được git bỏ qua). Có khóa thì phòng khám vừa chạy phụ đề vừa đọc; không có khóa thì chỉ có chữ. Phím tắt: Dấu cách tạm dừng, V bật/tắt tiếng.
+
 ## 1. Agent 01 và Agent 02 (demo mèo đuổi chuột, hai người bán)
 
 ```powershell
