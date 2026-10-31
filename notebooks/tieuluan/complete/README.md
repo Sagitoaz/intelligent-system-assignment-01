@@ -1,4 +1,4 @@
-# Notebook bổ sung cho tiểu luận sáu chương
+# Notebook bổ sung cho tiểu luận bảy chương
 
 Các notebook này bổ sung cho notebook thực nghiệm cũ trong `notebooks/tieuluan/`
 và `notebooks/chapter04/`; không thay thế hoặc ghi đè chúng.
