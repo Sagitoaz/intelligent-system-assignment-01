@@ -158,9 +158,11 @@ def demo(records, analysis, metadata):
     choices = [r for r in records if r.get('framework') == 'scratch' and r.get('seed') == 11 and r.get('kind') in ('mlp','cnn4','lstm')]
     if not choices:
         st.info('Chưa có đủ mô hình và dữ liệu kiểm tra.'); return
-    dataset = st.selectbox('Bộ dữ liệu kiểm tra', list(dict.fromkeys(r['dataset'] for r in choices)), format_func=NAMES.get)
+    datasets = list(dict.fromkeys(r['dataset'] for r in choices))
+    dataset = st.selectbox('Bộ dữ liệu kiểm tra', datasets, index=datasets.index(st.query_params.get('dataset')) if st.query_params.get('dataset') in datasets else 0, format_func=NAMES.get)
     available = [r for r in choices if r['dataset'] == dataset]
-    kind = st.selectbox('Mô hình kiểm tra', [r['kind'] for r in available], format_func=KINDS.get)
+    kinds = [r['kind'] for r in available]
+    kind = st.selectbox('Mô hình kiểm tra', kinds, index=kinds.index(st.query_params.get('kind')) if st.query_params.get('kind') in kinds else 0, format_func=KINDS.get)
     record = next(r for r in available if r['kind'] == kind)
     data = read_npz(str(ROOT / f'data/tieuluan/processed/{dataset}.npz'))
     features, labels = data['test_'+record['representation']], data['test_y']
@@ -195,7 +197,8 @@ def demo(records, analysis, metadata):
         change = float(data['test_return'][index])
         st.write(f"Phiên tiếp theo {day(data['test_target_date'][index])}: **{'+' if change >= 0 else '−'}{pct(abs(change),2)}**.")
     else: st.write('Kết quả thật: **' + ('Có rủi ro' if labels[index] else 'Không thuộc nhóm rủi ro') + '**.')
-    st.success('Đoán đúng') if positive == bool(labels[index]) else st.warning('Đoán sai')
+    if positive == bool(labels[index]): st.success('Đoán đúng')
+    else: st.warning('Đoán sai')
     st.caption(f'Ngưỡng {pct(threshold)} chọn trên validation, tức dữ liệu dành riêng để chọn ngưỡng, không dùng tập kiểm tra.')
     with st.expander('Mô hình thực sự nhìn thấy gì'):
         if record['representation'] == 'image':
@@ -318,7 +321,8 @@ def comparison(records):
 def backtest(analysis):
     guide('Backtest là thử cách mua bán trên quá khứ. Đọc số tiền sau phí rồi so với cách mua một lần và giữ đến cuối.')
     if not analysis or not analysis.get('equity'): st.info('Chưa có kết quả backtest.'); return
-    market = st.selectbox('Thị trường mô phỏng',[m for m in MARKETS if m in analysis['equity']],format_func=NAMES.get)
+    markets = [m for m in MARKETS if m in analysis['equity']]
+    market = st.selectbox('Thị trường mô phỏng',markets,index=markets.index(st.query_params.get('dataset')) if st.query_params.get('dataset') in markets else 0,format_func=NAMES.get)
     curves = analysis['equity'][market]; available = [k for k in STRATEGIES if k in curves]
     picked = st.multiselect('Chiến lược',available,default=[k for k in ['buy_hold','lstm','gru'] if k in available],format_func=STRATEGIES.get)
     st.write('**Mua và giữ:** mua đầu kỳ, giữ đến cuối. **Theo mô hình:** chỉ giữ tài sản khi xác suất tăng đạt ngưỡng, còn lại giữ tiền mặt. '
@@ -362,9 +366,21 @@ def main():
     except (OSError,ValueError): analysis = {}
     try: metadata = read_json(str(ASSETS / 'metadata.json'))
     except (OSError,ValueError): metadata = {}
-    tabs = st.tabs(['Giới thiệu','Thử trên dữ liệu kiểm tra','Dự báo phiên tới','Tự chấm điểm tín dụng','So sánh mô hình','Backtest','Dữ liệu và giới hạn'])
-    renderers = [lambda:intro(records),lambda:demo(records,analysis,metadata),lambda:live_tab(records,analysis),
-                 lambda:credit_tab(records,metadata),lambda:comparison(records),lambda:backtest(analysis),limits]
+    names = ['Giới thiệu','Thử trên dữ liệu kiểm tra','Dự báo phiên tới','Tự chấm điểm tín dụng','So sánh mô hình','Backtest','Dữ liệu và giới hạn']
+    renderers_all = {'Giới thiệu':lambda:intro(records),'Thử trên dữ liệu kiểm tra':lambda:demo(records,analysis,metadata),'Dự báo phiên tới':lambda:live_tab(records,analysis),
+                     'Tự chấm điểm tín dụng':lambda:credit_tab(records,metadata),'So sánh mô hình':lambda:comparison(records),'Backtest':lambda:backtest(analysis),'Dữ liệu và giới hạn':limits}
+    # Bản demo gộp mở từng chương bằng ?chapter=2|3|4: chỉ hiện các tab liên quan đến chương đó
+    by_chapter = {'2':['Thử trên dữ liệu kiểm tra','Tự chấm điểm tín dụng','So sánh mô hình'],
+                  '3':['Thử trên dữ liệu kiểm tra','So sánh mô hình','Dữ liệu và giới hạn'],
+                  '4':['Thử trên dữ liệu kiểm tra','Dự báo phiên tới','Backtest','So sánh mô hình']}
+    chapter = st.query_params.get('chapter')
+    if chapter in by_chapter:
+        names = by_chapter[chapter]
+        st.caption({'2':'Chương 2 · Học máy: MLP chấm điểm rủi ro trên dữ liệu bảng (tín dụng, phá sản), so sánh mô hình.',
+                    '3':'Chương 3 · CNN: mạng đọc ảnh GASF của chuỗi giá; chọn mô hình CNN ở tab đầu.',
+                    '4':'Chương 4 · RNN, LSTM: chọn LSTM hoặc GRU ở tab đầu, dự báo phiên tới và backtest.'}[chapter])
+    tabs = st.tabs(names)
+    renderers = [renderers_all[n] for n in names]
     for tab,render in zip(tabs,renderers):
         with tab:
             try: render()

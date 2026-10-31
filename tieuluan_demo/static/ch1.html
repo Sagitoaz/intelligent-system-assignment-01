@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chương 1 · Lịch sử AI và dữ liệu</title>
+<style>
+:root{--ink:#14203d;--line:#cfe0fa;--blue:#2589e0;--violet:#7060d8}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;font-weight:600;color:var(--ink);background:linear-gradient(135deg,#f3eaff,#eef6ff 60%,#fff6ec);padding:14px 18px}
+h2{margin:0 0 8px;font-size:17px}
+.grid{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:14px}
+.card{background:#fff;border:2px solid #dbe6f8;border-radius:14px;padding:12px 14px}
+.row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+button{border:2.5px solid #bfd0ee;background:#fff;border-radius:10px;padding:5px 12px;font:inherit;font-weight:800;cursor:pointer;color:var(--ink)}
+button.on{background:var(--c,var(--violet));border-color:var(--c,var(--violet));color:#fff}
+.tl{max-height:calc(100vh - 150px);overflow-y:auto;padding-right:4px}
+.item{display:grid;grid-template-columns:54px 1fr;gap:8px;padding:7px 0;border-bottom:1px dashed #d4e0f5}
+.yr{font-weight:900;color:var(--violet);font-size:17px}
+.ev{font-size:14px}.mn{font-size:12.5px;color:#4a5b7f;font-weight:600}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{padding:5px 6px;border-bottom:1px solid #e1e9f6;text-align:right}
+th:first-child,td:first-child{text-align:left}
+th{background:#eef5ff}
+tr.sel td{background:#fff6dc}
+canvas{width:100%;height:230px;display:block}
+.cap{font-size:12.5px;color:#4a5b7f;margin:2px 0 8px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:1000px){.grid{grid-template-columns:1fr}.two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="card">
+    <h2>Dòng thời gian AI <span style="font-weight:600;font-size:12.5px;color:#4a5b7f">(Bảng 1.1)</span></h2>
+    <div class="row" id="era"></div>
+    <div class="tl" id="tl"></div>
+  </div>
+  <div>
+    <div class="card" style="margin-bottom:12px">
+      <h2>Ba chỉ số dùng xuyên suốt tiểu luận</h2>
+      <div class="row" id="idx"></div>
+      <div class="two">
+        <div><div class="cap">Giá đóng cửa, thang logarit (Hình 1.4)</div><canvas id="price" width="620" height="260"></canvas></div>
+        <div><div class="cap">Lợi suất logarit theo ngày so với phân phối chuẩn (Hình 1.5)</div><canvas id="hist" width="620" height="260"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Thống kê mô tả lợi suất logarit theo ngày, tính lại từ dữ liệu <span style="font-weight:600;font-size:12.5px;color:#4a5b7f">(Bảng 1.2)</span></h2>
+      <table id="stat"></table>
+      <div class="cap" style="margin-top:6px">Biến động năm = độ lệch chuẩn × √252 (√365 với Bitcoin). Độ nhọn dư lớn nghĩa là đuôi phân phối dày hơn phân phối chuẩn.</div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var D, cur = 'sp500', era = 'all';
+  var fmt = function (x, n) { return x.toFixed(n).replace('.', ','); };
+  var thou = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
+  fetch('/api/ch1').then(function (r) { return r.json(); }).then(function (d) { D = d; init(); });
+  function init() {
+    [['all', 'Tất cả'], ['a', 'Trước 1990'], ['b', '1990–2011'], ['c', 'Từ 2012']].forEach(function (e) {
+      var b = document.createElement('button'); b.textContent = e[1]; b.dataset.e = e[0]; b.onclick = function () { era = e[0]; tl(); }; $('#era').appendChild(b); });
+    D.stats.forEach(function (s) { var b = document.createElement('button'); b.textContent = s.name; b.dataset.k = s.key; b.style.setProperty('--c', D.colors[s.key]); b.onclick = function () { cur = s.key; idx(); }; $('#idx').appendChild(b); });
+    tl(); idx();
+  }
+  function tl() {
+    document.querySelectorAll('#era button').forEach(function (b) { b.classList.toggle('on', b.dataset.e === era); });
+    var f = D.milestones.filter(function (m) { var y = parseInt(m.year, 10); return era === 'all' || (era === 'a' && y < 1990) || (era === 'b' && y >= 1990 && y <= 2011) || (era === 'c' && y >= 2012); });
+    $('#tl').innerHTML = f.map(function (m) { return '<div class="item"><div class="yr">' + m.year + '</div><div><div class="ev">' + m.event + '</div><div class="mn">' + m.meaning + '</div></div></div>'; }).join('');
+  }
+  function idx() {
+    document.querySelectorAll('#idx button').forEach(function (b) { b.classList.toggle('on', b.dataset.k === cur); });
+    var rows = D.stats.map(function (s) {
+      return '<tr class="' + (s.key === cur ? 'sel' : '') + '"><td>' + s.name + '</td><td>' + s.first.split('-').reverse().join('/') + ' – ' + s.last.split('-').reverse().join('/') + '</td><td>' + thou(s.n) + '</td><td>' + fmt(s.mean, 3) + '</td><td>' + fmt(s.std, 2) + '</td><td>' + fmt(s.annual, 1) + '</td><td>' + fmt(s.min, 1) + '</td><td>' + fmt(s.max, 1) + '</td><td>' + fmt(s.kurt, 1) + '</td><td>' + fmt(s.up, 1) + '%</td></tr>'; }).join('');
+    $('#stat').innerHTML = '<tr><th>Chỉ số</th><th>Giai đoạn</th><th>Số phiên</th><th>TB (%)</th><th>Độ lệch chuẩn (%)</th><th>Biến động năm (%)</th><th>Nhỏ nhất (%)</th><th>Lớn nhất (%)</th><th>Độ nhọn dư</th><th>Phiên tăng</th></tr>' + rows;
+    price(); hist();
+  }
+  function axes(c, W, H, l, b) { c.clearRect(0, 0, W, H); c.strokeStyle = '#cfdcf0'; c.lineWidth = 1; c.beginPath(); c.moveTo(l, 6); c.lineTo(l, H - b); c.lineTo(W - 6, H - b); c.stroke(); c.fillStyle = '#4a5b7f'; c.font = '600 12px Segoe UI,Arial'; }
+  function price() {
+    var cv = $('#price'), c = cv.getContext('2d'), W = cv.width, H = cv.height, s = D.series[cur], col = D.colors[cur], L = 50, B = 24; axes(c, W, H, L, B);
+    var lg = s.map(function (p) { return Math.log(p[1]); }), mn = Math.min.apply(null, lg), mx = Math.max.apply(null, lg);
+    c.strokeStyle = col; c.lineWidth = 2; c.beginPath(); lg.forEach(function (v, i) { var x = L + (W - L - 10) * i / (lg.length - 1), y = 8 + (H - B - 14) * (1 - (v - mn) / (mx - mn)); i ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke();
+    c.textAlign = 'left'; c.fillText(s[0][0].slice(0, 4), L, H - 6); c.textAlign = 'right'; c.fillText(s[s.length - 1][0].slice(0, 4), W - 8, H - 6);
+    c.textAlign = 'right'; c.fillText(Math.round(Math.exp(mx)).toLocaleString('vi-VN'), L - 4, 16); c.fillText(Math.round(Math.exp(mn)).toLocaleString('vi-VN'), L - 4, H - B);
+  }
+  function hist() {
+    var cv = $('#hist'), c = cv.getContext('2d'), W = cv.width, H = cv.height, h = D.hist[cur], col = D.colors[cur], L = 40, B = 24; axes(c, W, H, L, B);
+    var mx = Math.max.apply(null, h.counts.concat(h.normal)), n = h.counts.length, bw = (W - L - 10) / n;
+    c.fillStyle = col + 'aa'; h.counts.forEach(function (v, i) { var y = (H - B - 8) * v / mx; c.fillRect(L + i * bw + 1, H - B - y, bw - 2, y); });
+    c.strokeStyle = '#d6362d'; c.lineWidth = 2.2; c.beginPath(); h.normal.forEach(function (v, i) { var x = L + (i + .5) * bw, y = H - B - (H - B - 8) * v / mx; i ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke();
+    c.fillStyle = '#4a5b7f'; c.textAlign = 'center'; c.fillText(fmt(h.centers[0], 1) + '%', L + 14, H - 6); c.fillText('0', L + (W - L - 10) / 2, H - 6); c.fillText(fmt(h.centers[n - 1], 1) + '%', W - 26, H - 6);
+    c.fillStyle = '#d6362d'; c.textAlign = 'right'; c.fillText('đường đỏ: phân phối chuẩn cùng trung bình và độ lệch chuẩn', W - 8, 16);
+  }
+})();
+</script>
+</body>
+</html>

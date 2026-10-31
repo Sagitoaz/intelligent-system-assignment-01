@@ -81,3 +81,11 @@ def test_deepgraph_demo_sector_api_runs():
         raise AssertionError("cần báo lỗi khi thiếu một lớp")
     except ValueError:
         pass
+
+
+def test_tieuluan_hub_chapter1_matches_report_table():
+    from tieuluan_demo import server as hub
+    d = hub.ch1_data()
+    n = {s["key"]: s["n"] for s in d["stats"]}
+    assert n == {"sp500": 6726, "vnindex": 4175, "btc": 4397}  # Bảng 1.2 của tiểu luận
+    assert len(d["milestones"]) == 13 and d["milestones"][0]["year"] == "1943"

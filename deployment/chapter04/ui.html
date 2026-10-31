@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chương 4: Knowledge &amp; RAG Agent</title>
+<title>Chương 5: Knowledge &amp; RAG Agent</title>
 <style>
 :root{--bg:#eaf3fc;--ink:#101828;--mute:#3d4c63;--line:#a9c2da;--coral:#f0603a;--teal:#0d9f8f;--sky:#2589e0;--violet:#7060d8}
 *{box-sizing:border-box}
@@ -30,7 +30,7 @@ pre{background:#f3f6fa;border:1.5px solid var(--line);border-radius:10px;padding
 </style>
 </head>
 <body>
-<header><h1>Chương 4 · Knowledge &amp; RAG Agent</h1><p>Chạy hoàn toàn trên máy cá nhân (localhost), không cần API key. Tài liệu Swagger: <a href="/docs">/docs</a></p></header>
+<header><h1>Chương 5 · Knowledge &amp; RAG Agent</h1><p>Chạy hoàn toàn trên máy cá nhân (localhost), không cần API key. Kho tài liệu bằng tiếng Anh nên hãy hỏi bằng tiếng Anh; công cụ thống kê chỉ nhận các câu đếm chính xác (how many ...). Tài liệu Swagger: <a href="/docs">/docs</a></p></header>
 <main>
 <section>
   <label for="domain">Lĩnh vực</label>
@@ -45,7 +45,7 @@ pre{background:#f3f6fa;border:1.5px solid var(--line);border-radius:10px;padding
 <section id="out"><p style="color:var(--mute)">Kết quả sẽ hiện ở đây. Lần hỏi RAG đầu tiên có thể mất vài chục giây để nạp mô hình.</p></section>
 </main>
 <script>
-const examples=[["diabetes","Triệu chứng thường gặp của bệnh tiểu đường là gì?","auto"],["diabetes","Tỉ lệ tái nhập viện trong dữ liệu UCI là bao nhiêu?","statistics"],["finance","Doanh thu tăng trưởng thế nào so với năm trước?","auto"]];
+const examples=[["diabetes","What organ makes insulin?","auto"],["diabetes","How many encounters were readmitted within 30 days in the dataset?","statistics"],["finance","What is the percentage change in revenue?","auto"]];
 const $=id=>document.getElementById(id);
 examples.forEach(([d,q,t])=>{const b=document.createElement('button');b.className='chip';b.textContent=q;b.onclick=()=>{$('domain').value=d;$('q').value=q;$('task').value=t;go()};$('chips').append(b)});
 async function go(){

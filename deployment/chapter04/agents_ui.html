@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chương 7: Hệ bốn agent</title>
+<style>
+:root{--ink:#101828;--mute:#3d4c63;--line:#a9c2da;--coral:#f0603a;--teal:#0d9f8f;--sky:#2589e0;--violet:#7060d8;--amber:#e8a317}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#d8ebfc,#eaf3fc 240px,#f1f7fd);color:var(--ink);font:15px/1.5 "Segoe UI",system-ui,sans-serif}
+header{padding:18px 28px 0}
+h1{margin:0;font-size:24px;font-weight:800;background:linear-gradient(90deg,#e8502c,#6a58dc 55%,#1b7fdc);-webkit-background-clip:text;background-clip:text;color:transparent}
+header p{margin:4px 0 0;color:var(--mute)}
+main{display:grid;grid-template-columns:minmax(290px,380px) 1fr;gap:18px;padding:16px 28px 36px;max-width:1240px;margin:auto}
+section{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 6px 24px rgba(56,163,245,.10)}
+label{display:block;font-weight:700;font-size:13px;color:var(--mute);margin:10px 0 4px}
+select,textarea,input{width:100%;font:inherit;padding:8px 10px;border:1.5px solid #8fb0cf;border-radius:8px;background:#fff;color:var(--ink)}
+textarea{min-height:78px;resize:vertical}
+button{border:0;border-radius:10px;padding:10px 18px;font:inherit;font-weight:700;color:#fff;cursor:pointer;background:linear-gradient(135deg,#f0603a,#f58a3c);box-shadow:0 3px 10px rgba(240,96,58,.3)}
+button.alt{background:#fff;color:var(--sky);border:2px solid var(--sky);box-shadow:none}
+button.chip{background:#eef5ff;color:#244b7a;border:1.5px solid #b7cfee;box-shadow:none;padding:5px 10px;font-weight:600;font-size:13px;margin:3px 4px 0 0}
+button:disabled{opacity:.55;cursor:wait}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.steps{display:flex;flex-direction:column;gap:6px}
+.step{border:2px solid var(--c,#9db4d0);border-left-width:8px;border-radius:12px;padding:10px 14px;background:#fbfdff}
+.step h3{margin:0;font-size:16px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.step .n{display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;background:var(--c);color:#fff;font-size:13px;margin-right:8px}
+.kv{display:flex;gap:14px;flex-wrap:wrap;font-size:13.5px;margin:6px 0;color:var(--mute)}
+.kv b{color:var(--ink)}
+.msg{font-family:Consolas,monospace;font-size:12.5px;background:#f2f6fb;border-radius:8px;padding:6px 10px;word-break:break-all;color:#27405f}
+.arrow{text-align:center;color:#6b86a8;font-size:18px;line-height:1}
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12.5px;font-weight:800;color:#fff}
+.b-ok{background:var(--amber)} .b-bad{background:#e5342d} .b-pend{background:#8aa0bd} .b-good{background:#22b05a}
+.final{border:2.5px solid var(--violet);border-radius:14px;padding:12px 16px;margin-top:12px;background:#f7f5ff}
+.ev{font-size:13px;border-top:1px dashed #cfd9ea;padding:6px 0}
+.ev code{color:#4a3fb5;font-size:12px}
+.warn{background:#fff7e0;border:2px solid #f3d98a;border-radius:12px;padding:8px 12px;font-size:13.5px;margin-top:10px}
+.err{background:#ffe4e1;border:2px solid #f2a39b;border-radius:12px;padding:8px 12px;margin-top:10px}
+.hint{color:var(--mute);font-size:13px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.cmp div{border:2px solid #cfe0fa;border-radius:12px;padding:8px 12px;text-align:center}
+.cmp b{font-size:22px;display:block}
+@media(max-width:900px){main{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Chương 7 · Hệ bốn agent: truy hồi → đồ thị → viết → kiểm tra</h1>
+  <p>Mỗi agent chạy đúng một lượt; State và Message được hiện sau từng bước. Khớp với mục 7.2–7.5 của tiểu luận.</p>
+</header>
+<main>
+  <section>
+    <label for="domain">Miền dữ liệu</label>
+    <select id="domain"><option value="finance">finance (báo cáo tài chính FinQA)</option><option value="diabetes">diabetes (tài liệu NIDDK, UCI)</option></select>
+    <label for="q">Câu hỏi (tiếng Anh, theo kho tài liệu)</label>
+    <textarea id="q">What is the percentage change in revenue?</textarea>
+    <div class="hint">Câu hỏi mẫu:</div>
+    <div>
+      <button class="chip" data-d="finance" data-q="What is the percentage change in revenue?">Thay đổi doanh thu</button>
+      <button class="chip" data-d="finance" data-q="Find revenue" data-r="__missing_report__">Báo cáo không tồn tại</button>
+      <button class="chip" data-d="diabetes" data-q="How many encounters are in the dataset?">Đếm số lượt khám</button>
+      <button class="chip" data-d="diabetes" data-q="What organ makes insulin?">Cơ quan tạo insulin</button>
+    </div>
+    <label for="report">Bộ lọc báo cáo (tùy chọn, finance)</label>
+    <input id="report" placeholder="ví dụ ETR/2008/page_377.pdf, hoặc __missing_report__ để thử lỗi">
+    <div class="row"><button id="run">▶ Chạy bốn agent</button></div>
+    <div class="warn" id="note">Lần chạy đầu cần nạp mô hình sinh văn bản trên CPU nên có thể mất 30–60 giây.</div>
+    <div class="warn">Hai câu hỏi sai đầu vào (câu rỗng, miền lạ) bị chặn trước khi agent chạy: đó là chốt kiểm soát đầu vào ở mục 7.5.3.</div>
+  </section>
+  <section id="out"><div class="hint">Bấm “Chạy bốn agent” để xem từng lượt.</div></section>
+</main>
+<script>
+(function(){
+  var COL = {RetrievalAgent:'#2589e0', GraphAgent:'#0d9f8f', WriterAgent:'#e8a317', VerifierAgent:'#7060d8'};
+  var ROLE = {RetrievalAgent:'Tìm 3 đoạn bằng chứng', GraphAgent:'Đối chiếu nguồn trong đồ thị', WriterAgent:'Sinh câu trả lời từ bằng chứng', VerifierAgent:'Kiểm tra id nguồn hợp lệ'};
+  var $ = function(s){return document.querySelector(s);};
+  function esc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function badge(s){var c = s==='generated_unverified'?'b-ok':s==='insufficient_evidence'?'b-bad':s==='pending'?'b-pend':'b-good';return '<span class="badge '+c+'">'+esc(s)+'</span>';}
+  document.querySelectorAll('.chip').forEach(function(b){b.onclick=function(){$('#domain').value=b.dataset.d;$('#q').value=b.dataset.q;$('#report').value=b.dataset.r||'';};});
+  function post(path, body){return fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json().then(function(j){if(!r.ok) throw new Error(typeof j.detail==='string'?j.detail:JSON.stringify(j.detail)); return j;});});}
+  $('#run').onclick=function(){
+    var b=$('#run'); b.disabled=true; b.textContent='⏳ Đang chạy...'; $('#out').innerHTML='<div class="hint">Đang chạy bốn agent...</div>';
+    var body={domain:$('#domain').value,question:$('#q').value}; if($('#report').value.trim()) body.report=$('#report').value.trim();
+    post('/api/v1/agents/run',body).then(function(r){render(r);}).catch(function(e){$('#out').innerHTML='<div class="err"><b>Không chạy được.</b> '+esc(e.message)+'</div>';}).then(function(){b.disabled=false;b.textContent='▶ Chạy bốn agent';});
+  };
+  function render(r){
+    var h='<div class="steps">';
+    r.steps.forEach(function(s,i){
+      h+='<div class="step" style="--c:'+COL[s.agent]+'"><h3><span><span class="n">'+(i+1)+'</span>'+s.agent+'</span>'+badge(s.status)+'</h3><div class="hint">'+ROLE[s.agent]+'</div>'+
+         '<div class="kv"><span>evidence: <b>'+s.evidence+'</b></span><span>graph_context: <b>'+s.graph+'</b></span><span>answer: <b>'+esc(s.answer||'(rỗng)')+'</b></span></div>'+
+         '<div class="msg">Message '+esc(s.message.sender)+' → '+esc(s.message.receiver)+' '+esc(JSON.stringify(s.message.payload))+'</div></div>';
+      if(i<r.steps.length-1) h+='<div class="arrow">↓</div>';
+    });
+    h+='</div><div class="final"><b>Kết quả cuối:</b> '+badge(r.status)+'<div style="margin-top:6px;font-size:17px"><b>'+esc(r.answer)+'</b></div>'+
+       '<div class="hint">Chạy trong '+r.seconds.toFixed(1)+' giây · id nguồn hợp lệ chưa chứng minh câu trả lời đúng (generated_unverified).</div>';
+    if(r.evidence.length){h+='<div style="margin-top:8px"><b>Bằng chứng:</b>';r.evidence.forEach(function(e){h+='<div class="ev"><code>'+esc(e.id)+'</code><br>'+esc(e.text)+'</div>';});h+='</div>';}
+    h+='</div>';
+    if(r.domain==='diabetes'){h+='<div class="final" style="border-color:#22b05a;background:#f2fbf5"><b>So với công cụ thống kê xác định (ToolAgent)</b><div class="hint">Cùng câu hỏi đếm, công cụ đọc bảng thật thay vì để bộ sinh đoán.</div><div class="row"><button class="alt" id="stat">Chạy công cụ thống kê</button></div><div id="statOut"></div></div>';}
+    $('#out').innerHTML=h;
+    var sb=$('#stat'); if(sb) sb.onclick=function(){sb.disabled=true;post('/api/v1/knowledge/ask',{domain:'diabetes',question:r.question,task:'statistics'}).then(function(s){
+      $('#statOut').innerHTML='<div class="cmp"><div>Bộ sinh (hệ bốn agent)<b>'+esc(r.answer)+'</b></div><div>Công cụ thống kê<b>'+esc(s.answer)+'</b><span class="hint">'+esc(s.status||'')+'</span></div></div>';}).catch(function(e){$('#statOut').innerHTML='<div class="err">'+esc(e.message)+'</div>';}).then(function(){sb.disabled=false;});};
+  }
+})();
+</script>
+</body>
+</html>

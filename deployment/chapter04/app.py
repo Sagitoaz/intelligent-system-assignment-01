@@ -53,3 +53,36 @@ def ask(request:AskRequest):
         return result
     except (ValueError,TypeError,KeyError) as exc:
         raise HTTPException(status_code=422,detail=str(exc)) from exc
+
+
+# ---- Chương 7: hệ bốn agent chạy từng bước, trả về State/Message sau mỗi lượt
+class TeamRequest(BaseModel):
+    domain:Literal['diabetes','finance']
+    question:str=Field(min_length=1,max_length=2000)
+    report:str|None=None
+
+@lru_cache(maxsize=1)
+def team():
+    from scripts.tieuluan.complete_agents import MultiAgentTeam
+    graphs={'finance':load_graph(ROOT/'knowledge_graph/chapter04/finance_graph.json.gz')}
+    return MultiAgentTeam(rag(),graphs)
+
+@app.get('/agents',include_in_schema=False)
+def agents_page():
+    return FileResponse(Path(__file__).parent/'agents_ui.html')
+
+@app.post('/api/v1/agents/run')
+def run_team(request:TeamRequest):
+    from scripts.tieuluan.complete_agents import State
+    started=time.perf_counter()
+    if not request.question.strip():
+        raise HTTPException(status_code=422,detail='Empty question')
+    crew=team();state=State(request.question,request.domain,request.report);steps=[]
+    for worker in crew.agents:
+        worker.act(state)
+        message=state.messages[-1]
+        steps.append({'agent':type(worker).__name__,'evidence':len(state.evidence),'graph':len(state.graph_context),'answer':state.answer,'status':state.status,
+                      'message':{'sender':message.sender,'receiver':message.receiver,'payload':message.payload}})
+    return {'question':request.question,'domain':request.domain,'report':request.report,'steps':steps,'answer':state.answer,'status':state.status,
+            'evidence':[{'id':e['id'],'text':str(e.get('text',''))[:260]} for e in state.evidence],'seconds':time.perf_counter()-started}
+

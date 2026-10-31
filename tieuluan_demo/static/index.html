@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demo tiểu luận · 7 chương</title>
+<style>
+:root{--ink:#14203d;--line:#cfe0fa;--blue:#2589e0;--coral:#f0603a;--teal:#0d9f8f;--violet:#7060d8;--amber:#e8a317;--green:#22b05a}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;font-weight:600;color:var(--ink);background:linear-gradient(135deg,#e6f2ff,#fff3e6 60%,#f3eaff);display:flex;flex-direction:column;overflow:hidden}
+header{display:flex;align-items:center;gap:14px;padding:8px 16px;background:#fff;border-bottom:3px solid var(--line)}
+header h1{font-size:18px;margin:0;white-space:nowrap}
+header small{color:#4a5b7f}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.tab{border:2.5px solid #bfd0ee;background:#fff;border-radius:12px;padding:6px 12px;font:inherit;font-weight:800;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;align-items:flex-start;line-height:1.2}
+.tab span{font-size:11.5px;font-weight:600;color:#5a6b8c}
+.tab.active{color:#fff;border-color:var(--c);background:var(--c)}
+.tab.active span{color:#fff}
+.tab i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#c4cfe3;margin-right:5px}
+.tab i.up{background:var(--green)} .tab i.down{background:var(--amber)}
+main{flex:1;display:flex;min-height:0}
+.view{flex:1;min-width:0;position:relative;background:#fff}
+iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
+.loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;background:#f7fbff;color:#4a5b7f;z-index:2}
+.spin{width:36px;height:36px;border:5px solid #d7e5fa;border-top-color:var(--blue);border-radius:50%;animation:s 1s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+aside{width:330px;overflow-y:auto;padding:12px;background:#f7fbff;border-left:2px solid var(--line)}
+aside.hide{display:none}
+aside h2{font-size:15px;margin:0 0 4px;color:var(--c)}
+aside .card{background:#fff;border:2px solid #dbe6f8;border-radius:13px;padding:10px 12px;margin-bottom:10px;font-size:13.5px;line-height:1.45}
+aside .card b.h{display:block;font-size:12.5px;letter-spacing:.03em;text-transform:uppercase;color:#5a6b8c;margin-bottom:3px}
+aside ul{margin:2px 0 0;padding-left:18px}
+aside li{margin:2px 0}
+.chip{display:inline-block;border-radius:99px;padding:1px 9px;font-size:12px;background:#e9f1ff;margin:2px 3px 0 0;color:#244b7a}
+.toggle{margin-left:8px;border:2px solid #bfd0ee;background:#fff;border-radius:10px;padding:4px 10px;font:inherit;font-weight:700;font-size:13px;cursor:pointer}
+footer{padding:4px 16px;font-size:12.5px;background:#fff7e0;border-top:2px solid #f3d98a;display:flex;gap:12px;justify-content:space-between}
+a{color:var(--blue)}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎓 Demo tiểu luận · AI trong đầu tư tài chính</h1><small>7 chương, chạy trên localhost</small>
+  <nav id="nav"></nav>
+  <button class="toggle" id="toggle">Ẩn đối chiếu</button>
+</header>
+<main>
+  <div class="view" id="view"></div>
+  <aside id="aside"></aside>
+</main>
+<footer><span>Chỉ để học tập: không phải khuyến nghị đầu tư. Mỗi tab là demo của đúng một chương; cột bên phải ghi mục, hình, bảng của báo cáo để đối chiếu.</span><span id="st"></span></footer>
+<script>
+(function () {
+  var H = location.protocol + '//127.0.0.1:';
+  var CH = [
+    { n: 1, short: 'Lịch sử AI', sub: 'dòng thời gian, dữ liệu', color: '#7060d8', child: null, url: '/ch1.html',
+      sec: ['1.7 AI trong tài chính: lịch sử song hành', '1.8 Dữ liệu minh họa: ba chỉ số thị trường'], refs: ['Bảng 1.1: 13 mốc phát triển của AI', 'Bảng 1.2: số phiên, trung bình, độ lệch chuẩn, biến động năm, độ nhọn dư, % phiên tăng', 'Hình 1.4: giá thang logarit của ba chỉ số', 'Hình 1.5: phân phối lợi suất so với phân phối chuẩn'],
+      try_: ['Đổi giữa S&P 500, VN-Index, Bitcoin và đọc lại từng ô của Bảng 1.2 (số được tính lại từ dữ liệu).', 'Lọc dòng thời gian theo giai đoạn để so với Bảng 1.1.'] },
+    { n: 2, short: 'Học máy', sub: 'MLP trên dữ liệu bảng', color: '#2589e0', child: 'streamlit', url: H + '8502/?embed=true&chapter=2&dataset=credit_default&kind=mlp',
+      sec: ['2.9 Dữ liệu thực nghiệm', '2.10 Cài đặt bằng ba cách', '2.11 Kết quả và thảo luận'], refs: ['Hình 2.4: phân bố lớp của hai bộ dữ liệu', 'Hình 2.7: đường ROC trên tập test', 'Mục 2.11: ROC-AUC của rừng ngẫu nhiên, MLP, hồi quy logistic'],
+      try_: ['Tab “Thử trên dữ liệu kiểm tra”: chọn bộ dữ liệu và mô hình MLP, lấy một dòng.', 'Tab “Tự chấm điểm tín dụng”: nhập hồ sơ và xem xác suất.', 'Tab “So sánh mô hình”: đối chiếu với kết quả trong báo cáo.'] },
+    { n: 3, short: 'CNN', sub: 'đọc ảnh GASF', color: '#0d9f8f', child: 'streamlit', url: H + '8502/?embed=true&chapter=3&dataset=vnindex&kind=cnn4',
+      sec: ['3.7 Dữ liệu thực nghiệm: ảnh GASF', '3.9 Kết quả và thảo luận'], refs: ['Hình 3.5: cửa sổ 20 phiên đầu tiên của tập test', 'Hình 3.8: ROC-AUC trên tập test và khoảng tin cậy'],
+      try_: ['Chọn VN-Index, mô hình CNN4, rồi chọn một ngày cuối cửa sổ.', 'Đọc xác suất tăng và đối chiếu nhãn thật.'] },
+    { n: 4, short: 'RNN · LSTM', sub: 'chuỗi, backtest', color: '#e8a317', child: 'streamlit', url: H + '8502/?embed=true&chapter=4&dataset=vnindex&kind=lstm',
+      sec: ['4.8 Kết quả và thảo luận', '4.9 Từ dự báo đến quyết định đầu tư'], refs: ['Hình 4.6: ROC-AUC trên tập test và khoảng tin cậy', 'Hình 4.8: giá trị danh mục của các chiến lược trên tập test'],
+      try_: ['Tab “Thử trên dữ liệu kiểm tra”: chọn LSTM hoặc GRU.', 'Tab “Backtest”: so chiến lược theo mô hình với mua và giữ, trước và sau phí.', 'Tab “Dự báo phiên tới” cần internet khi bấm tải giá mới.'] },
+    { n: 5, short: 'KG · RAG', sub: 'hỏi đáp có nguồn', color: '#d6458a', child: 'fastapi', url: H + '8044/',
+      sec: ['5.4 KB và RAG cho bệnh tiểu đường', '5.5 KB và RAG cho chứng khoán', '5.8 Deploy với Agent'], refs: ['Hình 5.7: ToolAgent định tuyến yêu cầu tới bốn công cụ', 'Bảng 5.3: so sánh truy hồi BM25, vector, hybrid', 'Mục 5.7: ảo giác và cách kiểm soát'],
+      try_: ['Dùng ba câu hỏi mẫu; câu cần tính toán sẽ đi qua công cụ, câu mở đi qua RAG.', 'Lần hỏi RAG đầu tiên mất 30–60 giây vì nạp mô hình trên CPU.', 'Tài liệu API: cổng 8044, đường dẫn /docs.'] },
+    { n: 6, short: 'Deep Graph', sub: 'GCN trên VN30', color: '#f0603a', child: 'deepgraph', url: H + '8300/',
+      sec: ['6.3 Bài toán và dữ liệu', '6.5 Kết quả và phân tích', '6.6 Triển khai và demo'], refs: ['Hình 6.2: đồ thị tương quan VN30', 'Bảng 6.5 và Hình 6.4: độ chính xác bài toán đoán ngành', 'Hình 6.5–6.7: ba màn hình demo'],
+      try_: ['Màn hình 3: chọn 9 mã biết nhãn, bấm chạy, so MLP với GCN (trung bình 40 lần chia trong báo cáo: 73,1% so với 63,9%).', 'Màn hình 2: tăng số lớp để thấy làm trơn quá mức.'] },
+    { n: 7, short: 'Hệ đa agent', sub: 'bốn agent, State/Message', color: '#22b05a', child: 'fastapi', url: H + '8044/agents',
+      sec: ['7.2 Kiến trúc, vai trò và dữ liệu trao đổi', '7.4 Mã nguồn và biểu diễn luồng phối hợp', '7.5 Đánh giá và phân tích lỗi', '7.7.1 Kịch bản demo'], refs: ['Hình 7.3: State và Message qua bốn lượt', 'Hình 7.8: đường lỗi (insufficient_evidence, đầu vào bị chặn)', 'Hình 7.9: bộ sinh trả 2, thống kê trả 101.766'],
+      try_: ['Chạy câu “Thay đổi doanh thu” rồi xem Message ở từng agent.', 'Chạy “Báo cáo không tồn tại” để thấy insufficient_evidence.', 'Chạy “Đếm số lượt khám” rồi bấm công cụ thống kê để so 2 với 101.766.'] }
+  ];
+  var cur = 0, status = {}, loaded = {};
+  var $ = function (s) { return document.querySelector(s); };
+  var nav = $('#nav'), view = $('#view'), aside = $('#aside');
+  CH.forEach(function (c, i) {
+    var b = document.createElement('button'); b.className = 'tab'; b.style.setProperty('--c', c.color);
+    b.innerHTML = '<div><i></i>Chương ' + c.n + ' · ' + c.short + '</div><span>' + c.sub + '</span>'; b.onclick = function () { show(i); }; nav.appendChild(b); c.btn = b;
+    var f = document.createElement('div'); f.style.display = 'none'; f.style.position = 'absolute'; f.style.inset = '0'; f.id = 'v' + i;
+    f.innerHTML = '<div class="loading"><div class="spin"></div><div>Đang khởi động demo của Chương ' + c.n + '…</div></div>'; view.appendChild(f); c.pane = f;
+  });
+  function side(c) {
+    aside.style.setProperty('--c', c.color);
+    aside.innerHTML = '<h2>Đối chiếu · Chương ' + c.n + '</h2>' +
+      '<div class="card"><b class="h">Mục của báo cáo</b><ul>' + c.sec.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>' +
+      '<div class="card"><b class="h">Hình, bảng nên so</b><ul>' + c.refs.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>' +
+      '<div class="card"><b class="h">Nên thử trong demo</b><ul>' + c.try_.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>';
+  }
+  function ensure(i) {
+    var c = CH[i]; if (loaded[i]) return;
+    if (c.child && !status[c.child]) return;
+    var fr = document.createElement('iframe'); fr.src = c.url; fr.title = 'Chương ' + c.n; c.pane.innerHTML = ''; c.pane.appendChild(fr); loaded[i] = true;
+  }
+  function show(i) {
+    cur = i; CH.forEach(function (c, k) { c.btn.classList.toggle('active', k === i); c.pane.style.display = k === i ? 'block' : 'none'; });
+    side(CH[i]); ensure(i); location.hash = '#c' + CH[i].n;
+  }
+  function poll() {
+    fetch('/api/status').then(function (r) { return r.json(); }).then(function (s) {
+      status = s; CH.forEach(function (c) { var up = c.child ? s[c.child] : true; var d = c.btn.querySelector('i'); d.className = up ? 'up' : 'down'; });
+      ensure(cur);
+      var down = Object.keys(s).filter(function (k) { return !s[k]; }); $('#st').textContent = down.length ? 'Đang khởi động: ' + down.join(', ') : 'Mọi demo đã sẵn sàng';
+    }, function () { $('#st').textContent = 'Mất kết nối máy chủ'; });
+  }
+  $('#toggle').onclick = function () { aside.classList.toggle('hide'); this.textContent = aside.classList.contains('hide') ? 'Hiện đối chiếu' : 'Ẩn đối chiếu'; };
+  var start = parseInt((location.hash.match(/#c(\d)/) || [0, 1])[1], 10) - 1; if (!(start >= 0 && start < 7)) start = 0;
+  show(start); poll(); setInterval(poll, 3000);
+})();
+</script>
+</body>
+</html>

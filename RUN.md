@@ -6,6 +6,7 @@ Mở **PowerShell tại thư mục gốc dự án** rồi chạy lệnh của ph
 | Phần | Địa chỉ mở trên trình duyệt | Cổng |
 |---|---|---|
 | Agent 01 & Agent 02 (demo mèo đuổi chuột, hai người bán) | http://localhost:8100 | 8100 |
+| **Tiểu luận: demo gộp 7 chương (mỗi chương một tab)** | http://localhost:8500 | 8500 (tự mở thêm 8502, 8044, 8300) |
 | Project 01: Phòng khám AI 3D (hệ đa agent tiểu đường) | http://localhost:8200 | 8200 |
 | Tiểu luận Chương 6: Deep Graph (GCN trên đồ thị VN30) | http://localhost:8300 | 8300 |
 | Assignment 01–02: API (FastAPI) | http://localhost:8000/docs | 8000 |
@@ -28,6 +29,17 @@ cd web; npm install; cd ..
 ```
 
 Nếu không kích hoạt venv, thay `python` bằng `.\.venv\Scripts\python.exe` trong mọi lệnh bên dưới.
+
+## 0a. Tiểu luận: demo gộp bảy chương (một lệnh, mỗi chương một tab)
+
+```powershell
+python tieuluan_demo/server.py --open            # mở http://localhost:8500
+```
+
+Máy chủ tự khởi động các demo con trên 127.0.0.1 (Streamlit 8502 cho Chương 2–4, FastAPI 8044 cho Chương 5 và 7, Deep Graph 8300 cho Chương 6); Chương 1 do chính máy chủ này phục vụ.
+Mỗi tab có cột bên phải ghi mục, hình, bảng của báo cáo để đối chiếu. Log của từng demo con nằm ở thư mục tạm (`tieuluan_demo_<tên>.log`).
+Lần đầu các tab cần vài chục giây; lần hỏi RAG đầu tiên (Chương 5, 7) cần thêm 30–60 giây vì nạp mô hình sinh văn bản trên CPU.
+Nếu đã chạy riêng một demo con thì thêm `--no-children`.
 
 ## 0. Project 01: Phòng khám AI 3D (hệ đa agent cho bệnh tiểu đường)
 
@@ -168,7 +180,7 @@ Start-Process -WorkingDirectory web powershell "-NoExit","-Command","npm run dev
 Tắt tất cả ứng dụng đang giữ các cổng trên:
 
 ```powershell
-8000,8044,8100,8200,8300,8501,8502,5173 | ForEach-Object { Get-NetTCPConnection -LocalPort $_ -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force } }
+8000,8044,8100,8200,8300,8500,8501,8502,5173 | ForEach-Object { Get-NetTCPConnection -LocalPort $_ -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force } }
 ```
 
 ## 8. Gặp lỗi thường gặp
