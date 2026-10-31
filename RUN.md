@@ -6,6 +6,7 @@ Mở **PowerShell tại thư mục gốc dự án** rồi chạy lệnh của ph
 | Phần | Địa chỉ mở trên trình duyệt | Cổng |
 |---|---|---|
 | Agent 01 & Agent 02 (demo mèo đuổi chuột, hai người bán) | http://localhost:8100 | 8100 |
+| Project 01: Phòng khám AI 3D (hệ đa agent tiểu đường) | http://localhost:8200 | 8200 |
 | Assignment 01–02: API (FastAPI) | http://localhost:8000/docs | 8000 |
 | Assignment 01–02: Web (React) | http://localhost:5173 | 5173 |
 | Assignment 06: Dự báo RNN (Streamlit) | http://localhost:8501 | 8501 |
@@ -26,6 +27,18 @@ cd web; npm install; cd ..
 ```
 
 Nếu không kích hoạt venv, thay `python` bằng `.\.venv\Scripts\python.exe` trong mọi lệnh bên dưới.
+
+## 0. Project 01: Phòng khám AI 3D (hệ đa agent cho bệnh tiểu đường)
+
+```powershell
+python project01/server.py --open                # mở http://localhost:8200
+python project01/server.py --open --port 8210    # đổi cổng nếu bị trùng
+python -m pytest tests/test_project01.py -q      # 7 kiểm thử
+# Huấn luyện/đánh giá lại (tùy chọn, kết quả lưu ở project01/artifacts/)
+python project01/train/train_dl.py ; python project01/train/build_kg.py ; python project01/train/train_rl.py ; python project01/train/eval_rag.py
+```
+
+Thêm `?mock=1` vào địa chỉ để xem dữ liệu mẫu khi chưa chạy máy chủ API.
 
 ## 1. Agent 01 và Agent 02 (demo mèo đuổi chuột, hai người bán)
 
@@ -143,7 +156,7 @@ Start-Process -WorkingDirectory web powershell "-NoExit","-Command","npm run dev
 Tắt tất cả ứng dụng đang giữ các cổng trên:
 
 ```powershell
-8000,8044,8100,8501,8502,5173 | ForEach-Object { Get-NetTCPConnection -LocalPort $_ -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force } }
+8000,8044,8100,8200,8501,8502,5173 | ForEach-Object { Get-NetTCPConnection -LocalPort $_ -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force } }
 ```
 
 ## 8. Gặp lỗi thường gặp

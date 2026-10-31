@@ -1,0 +1,68 @@
+{
+ "patient": {
+  "name": "Bệnh nhân ảo",
+  "insulin_sensitivity": 0.8,
+  "baseline_glucose": 112
+ },
+ "state": {
+  "hour": 6,
+  "glucose": 118.0,
+  "carbs_on_board": 0.0,
+  "activity_on_board": 0.0,
+  "log": []
+ },
+ "actions": [
+  {
+   "id": "rest",
+   "label": "Nghỉ ngơi",
+   "emoji": "🛋️",
+   "desc": "Nghỉ một giờ, đường huyết gần như giữ nguyên."
+  },
+  {
+   "id": "light_meal",
+   "label": "Bữa nhẹ",
+   "emoji": "🥗",
+   "desc": "Salad, trái cây. Đường tăng nhẹ."
+  },
+  {
+   "id": "normal_meal",
+   "label": "Bữa thường",
+   "emoji": "🍚",
+   "desc": "Cơm và thức ăn cân đối."
+  },
+  {
+   "id": "heavy_meal",
+   "label": "Bữa nhiều tinh bột",
+   "emoji": "🍔",
+   "desc": "Đường huyết tăng vọt."
+  },
+  {
+   "id": "walk",
+   "label": "Đi bộ",
+   "emoji": "🚶",
+   "desc": "Đi bộ nhẹ giúp hạ đường huyết."
+  },
+  {
+   "id": "workout",
+   "label": "Tập luyện",
+   "emoji": "🏋️",
+   "desc": "Tập mạnh, hạ đường nhanh, coi chừng hạ quá thấp."
+  },
+  {
+   "id": "skip",
+   "label": "Bỏ qua giờ này",
+   "emoji": "⏭️",
+   "desc": "Không làm gì đặc biệt."
+  }
+ ],
+ "advice": {
+  "coach": {
+   "action": "light_meal",
+   "why": "Đường huyết đang ổn, một bữa nhẹ giữ năng lượng mà không tăng đột ngột."
+  },
+  "rule": {
+   "action": "rest",
+   "why": "Chưa có dấu hiệu nguy hiểm, cứ nghỉ ngơi và theo dõi."
+  }
+ }
+}

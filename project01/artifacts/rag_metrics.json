@@ -1,0 +1,178 @@
+{
+ "BM25": {
+  "hit_at_1": 0.375,
+  "hit_at_3": 0.5625,
+  "mrr": 0.4844,
+  "questions": 16,
+  "detail": [
+   {
+    "id": "DM01",
+    "question": "What organ makes insulin?",
+    "rank": null
+   },
+   {
+    "id": "DM02",
+    "question": "Which hormone helps glucose enter cells?",
+    "rank": 2
+   },
+   {
+    "id": "DM03",
+    "question": "What is the most common type of diabetes?",
+    "rank": null
+   },
+   {
+    "id": "DM04",
+    "question": "When does gestational diabetes develop?",
+    "rank": null
+   },
+   {
+    "id": "DM05",
+    "question": "Are glucose levels in prediabetes above normal?",
+    "rank": 1
+   },
+   {
+    "id": "DM06",
+    "question": "What attacks insulin-producing cells in type 1 diabetes?",
+    "rank": 1
+   },
+   {
+    "id": "DM07",
+    "question": "What causes monogenic diabetes?",
+    "rank": null
+   },
+   {
+    "id": "DM08",
+    "question": "How many months are reflected in an A1C blood test?",
+    "rank": 2
+   },
+   {
+    "id": "DM09",
+    "question": "How many hours should a person fast before the fasting plasma glucose test?",
+    "rank": 2
+   },
+   {
+    "id": "DM10",
+    "question": "Can an over-the-counter blood glucose meter diagnose diabetes?",
+    "rank": 1
+   },
+   {
+    "id": "DM11",
+    "question": "During which pregnancy weeks is gestational diabetes screening recommended?",
+    "rank": 4
+   },
+   {
+    "id": "DM12",
+    "question": "Which health measure corresponds to B in the diabetes ABCs?",
+    "rank": null
+   },
+   {
+    "id": "DM13",
+    "question": "Which health measure corresponds to C in the diabetes ABCs?",
+    "rank": null
+   },
+   {
+    "id": "DM14",
+    "question": "How many minutes of moderate activity per week does this source suggest?",
+    "rank": 1
+   },
+   {
+    "id": "DM15",
+    "question": "How many hours of sleep per night should most adults aim for according to this source?",
+    "rank": 1
+   },
+   {
+    "id": "DM16",
+    "question": "Can type 2 diabetes occur during childhood?",
+    "rank": 1
+   }
+  ]
+ },
+ "Graph-RAG": {
+  "hit_at_1": 0.4375,
+  "hit_at_3": 0.625,
+  "mrr": 0.5208,
+  "questions": 16,
+  "detail": [
+   {
+    "id": "DM01",
+    "question": "What organ makes insulin?",
+    "rank": null
+   },
+   {
+    "id": "DM02",
+    "question": "Which hormone helps glucose enter cells?",
+    "rank": 2
+   },
+   {
+    "id": "DM03",
+    "question": "What is the most common type of diabetes?",
+    "rank": null
+   },
+   {
+    "id": "DM04",
+    "question": "When does gestational diabetes develop?",
+    "rank": null
+   },
+   {
+    "id": "DM05",
+    "question": "Are glucose levels in prediabetes above normal?",
+    "rank": 1
+   },
+   {
+    "id": "DM06",
+    "question": "What attacks insulin-producing cells in type 1 diabetes?",
+    "rank": 1
+   },
+   {
+    "id": "DM07",
+    "question": "What causes monogenic diabetes?",
+    "rank": null
+   },
+   {
+    "id": "DM08",
+    "question": "How many months are reflected in an A1C blood test?",
+    "rank": 2
+   },
+   {
+    "id": "DM09",
+    "question": "How many hours should a person fast before the fasting plasma glucose test?",
+    "rank": 1
+   },
+   {
+    "id": "DM10",
+    "question": "Can an over-the-counter blood glucose meter diagnose diabetes?",
+    "rank": 1
+   },
+   {
+    "id": "DM11",
+    "question": "During which pregnancy weeks is gestational diabetes screening recommended?",
+    "rank": 3
+   },
+   {
+    "id": "DM12",
+    "question": "Which health measure corresponds to B in the diabetes ABCs?",
+    "rank": null
+   },
+   {
+    "id": "DM13",
+    "question": "Which health measure corresponds to C in the diabetes ABCs?",
+    "rank": null
+   },
+   {
+    "id": "DM14",
+    "question": "How many minutes of moderate activity per week does this source suggest?",
+    "rank": 1
+   },
+   {
+    "id": "DM15",
+    "question": "How many hours of sleep per night should most adults aim for according to this source?",
+    "rank": 1
+   },
+   {
+    "id": "DM16",
+    "question": "Can type 2 diabetes occur during childhood?",
+    "rank": 1
+   }
+  ]
+ }
+}

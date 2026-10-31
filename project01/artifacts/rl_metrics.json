@@ -1,0 +1,269 @@
+{
+ "episodes": 60000,
+ "alpha": 0.15,
+ "gamma": 0.97,
+ "seed": 11,
+ "states_visited": 1535,
+ "train_seconds": 93.2,
+ "actions": [
+  "rest",
+  "sweet",
+  "light_meal",
+  "normal_meal",
+  "heavy_meal",
+  "walk",
+  "workout"
+ ],
+ "curve": [
+  {
+   "episode": 2000,
+   "mean_return": -27.576,
+   "epsilon": 0.955
+  },
+  {
+   "episode": 4000,
+   "mean_return": -23.945,
+   "epsilon": 0.91
+  },
+  {
+   "episode": 6000,
+   "mean_return": -21.816,
+   "epsilon": 0.864
+  },
+  {
+   "episode": 8000,
+   "mean_return": -19.528,
+   "epsilon": 0.819
+  },
+  {
+   "episode": 10000,
+   "mean_return": -15.332,
+   "epsilon": 0.774
+  },
+  {
+   "episode": 12000,
+   "mean_return": -12.545,
+   "epsilon": 0.729
+  },
+  {
+   "episode": 14000,
+   "mean_return": -10.282,
+   "epsilon": 0.683
+  },
+  {
+   "episode": 16000,
+   "mean_return": -6.234,
+   "epsilon": 0.638
+  },
+  {
+   "episode": 18000,
+   "mean_return": -4.328,
+   "epsilon": 0.593
+  },
+  {
+   "episode": 20000,
+   "mean_return": -0.651,
+   "epsilon": 0.548
+  },
+  {
+   "episode": 22000,
+   "mean_return": 2.124,
+   "epsilon": 0.502
+  },
+  {
+   "episode": 24000,
+   "mean_return": 5.166,
+   "epsilon": 0.457
+  },
+  {
+   "episode": 26000,
+   "mean_return": 8.368,
+   "epsilon": 0.412
+  },
+  {
+   "episode": 28000,
+   "mean_return": 9.601,
+   "epsilon": 0.367
+  },
+  {
+   "episode": 30000,
+   "mean_return": 12.405,
+   "epsilon": 0.321
+  },
+  {
+   "episode": 32000,
+   "mean_return": 14.247,
+   "epsilon": 0.276
+  },
+  {
+   "episode": 34000,
+   "mean_return": 15.839,
+   "epsilon": 0.231
+  },
+  {
+   "episode": 36000,
+   "mean_return": 18.178,
+   "epsilon": 0.186
+  },
+  {
+   "episode": 38000,
+   "mean_return": 19.29,
+   "epsilon": 0.14
+  },
+  {
+   "episode": 40000,
+   "mean_return": 20.398,
+   "epsilon": 0.095
+  },
+  {
+   "episode": 42000,
+   "mean_return": 21.564,
+   "epsilon": 0.05
+  },
+  {
+   "episode": 44000,
+   "mean_return": 22.161,
+   "epsilon": 0.05
+  },
+  {
+   "episode": 46000,
+   "mean_return": 22.151,
+   "epsilon": 0.05
+  },
+  {
+   "episode": 48000,
+   "mean_return": 22.307,
+   "epsilon": 0.05
+  },
+  {
+   "episode": 50000,
+   "mean_return": 22.421,
+   "epsilon": 0.05
+  },
+  {
+   "episode": 52000,
+   "mean_return": 22.119,
+   "epsilon": 0.05
+  },
+  {
+   "episode": 54000,
+   "mean_return": 22.419,
+   "epsilon": 0.05
+  },
+  {
+   "episode": 56000,
+   "mean_return": 22.355,
+   "epsilon": 0.05
+  },
+  {
+   "episode": 58000,
+   "mean_return": 22.223,
+   "epsilon": 0.05
+  },
+  {
+   "episode": 60000,
+   "mean_return": 22.263,
+   "epsilon": 0.05
+  }
+ ],
+ "evaluation": {
+  "nhạy insulin tốt (s ≥ 0,85)": {
+   "rl": {
+    "name": "Huấn luyện viên RL",
+    "time_in_range": 0.9999,
+    "mean_glucose": 110.4,
+    "hypo_hours": 0.0,
+    "hyper_hours": 0.0,
+    "danger_hours": 0.0,
+    "mean_reward": 23.0,
+    "runs": 350
+   },
+   "rule": {
+    "name": "Huấn luyện viên theo luật",
+    "time_in_range": 0.9999,
+    "mean_glucose": 133.4,
+    "hypo_hours": 0.0,
+    "hyper_hours": 0.0,
+    "danger_hours": 0.0,
+    "mean_reward": 17.25,
+    "runs": 350
+   },
+   "none": {
+    "name": "Không có huấn luyện viên",
+    "time_in_range": 0.7246,
+    "mean_glucose": 162.0,
+    "hypo_hours": 0.0,
+    "hyper_hours": 6.61,
+    "danger_hours": 0.22,
+    "mean_reward": 3.46,
+    "runs": 350
+   }
+  },
+  "trung bình (0,55 ≤ s < 0,85)": {
+   "rl": {
+    "name": "Huấn luyện viên RL",
+    "time_in_range": 0.9995,
+    "mean_glucose": 108.4,
+    "hypo_hours": 0.01,
+    "hyper_hours": 0.0,
+    "danger_hours": 0.0,
+    "mean_reward": 23.39,
+    "runs": 350
+   },
+   "rule": {
+    "name": "Huấn luyện viên theo luật",
+    "time_in_range": 0.9444,
+    "mean_glucose": 151.9,
+    "hypo_hours": 0.0,
+    "hyper_hours": 1.33,
+    "danger_hours": 0.0,
+    "mean_reward": 10.13,
+    "runs": 350
+   },
+   "none": {
+    "name": "Không có huấn luyện viên",
+    "time_in_range": 0.1631,
+    "mean_glucose": 231.2,
+    "hypo_hours": 0.0,
+    "hyper_hours": 20.09,
+    "danger_hours": 8.46,
+    "mean_reward": -28.61,
+    "runs": 350
+   }
+  },
+  "kháng insulin (s < 0,55)": {
+   "rl": {
+    "name": "Huấn luyện viên RL",
+    "time_in_range": 1.0,
+    "mean_glucose": 113.4,
+    "hypo_hours": 0.0,
+    "hyper_hours": 0.0,
+    "danger_hours": 0.0,
+    "mean_reward": 23.23,
+    "runs": 350
+   },
+   "rule": {
+    "name": "Huấn luyện viên theo luật",
+    "time_in_range": 0.747,
+    "mean_glucose": 159.6,
+    "hypo_hours": 0.0,
+    "hyper_hours": 6.07,
+    "danger_hours": 0.0,
+    "mean_reward": 4.79,
+    "runs": 350
+   },
+   "none": {
+    "name": "Không có huấn luyện viên",
+    "time_in_range": 0.0811,
+    "mean_glucose": 282.3,
+    "hypo_hours": 0.0,
+    "hyper_hours": 22.05,
+    "danger_hours": 15.57,
+    "mean_reward": -43.74,
+    "runs": 350
+   }
+  }
+ },
+ "eval_patients_per_group": 70,
+ "eval_days_per_patient": 5
+}

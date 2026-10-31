@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phòng khám AI - Hệ đa agent cho bệnh tiểu đường</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232589e0'/%3E%3Crect x='26' y='12' width='12' height='40' rx='3' fill='white'/%3E%3Crect x='12' y='26' width='40' height='12' rx='3' fill='white'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-logo" aria-hidden="true"><i></i><i></i></span><div><b>Phòng khám AI</b><small>Hệ đa agent cho bệnh tiểu đường</small></div></div>
+  <nav class="tabs" role="tablist" aria-label="Chế độ">
+    <button class="tab active" data-mode="consult" role="tab" style="--tc:#2589e0"><span class="ti">🩺</span>Khám bệnh<kbd>1</kbd></button>
+    <button class="tab" data-mode="life" role="tab" style="--tc:#f0603a"><span class="ti">🎮</span>Sống 24 giờ<kbd>2</kbd></button>
+    <button class="tab" data-mode="kg" role="tab" style="--tc:#0d9f8f"><span class="ti">🕸️</span>Bản đồ tri thức<kbd>3</kbd></button>
+  </nav>
+  <div class="top-right">
+    <span id="mockBadge" class="badge-mock" hidden>Chế độ demo offline</span>
+    <button id="helpBtn" class="icon-btn" title="Phím tắt (?)" aria-label="Phím tắt">?</button>
+  </div>
+</header>
+
+<div class="layout">
+  <section class="stage" id="stage">
+    <div id="bubbles" class="bubbles"></div>
+    <div class="stage-chip" id="stageChip">Kéo chuột để xoay, cuộn để phóng to</div>
+    <div class="alert-vignette"></div>
+    <div class="hud" id="hud" hidden>
+      <div class="hud-caption" id="hudCaption"></div>
+      <div class="hud-bar">
+        <div class="hud-dots" id="hudDots"></div>
+        <button class="btn sm" id="btnSkip" title="Bỏ qua (S)">⏭ Bỏ qua</button>
+        <button class="btn sm" id="btnFast" title="Tua nhanh (F)">⏩ Tua nhanh</button>
+        <button class="btn sm" id="btnReplay" title="Phát lại (R)">↺ Phát lại</button>
+      </div>
+    </div>
+    <div class="stage-loading" id="stageLoading"><div class="spinner"></div><b>Đang dựng phòng khám 3D...</b></div>
+    <div class="webgl-error" id="webglError" hidden><b>Trình duyệt không bật được WebGL.</b><span>Hãy bật tăng tốc phần cứng hoặc thử trình duyệt khác. Các bảng bên phải vẫn dùng được.</span></div>
+  </section>
+
+  <aside class="panel" id="panel">
+    <div class="banner" id="banner" hidden></div>
+
+    <!-- KHÁM BỆNH -->
+    <div class="view" id="view-consult">
+      <div id="consultForm">
+        <div class="card hero">
+          <h2>Chào mừng đến Phòng khám AI</h2>
+          <p>Sáu nhân vật AI sẽ cùng hội chẩn hồ sơ của bạn. Chọn một vai có sẵn hoặc tự nhập thông tin rồi bấm <b>Vào khám</b>.</p>
+        </div>
+        <div class="card">
+          <h3>1. Chọn một vai</h3>
+          <div class="personas" id="personas"></div>
+        </div>
+        <div class="card" id="avatarCard">
+          <h3>2. Nhân vật của bạn</h3>
+          <div class="avatar-row">
+            <label class="fld"><span>Tên hiển thị</span><input type="text" id="avName" maxlength="24" placeholder="Nhập tên"></label>
+            <div class="fld"><span>Giới tính</span><div class="seg" id="avSex"><button data-v="female">Nữ</button><button data-v="male">Nam</button></div></div>
+          </div>
+          <div class="fld"><span>Màu áo</span><div class="swatches" id="avColors"></div></div>
+          <div class="bmi-line" id="bmiLine"></div>
+        </div>
+        <div class="card">
+          <h3>3. Hồ sơ sức khỏe</h3>
+          <div id="formGroups"></div>
+        </div>
+        <div class="sticky-cta"><button class="btn primary big" id="btnConsult">🚪 Vào khám</button></div>
+      </div>
+      <div id="consultRun" hidden>
+        <div class="card"><h3>Diễn biến hội chẩn</h3><div class="chat" id="chatLog"></div></div>
+        <div id="consultResult"></div>
+      </div>
+    </div>
+
+    <!-- SỐNG 24 GIỜ -->
+    <div class="view" id="view-life" hidden>
+      <div id="lifeIntro">
+        <div class="card hero life">
+          <h2>Sống 24 giờ</h2>
+          <p>Chăm sóc một bệnh nhân ảo từ 6 giờ sáng đến 6 giờ sáng hôm sau. Mỗi giờ chọn một hành động để giữ đường huyết trong vùng an toàn. Đây là mô phỏng đồ chơi, không phải y khoa thật.</p>
+          <label class="fld"><span>Hạt giống ngẫu nhiên (seed)</span><input type="number" id="lifeSeed" value="7" min="1" max="9999"></label>
+          <button class="btn primary big" id="btnLifeStart">▶ Bắt đầu ngày mới</button>
+        </div>
+      </div>
+      <div id="lifePlay" hidden>
+        <div class="card gl-card">
+          <div class="gl-top"><div><small>Giờ</small><b id="lifeClock">06:00</b></div><div class="gl-val"><b id="lifeGl">112</b><small>mg/dL</small></div><div class="zone-pill" id="lifeZonePill">An toàn</div></div>
+          <div class="zonebar" id="zoneBar"><span class="z low"></span><span class="z ok"></span><span class="z high"></span><span class="z danger"></span><i class="marker" id="zoneMarker"></i></div>
+          <div class="zone-scale"><span>40</span><span>70</span><span>180</span><span>250</span><span>300</span></div>
+          <canvas id="lifeChart" width="560" height="190"></canvas>
+          <div class="progress"><i id="lifeProg"></i></div>
+        </div>
+        <div class="card">
+          <div class="row-between"><h3>Lời khuyên</h3>
+            <label class="switch"><input type="checkbox" id="autoPlay"><span class="slider"></span><b>Nghe lời huấn luyện viên</b></label></div>
+          <div class="advice-cards" id="adviceCards"></div>
+        </div>
+        <div class="card"><h3>Chọn hành động cho giờ này</h3><div class="actions" id="actionGrid"></div><div class="life-events" id="lifeEvents"></div></div>
+      </div>
+      <div id="lifeEnd" hidden></div>
+    </div>
+
+    <!-- BẢN ĐỒ TRI THỨC -->
+    <div class="view" id="view-kg" hidden>
+      <div class="card hero kg"><h2>Bản đồ tri thức</h2><p>Đồ thị 3D về bệnh tiểu đường. Kéo để xoay, bấm vào một nút để đọc mô tả.</p>
+        <form class="search" id="kgForm"><input type="search" id="kgQ" placeholder="Tìm: triệu chứng tiểu đường, huyết áp..." aria-label="Tìm kiếm"><button class="btn primary" type="submit">Tìm</button></form>
+        <div class="chips" id="kgSuggest"></div>
+      </div>
+      <div class="card" id="kgLegend"><div class="row-between"><h3>Chú giải</h3><label class="switch"><input type="checkbox" id="kgEdgeToggle" checked><span class="slider"></span><b>Nhãn quan hệ</b></label></div><div class="legend" id="legendItems"></div></div>
+      <div class="card" id="kgNodeInfo" hidden></div>
+      <div id="kgSearchResult"></div>
+    </div>
+  </aside>
+</div>
+
+<footer class="foot"><span class="foot-ico">⚕️</span><b>Chỉ để học tập, không phải chẩn đoán y khoa.</b><span class="foot-sub" id="footModel"></span></footer>
+
+<div class="modal" id="helpModal" hidden><div class="modal-card"><h3>Phím tắt</h3>
+  <ul class="keys"><li><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> Chuyển chế độ</li><li><kbd>Enter</kbd> Vào khám / bắt đầu</li><li><kbd>S</kbd> Bỏ qua hội chẩn</li><li><kbd>F</kbd> Tua nhanh</li><li><kbd>R</kbd> Phát lại</li><li><kbd>H</kbd> Về góc nhìn toàn cảnh</li><li><kbd>?</kbd> Mở bảng này</li><li><kbd>Esc</kbd> Đóng cửa sổ</li></ul>
+  <p class="muted">Thêm <code>?mock=1</code> vào địa chỉ để chạy bằng dữ liệu mẫu (offline).</p>
+  <button class="btn primary" id="helpClose">Đã hiểu</button></div></div>
+
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="scene.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

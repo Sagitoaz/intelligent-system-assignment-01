@@ -1,0 +1,1076 @@
+{
+ "nodes": [
+  {
+   "id": "diabetes",
+   "label": "Diabetes",
+   "vi": "Bệnh tiểu đường",
+   "type": "condition",
+   "desc": "Bệnh xảy ra khi đường huyết (glucose) trong máu quá cao vì cơ thể thiếu hoặc không dùng tốt insulin.",
+   "aliases": [
+    "tiểu đường",
+    "đái tháo đường",
+    "diabetes"
+   ],
+   "aliases_en": [
+    "diabetes blood glucose insulin"
+   ],
+   "passages": [
+    "symptoms-causes:51",
+    "what-is-diabetes:9",
+    "managing-diabetes:101"
+   ]
+  },
+  {
+   "id": "type1",
+   "label": "Type 1 diabetes",
+   "vi": "Tiểu đường típ 1",
+   "type": "condition",
+   "desc": "Hệ miễn dịch phá hủy tế bào beta của tụy nên cơ thể gần như không tạo insulin; hay gặp ở trẻ em và người trẻ.",
+   "aliases": [
+    "tip 1",
+    "typ 1",
+    "type 1",
+    "loại 1"
+   ],
+   "aliases_en": [
+    "type 1 diabetes immune system beta cells"
+   ],
+   "passages": [
+    "symptoms-causes:50",
+    "tests-diagnosis:62",
+    "what-is-diabetes:14"
+   ]
+  },
+  {
+   "id": "type2",
+   "label": "Type 2 diabetes",
+   "vi": "Tiểu đường típ 2",
+   "type": "condition",
+   "desc": "Dạng phổ biến nhất (khoảng 90–95% ca): tế bào kháng insulin, tụy sản xuất không đủ; tiến triển chậm qua nhiều năm.",
+   "aliases": [
+    "tip 2",
+    "typ 2",
+    "type 2",
+    "loại 2"
+   ],
+   "aliases_en": [
+    "type 2 diabetes insulin resistance"
+   ],
+   "passages": [
+    "symptoms-causes:54",
+    "symptoms-causes:56",
+    "symptoms-causes:86"
+   ]
+  },
+  {
+   "id": "prediabetes",
+   "label": "Prediabetes",
+   "vi": "Tiền tiểu đường",
+   "type": "condition",
+   "desc": "Đường huyết cao hơn bình thường nhưng chưa đủ để chẩn đoán tiểu đường típ 2; còn cơ hội đảo ngược nếu thay đổi lối sống.",
+   "aliases": [
+    "tien tieu duong",
+    "prediabetes"
+   ],
+   "aliases_en": [
+    "prediabetes blood glucose higher than normal"
+   ],
+   "passages": [
+    "what-is-diabetes:21",
+    "symptoms-causes:55",
+    "tests-diagnosis:13"
+   ]
+  },
+  {
+   "id": "gestational",
+   "label": "Gestational diabetes",
+   "vi": "Tiểu đường thai kỳ",
+   "type": "condition",
+   "desc": "Xuất hiện khi mang thai, thường hết sau sinh nhưng làm tăng nguy cơ tiểu đường típ 2 về sau.",
+   "aliases": [
+    "thai ky",
+    "mang thai",
+    "gestational"
+   ],
+   "aliases_en": [
+    "gestational diabetes pregnancy"
+   ],
+   "passages": [
+    "what-is-diabetes:19",
+    "symptoms-causes:64",
+    "tests-diagnosis:34"
+   ]
+  },
+  {
+   "id": "insulin_res",
+   "label": "Insulin resistance",
+   "vi": "Kháng insulin",
+   "type": "condition",
+   "desc": "Tế bào không đáp ứng tốt với insulin nên glucose khó vào tế bào và ở lại trong máu.",
+   "aliases": [
+    "khang insulin",
+    "insulin resistance"
+   ],
+   "aliases_en": [
+    "insulin resistance cells glucose"
+   ],
+   "passages": [
+    "symptoms-causes:54",
+    "symptoms-causes:69",
+    "symptoms-causes:51"
+   ]
+  },
+  {
+   "id": "thirst",
+   "label": "Increased thirst",
+   "vi": "Khát nước nhiều",
+   "type": "symptom",
+   "desc": "Đường huyết cao kéo nước ra khỏi mô khiến người bệnh khát liên tục.",
+   "aliases": [
+    "khat nuoc",
+    "khat"
+   ],
+   "aliases_en": [
+    "thirsty thirst"
+   ],
+   "passages": [
+    "tests-diagnosis:19"
+   ]
+  },
+  {
+   "id": "urination",
+   "label": "Frequent urination",
+   "vi": "Đi tiểu nhiều",
+   "type": "symptom",
+   "desc": "Thận đào thải bớt glucose qua nước tiểu nên phải đi tiểu thường xuyên, kể cả ban đêm.",
+   "aliases": [
+    "di tieu nhieu",
+    "tieu nhieu"
+   ],
+   "aliases_en": [
+    "urinate more often"
+   ],
+   "passages": [
+    "tests-diagnosis:19",
+    "symptoms-causes:47",
+    "symptoms-causes:87"
+   ]
+  },
+  {
+   "id": "fatigue",
+   "label": "Fatigue",
+   "vi": "Mệt mỏi",
+   "type": "symptom",
+   "desc": "Glucose không vào được tế bào để tạo năng lượng nên người bệnh mệt mỏi, uể oải.",
+   "aliases": [
+    "met moi",
+    "met",
+    "uể oải"
+   ],
+   "aliases_en": [
+    "tired fatigue feeling very tired"
+   ],
+   "passages": [
+    "tests-diagnosis:19",
+    "managing-diabetes:64",
+    "managing-diabetes:71"
+   ]
+  },
+  {
+   "id": "blurred",
+   "label": "Blurred vision",
+   "vi": "Nhìn mờ",
+   "type": "symptom",
+   "desc": "Đường huyết cao làm thay đổi hình dạng thấu kính mắt nên nhìn mờ.",
+   "aliases": [
+    "nhin mo",
+    "mo mat"
+   ],
+   "aliases_en": [
+    "blurry vision"
+   ],
+   "passages": []
+  },
+  {
+   "id": "slow_heal",
+   "label": "Slow-healing sores",
+   "vi": "Vết thương lâu lành",
+   "type": "symptom",
+   "desc": "Đường huyết cao làm giảm lưu thông máu và khả năng chống nhiễm trùng nên vết loét, vết cắt lâu lành.",
+   "aliases": [
+    "vet thuong",
+    "lau lanh",
+    "loet"
+   ],
+   "aliases_en": [
+    "sores that heal slowly infections"
+   ],
+   "passages": [
+    "symptoms-causes:23",
+    "symptoms-causes:41",
+    "symptoms-causes:31"
+   ]
+  },
+  {
+   "id": "weight_loss",
+   "label": "Unexplained weight loss",
+   "vi": "Sụt cân không rõ lý do",
+   "type": "symptom",
+   "desc": "Cơ thể đốt mỡ và cơ để lấy năng lượng khi thiếu insulin; thường gặp ở típ 1.",
+   "aliases": [
+    "sut can",
+    "gay sut",
+    "giam can"
+   ],
+   "aliases_en": [
+    "weight loss unexplained"
+   ],
+   "passages": [
+    "symptoms-causes:26",
+    "managing-diabetes:100",
+    "managing-diabetes:36"
+   ]
+  },
+  {
+   "id": "dka",
+   "label": "Diabetic ketoacidosis",
+   "vi": "Nhiễm toan ceton",
+   "type": "complication",
+   "desc": "Biến chứng cấp cứu khi cơ thể thiếu insulin nặng và tích tụ ceton trong máu; cần đi cấp cứu ngay.",
+   "aliases": [
+    "nhiem toan",
+    "ceton",
+    "dka"
+   ],
+   "aliases_en": [
+    "diabetic ketoacidosis DKA ketones"
+   ],
+   "passages": [
+    "managing-diabetes:73",
+    "symptoms-causes:32",
+    "managing-diabetes:46"
+   ]
+  },
+  {
+   "id": "overweight",
+   "label": "Overweight / obesity",
+   "vi": "Thừa cân, béo phì",
+   "type": "risk_factor",
+   "desc": "Mỡ thừa, nhất là mỡ bụng, làm tăng kháng insulin; là yếu tố nguy cơ chính có thể thay đổi được.",
+   "aliases": [
+    "thua can",
+    "beo phi",
+    "bmi",
+    "can nang"
+   ],
+   "aliases_en": [
+    "overweight obesity weight"
+   ],
+   "passages": [
+    "managing-diabetes:36",
+    "tests-diagnosis:25",
+    "tests-diagnosis:28"
+   ]
+  },
+  {
+   "id": "inactivity",
+   "label": "Physical inactivity",
+   "vi": "Ít vận động",
+   "type": "risk_factor",
+   "desc": "Ít hoạt động thể chất làm tăng nguy cơ tiểu đường típ 2; vận động giúp hạ đường huyết, huyết áp và mỡ máu.",
+   "aliases": [
+    "it van dong",
+    "van dong",
+    "the duc",
+    "ngoi nhieu"
+   ],
+   "aliases_en": [
+    "physically active less than 3 times a week"
+   ],
+   "passages": [
+    "symptoms-causes:66",
+    "symptoms-causes:61",
+    "managing-diabetes:34"
+   ]
+  },
+  {
+   "id": "age",
+   "label": "Age 35 or older",
+   "vi": "Tuổi từ 35 trở lên",
+   "type": "risk_factor",
+   "desc": "Nguy cơ tiểu đường típ 2 tăng dần theo tuổi; người lớn tuổi nên được tầm soát định kỳ.",
+   "aliases": [
+    "tuoi",
+    "lon tuoi",
+    "cao tuoi"
+   ],
+   "aliases_en": [
+    "age 35 or older risk increases as a person gets older"
+   ],
+   "passages": [
+    "symptoms-causes:58",
+    "symptoms-causes:92",
+    "managing-diabetes:58"
+   ]
+  },
+  {
+   "id": "family",
+   "label": "Family history",
+   "vi": "Tiền sử gia đình",
+   "type": "risk_factor",
+   "desc": "Có cha mẹ hoặc anh chị em ruột bị tiểu đường làm tăng nguy cơ; không thay đổi được.",
+   "aliases": [
+    "gia dinh",
+    "di truyen",
+    "cha me"
+   ],
+   "aliases_en": [
+    "family history parent sibling"
+   ],
+   "passages": [
+    "symptoms-causes:73",
+    "tests-diagnosis:63",
+    "symptoms-causes:65"
+   ]
+  },
+  {
+   "id": "high_bp",
+   "label": "High blood pressure",
+   "vi": "Huyết áp cao",
+   "type": "risk_factor",
+   "desc": "Huyết áp cao thường đi cùng tiểu đường típ 2 và làm tăng nguy cơ biến chứng tim, thận.",
+   "aliases": [
+    "huyet ap",
+    "cao huyet ap"
+   ],
+   "aliases_en": [
+    "high blood pressure"
+   ],
+   "passages": [
+    "managing-diabetes:23",
+    "what-is-diabetes:30",
+    "managing-diabetes:66"
+   ]
+  },
+  {
+   "id": "high_chol",
+   "label": "High cholesterol",
+   "vi": "Mỡ máu cao",
+   "type": "risk_factor",
+   "desc": "HDL thấp và triglyceride cao là yếu tố nguy cơ; mỡ máu cần được kiểm soát cùng đường huyết.",
+   "aliases": [
+    "mo mmau",
+    "cholesterol"
+   ],
+   "aliases_en": [
+    "cholesterol triglycerides HDL"
+   ],
+   "passages": [
+    "managing-diabetes:25",
+    "symptoms-causes:100",
+    "managing-diabetes:29"
+   ]
+  },
+  {
+   "id": "smoking",
+   "label": "Smoking",
+   "vi": "Hút thuốc",
+   "type": "risk_factor",
+   "desc": "Hút thuốc làm tăng nguy cơ tiểu đường típ 2 và làm biến chứng mạch máu nặng hơn; bỏ thuốc rất có lợi.",
+   "aliases": [
+    "hut thuoc",
+    "thuoc la"
+   ],
+   "aliases_en": [
+    "smoking quit smoking"
+   ],
+   "passages": [
+    "managing-diabetes:27",
+    "symptoms-causes:65"
+   ]
+  },
+  {
+   "id": "hx_gdm",
+   "label": "History of gestational diabetes",
+   "vi": "Từng bị tiểu đường thai kỳ",
+   "type": "risk_factor",
+   "desc": "Phụ nữ từng bị tiểu đường thai kỳ hoặc sinh con trên 4 kg có nguy cơ cao hơn.",
+   "aliases": [
+    "tieu duong thai ky",
+    "sinh con"
+   ],
+   "aliases_en": [
+    "history of gestational diabetes baby weighing 9 pounds"
+   ],
+   "passages": [
+    "symptoms-causes:64",
+    "symptoms-causes:48",
+    "symptoms-causes:73"
+   ]
+  },
+  {
+   "id": "a1c",
+   "label": "A1C test",
+   "vi": "Xét nghiệm A1C",
+   "type": "test",
+   "desc": "Đo đường huyết trung bình 2–3 tháng. Theo chuẩn ADA: từ 6,5% trở lên là tiểu đường; 5,7–6,4% là tiền tiểu đường.",
+   "aliases": [
+    "a1c",
+    "hba1c",
+    "duong huyet trung binh"
+   ],
+   "aliases_en": [
+    "A1C test average blood glucose"
+   ],
+   "passages": [
+    "tests-diagnosis:43",
+    "tests-diagnosis:41",
+    "managing-diabetes:21"
+   ]
+  },
+  {
+   "id": "fpg",
+   "label": "Fasting plasma glucose",
+   "vi": "Đường huyết lúc đói (FPG)",
+   "type": "test",
+   "desc": "Đo sau nhịn ăn ít nhất 8 giờ. Theo chuẩn ADA: từ 126 mg/dL trở lên là tiểu đường; 100–125 mg/dL là tiền tiểu đường.",
+   "aliases": [
+    "luc doi",
+    "fpg",
+    "nhin an",
+    "duong huyet doi"
+   ],
+   "aliases_en": [
+    "fasting plasma glucose FPG fasted 8 hours"
+   ],
+   "passages": [
+    "tests-diagnosis:39",
+    "tests-diagnosis:45",
+    "tests-diagnosis:50"
+   ]
+  },
+  {
+   "id": "ogtt",
+   "label": "Oral glucose tolerance test",
+   "vi": "Nghiệm pháp dung nạp glucose (OGTT)",
+   "type": "test",
+   "desc": "Đo đường huyết sau uống dung dịch glucose 2 giờ. Theo chuẩn ADA: từ 200 mg/dL là tiểu đường; 140–199 mg/dL là tiền tiểu đường.",
+   "aliases": [
+    "ogtt",
+    "dung nap glucose",
+    "uong duong"
+   ],
+   "aliases_en": [
+    "oral glucose tolerance test OGTT"
+   ],
+   "passages": [
+    "tests-diagnosis:49",
+    "tests-diagnosis:47",
+    "tests-diagnosis:51"
+   ]
+  },
+  {
+   "id": "rpg",
+   "label": "Random plasma glucose",
+   "vi": "Đường huyết ngẫu nhiên",
+   "type": "test",
+   "desc": "Đo vào bất kỳ lúc nào khi có triệu chứng; từ 200 mg/dL kèm triệu chứng gợi ý tiểu đường.",
+   "aliases": [
+    "ngau nhien",
+    "bat ky luc nao"
+   ],
+   "aliases_en": [
+    "random plasma glucose test symptoms"
+   ],
+   "passages": [
+    "tests-diagnosis:45",
+    "tests-diagnosis:39",
+    "tests-diagnosis:47"
+   ]
+  },
+  {
+   "id": "screening",
+   "label": "Routine screening",
+   "vi": "Tầm soát định kỳ",
+   "type": "test",
+   "desc": "Người có yếu tố nguy cơ nên xét nghiệm định kỳ; kết quả bình thường vẫn nên làm lại sau mỗi 3 năm.",
+   "aliases": [
+    "tam soat",
+    "xet nghiem dinh ky",
+    "kham"
+   ],
+   "aliases_en": [
+    "routine testing risk factors retested every 3 years"
+   ],
+   "passages": [
+    "tests-diagnosis:29",
+    "tests-diagnosis:22",
+    "symptoms-causes:70"
+   ]
+  },
+  {
+   "id": "weight_mgmt",
+   "label": "Healthy weight",
+   "vi": "Giữ cân nặng hợp lý",
+   "type": "lifestyle",
+   "desc": "Giảm một phần cân nặng giúp giảm kháng insulin; hỏi nhóm chăm sóc sức khỏe về kế hoạch phù hợp.",
+   "aliases": [
+    "giam can",
+    "can nang hop ly",
+    "giu can"
+   ],
+   "aliases_en": [
+    "manage your weight lose weight"
+   ],
+   "passages": [
+    "managing-diabetes:36",
+    "managing-diabetes:100",
+    "what-is-diabetes:17"
+   ]
+  },
+  {
+   "id": "activity",
+   "label": "Physical activity",
+   "vi": "Vận động đều đặn",
+   "type": "lifestyle",
+   "desc": "Nên ít nhất 150 phút mỗi tuần hoạt động cường độ vừa như đi bộ nhanh; có thể thêm bài tập sức mạnh.",
+   "aliases": [
+    "van dong",
+    "di bo",
+    "tap the duc",
+    "150 phut"
+   ],
+   "aliases_en": [
+    "physical activity 150 minutes brisk walking"
+   ],
+   "passages": [
+    "managing-diabetes:34",
+    "managing-diabetes:36",
+    "managing-diabetes:64"
+   ]
+  },
+  {
+   "id": "healthy_eating",
+   "label": "Healthy eating",
+   "vi": "Ăn uống lành mạnh",
+   "type": "lifestyle",
+   "desc": "Ưu tiên rau, trái cây, ngũ cốc nguyên hạt, đạm nạc; hạn chế đồ uống có đường và thức ăn nhiều đường tinh luyện.",
+   "aliases": [
+    "an uong",
+    "che do an",
+    "thuc don",
+    "bua an"
+   ],
+   "aliases_en": [
+    "healthy eating meal plan vegetables"
+   ],
+   "passages": [
+    "managing-diabetes:64",
+    "managing-diabetes:71",
+    "managing-diabetes:83"
+   ]
+  },
+  {
+   "id": "quit_smoking",
+   "label": "Quitting smoking",
+   "vi": "Bỏ thuốc lá",
+   "type": "lifestyle",
+   "desc": "Bỏ thuốc giúp giảm nguy cơ biến chứng tim mạch và cải thiện kiểm soát đường huyết.",
+   "aliases": [
+    "bo thuoc"
+   ],
+   "aliases_en": [
+    "quit smoking"
+   ],
+   "passages": [
+    "managing-diabetes:27",
+    "symptoms-causes:65"
+   ]
+  },
+  {
+   "id": "glucose_monitor",
+   "label": "Blood glucose monitoring",
+   "vi": "Tự theo dõi đường huyết",
+   "type": "treatment",
+   "desc": "Đo đường huyết tại nhà (hoặc máy theo dõi liên tục CGM) giúp tránh đường huyết quá cao hoặc quá thấp.",
+   "aliases": [
+    "theo doi duong huyet",
+    "do duong huyet",
+    "cgm"
+   ],
+   "aliases_en": [
+    "check blood glucose level at home CGM time in range"
+   ],
+   "passages": [
+    "managing-diabetes:59",
+    "managing-diabetes:48",
+    "managing-diabetes:45"
+   ]
+  },
+  {
+   "id": "time_in_range",
+   "label": "Time in range",
+   "vi": "Thời gian trong ngưỡng an toàn",
+   "type": "treatment",
+   "desc": "Phần trăm thời gian đường huyết nằm trong khoảng mục tiêu; là chỉ số dùng trong demo huấn luyện viên RL.",
+   "aliases": [
+    "trong nguong",
+    "time in range"
+   ],
+   "aliases_en": [
+    "time in range percentage of time glucose"
+   ],
+   "passages": [
+    "managing-diabetes:59",
+    "tests-diagnosis:43",
+    "managing-diabetes:58"
+   ]
+  },
+  {
+   "id": "medicines",
+   "label": "Diabetes medicines",
+   "vi": "Thuốc điều trị tiểu đường",
+   "type": "treatment",
+   "desc": "Gồm thuốc uống và thuốc tiêm do bác sĩ chỉ định; không tự ý dùng hoặc ngừng.",
+   "aliases": [
+    "thuoc",
+    "dieu tri"
+   ],
+   "aliases_en": [
+    "diabetes medicines insulin"
+   ],
+   "passages": [
+    "symptoms-causes:94",
+    "managing-diabetes:42",
+    "managing-diabetes:45"
+   ]
+  },
+  {
+   "id": "insulin_tx",
+   "label": "Insulin therapy",
+   "vi": "Điều trị bằng insulin",
+   "type": "treatment",
+   "desc": "Bắt buộc với típ 1 và một số người típ 2; liều do bác sĩ quyết định.",
+   "aliases": [
+    "tiem insulin",
+    "insulin"
+   ],
+   "aliases_en": [
+    "insulin take insulin"
+   ],
+   "passages": [
+    "what-is-diabetes:14",
+    "symptoms-causes:92",
+    "symptoms-causes:54"
+   ]
+  },
+  {
+   "id": "hypo",
+   "label": "Hypoglycemia",
+   "vi": "Hạ đường huyết",
+   "type": "complication",
+   "desc": "Đường huyết dưới 70 mg/dL ở người bệnh tiểu đường: run, đói, vã mồ hôi; cần ăn nhanh đường hấp thu nhanh và báo bác sĩ.",
+   "aliases": [
+    "ha duong huyet",
+    "duong huyet thap"
+   ],
+   "aliases_en": [
+    "hypoglycemia blood glucose too low below 70 mg/dL"
+   ],
+   "passages": [
+    "managing-diabetes:60",
+    "managing-diabetes:66",
+    "tests-diagnosis:47"
+   ]
+  },
+  {
+   "id": "hyper",
+   "label": "Hyperglycemia",
+   "vi": "Tăng đường huyết",
+   "type": "complication",
+   "desc": "Đường huyết cao kéo dài gây khát, tiểu nhiều và tổn thương mạch máu, thần kinh về lâu dài.",
+   "aliases": [
+    "tang duong huyet",
+    "duong huyet cao"
+   ],
+   "aliases_en": [
+    "high blood glucose hyperglycemia"
+   ],
+   "passages": [
+    "managing-diabetes:66",
+    "tests-diagnosis:50",
+    "symptoms-causes:55"
+   ]
+  },
+  {
+   "id": "heart",
+   "label": "Heart disease",
+   "vi": "Bệnh tim mạch",
+   "type": "complication",
+   "desc": "Tiểu đường làm tăng nguy cơ nhồi máu cơ tim và đột quỵ.",
+   "aliases": [
+    "tim",
+    "tim mach",
+    "nhoi mau",
+    "dot quy"
+   ],
+   "aliases_en": [
+    "heart disease stroke"
+   ],
+   "passages": [
+    "symptoms-causes:101",
+    "managing-diabetes:19",
+    "managing-diabetes:90"
+   ]
+  },
+  {
+   "id": "kidney",
+   "label": "Kidney disease",
+   "vi": "Bệnh thận",
+   "type": "complication",
+   "desc": "Đường huyết cao lâu ngày làm tổn thương các mạch máu nhỏ ở thận.",
+   "aliases": [
+    "than",
+    "suy than"
+   ],
+   "aliases_en": [
+    "kidney disease damage"
+   ],
+   "passages": [
+    "managing-diabetes:90",
+    "symptoms-causes:84",
+    "managing-diabetes:19"
+   ]
+  },
+  {
+   "id": "eye",
+   "label": "Eye damage",
+   "vi": "Tổn thương mắt",
+   "type": "complication",
+   "desc": "Có thể dẫn đến bệnh võng mạc đái tháo đường và mù lòa nếu không kiểm soát và khám mắt định kỳ.",
+   "aliases": [
+    "mat",
+    "vong mac"
+   ],
+   "aliases_en": [
+    "eye damage retinopathy"
+   ],
+   "passages": [
+    "what-is-diabetes:31",
+    "managing-diabetes:112",
+    "symptoms-causes:84"
+   ]
+  },
+  {
+   "id": "nerve",
+   "label": "Nerve damage",
+   "vi": "Tổn thương thần kinh",
+   "type": "complication",
+   "desc": "Gây tê, ngứa ran hoặc đau ở bàn chân, bàn tay; làm tăng nguy cơ loét chân.",
+   "aliases": [
+    "than kinh",
+    "te chan",
+    "te tay"
+   ],
+   "aliases_en": [
+    "nerve damage neuropathy feet"
+   ],
+   "passages": [
+    "what-is-diabetes:30",
+    "what-is-diabetes:31",
+    "managing-diabetes:112"
+   ]
+  },
+  {
+   "id": "foot",
+   "label": "Foot problems",
+   "vi": "Biến chứng bàn chân",
+   "type": "complication",
+   "desc": "Giảm cảm giác và lưu thông máu dễ gây loét, nhiễm trùng; cần kiểm tra chân hằng ngày.",
+   "aliases": [
+    "ban chan",
+    "loet chan"
+   ],
+   "aliases_en": [
+    "foot problems feet sores"
+   ],
+   "passages": [
+    "managing-diabetes:90",
+    "what-is-diabetes:30",
+    "managing-diabetes:19"
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "source": "type1",
+   "target": "diabetes",
+   "rel": "is_a"
+  },
+  {
+   "source": "type2",
+   "target": "diabetes",
+   "rel": "is_a"
+  },
+  {
+   "source": "gestational",
+   "target": "diabetes",
+   "rel": "is_a"
+  },
+  {
+   "source": "prediabetes",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "insulin_res",
+   "target": "type2",
+   "rel": "causes"
+  },
+  {
+   "source": "overweight",
+   "target": "insulin_res",
+   "rel": "causes"
+  },
+  {
+   "source": "thirst",
+   "target": "diabetes",
+   "rel": "symptom_of"
+  },
+  {
+   "source": "urination",
+   "target": "diabetes",
+   "rel": "symptom_of"
+  },
+  {
+   "source": "fatigue",
+   "target": "diabetes",
+   "rel": "symptom_of"
+  },
+  {
+   "source": "blurred",
+   "target": "diabetes",
+   "rel": "symptom_of"
+  },
+  {
+   "source": "slow_heal",
+   "target": "diabetes",
+   "rel": "symptom_of"
+  },
+  {
+   "source": "weight_loss",
+   "target": "type1",
+   "rel": "symptom_of"
+  },
+  {
+   "source": "dka",
+   "target": "type1",
+   "rel": "complication_of"
+  },
+  {
+   "source": "overweight",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "inactivity",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "age",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "family",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "high_bp",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "high_chol",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "smoking",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "hx_gdm",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "diabetes",
+   "target": "a1c",
+   "rel": "diagnosed_by"
+  },
+  {
+   "source": "diabetes",
+   "target": "fpg",
+   "rel": "diagnosed_by"
+  },
+  {
+   "source": "diabetes",
+   "target": "ogtt",
+   "rel": "diagnosed_by"
+  },
+  {
+   "source": "diabetes",
+   "target": "rpg",
+   "rel": "diagnosed_by"
+  },
+  {
+   "source": "prediabetes",
+   "target": "a1c",
+   "rel": "diagnosed_by"
+  },
+  {
+   "source": "prediabetes",
+   "target": "fpg",
+   "rel": "diagnosed_by"
+  },
+  {
+   "source": "gestational",
+   "target": "ogtt",
+   "rel": "diagnosed_by"
+  },
+  {
+   "source": "diabetes",
+   "target": "screening",
+   "rel": "diagnosed_by"
+  },
+  {
+   "source": "type2",
+   "target": "weight_mgmt",
+   "rel": "prevented_by"
+  },
+  {
+   "source": "type2",
+   "target": "activity",
+   "rel": "prevented_by"
+  },
+  {
+   "source": "prediabetes",
+   "target": "healthy_eating",
+   "rel": "prevented_by"
+  },
+  {
+   "source": "prediabetes",
+   "target": "activity",
+   "rel": "prevented_by"
+  },
+  {
+   "source": "overweight",
+   "target": "weight_mgmt",
+   "rel": "treated_by"
+  },
+  {
+   "source": "inactivity",
+   "target": "activity",
+   "rel": "treated_by"
+  },
+  {
+   "source": "smoking",
+   "target": "quit_smoking",
+   "rel": "treated_by"
+  },
+  {
+   "source": "diabetes",
+   "target": "healthy_eating",
+   "rel": "treated_by"
+  },
+  {
+   "source": "diabetes",
+   "target": "activity",
+   "rel": "treated_by"
+  },
+  {
+   "source": "diabetes",
+   "target": "medicines",
+   "rel": "treated_by"
+  },
+  {
+   "source": "type1",
+   "target": "insulin_tx",
+   "rel": "treated_by"
+  },
+  {
+   "source": "diabetes",
+   "target": "glucose_monitor",
+   "rel": "monitors"
+  },
+  {
+   "source": "glucose_monitor",
+   "target": "time_in_range",
+   "rel": "monitors"
+  },
+  {
+   "source": "activity",
+   "target": "high_bp",
+   "rel": "helps"
+  },
+  {
+   "source": "activity",
+   "target": "high_chol",
+   "rel": "helps"
+  },
+  {
+   "source": "insulin_tx",
+   "target": "hypo",
+   "rel": "causes"
+  },
+  {
+   "source": "medicines",
+   "target": "hypo",
+   "rel": "causes"
+  },
+  {
+   "source": "diabetes",
+   "target": "hyper",
+   "rel": "causes"
+  },
+  {
+   "source": "diabetes",
+   "target": "heart",
+   "rel": "causes"
+  },
+  {
+   "source": "diabetes",
+   "target": "kidney",
+   "rel": "causes"
+  },
+  {
+   "source": "diabetes",
+   "target": "eye",
+   "rel": "causes"
+  },
+  {
+   "source": "diabetes",
+   "target": "nerve",
+   "rel": "causes"
+  },
+  {
+   "source": "nerve",
+   "target": "foot",
+   "rel": "causes"
+  },
+  {
+   "source": "heart",
+   "target": "high_bp",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "kidney",
+   "target": "high_bp",
+   "rel": "raises_risk"
+  }
+ ]
+}

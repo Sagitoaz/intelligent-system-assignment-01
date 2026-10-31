@@ -1,0 +1,362 @@
+{
+ "nodes": [
+  {
+   "id": "type2",
+   "label": "Type 2 diabetes",
+   "vi": "Tiểu đường típ 2",
+   "type": "condition",
+   "desc": "Cơ thể kháng insulin hoặc tiết không đủ, đường huyết tăng kéo dài."
+  },
+  {
+   "id": "prediabetes",
+   "label": "Prediabetes",
+   "vi": "Tiền tiểu đường",
+   "type": "condition",
+   "desc": "Đường huyết cao hơn bình thường nhưng chưa đến ngưỡng tiểu đường."
+  },
+  {
+   "id": "type1",
+   "label": "Type 1 diabetes",
+   "vi": "Tiểu đường típ 1",
+   "type": "condition",
+   "desc": "Hệ miễn dịch phá hủy tế bào tiết insulin."
+  },
+  {
+   "id": "gestational",
+   "label": "Gestational diabetes",
+   "vi": "Tiểu đường thai kỳ",
+   "type": "condition",
+   "desc": "Tiểu đường xuất hiện trong thai kỳ."
+  },
+  {
+   "id": "thirst",
+   "label": "Increased thirst",
+   "vi": "Khát nhiều",
+   "type": "symptom",
+   "desc": "Cảm giác khát liên tục do đường huyết cao."
+  },
+  {
+   "id": "urination",
+   "label": "Frequent urination",
+   "vi": "Tiểu nhiều",
+   "type": "symptom",
+   "desc": "Thận thải đường dư qua nước tiểu."
+  },
+  {
+   "id": "fatigue",
+   "label": "Fatigue",
+   "vi": "Mệt mỏi",
+   "type": "symptom",
+   "desc": "Tế bào thiếu năng lượng dù đường trong máu cao."
+  },
+  {
+   "id": "blurred",
+   "label": "Blurred vision",
+   "vi": "Nhìn mờ",
+   "type": "symptom",
+   "desc": "Đường huyết cao làm thủy tinh thể thay đổi."
+  },
+  {
+   "id": "slow_heal",
+   "label": "Slow-healing sores",
+   "vi": "Vết thương lâu lành",
+   "type": "symptom",
+   "desc": "Tuần hoàn kém và đường cao làm chậm liền vết thương."
+  },
+  {
+   "id": "high_bp",
+   "label": "High blood pressure",
+   "vi": "Huyết áp cao",
+   "type": "risk_factor",
+   "desc": "Thường đi cùng tiểu đường típ 2."
+  },
+  {
+   "id": "obesity",
+   "label": "Overweight / obesity",
+   "vi": "Thừa cân, béo phì",
+   "type": "risk_factor",
+   "desc": "Mỡ thừa, nhất là mỡ bụng, làm tăng kháng insulin."
+  },
+  {
+   "id": "age45",
+   "label": "Age 45 or older",
+   "vi": "Tuổi từ 45",
+   "type": "risk_factor",
+   "desc": "Nguy cơ tăng dần theo tuổi."
+  },
+  {
+   "id": "family",
+   "label": "Family history",
+   "vi": "Tiền sử gia đình",
+   "type": "risk_factor",
+   "desc": "Cha mẹ hoặc anh chị em bị tiểu đường."
+  },
+  {
+   "id": "inactivity",
+   "label": "Physical inactivity",
+   "vi": "Ít vận động",
+   "type": "risk_factor",
+   "desc": "Ít hoạt động làm giảm độ nhạy insulin."
+  },
+  {
+   "id": "high_chol",
+   "label": "High cholesterol",
+   "vi": "Mỡ máu cao",
+   "type": "risk_factor",
+   "desc": "HDL thấp, triglyceride cao."
+  },
+  {
+   "id": "smoking",
+   "label": "Smoking",
+   "vi": "Hút thuốc",
+   "type": "risk_factor",
+   "desc": "Tăng nguy cơ và biến chứng."
+  },
+  {
+   "id": "a1c",
+   "label": "A1C test",
+   "vi": "Xét nghiệm A1C",
+   "type": "test",
+   "desc": "Đường huyết trung bình 2 đến 3 tháng. 6,5% trở lên là tiểu đường."
+  },
+  {
+   "id": "fpg",
+   "label": "Fasting plasma glucose",
+   "vi": "Đường huyết lúc đói",
+   "type": "test",
+   "desc": "126 mg/dL trở lên ở hai lần thử là tiểu đường."
+  },
+  {
+   "id": "ogtt",
+   "label": "Oral glucose tolerance test",
+   "vi": "Nghiệm pháp dung nạp glucose",
+   "type": "test",
+   "desc": "Đo đường huyết sau khi uống 75 g glucose."
+  },
+  {
+   "id": "metformin",
+   "label": "Metformin",
+   "vi": "Metformin",
+   "type": "treatment",
+   "desc": "Thuốc đầu tay làm giảm sản xuất glucose ở gan."
+  },
+  {
+   "id": "insulin",
+   "label": "Insulin therapy",
+   "vi": "Liệu pháp insulin",
+   "type": "treatment",
+   "desc": "Bổ sung insulin, bắt buộc với típ 1."
+  },
+  {
+   "id": "diet",
+   "label": "Healthy eating",
+   "vi": "Ăn uống lành mạnh",
+   "type": "lifestyle",
+   "desc": "Nhiều rau, ngũ cốc nguyên hạt, hạn chế đường."
+  },
+  {
+   "id": "exercise",
+   "label": "Regular exercise",
+   "vi": "Vận động đều đặn",
+   "type": "lifestyle",
+   "desc": "150 phút mỗi tuần giúp hạ đường huyết."
+  },
+  {
+   "id": "weightloss",
+   "label": "Weight loss",
+   "vi": "Giảm cân",
+   "type": "lifestyle",
+   "desc": "Giảm 5 đến 7% cân nặng làm giảm mạnh nguy cơ."
+  },
+  {
+   "id": "retinopathy",
+   "label": "Retinopathy",
+   "vi": "Bệnh võng mạc",
+   "type": "complication",
+   "desc": "Tổn thương mạch máu ở mắt."
+  },
+  {
+   "id": "neuropathy",
+   "label": "Neuropathy",
+   "vi": "Bệnh thần kinh",
+   "type": "complication",
+   "desc": "Tê bì, đau nhức bàn chân."
+  },
+  {
+   "id": "nephropathy",
+   "label": "Kidney disease",
+   "vi": "Bệnh thận",
+   "type": "complication",
+   "desc": "Thận suy giảm chức năng lọc."
+  },
+  {
+   "id": "heart",
+   "label": "Heart disease",
+   "vi": "Bệnh tim mạch",
+   "type": "complication",
+   "desc": "Đái tháo đường làm tăng nguy cơ nhồi máu, đột quỵ."
+  }
+ ],
+ "edges": [
+  {
+   "source": "high_bp",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "obesity",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "age45",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "family",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "inactivity",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "high_chol",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "smoking",
+   "target": "type2",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "obesity",
+   "target": "prediabetes",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "prediabetes",
+   "target": "type2",
+   "rel": "progresses_to"
+  },
+  {
+   "source": "thirst",
+   "target": "type2",
+   "rel": "symptom_of"
+  },
+  {
+   "source": "urination",
+   "target": "type2",
+   "rel": "symptom_of"
+  },
+  {
+   "source": "fatigue",
+   "target": "type2",
+   "rel": "symptom_of"
+  },
+  {
+   "source": "blurred",
+   "target": "type2",
+   "rel": "symptom_of"
+  },
+  {
+   "source": "slow_heal",
+   "target": "type2",
+   "rel": "symptom_of"
+  },
+  {
+   "source": "a1c",
+   "target": "type2",
+   "rel": "diagnoses"
+  },
+  {
+   "source": "fpg",
+   "target": "type2",
+   "rel": "diagnoses"
+  },
+  {
+   "source": "ogtt",
+   "target": "prediabetes",
+   "rel": "diagnoses"
+  },
+  {
+   "source": "metformin",
+   "target": "type2",
+   "rel": "treats"
+  },
+  {
+   "source": "insulin",
+   "target": "type1",
+   "rel": "treats"
+  },
+  {
+   "source": "insulin",
+   "target": "type2",
+   "rel": "treats"
+  },
+  {
+   "source": "diet",
+   "target": "type2",
+   "rel": "prevents"
+  },
+  {
+   "source": "exercise",
+   "target": "type2",
+   "rel": "prevents"
+  },
+  {
+   "source": "weightloss",
+   "target": "prediabetes",
+   "rel": "prevents"
+  },
+  {
+   "source": "exercise",
+   "target": "weightloss",
+   "rel": "supports"
+  },
+  {
+   "source": "diet",
+   "target": "weightloss",
+   "rel": "supports"
+  },
+  {
+   "source": "inactivity",
+   "target": "obesity",
+   "rel": "leads_to"
+  },
+  {
+   "source": "type2",
+   "target": "retinopathy",
+   "rel": "causes"
+  },
+  {
+   "source": "type2",
+   "target": "neuropathy",
+   "rel": "causes"
+  },
+  {
+   "source": "type2",
+   "target": "nephropathy",
+   "rel": "causes"
+  },
+  {
+   "source": "type2",
+   "target": "heart",
+   "rel": "causes"
+  },
+  {
+   "source": "high_bp",
+   "target": "heart",
+   "rel": "raises_risk"
+  },
+  {
+   "source": "gestational",
+   "target": "type2",
+   "rel": "raises_risk"
+  }
+ ]
+}

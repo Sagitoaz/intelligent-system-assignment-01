@@ -1,0 +1,460 @@
+{
+ "agents": [
+  {
+   "id": "doctor",
+   "name": "Bác sĩ trưởng",
+   "role": "Điều phối, kết luận",
+   "color": "#2589e0",
+   "blurb": "Tiếp đón bệnh nhân, điều phối cả nhóm và đưa ra kết luận cuối cùng."
+  },
+  {
+   "id": "predictor",
+   "name": "Bác sĩ dữ liệu",
+   "role": "Deep Learning dự đoán nguy cơ",
+   "color": "#7060d8",
+   "blurb": "Mạng MLP 3 lớp học từ 253.680 hồ sơ BRFSS để ước lượng nguy cơ."
+  },
+  {
+   "id": "knowledge",
+   "name": "Thủ thư tri thức",
+   "role": "KB đồ thị + RAG NIDDK",
+   "color": "#0d9f8f",
+   "blurb": "Tra đồ thị tri thức và trích dẫn tài liệu NIDDK."
+  },
+  {
+   "id": "coach",
+   "name": "Huấn luyện viên",
+   "role": "Reinforcement learning",
+   "color": "#f0603a",
+   "blurb": "Gợi ý ăn uống và vận động bằng học tăng cường."
+  },
+  {
+   "id": "guardian",
+   "name": "Hộ lý an toàn",
+   "role": "Luật cảnh báo khẩn",
+   "color": "#e8a317",
+   "blurb": "Luật (rule) phát hiện dấu hiệu cần đi khám ngay."
+  },
+  {
+   "id": "reporter",
+   "name": "Thư ký báo cáo",
+   "role": "Sinh hình và bảng",
+   "color": "#e8508a",
+   "blurb": "Vẽ biểu đồ và lập bảng cho báo cáo."
+  }
+ ],
+ "personas": [
+  {
+   "id": "minh",
+   "name": "Anh Minh, 52 tuổi",
+   "story": "Nhân viên văn phòng, ít vận động, huyết áp cao và hay khát nước.",
+   "profile": {
+    "age_years": 52,
+    "sex": "male",
+    "height_cm": 168,
+    "weight_kg": 84,
+    "high_bp": true,
+    "high_chol": true,
+    "chol_check": true,
+    "smoker": false,
+    "stroke": false,
+    "heart_disease": false,
+    "phys_activity": false,
+    "fruits_daily": true,
+    "veggies_daily": true,
+    "heavy_alcohol": false,
+    "any_healthcare": true,
+    "no_doc_cost": false,
+    "diff_walking": false,
+    "gen_health": 4,
+    "mental_bad_days": 2,
+    "physical_bad_days": 2,
+    "education": 5,
+    "income": 6,
+    "symptoms": [
+     "thirst",
+     "fatigue"
+    ],
+    "fasting_glucose": 118
+   }
+  },
+  {
+   "id": "lan",
+   "name": "Chị Lan, 29 tuổi",
+   "story": "Giáo viên trẻ, ăn uống lành mạnh, chạy bộ mỗi sáng.",
+   "profile": {
+    "age_years": 29,
+    "sex": "female",
+    "height_cm": 160,
+    "weight_kg": 51,
+    "high_bp": false,
+    "high_chol": false,
+    "chol_check": true,
+    "smoker": false,
+    "stroke": false,
+    "heart_disease": false,
+    "phys_activity": true,
+    "fruits_daily": true,
+    "veggies_daily": true,
+    "heavy_alcohol": false,
+    "any_healthcare": true,
+    "no_doc_cost": false,
+    "diff_walking": false,
+    "gen_health": 1,
+    "mental_bad_days": 2,
+    "physical_bad_days": 2,
+    "education": 5,
+    "income": 6,
+    "symptoms": []
+   }
+  },
+  {
+   "id": "hung",
+   "name": "Bác Hùng, 66 tuổi",
+   "story": "Về hưu, hút thuốc lâu năm, từng bị bệnh tim, đi lại khó khăn.",
+   "profile": {
+    "age_years": 66,
+    "sex": "male",
+    "height_cm": 165,
+    "weight_kg": 78,
+    "high_bp": true,
+    "high_chol": true,
+    "chol_check": true,
+    "smoker": true,
+    "stroke": false,
+    "heart_disease": true,
+    "phys_activity": false,
+    "fruits_daily": true,
+    "veggies_daily": true,
+    "heavy_alcohol": false,
+    "any_healthcare": true,
+    "no_doc_cost": false,
+    "diff_walking": true,
+    "gen_health": 4,
+    "mental_bad_days": 2,
+    "physical_bad_days": 12,
+    "education": 5,
+    "income": 6,
+    "symptoms": [
+     "frequent_urination",
+     "blurred_vision",
+     "slow_healing"
+    ],
+    "fasting_glucose": 146
+   }
+  },
+  {
+   "id": "an",
+   "name": "Em An, 35 tuổi",
+   "story": "Lập trình viên, cân nặng hơi cao, ngủ muộn.",
+   "profile": {
+    "age_years": 35,
+    "sex": "female",
+    "height_cm": 158,
+    "weight_kg": 72,
+    "high_bp": false,
+    "high_chol": false,
+    "chol_check": true,
+    "smoker": false,
+    "stroke": false,
+    "heart_disease": false,
+    "phys_activity": true,
+    "fruits_daily": false,
+    "veggies_daily": true,
+    "heavy_alcohol": false,
+    "any_healthcare": true,
+    "no_doc_cost": false,
+    "diff_walking": false,
+    "gen_health": 3,
+    "mental_bad_days": 2,
+    "physical_bad_days": 2,
+    "education": 5,
+    "income": 6,
+    "symptoms": [
+     "fatigue"
+    ]
+   }
+  }
+ ],
+ "fields": [
+  {
+   "key": "age_years",
+   "label": "Tuổi",
+   "type": "number",
+   "min": 18,
+   "max": 95,
+   "default": 45,
+   "unit": "tuổi",
+   "help": "Nguy cơ tăng dần theo tuổi, nhất là sau 45."
+  },
+  {
+   "key": "sex",
+   "label": "Giới tính",
+   "type": "select",
+   "options": [
+    [
+     "female",
+     "Nữ"
+    ],
+    [
+     "male",
+     "Nam"
+    ]
+   ],
+   "default": "female",
+   "help": "Dùng để dựng nhân vật và làm đặc trưng cho mô hình."
+  },
+  {
+   "key": "height_cm",
+   "label": "Chiều cao",
+   "type": "number",
+   "min": 130,
+   "max": 210,
+   "default": 165,
+   "unit": "cm",
+   "help": "Dùng tính chỉ số BMI."
+  },
+  {
+   "key": "weight_kg",
+   "label": "Cân nặng",
+   "type": "number",
+   "min": 35,
+   "max": 180,
+   "default": 62,
+   "unit": "kg",
+   "help": "Thừa cân là yếu tố nguy cơ quan trọng."
+  },
+  {
+   "key": "high_bp",
+   "label": "Huyết áp cao",
+   "type": "bool",
+   "default": false,
+   "help": "Bác sĩ từng báo bạn bị tăng huyết áp."
+  },
+  {
+   "key": "high_chol",
+   "label": "Mỡ máu cao",
+   "type": "bool",
+   "default": false,
+   "help": "Cholesterol cao theo xét nghiệm."
+  },
+  {
+   "key": "chol_check",
+   "label": "Đã xét nghiệm mỡ máu 5 năm qua",
+   "type": "bool",
+   "default": true,
+   "help": "Có kiểm tra cholesterol gần đây."
+  },
+  {
+   "key": "stroke",
+   "label": "Từng bị đột quỵ",
+   "type": "bool",
+   "default": false,
+   "help": "Tiền sử đột quỵ."
+  },
+  {
+   "key": "heart_disease",
+   "label": "Bệnh tim mạch",
+   "type": "bool",
+   "default": false,
+   "help": "Bệnh mạch vành hoặc từng nhồi máu cơ tim."
+  },
+  {
+   "key": "diff_walking",
+   "label": "Đi lại khó khăn",
+   "type": "bool",
+   "default": false,
+   "help": "Khó leo cầu thang hoặc đi bộ."
+  },
+  {
+   "key": "smoker",
+   "label": "Hút thuốc",
+   "type": "bool",
+   "default": false,
+   "help": "Đã hút từ 100 điếu trong đời."
+  },
+  {
+   "key": "phys_activity",
+   "label": "Có vận động thể lực",
+   "type": "bool",
+   "default": true,
+   "help": "Có vận động ngoài công việc trong 30 ngày qua."
+  },
+  {
+   "key": "fruits_daily",
+   "label": "Ăn trái cây mỗi ngày",
+   "type": "bool",
+   "default": true,
+   "help": "Ít nhất một lần mỗi ngày."
+  },
+  {
+   "key": "veggies_daily",
+   "label": "Ăn rau mỗi ngày",
+   "type": "bool",
+   "default": true,
+   "help": "Ít nhất một lần mỗi ngày."
+  },
+  {
+   "key": "heavy_alcohol",
+   "label": "Uống rượu bia nhiều",
+   "type": "bool",
+   "default": false,
+   "help": "Trên 14 ly mỗi tuần với nam, trên 7 với nữ."
+  },
+  {
+   "key": "gen_health",
+   "label": "Tự đánh giá sức khỏe",
+   "type": "select",
+   "options": [
+    [
+     1,
+     "Rất tốt"
+    ],
+    [
+     2,
+     "Tốt"
+    ],
+    [
+     3,
+     "Khá"
+    ],
+    [
+     4,
+     "Kém"
+    ],
+    [
+     5,
+     "Rất kém"
+    ]
+   ],
+   "default": 3,
+   "help": "Cảm nhận chung của bạn về sức khỏe."
+  },
+  {
+   "key": "mental_bad_days",
+   "label": "Ngày tinh thần không tốt",
+   "type": "number",
+   "min": 0,
+   "max": 30,
+   "default": 2,
+   "unit": "ngày/30",
+   "help": "Trong 30 ngày qua."
+  },
+  {
+   "key": "physical_bad_days",
+   "label": "Ngày thể chất không tốt",
+   "type": "number",
+   "min": 0,
+   "max": 30,
+   "default": 2,
+   "unit": "ngày/30",
+   "help": "Trong 30 ngày qua."
+  },
+  {
+   "key": "any_healthcare",
+   "label": "Có bảo hiểm / chăm sóc y tế",
+   "type": "bool",
+   "default": true,
+   "help": "Có thể đi khám khi cần."
+  },
+  {
+   "key": "no_doc_cost",
+   "label": "Từng bỏ khám vì chi phí",
+   "type": "bool",
+   "default": false,
+   "help": "Trong 12 tháng qua."
+  },
+  {
+   "key": "education",
+   "label": "Trình độ học vấn",
+   "type": "select",
+   "options": [
+    [
+     1,
+     "Chưa đi học"
+    ],
+    [
+     2,
+     "Tiểu học"
+    ],
+    [
+     3,
+     "THCS"
+    ],
+    [
+     4,
+     "THPT"
+    ],
+    [
+     5,
+     "Cao đẳng/Đại học"
+    ],
+    [
+     6,
+     "Sau đại học"
+    ]
+   ],
+   "default": 5,
+   "help": "Thang 1 đến 6 của BRFSS."
+  },
+  {
+   "key": "income",
+   "label": "Mức thu nhập",
+   "type": "number",
+   "min": 1,
+   "max": 8,
+   "default": 5,
+   "unit": "/8",
+   "help": "Thang 1 (thấp) đến 8 (cao)."
+  },
+  {
+   "key": "fasting_glucose",
+   "label": "Đường huyết lúc đói",
+   "type": "number",
+   "min": 60,
+   "max": 300,
+   "default": null,
+   "optional": true,
+   "unit": "mg/dL",
+   "help": "Không bắt buộc. Bình thường dưới 100 mg/dL."
+  },
+  {
+   "key": "symptoms",
+   "label": "Triệu chứng gần đây",
+   "type": "multi",
+   "options": [
+    [
+     "thirst",
+     "Khát nhiều"
+    ],
+    [
+     "frequent_urination",
+     "Tiểu nhiều"
+    ],
+    [
+     "fatigue",
+     "Mệt mỏi"
+    ],
+    [
+     "blurred_vision",
+     "Nhìn mờ"
+    ],
+    [
+     "slow_healing",
+     "Vết thương lâu lành"
+    ]
+   ],
+   "default": [],
+   "help": "Chọn các triệu chứng bạn thấy."
+  }
+ ],
+ "model": {
+  "name": "MLP 3 lớp",
+  "train_rows": 202944,
+  "test_rows": 50736,
+  "accuracy": 0.8312,
+  "macro_f1": 0.4127,
+  "auc_ovr": 0.8159
+ },
+ "disclaimer": "Chỉ để học tập, không phải chẩn đoán y khoa. Hãy gặp bác sĩ nếu bạn lo lắng về sức khỏe."
+}

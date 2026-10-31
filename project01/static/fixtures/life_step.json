@@ -1,0 +1,32 @@
+{
+ "state": {
+  "hour": 7,
+  "glucose": 132.0,
+  "carbs_on_board": 24.0,
+  "activity_on_board": 0.0,
+  "log": []
+ },
+ "glucose_before": 118.0,
+ "glucose_after": 132.0,
+ "reward": 1.1,
+ "zone": "ok",
+ "events": [
+  "Bữa nhẹ làm đường huyết tăng 14 mg/dL."
+ ],
+ "advice": {
+  "coach": {
+   "action": "walk",
+   "why": "Đi bộ sau bữa ăn giúp đường huyết không tăng quá cao."
+  },
+  "rule": {
+   "action": "walk",
+   "why": "Đường đang tăng, nên vận động nhẹ."
+  }
+ },
+ "done": false,
+ "score": {
+  "time_in_range": 1.0,
+  "hypo_hours": 0,
+  "hyper_hours": 0
+ }
+}
