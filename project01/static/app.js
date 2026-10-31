@@ -96,6 +96,10 @@
     $$('#avSex button').forEach(function (bt) { bt.classList.toggle('on', bt.dataset.v === v.sex); });
   }
 
+  /* giữ trang đứng yên: focus vào ô ẩn không được cuộn cả tài liệu (gây màn hình trống) */
+  window.addEventListener('scroll', function () { if (window.scrollY || window.scrollX) window.scrollTo(0, 0); });
+  [document.documentElement, document.body].forEach(function (el) { el.addEventListener('scroll', function () { el.scrollTop = 0; el.scrollLeft = 0; }); });
+
   function buildForm() {
     var meta = S.meta, fields = meta.fields.slice();
     if (!fields.some(function (f) { return f.key === 'symptoms'; })) fields.push(SYMPTOM_FIELD);
