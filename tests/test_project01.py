@@ -66,3 +66,18 @@ def test_tts_text_cleaning_and_voice_map():
     assert Speaker.clean("Chào 😀 bạn!  Xem https://x.org/a ok") == "Chào bạn! Xem ok"
     assert len(Speaker.clean("a" * 1000)) <= 320
     assert set(VOICES) == {"doctor", "predictor", "knowledge", "coach", "guardian", "reporter"}
+
+
+def test_deepgraph_demo_sector_api_runs():
+    from deepgraph_demo import server as dg
+    dg.load()
+    n = len(dg.DATA["tickers"])
+    banks = [i for i in range(n) if dg.DATA["label"][i] == 1][:4]
+    others = [i for i in range(n) if dg.DATA["label"][i] == 0][:5]
+    out = dg.api_sector({"labelled": banks + others, "k": 4})
+    assert out["n_test"] == n - 9 and 0 <= out["gcn"]["accuracy"] <= 1 and len(out["gcn"]["prob"]) == n
+    try:
+        dg.api_sector({"labelled": banks[:1], "k": 4})
+        raise AssertionError("cần báo lỗi khi thiếu một lớp")
+    except ValueError:
+        pass

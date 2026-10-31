@@ -15,6 +15,7 @@ Kho mã của môn Phát triển Hệ thống Thông minh (PTIT). Mọi ứng d�
 | Chương 4 | Knowledge Graph, RAG và agent dùng công cụ | `docs/report_chapter_04/` | RUN.md mục 5 |
 | Tiểu luận | AI trong đầu tư tài chính (6 chương) | `docs/tieuluan/`, `deliverables/tieuluan_hoan_chinh_6_chuong/` | RUN.md mục 6 |
 | Project 01 | Hệ đa agent tiểu đường: Deep Learning, KB + RAG, RL, luật, phòng khám 3D | `project01/`, `docs/project01/` | RUN.md mục 0 |
+| Tiểu luận Ch. 6 | Deep Graph: GCN trên đồ thị 27 cổ phiếu VN30, demo localhost | `deepgraph_demo/`, `scripts/tieuluan/complete_gnn.py` | RUN.md mục 0b |
 | Agent 01, Agent 02 | AI agent, RL so với rule-based (mèo đuổi chuột, hai người bán) | `agents/agent01/`, `agents/agent02/` | RUN.md mục 1 |
 
 Báo cáo là file Word (`.docx`) là bản chính; file PDF nộp bài do tác giả tự xuất.

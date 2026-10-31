@@ -7,6 +7,7 @@ Mở **PowerShell tại thư mục gốc dự án** rồi chạy lệnh của ph
 |---|---|---|
 | Agent 01 & Agent 02 (demo mèo đuổi chuột, hai người bán) | http://localhost:8100 | 8100 |
 | Project 01: Phòng khám AI 3D (hệ đa agent tiểu đường) | http://localhost:8200 | 8200 |
+| Tiểu luận Chương 6: Deep Graph (GCN trên đồ thị VN30) | http://localhost:8300 | 8300 |
 | Assignment 01–02: API (FastAPI) | http://localhost:8000/docs | 8000 |
 | Assignment 01–02: Web (React) | http://localhost:5173 | 5173 |
 | Assignment 06: Dự báo RNN (Streamlit) | http://localhost:8501 | 8501 |
@@ -41,6 +42,15 @@ python project01/train/train_dl.py ; python project01/train/build_kg.py ; python
 Thêm `?mock=1` vào địa chỉ để xem dữ liệu mẫu khi chưa chạy máy chủ API.
 
 Giọng nói (tùy chọn): đặt `API_MODEL_TTS` (khóa Azure Speech) và `TTS_ENDPOINT` (địa chỉ khu vực, ví dụ `https://southeastasia.api.cognitive.microsoft.com/`) trong tệp `.env` ở thư mục gốc (tệp này đã được git bỏ qua). Có khóa thì phòng khám vừa chạy phụ đề vừa đọc; không có khóa thì chỉ có chữ. Phím tắt: Dấu cách tạm dừng, V bật/tắt tiếng.
+
+## 0b. Tiểu luận Chương 6: demo Deep Graph (GCN trên đồ thị cổ phiếu VN30)
+
+```powershell
+python deepgraph_demo/server.py --open           # mở http://localhost:8300
+python -m scripts.tieuluan.complete_gnn          # chạy lại thực nghiệm (khoảng 4 phút) -> data/tieuluan/gnn/results.json
+```
+
+Trang có ba màn hình: đồ thị tương quan, lan truyền thông điệp qua các lớp GCN, và trò chơi đoán ngành bằng GCN so với MLP.
 
 ## 1. Agent 01 và Agent 02 (demo mèo đuổi chuột, hai người bán)
 
@@ -158,7 +168,7 @@ Start-Process -WorkingDirectory web powershell "-NoExit","-Command","npm run dev
 Tắt tất cả ứng dụng đang giữ các cổng trên:
 
 ```powershell
-8000,8044,8100,8200,8501,8502,5173 | ForEach-Object { Get-NetTCPConnection -LocalPort $_ -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force } }
+8000,8044,8100,8200,8300,8501,8502,5173 | ForEach-Object { Get-NetTCPConnection -LocalPort $_ -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force } }
 ```
 
 ## 8. Gặp lỗi thường gặp
