@@ -185,15 +185,21 @@ class QCoach:
         return best
 
     def advise(self, state: dict) -> tuple[str, str]:
-        a = self.act(state)
+        """Gợi ý cho người chơi: lấy hành động tốt nhất của bảng Q nhưng không khuyên đồ ngọt khi đường huyết đã cao."""
         g = state["glucose"]
-        why = {"sweet": "Đường huyết đang thấp hoặc sắp thấp, cần đường hấp thu nhanh.",
-               "light_meal": "Cần ăn nhưng chọn ít tinh bột để đường huyết không vọt lên.",
-               "normal_meal": "Đến lúc ăn bữa chính; khẩu phần vừa phải giúp đường huyết ổn định.",
-               "heavy_meal": "Bữa lớn: chỉ nên chọn khi đường huyết thấp và còn nhiều giờ để vận động sau đó.",
-               "walk": "Đi bộ nhẹ giúp kéo đường huyết xuống và đã học được là lựa chọn an toàn.",
-               "workout": "Đường huyết cao nên vận động mạnh hơn để hạ nhanh.",
-               "rest": "Đường huyết đang ổn, nghỉ ngơi và chờ giờ ăn tiếp theo."}[a]
+        v = self.values(encode(state))
+        legal = [x for x in allowed(state["hour"]) if not (x == "sweet" and g >= 140)] or allowed(state["hour"])
+        a = max(legal, key=lambda x: (v[AID[x]], -AID[x]))
+        if a == "sweet":
+            why = "Đường huyết đang thấp hoặc sắp thấp, cần đường hấp thu nhanh."
+        elif a == "rest":
+            why = "Đường huyết đang ổn, nghỉ ngơi và chờ giờ ăn tiếp theo." if g <= 180 else "Đường huyết đang cao nhưng chưa nên làm gì mạnh; theo dõi thêm một giờ."
+        else:
+            why = {"light_meal": "Cần ăn nhưng chọn ít tinh bột để đường huyết không vọt lên.",
+                   "normal_meal": "Đến lúc ăn bữa chính; khẩu phần vừa phải giúp đường huyết ổn định.",
+                   "heavy_meal": "Bữa lớn: chỉ nên chọn khi đường huyết thấp và còn nhiều giờ để vận động sau đó.",
+                   "walk": "Đi bộ nhẹ giúp kéo đường huyết xuống và đã học được là lựa chọn an toàn.",
+                   "workout": "Đường huyết cao nên vận động mạnh hơn để hạ nhanh."}[a]
         return a, f"{why} (G = {g:.0f} mg/dL)"
 
 

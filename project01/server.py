@@ -11,6 +11,8 @@ import mimetypes
 import os
 import random
 import sys
+import socket
+import threading
 import traceback
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -133,6 +135,11 @@ class Handler(BaseHTTPRequestHandler):
 
 def main():
     global CLINIC
+    for stream in (sys.stdout, sys.stderr):  # console Windows mặc định cp1252 không in được tiếng Việt
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=8200)
     ap.add_argument("--open", action="store_true")
@@ -140,6 +147,13 @@ def main():
     print("Đang nạp mô hình Deep Learning, đồ thị tri thức và Q-table ...", flush=True)
     CLINIC = Clinic()
     server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
+    if socket.has_ipv6:  # "localhost" thường phân giải sang ::1 trước; không nghe thì trình duyệt chờ rất lâu
+        class V6Server(ThreadingHTTPServer):
+            address_family = socket.AF_INET6
+        try:
+            threading.Thread(target=V6Server(("::1", args.port), Handler).serve_forever, daemon=True).start()
+        except OSError:
+            pass
     url = f"http://localhost:{args.port}"
     print(f"Phòng khám AI sẵn sàng tại {url}  (Ctrl+C để dừng)", flush=True)
     if args.open:
