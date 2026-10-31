@@ -46,7 +46,8 @@ Nếu đã chạy riêng một demo con thì thêm `--no-children`.
 ```powershell
 python project01/server.py --open                # mở http://localhost:8200
 python project01/server.py --open --port 8210    # đổi cổng nếu bị trùng
-python -m pytest tests/test_project01.py -q      # 7 kiểm thử
+python -m pytest tests/test_project01.py -q      # kiểm thử tự động
+python -m jupyter lab notebooks/project01        # notebook thực hành (đã chạy sẵn, có giải thích từng ô)
 # Huấn luyện/đánh giá lại (tùy chọn, kết quả lưu ở project01/artifacts/)
 python project01/train/train_dl.py ; python project01/train/build_kg.py ; python project01/train/train_rl.py ; python project01/train/eval_rag.py
 ```
