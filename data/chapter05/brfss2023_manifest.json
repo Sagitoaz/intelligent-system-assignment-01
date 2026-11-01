@@ -1,0 +1,34 @@
+{
+  "source": "CDC BRFSS 2023 (LLCP2023XPT.zip)",
+  "url": "https://www.cdc.gov/brfss/annual_data/2023/files/LLCP2023XPT.zip",
+  "license": "US government public data (public domain)",
+  "year": 2023,
+  "raw_rows": 433323,
+  "valid_rows": 280420,
+  "sampled_rows": 150000,
+  "seed": 2023,
+  "columns": [
+    "diabetes_status",
+    "age_group",
+    "sex",
+    "bmi",
+    "bmi_category",
+    "physical_activity",
+    "high_blood_pressure",
+    "high_cholesterol",
+    "smoker_status",
+    "general_health",
+    "heart_disease",
+    "stroke",
+    "income_group",
+    "education",
+    "state"
+  ],
+  "diabetes_status_counts": {
+    "no": 122896,
+    "yes": 22101,
+    "prediabetes": 3898,
+    "gestational_only": 1105
+  },
+  "note": "Mẫu ngẫu nhiên không trọng số; tỉ lệ chỉ mô tả mẫu, không đại diện toàn dân Hoa Kỳ."
+}

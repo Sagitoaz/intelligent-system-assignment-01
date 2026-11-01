@@ -3,68 +3,202 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chương 5: Knowledge &amp; RAG Agent</title>
+<title>Chương 5: Hỏi đáp tài liệu có nguồn (KG và RAG)</title>
 <style>
-:root{--bg:#eaf3fc;--ink:#101828;--mute:#3d4c63;--line:#a9c2da;--coral:#f0603a;--teal:#0d9f8f;--sky:#2589e0;--violet:#7060d8}
+:root{--bg:#f3f8ff;--ink:#14213d;--mute:#44546f;--line:#c9d9ee;--card:#fff;
+--rag:#6c5ce7;--ragbg:#efecff;--stat:#0b9a8a;--statbg:#dcf7f2;--calc:#d98a00;--calcbg:#fff1d1;--graph:#2a7de1;--graphbg:#e0eeff;--stop:#c2415d;--stopbg:#ffe6ec}
 *{box-sizing:border-box}
-body{margin:0;background:linear-gradient(180deg,#d8ebfc,#eaf3fc 240px,#f1f7fd);color:var(--ink);font:15px/1.55 "Segoe UI",system-ui,sans-serif}
-header{padding:22px 28px 0}
-h1{margin:0;font-size:26px;font-weight:800;background:linear-gradient(90deg,#e8502c,#6a58dc 55%,#1b7fdc);-webkit-background-clip:text;background-clip:text;color:transparent}
-header p{margin:4px 0 0;color:var(--mute)}
-main{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:18px;padding:18px 28px 40px;max-width:1200px;margin:auto}
-section{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 6px 24px rgba(56,163,245,.10)}
-label{display:block;font-weight:600;font-size:13px;color:var(--mute);margin:12px 0 4px}
-select,textarea,input{width:100%;font:inherit;padding:8px 10px;border:1.5px solid #8fb0cf;border-radius:8px;background:#fff;color:var(--ink)}
-textarea{min-height:92px;resize:vertical}
-button{margin-top:16px;border:0;border-radius:10px;padding:11px 20px;font:inherit;font-weight:700;color:#fff;cursor:pointer;background:linear-gradient(135deg,#f0603a,#f58a3c);box-shadow:0 3px 10px rgba(240,96,58,.35)}
-button:disabled{opacity:.6;cursor:wait}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.chip{border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:99px;padding:5px 12px;font-size:13px;cursor:pointer;margin:0;box-shadow:none;font-weight:600}
-.chip:hover{border-color:var(--sky)}
-.answer{background:#d6f5ec;border:1.5px solid #7fd6c0;border-radius:12px;padding:14px 16px;font-size:16px;margin-bottom:14px}
-.meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.badge{background:#dbeeff;border:1.5px solid #8ec3f2;color:#0e3a66;border-radius:99px;padding:2px 10px;font-size:12px;font-weight:700}
-pre{background:#f3f6fa;border:1.5px solid var(--line);border-radius:10px;padding:12px;overflow:auto;max-height:420px;font:12.5px/1.45 Consolas,monospace}
-.err{background:#fde3da;border:1.5px solid #f4b3a2;color:#a8311a;border-radius:12px;padding:12px 14px;font-weight:600}
-@media(max-width:800px){main{grid-template-columns:1fr}}
+body{margin:0;background:linear-gradient(180deg,#dcecff 0,#f3f8ff 260px);color:var(--ink);font:16px/1.6 "Segoe UI",system-ui,sans-serif}
+a{color:#1d6fd6}
+header{max-width:1000px;margin:0 auto;padding:22px 20px 4px}
+h1{margin:0;font-size:28px;font-weight:800;background:linear-gradient(90deg,#e8502c,#6a58dc 55%,#1b7fdc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin:4px 0 0;color:var(--mute)}
+main{max-width:1000px;margin:0 auto;padding:12px 20px 60px}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:0 6px 22px rgba(42,125,225,.10);margin-bottom:16px}
+.what h2{margin:0 0 8px;font-size:19px}
+.what .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.what .col{border-radius:12px;padding:12px 14px;font-size:15.5px}
+.what .col b{display:block;margin-bottom:2px}
+.c1{background:var(--graphbg)}.c2{background:var(--ragbg)}.c3{background:var(--statbg)}
+.banner{border-radius:12px;padding:10px 14px;margin-bottom:14px;font-weight:600;display:none}
+.banner.loading{display:block;background:#fff4d6;border:1.5px solid #f2cf75;color:#7a5600}
+.banner.error{display:block;background:var(--stopbg);border:1.5px solid #f2a9b8;color:#8a1c36}
+.bar{height:8px;background:#e5eefb;border-radius:99px;overflow:hidden;margin-top:6px}
+.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#6c5ce7,#2a7de1,#0b9a8a);border-radius:99px;transition:width .4s}
+.domain{display:flex;gap:8px;margin:0 0 10px;flex-wrap:wrap;align-items:center}
+.domain span{font-weight:700;color:var(--mute)}
+.seg{border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:5px 14px;font:inherit;font-size:15px;cursor:pointer;font-weight:600;color:var(--ink)}
+.seg.on{background:#2a7de1;border-color:#2a7de1;color:#fff}
+.samples{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px;margin:8px 0 14px}
+.sample{display:block;text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;font:inherit;cursor:pointer;color:var(--ink);transition:transform .1s,box-shadow .1s}
+.sample:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.10)}
+.sample b{display:block;font-size:15.5px}
+.sample small{display:block;color:var(--mute);font-size:15px;margin-top:2px}
+.sample.rag{border-left:6px solid var(--rag)}.sample.stat{border-left:6px solid var(--stat)}.sample.calc{border-left:6px solid var(--calc)}.sample.graph{border-left:6px solid var(--graph)}.sample.stop{border-left:6px solid var(--stop)}
+.ask{display:flex;gap:10px;align-items:stretch}
+.ask textarea{flex:1;font:inherit;font-size:17px;padding:12px 14px;border:2px solid #8fb0cf;border-radius:12px;min-height:64px;resize:vertical;color:var(--ink);background:#fff}
+.ask textarea:focus{outline:none;border-color:#2a7de1}
+.go{border:0;border-radius:12px;padding:0 26px;font:inherit;font-size:17px;font-weight:800;color:#fff;cursor:pointer;background:linear-gradient(135deg,#f0603a,#f58a3c);box-shadow:0 3px 10px rgba(240,96,58,.35)}
+.go:disabled{opacity:.55;cursor:wait}
+.chat{display:flex;flex-direction:column;gap:14px;margin-top:6px}
+.you{align-self:flex-end;max-width:85%;background:#2a7de1;color:#fff;border-radius:16px 16px 4px 16px;padding:10px 16px;font-size:17px}
+.bot{background:#fff;border:1.5px solid var(--line);border-radius:16px 16px 16px 4px;padding:16px 18px;box-shadow:0 4px 16px rgba(42,125,225,.08)}
+.route{display:inline-block;border-radius:99px;padding:2px 12px;font-size:14.5px;font-weight:800;margin-bottom:8px}
+.r-rag{background:var(--ragbg);color:#4a3bc4}.r-statistics{background:var(--statbg);color:#066b60}.r-calculate{background:var(--calcbg);color:#8a5a00}.r-graph{background:var(--graphbg);color:#1a5cae}.r-help{background:#eceff5;color:#44546f}
+.answer{font-size:19px;line-height:1.6;font-weight:600;border-radius:12px;padding:12px 16px;margin:2px 0 10px}
+.a-rag{background:var(--ragbg)}.a-statistics{background:var(--statbg)}.a-calculate{background:var(--calcbg)}.a-graph{background:var(--graphbg)}.a-stop{background:var(--stopbg)}.a-help{background:#eceff5}
+.query{font-size:15.5px;color:var(--mute);margin:-2px 0 10px}
+.steps{margin:6px 0 10px;padding:10px 14px;background:#f7faff;border:1.5px dashed var(--line);border-radius:12px}
+.steps h4{margin:0 0 4px;font-size:15.5px}
+.flow{display:flex;flex-wrap:wrap;gap:6px 4px;align-items:center;font-size:15.5px}
+.flow .st{background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:3px 10px;font-weight:600}
+.flow .arrow{color:#8aa3c4;font-weight:800}
+.flow small{display:none}
+.stepdetail{margin:8px 0 0;padding-left:20px;font-size:15.5px;color:var(--mute)}
+.stepdetail li{margin:2px 0}
+table.t{border-collapse:collapse;margin:6px 0 12px;font-size:15.5px;width:100%;max-width:640px}
+table.t th{background:#e6f0fd;text-align:left;padding:6px 10px;border:1px solid var(--line)}
+table.t td{padding:5px 10px;border:1px solid var(--line)}
+.tablewrap{max-height:340px;overflow:auto}
+.src{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin:6px 0 10px}
+.s{border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;background:#fcfdff;font-size:15.5px}
+.s b{display:block;font-size:15.5px}
+.s p{margin:4px 0;color:#2a3a55}
+mark{background:#ffe27a;border-radius:3px;padding:0 2px}
+.conf{border-radius:10px;padding:8px 12px;font-size:15.5px;font-weight:600;margin:6px 0}
+.conf.warn{background:#fff4d6;border:1.5px solid #f2cf75;color:#6b4a00}.conf.ok{background:var(--statbg);border:1.5px solid #8fdccd;color:#075e54}.conf.info{background:#eef2f9;border:1.5px solid var(--line);color:#33415c}
+details{margin-top:8px}summary{cursor:pointer;font-weight:700;color:#1d6fd6;font-size:15.5px}
+pre{background:#f3f6fa;border:1.5px solid var(--line);border-radius:10px;padding:12px;overflow:auto;max-height:340px;font:13.5px/1.45 Consolas,monospace}
+.pending{color:var(--mute)}
+.meta{font-size:14.5px;color:var(--mute)}
+@media(max-width:760px){.what .cols{grid-template-columns:1fr}.ask{flex-direction:column}.go{padding:12px}}
 </style>
 </head>
 <body>
-<header><h1>Chương 5 · Knowledge &amp; RAG Agent</h1><p>Chạy hoàn toàn trên máy cá nhân (localhost), không cần API key. Kho tài liệu bằng tiếng Anh nên hãy hỏi bằng tiếng Anh; công cụ thống kê chỉ nhận các câu đếm chính xác (how many ...). Tài liệu Swagger: <a href="/docs">/docs</a></p></header>
+<header>
+  <h1>Chương 5 · Hỏi đáp tài liệu có nguồn (KG và RAG)</h1>
+  <p class="sub">Chạy hoàn toàn trên máy bạn (localhost), không cần API key. Hỏi bằng tiếng Việt hoặc tiếng Anh. Chương 7 (hệ bốn agent): <a href="/agents">/agents</a> · API: <a href="/docs">/docs</a></p>
+</header>
 <main>
-<section>
-  <label for="domain">Lĩnh vực</label>
-  <select id="domain"><option value="diabetes">Bệnh tiểu đường (diabetes)</option><option value="finance">Tài chính (finance)</option></select>
-  <label for="task">Cách xử lý</label>
-  <select id="task"><option value="auto">Tự chọn (auto)</option><option value="rag">RAG: truy xuất rồi sinh câu trả lời</option><option value="statistics">Thống kê CSV</option><option value="calculate">Tính toán</option><option value="graph">Tra đồ thị tri thức</option></select>
-  <label for="q">Câu hỏi</label>
-  <textarea id="q">Triệu chứng thường gặp của bệnh tiểu đường là gì?</textarea>
-  <div class="chips" id="chips"></div>
-  <button id="go">Hỏi agent</button>
-</section>
-<section id="out"><p style="color:var(--mute)">Kết quả sẽ hiện ở đây. Lần hỏi RAG đầu tiên có thể mất vài chục giây để nạp mô hình.</p></section>
+<div class="card what">
+  <h2>Demo này làm gì?</h2>
+  <div class="cols">
+    <div class="col c1"><b>KG, đồ thị tri thức</b>Một đồ thị nối khái niệm với nguồn: công ty, báo cáo của công ty và từng đoạn văn. Nhờ đó mỗi câu trả lời chỉ ra được nguồn nào.</div>
+    <div class="col c2"><b>RAG, tìm rồi viết</b>Hệ thống tìm vài đoạn tài liệu liên quan đến câu hỏi, rồi nhờ một mô hình ngôn ngữ nhỏ viết câu trả lời chỉ dựa trên các đoạn đó.</div>
+    <div class="col c3"><b>Công cụ cho con số chính xác</b>Khi bạn hỏi số liệu (tỉ lệ, so sánh, tăng trưởng), agent không để mô hình đoán mà dùng công cụ thống kê hoặc máy tính để tính đúng.</div>
+  </div>
+</div>
+
+<div id="banner" class="banner"></div>
+
+<div class="card">
+  <div class="domain"><span>Lĩnh vực:</span>
+    <button class="seg on" data-d="diabetes">Bệnh tiểu đường</button>
+    <button class="seg" data-d="finance">Tài chính (báo cáo công ty)</button>
+  </div>
+  <div class="ask">
+    <textarea id="q" placeholder="Gõ câu hỏi của bạn ở đây, ví dụ: Tiểu đường thai kỳ là gì?"></textarea>
+    <button class="go" id="go">Hỏi agent</button>
+  </div>
+  <p class="meta" style="margin:10px 0 0">Hoặc bấm một câu mẫu (dòng nhỏ bên dưới mỗi nút cho biết câu đó đi qua công cụ nào):</p>
+  <div class="samples" id="samples"></div>
+</div>
+
+<div class="chat" id="chat"></div>
 </main>
 <script>
-const examples=[["diabetes","What organ makes insulin?","auto"],["diabetes","How many encounters were readmitted within 30 days in the dataset?","statistics"],["finance","What is the percentage change in revenue?","auto"]];
+const SAMPLES=[
+ {d:'diabetes',k:'rag',q:'Xét nghiệm A1C cho biết điều gì?',n:'RAG: dịch sang tiếng Anh, tìm đoạn tài liệu NIDDK, mô hình viết câu trả lời'},
+ {d:'diabetes',k:'rag',q:'Tiểu đường thai kỳ là gì?',n:'RAG: kiến thức nằm trong tài liệu, có thẻ nguồn để kiểm tra'},
+ {d:'diabetes',k:'stat',q:'Tỉ lệ tiểu đường theo nhóm tuổi',n:'Công cụ thống kê: pandas tính trên 150.000 người khảo sát CDC 2023'},
+ {d:'diabetes',k:'stat',q:'So sánh tỉ lệ tiểu đường giữa nam và nữ',n:'Công cụ thống kê: so sánh hai nhóm, có bảng'},
+ {d:'diabetes',k:'stat',q:'Tỉ lệ tiểu đường ở người huyết áp cao',n:'Công cụ thống kê: lọc nhóm huyết áp cao rồi tính tỉ lệ'},
+ {d:'finance',k:'calc',q:'Tính tăng trưởng doanh thu từ 100 lên 130',n:'Máy tính: tách hai số trong câu rồi tính chính xác'},
+ {d:'finance',k:'graph',q:'Công ty V có những báo cáo nào?',n:'Đồ thị tri thức: tra công ty, báo cáo và số đoạn đã lập chỉ mục'},
+ {d:'diabetes',k:'stop',q:'Giá vàng hôm nay là bao nhiêu?',n:'Ngoài tài liệu: hệ thống từ chối thay vì bịa'}
+];
 const $=id=>document.getElementById(id);
-examples.forEach(([d,q,t])=>{const b=document.createElement('button');b.className='chip';b.textContent=q;b.onclick=()=>{$('domain').value=d;$('q').value=q;$('task').value=t;go()};$('chips').append(b)});
-async function go(){
-  const btn=$('go');btn.disabled=true;$('out').innerHTML='<p style="color:#3d4c63">Đang xử lý...</p>';
+let domain='diabetes',busy=false,ready=false;
+function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function hl(text,terms){let h=esc(text);(terms||[]).forEach(t=>{h=h.replace(new RegExp('\\b('+t.replace(/[^a-z0-9]/gi,'')+')\\b','gi'),'<mark>$1</mark>')});return h}
+document.querySelectorAll('.seg').forEach(b=>b.onclick=()=>setDomain(b.dataset.d));
+function setDomain(d){domain=d;document.querySelectorAll('.seg').forEach(x=>x.classList.toggle('on',x.dataset.d===d))}
+SAMPLES.forEach(s=>{const b=el('button','sample '+s.k);b.append(el('b','',s.q),el('small','',s.n));b.onclick=()=>{setDomain(s.d);$('q').value=s.q;go()};$('samples').append(b)});
+
+// ---- trạng thái nạp mô hình
+async function pollStatus(){
   try{
-    const r=await fetch('/api/v1/knowledge/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:$('domain').value,question:$('q').value,task:$('task').value})});
+    const s=await (await fetch('/api/v1/status')).json();const b=$('banner');
+    if(s.stage==='ready'||s.stage==='idle'){b.className='banner';b.textContent='';ready=true;return}
+    if(s.stage==='error'){b.className='banner error';b.textContent=s.message;return}
+    b.className='banner loading';b.innerHTML='';
+    b.append(el('div','','Đang nạp mô hình ngôn ngữ (Qwen2.5-1.5B) và dữ liệu, khoảng 1–2 phút (đã chạy '+Math.round(s.elapsed||0)+' giây). Bạn vẫn có thể đặt câu hỏi, câu sẽ được xử lý ngay khi mô hình nạp xong.'));
+    const bar=el('div','bar');const i=el('i');i.style.width=Math.min(95,(s.elapsed||0)/120*100)+'%';bar.append(i);b.append(bar);
+  }catch(e){}
+  setTimeout(pollStatus,2000);
+}
+pollStatus();
+
+// ---- ước lượng thời gian
+function guessQuick(q){return /bao nhiêu|tỉ lệ|tỷ lệ|so sánh|trung bình|how many|percent|average|compare|rate|tăng trưởng|growth|cộng|trừ|nhân|chia|báo cáo|report|\d\s*[+\-*\/x×÷]\s*\d/i.test(q)}
+function estimate(q){const k=guessQuick(q)?'quick':'rag';let v=NaN;try{v=parseFloat(localStorage.getItem('est_'+k))}catch(e){}return [k,isNaN(v)?(k==='quick'?4:60):v]}
+function saveEst(k,sec){try{const old=parseFloat(localStorage.getItem('est_'+k));localStorage.setItem('est_'+k,String(isNaN(old)?sec:(old+sec)/2))}catch(e){}}
+
+function renderBot(j){
+  const box=el('div','bot');
+  const route=j.route||'help';
+  const stop=j.status==='insufficient_evidence'&&route==='rag';
+  box.append(el('span','route r-'+route,(stop?'Từ chối: ':'Cách xử lý: ')+(j.route_label||'')));
+  box.append(el('div','answer a-'+(stop?'stop':route),j.answer||'(không có câu trả lời)'));
+  if(j.english_answer&&j.language==='vi')box.append(el('div','query','Bản tiếng Anh mô hình viết trước khi dịch (để bạn đối chiếu): "'+j.english_answer+'"'));
+  if(j.translated&&j.query_used)box.append(el('div','query','Truy vấn tiếng Anh đã dùng để tìm tài liệu (kho tài liệu bằng tiếng Anh): "'+j.query_used+'"'));
+  if(j.table&&j.table.rows&&j.table.rows.length){
+    const w=el('div','tablewrap');const t=el('table','t');const th=el('tr');j.table.columns.forEach(c=>th.append(el('th','',c)));t.append(th);
+    j.table.rows.forEach(r=>{const tr=el('tr');r.forEach(c=>tr.append(el('td','',String(c))));t.append(tr)});w.append(t);box.append(w);
+  }
+  if(j.steps&&j.steps.length){
+    const s=el('div','steps');s.append(el('h4','','Cách agent xử lý'));
+    const f=el('div','flow');j.steps.forEach((st,i)=>{if(i)f.append(el('span','arrow','→'));f.append(el('span','st',(i+1)+'. '+st.title))});s.append(f);
+    const ol=el('ol','stepdetail');j.steps.forEach(st=>ol.append(el('li','',st.detail)));s.append(ol);box.append(s);
+  }
+  if(j.sources&&j.sources.length){
+    box.append(el('h4','','Nguồn'));
+    const g=el('div','src');
+    j.sources.forEach(x=>{const c=el('div','s');const t=el('b','',x.title);c.append(t);
+      const p=el('p');p.innerHTML=hl(x.snippet||'',x.highlights);c.append(p);
+      if(x.url){const a=el('a','','Mở nguồn');a.href=x.url;a.target='_blank';a.rel='noopener';c.append(a)}
+      g.append(c)});box.append(g);
+  }
+  if(j.confidence)box.append(el('div','conf '+j.confidence.level,'Mức tin cậy: '+j.confidence.label));
+  const d=el('details');d.append(el('summary','','Chi tiết kỹ thuật (JSON)'));const pre=el('pre','',JSON.stringify(j,null,2));d.append(pre);box.append(d);
+  if(j.api_seconds)box.append(el('div','meta','Thời gian xử lý: '+j.api_seconds.toFixed(1)+' giây'));
+  return box;
+}
+async function go(){
+  if(busy)return;const q=$('q').value.trim();
+  if(!q){$('q').focus();return}
+  busy=true;$('go').disabled=true;
+  const chat=$('chat');chat.prepend(el('div','you',q));
+  const you=chat.firstChild;
+  const [k,est]=estimate(q);const pend=el('div','bot pending');
+  pend.append(el('div','',k==='quick'?'Agent đang nhận ra loại câu hỏi và tính toán…':'Agent đang dịch câu hỏi, tìm tài liệu và nhờ mô hình viết câu trả lời (CPU nên cần khoảng '+Math.round(est)+' giây)…'));
+  const bar=el('div','bar');const i=el('i');bar.append(i);pend.append(bar);const tm=el('div','meta','Đã chờ 0 giây');pend.append(tm);
+  you.after(pend);
+  const t0=performance.now();const iv=setInterval(()=>{const t=(performance.now()-t0)/1000;i.style.width=Math.min(95,(1-Math.exp(-t/(est*0.7)))*100)+'%';tm.textContent='Đã chờ '+Math.round(t)+' giây'},300);
+  try{
+    const r=await fetch('/api/v1/knowledge/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:domain,question:q,task:'auto'})});
     const j=await r.json();
-    if(!r.ok) throw new Error(typeof j.detail==='string'?j.detail:JSON.stringify(j.detail));
-    const ans=j.answer||j.result||j.response||'';
-    $('out').innerHTML='';
-    const meta=document.createElement('div');meta.className='meta';
-    [['xử lý',j.task],['thời gian',j.api_seconds?j.api_seconds.toFixed(2)+' s':null]].forEach(([k,v])=>{if(v){const s=document.createElement('span');s.className='badge';s.textContent=k+': '+v;meta.append(s)}});
-    $('out').append(meta);
-    if(ans){const a=document.createElement('div');a.className='answer';a.textContent=typeof ans==='string'?ans:JSON.stringify(ans);$('out').append(a)}
-    const pre=document.createElement('pre');pre.textContent=JSON.stringify(j,null,2);$('out').append(pre);
-  }catch(e){$('out').innerHTML='';const d=document.createElement('div');d.className='err';d.textContent='Lỗi: '+e.message;$('out').append(d)}
-  btn.disabled=false;
+    if(!r.ok||!j.answer){throw new Error(typeof j.detail==='string'?j.detail:'máy chủ trả về phản hồi không đọc được')}
+    saveEst(k,(performance.now()-t0)/1000);
+    pend.replaceWith(renderBot(j));
+  }catch(e){
+    const b=el('div','bot');b.append(el('div','answer a-stop','Chưa lấy được câu trả lời: '+e.message+'. Hãy kiểm tra máy chủ còn chạy và thử lại.'));pend.replaceWith(b);
+  }
+  clearInterval(iv);busy=false;$('go').disabled=false;
 }
 $('go').onclick=go;
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();go()}});
 </script>
 </body>
 </html>

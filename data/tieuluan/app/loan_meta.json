@@ -1,0 +1,18 @@
+{
+  "dataset": "loan_default",
+  "threshold": 0.12,
+  "base_rate": 0.1292397379875183,
+  "test_base_rate": 0.15230152010917664,
+  "ensemble_seeds": [
+    11,
+    22,
+    33
+  ],
+  "ensemble_test_balanced_accuracy": 0.6322750111791591,
+  "ensemble_test_auc": 0.6815025220161811,
+  "config": {
+    "epochs_max": 25,
+    "patience": 5,
+    "batch_size": 256
+  }
+}

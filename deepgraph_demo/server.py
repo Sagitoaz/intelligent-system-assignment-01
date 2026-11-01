@@ -49,8 +49,22 @@ def load():
     DATA.update(close=close, tickers=tickers, f=f, label=label, corr=corr, r5=r5, sector=[sector_of[t] for t in tickers], last=str(close.index[-1].date()))
 
 
+def report_numbers() -> dict:
+    """Số liệu chính thức của báo cáo (đọc từ results.json) để màn hình 3 hiển thị khớp với notebook 06 và Chương 6."""
+    path = os.path.join(os.path.dirname(HERE), "data", "tieuluan", "gnn", "results.json")
+    r = json.load(open(path, encoding="utf-8"))
+    label = DATA["label"]
+    n1, n0 = int(label.sum()), int(len(label) - label.sum())
+    k1, k0 = max(2, round(n1 / 3)), max(2, round(n0 / 3))
+    majority = max(n1 - k1, n0 - k0) / (n1 + n0 - k1 - k0)
+    sector = {k: v["mean"] for k, v in r["sector_task"].items() if not k.startswith("_")}
+    auc = {k: v["auc"]["mean"] for k, v in r["results"].items()}
+    return dict(sector=sector, auc=auc, majority=majority, seeds=len(r["seeds"]), splits=len(r["sector_task"]["_per_split"]["MLP (không đồ thị)"]),
+                first=r["info"]["first"], last=r["info"]["last"])
+
+
 def api_graph() -> dict:
-    return dict(tickers=DATA["tickers"], sector=DATA["sector"], sectors=list(g.SECTORS), label=DATA["label"].tolist(), corr=np.round(DATA["corr"], 3).tolist(),
+    return dict(report=report_numbers(), first=str(DATA["close"].index[0].date()), tickers=DATA["tickers"], sector=DATA["sector"], sectors=list(g.SECTORS), label=DATA["label"].tolist(), corr=np.round(DATA["corr"], 3).tolist(),
                 feature=np.round(DATA["r5"], 3).tolist(), feature_name="lợi suất 5 phiên gần nhất (chuẩn hóa)", last=DATA["last"],
                 node_features=["độ biến động", "beta", "độ lệch", "độ nhọn", "log khối lượng", "tự tương quan bậc 1"])
 

@@ -1,4 +1,5 @@
 """Kiểm thử hệ đa agent tiểu đường (project01): mô hình, luật an toàn, đồ thị tri thức, RL và kịch bản hội chẩn."""
+import os
 import random
 
 import pytest
@@ -83,9 +84,18 @@ def test_deepgraph_demo_sector_api_runs():
         pass
 
 
-def test_tieuluan_hub_chapter1_matches_report_table():
+def test_tieuluan_hub_has_six_chapters_and_no_chapter1():
     from tieuluan_demo import server as hub
-    d = hub.ch1_data()
-    n = {s["key"]: s["n"] for s in d["stats"]}
-    assert n == {"sp500": 6726, "vnindex": 4175, "btc": 4397}  # Bảng 1.2 của tiểu luận
-    assert len(d["milestones"]) == 13 and d["milestones"][0]["year"] == "1943"
+    assert not hasattr(hub, "ch1_data")
+    assert {c["name"] for c in hub.CHILDREN} == {"streamlit", "fastapi", "deepgraph"}
+    html = open(os.path.join(hub.STATIC, "index.html"), encoding="utf-8").read()
+    assert html.count("{ n: ") == 6 and "{ n: 1," not in html and "ch1" not in html
+    assert not os.path.exists(os.path.join(hub.STATIC, "ch1.html"))
+
+
+def test_deepgraph_report_numbers_match_results_json():
+    from deepgraph_demo import server as dg
+    dg.load()
+    rep = dg.api_graph()["report"]
+    assert abs(rep["sector"]["GCN, đồ thị tương quan"] - 0.7306) < 1e-3 and rep["splits"] == 40
+    assert abs(rep["majority"] - 10 / 18) < 1e-9

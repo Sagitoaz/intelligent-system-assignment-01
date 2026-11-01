@@ -29738,6 +29738,42 @@
     "low": 0.03172346760745042,
     "high": 0.05655941530100195
    }
+  },
+  "loan_default": {
+   "logistic": {
+    "auc": 0.6780067799994338,
+    "low": 0.6713320685125422,
+    "high": 0.6847013734990891,
+    "p_value_auc_le_half": 0.0004997501249375312,
+    "n_boot": 2000,
+    "method": "stratified bootstrap"
+   },
+   "random_forest": {
+    "auc": 0.6772046563108877,
+    "low": 0.6701654598645358,
+    "high": 0.6838122874853151,
+    "p_value_auc_le_half": 0.0004997501249375312,
+    "n_boot": 2000,
+    "method": "stratified bootstrap"
+   },
+   "mlp": {
+    "auc": 0.6815025220161811,
+    "low": 0.6746118977657813,
+    "high": 0.6882446045795239,
+    "p_value_auc_le_half": 0.0004997501249375312,
+    "n_boot": 2000,
+    "method": "stratified bootstrap"
+   },
+   "rf_minus_mlp": {
+    "difference": -0.004297865705293447,
+    "low": -0.007305405802685874,
+    "high": -0.0014479119248479607
+   },
+   "mlp_minus_logistic": {
+    "difference": 0.003495742016747294,
+    "low": 0.0013932457255790259,
+    "high": 0.005576449817254458
+   }
   }
  },
  "assumptions": {

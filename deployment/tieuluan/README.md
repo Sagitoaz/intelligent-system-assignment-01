@@ -1,11 +1,16 @@
 # Ứng dụng minh họa của tiểu luận
 
-Ứng dụng Streamlit có bảy tab: **Giới thiệu**, **Thử trên dữ liệu kiểm tra**, **Dự báo phiên tới**,
-**Tự chấm điểm tín dụng**, **So sánh mô hình**, **Backtest**, **Dữ liệu và giới hạn**.
-Chọn ngày để đối chiếu giá, dự báo và kết quả thật; nhập hồ sơ tín dụng để chạy MLP;
-xem mô phỏng 100 triệu đồng trước và sau phí. Câu chữ dành cho người chưa học tài chính.
-Ứng dụng chỉ suy luận bằng NumPy, không huấn luyện lại, không đổi kết quả thực nghiệm.
-Ba thư viện trực tiếp trong requirements giữ nguyên; requests và Altair là phụ thuộc của Streamlit.
+Ứng dụng Streamlit cho người chưa biết gì về AI: mỗi chương mở đầu bằng khung "Demo này làm gì?" và "Cách đọc kết quả",
+kết luận là câu văn, có thanh đo và biểu đồ màu sáng. Chọn chương bằng `?chapter=2|3|4` (`&embed=true` để nhúng iframe).
+
+- **Chương 2**: nhập hồ sơ vay bằng thanh trượt hoặc lấy một hồ sơ thật trong tập kiểm tra (Lending Club, 36 tháng, 2012–2015);
+  hiện khả năng không trả được nợ, ba yếu tố ảnh hưởng nhất, so sánh ba mô hình, kiểm chứng với kết cục thật; tab so sánh và tab dữ liệu.
+- **Chương 3**: chọn thị trường và một ngày đã biết; đồ thị giá có vùng 20 phiên được tô màu, ảnh GASF, xác suất tăng, kết quả thật, tỉ lệ đúng
+  trên cả giai đoạn kiểm tra so với đoán mò; dự báo phiên sắp tới; so sánh mô hình; dữ liệu và giới hạn.
+- **Chương 4**: như Chương 3 với 20 mức thay đổi giá và LSTM, thêm backtest 100 triệu đồng trước/sau phí so với mua và giữ.
+
+Mã chia thành `app.py` (điều hướng), `common.py` (định dạng, thanh đo), `ch2.py`, `market.py` (Chương 3 và 4).
+Ứng dụng chỉ suy luận bằng trọng số đã lưu, không huấn luyện lại, không đổi kết quả thực nghiệm.
 
 ## Chạy tại máy
 
@@ -14,8 +19,9 @@ Từ thư mục gốc dự án:
 ```powershell
 .venv\Scripts\python.exe -m pip install -r deployment/tieuluan/requirements.txt
 .venv\Scripts\python.exe -m streamlit run deployment/tieuluan/app.py --server.port 8502
-.venv\Scripts\python.exe -m scripts.tieuluan.prepare_app_assets
-.venv\Scripts\python.exe -m pytest tests/test_tieuluan.py tests/test_tieuluan_app.py tests/test_tieuluan_live.py tests/test_tieuluan_credit.py -q
+.venv\Scripts\python.exe -m scripts.tieuluan.prepare_loan_data <accepted_2007_to_2018Q4.csv>   # dữ liệu Chương 2
+.venv\Scripts\python.exe -m scripts.tieuluan.run_loan                                          # huấn luyện Chương 2
+.venv\Scripts\python.exe -m pytest tests/test_tieuluan.py tests/test_tieuluan_app.py tests/test_tieuluan_live.py tests/test_tieuluan_credit.py tests/test_tieuluan_loan.py -q
 ```
 
 Ứng dụng đọc `results/tieuluan/full`, `models/tieuluan/full` (hạt giống 11, 22, 33),

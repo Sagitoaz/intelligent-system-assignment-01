@@ -1,4 +1,6 @@
-"""Sinh (và tùy chọn thực thi) ba notebook minh họa cho Chương 2, 3, 4 của tiểu luận.
+"""Thư viện ô notebook cho phần A của Chương 3, 4 (dựng notebook: scripts/tieuluan/chapter_notebooks.py).
+
+Mô tả gốc: ba notebook minh họa cho Chương 2, 3, 4 của tiểu luận.
 
 Mỗi notebook: (1) xem dữ liệu, kích thước, phân bố lớp và dòng dữ liệu gốc; (2) xem cùng một mô hình
 viết bằng NumPy, Keras, PyTorch và kiểm tra song trùng; (3) HUẤN LUYỆN LẠI một cấu hình (hạt giống 11)
@@ -430,36 +432,12 @@ SPECS = [
 
 
 def main():
-    if hasattr(sys.stdout, 'reconfigure'):
-        sys.stdout.reconfigure(encoding='utf-8')
+    """Từ khi mỗi chương chỉ có một notebook, việc dựng nằm ở chapter_notebooks.py; tệp này chỉ còn cung cấp
+    các ô dùng lại cho phần A của Chương 3, 4 (hàm notebook, SPECS)."""
+    from scripts.tieuluan import chapter_notebooks
     parser = argparse.ArgumentParser()
     parser.add_argument('--execute', action='store_true')
-    args = parser.parse_args()
-    output = ROOT / 'notebooks/tieuluan'
-    output.mkdir(parents=True, exist_ok=True)
-    for name, chapter, title, intro, datasets, kind, kinds, representation, demo in SPECS:
-        nb = notebook(chapter, title, intro, datasets, kind, kinds, representation, demo)
-        if args.execute:
-            from nbclient import NotebookClient
-            from jupyter_client import KernelManager
-            from jupyter_client.kernelspec import KernelSpecManager
-            with tempfile.TemporaryDirectory(prefix='tieuluan_kernel_') as temp:
-                kernel_dir = Path(temp) / 'tieuluan'
-                kernel_dir.mkdir()
-                (kernel_dir / 'kernel.json').write_text(json.dumps({
-                    'argv': [sys.executable, '-m', 'ipykernel_launcher', '-f', '{connection_file}'],
-                    'display_name': 'Tiểu luận venv', 'language': 'python'}), encoding='utf-8')
-                manager = KernelManager(kernel_name='tieuluan', kernel_spec_manager=KernelSpecManager(kernel_dirs=[temp]))
-                client = NotebookClient(nb, km=manager, timeout=900, resources={'metadata': {'path': str(ROOT)}})
-                try:
-                    client.execute()
-                finally:
-                    if manager.has_kernel:
-                        manager.shutdown_kernel(now=True)
-        nbf.validate(nb)
-        path = output / f'{name}.ipynb'
-        nbf.write(nb, path)
-        print(f'{path.relative_to(ROOT)}: {len(nb.cells)} ô; đã thực thi = {args.execute}', flush=True)
+    chapter_notebooks.build(run=parser.parse_args().execute)
 
 
 if __name__ == '__main__':

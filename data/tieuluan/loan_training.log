@@ -1,0 +1,41 @@
+train (87535, 35) val (20384, 35) test (42081, 35)
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1793520040.276063   33468 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1793520062.446782   33468 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+RUN 1/16 loan_default__mlp__scratch__11
+  AUC=0.6759 BAcc=0.6224 epochs=25 time=4.6s
+RUN 2/16 loan_default__mlp__pytorch__11
+  AUC=0.6757 BAcc=0.6271 epochs=25 time=32.0s
+RUN 3/16 loan_default__mlp__keras__11
+WARNING:tensorflow:TensorFlow GPU support is not available on native Windows for TensorFlow >= 2.11. Even if CUDA/cuDNN are installed, GPU will not be used. Please use WSL2 or the TensorFlow-DirectML plugin.
+WARNING:tensorflow:From E:\WINDOW\Project\intelligent-system-assignment-01\.venv\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+  AUC=0.6756 BAcc=0.6281 epochs=25 time=46.8s
+RUN 4/16 loan_default__logistic__sklearn__11
+  AUC=0.6780 BAcc=0.6282 epochs=None time=0.5s
+RUN 5/16 loan_default__random_forest__sklearn__11
+  AUC=0.6773 BAcc=0.6248 epochs=None time=11.6s
+RUN 6/16 loan_default__mlp__scratch__22
+  AUC=0.6749 BAcc=0.6253 epochs=15 time=4.8s
+RUN 7/16 loan_default__mlp__pytorch__22
+  AUC=0.6749 BAcc=0.6253 epochs=15 time=18.1s
+RUN 8/16 loan_default__mlp__keras__22
+  AUC=0.6750 BAcc=0.6249 epochs=15 time=27.4s
+RUN 9/16 loan_default__logistic__sklearn__22
+  AUC=0.6780 BAcc=0.6282 epochs=None time=0.6s
+RUN 10/16 loan_default__random_forest__sklearn__22
+  AUC=0.6765 BAcc=0.6261 epochs=None time=13.4s
+RUN 11/16 loan_default__mlp__scratch__33
+  AUC=0.6792 BAcc=0.6313 epochs=21 time=5.6s
+RUN 12/16 loan_default__mlp__pytorch__33
+  AUC=0.6792 BAcc=0.6313 epochs=21 time=21.0s
+RUN 13/16 loan_default__mlp__keras__33
+  AUC=0.6792 BAcc=0.6304 epochs=21 time=59.5s
+RUN 14/16 loan_default__logistic__sklearn__33
+  AUC=0.6780 BAcc=0.6282 epochs=None time=0.5s
+RUN 15/16 loan_default__random_forest__sklearn__33
+  AUC=0.6765 BAcc=0.6247 epochs=None time=11.0s
+RUN 16/16 loan_default__majority__baseline__0
+  AUC=0.5000 BAcc=0.5000 epochs=None time=0.0s
+COMPLETED {"dataset": "loan_default", "threshold": 0.12, "base_rate": 0.1292397379875183, "test_base_rate": 0.15230152010917664, "ensemble_seeds": [11, 22, 33], "ensemble_test_balanced_accuracy": 0.6322750111791591, "ensemble_test_auc": 0.6815672446143467, "config": {"epochs_max": 25, "patience": 5, "batch_size": 256}}

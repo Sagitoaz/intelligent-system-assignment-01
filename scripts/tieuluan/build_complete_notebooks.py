@@ -310,18 +310,38 @@ def model_notebook(kind):
 
 
 def knowledge_notebook():
-    return [md('''# Chương 5: KG – RAG, giải thích từng hàm và chạy demo
+    return [md('''# Chương 5: Đồ thị tri thức (KG) và RAG, giải thích từng hàm và chạy demo
 
-    Corpus, embedding và generator đã có trong dự án. Run All chạy cục bộ,
-    không cần API key. Phân biệt truy hồi bằng chứng với tính đúng của đáp án.'''),
+    Notebook này chạy đúng các hàm mà demo localhost (cổng 8044, trang chủ `/`) dùng. Chạy hoàn toàn trên máy,
+    không cần API key. Có bốn đường xử lý: **RAG** (tìm đoạn tài liệu rồi để mô hình viết), **công cụ thống kê**
+    (pandas trên dữ liệu CDC BRFSS 2023), **máy tính** và **tra đồ thị tri thức**. Bài học chính: câu hỏi kiến thức
+    đi qua RAG, còn câu hỏi cần con số chính xác phải đi qua công cụ, vì mô hình ngôn ngữ nhỏ có thể sai.'''),
     code('KG-01',SETUP),
-    md('''## 1. Đồ thị là hợp các bước chuẩn hóa → tạo nút → tạo cạnh → truy vấn
+    md('''## 1. Dữ liệu và mô hình đang dùng
 
-    `build_document_graph(chunks, domain)` nhận các đoạn đã có metadata và trả
-    NetworkX DiGraph. Ví dụ dưới dùng hai dòng giả định để dễ kiểm tra; không
-    coi các con số minh họa là báo cáo kinh doanh thật.'''),
+    - **Kho tài liệu tiếng Anh**: 183 đoạn từ bốn trang NIDDK về bệnh tiểu đường (`diabetes_corpus.jsonl`) và 9.177 đoạn
+      từ các báo cáo tài chính FinQA (`finance_corpus.jsonl`).
+    - **Dữ liệu thống kê mới**: CDC BRFSS 2023 (khảo sát sức khỏe người trưởng thành Hoa Kỳ), mẫu ngẫu nhiên 150.000
+      người trả lời hợp lệ, lưu CSV ở `data/chapter05/brfss2023_diabetes_150k.csv`. Dữ liệu cũ (UCI 1999–2008) không còn được dùng.
+    - **Bộ sinh câu trả lời**: `Qwen/Qwen2.5-1.5B-Instruct` chạy trên CPU (tải bằng `scripts/chapter05/download_llm.py`
+      vào `models/chapter05/llm`). Bộ sinh cũ flan-t5-small chỉ cho ra vài từ nên được thay; lớp `LocalGenerator` cũ vẫn còn trong mã.'''),
     code('KG-02','''
-    from src.chapter04.knowledge import build_document_graph, safe_calculate
+    manifest = json.loads((ROOT/'data/chapter05/brfss2023_manifest.json').read_text(encoding='utf8'))
+    print({k: manifest[k] for k in ['source','year','raw_rows','valid_rows','sampled_rows','license']})
+    survey = pd.read_csv(ROOT/'data/chapter05/brfss2023_diabetes_150k.csv')
+    print('Số dòng:', len(survey), '| Số cột:', survey.shape[1])
+    display(survey.head(5))
+    display(survey.diabetes_status.value_counts().rename('số người').to_frame())
+    llm_name = (ROOT/'models/chapter05/llm/SOURCE.txt').read_text(encoding='utf8').strip()
+    print('Mô hình sinh:', llm_name)
+    '''),
+    md('''## 2. Đồ thị tri thức: chuẩn hóa → tạo nút → tạo cạnh → truy vấn
+
+    `build_document_graph(chunks, domain)` nhận các đoạn đã có metadata và trả về NetworkX DiGraph. Ví dụ dưới dùng một
+    dòng giả định để dễ kiểm tra (không phải báo cáo thật). Sau đó nạp đồ thị tài chính thật (công ty → báo cáo → đoạn văn)
+    và tra công ty V (Visa) để thấy câu hỏi "công ty này có những báo cáo nào" trả lời được bằng đồ thị mà không cần mô hình.'''),
+    code('KG-03','''
+    from src.chapter04.knowledge import build_document_graph, safe_calculate, load_graph
     chunks = [{'id':'demo:row1','company':'DEMO','report':'DEMO:2023',
         'year':'2023','filename':'demo-report','kind':'table',
         'text':'Revenue 2022: 100 USD; 2023: 120 USD',
@@ -331,48 +351,98 @@ def knowledge_notebook():
     print('Cạnh:',list(graph.edges(data=True)))
     print('Nguồn cha:',list(graph.predecessors('passage:demo:row1')))
     print(inspect.getsource(build_document_graph))
+    fin = load_graph(ROOT/'knowledge_graph/chapter04/finance_graph.json.gz')
+    kinds = pd.Series([d['type'] for _, d in fin.nodes(data=True)]).value_counts()
+    display(kinds.rename('số nút').to_frame())
+    reports = [fin.nodes[n] for n in fin.successors('company:V')]
+    print('Công ty V có', len(reports), 'báo cáo:', sorted(r['year'] for r in reports))
     '''),
-    md('''## 2. RRF: hợp thứ hạng thay vì cộng điểm khác thang đo
+    md('''## 3. RRF: hợp thứ hạng thay vì cộng điểm khác thang đo
 
-    `reciprocal_rank_fusion` nhận nhiều danh sách id và cộng 1/(60+rank).
-    Ví dụ hai danh sách dưới giúp tự tính điểm của B. Hàm trả về id theo điểm
-    giảm dần; bản thân RRF chưa tạo văn bản trả lời.'''),
-    code('KG-03','''
+    Truy hồi lai kết hợp BM25 (khớp từ khóa) với vector (khớp nghĩa). `reciprocal_rank_fusion` nhận nhiều danh sách id và
+    cộng 1/(60+hạng). Ví dụ hai danh sách dưới giúp tự tính điểm của B. Hàm chỉ trả về id theo điểm giảm dần.'''),
+    code('KG-04','''
     from src.chapter04.retrieval import reciprocal_rank_fusion
     rankings = [['A','B','C'],['B','D','A']]
     print('Hạng hợp nhất:',reciprocal_rank_fusion(rankings,k=4))
     print('Điểm B:',1/62+1/61)
     print(inspect.getsource(reciprocal_rank_fusion))
     '''),
-    md('''## 3. Hợp hàm RAG: retrieve → build_prompt → generate → đóng gói nguồn
+    md('''## 4. Một lượt RAG hoàn chỉnh bằng câu hỏi tiếng Việt
 
-    Chạy truy hồi thật trước khi sinh. In id, locator và một phần văn bản để
-    kiểm tra. `build_prompt` đặt câu hỏi trước ngữ cảnh. Kết quả được sinh giữ
-    trạng thái generated_unverified: nguồn tồn tại chưa chứng minh đáp án đúng.'''),
-    code('KG-04','''
-    from deployment.chapter04.app import rag
-    from src.chapter04.rag import build_prompt
-    engine = rag()
-    question = 'What are the symptoms of diabetes?'
-    evidence = engine.retrieve(question,'diabetes',k=3)
-    display(pd.DataFrame([{'id':e['id'],'text':e['text'][:180]}
-                          for e in evidence]))
-    print(build_prompt(question,evidence)[:1400])
-    answer = engine.answer(question,'diabetes')
-    print('Answer:',answer['answer'])
-    print('Status:',answer['status'])
-    print('Sources:',answer['citations'])
-    '''),
-    md('''## 4. Tách phép tính ra công cụ
-
-    `safe_calculate` nhận operation, hai values và units. Ví dụ growth từ
-    100 lên 120 bằng 20%. Không dùng eval; không trích toán hạng tự động.
-    Đơn vị không khớp hoặc chia cho không phải bị từ chối.'''),
+    `RAGEngine.answer` làm bốn việc: (1) **dịch** câu hỏi tiếng Việt thành truy vấn tiếng Anh vì kho tài liệu bằng tiếng Anh;
+    (2) **truy hồi lai** ba đoạn gần nhất; (3) **mô hình viết** câu trả lời chỉ dựa trên ba đoạn đó (viết tiếng Anh trước vì mô hình
+    nhỏ đọc tiếng Anh tốt hơn, rồi dịch sang tiếng Việt bằng bảng thuật ngữ); (4) đóng gói nguồn và trạng thái.
+    Kết quả luôn có trạng thái `generated_unverified`: các mã nguồn tồn tại nhưng chưa ai kiểm chứng câu viết có đúng ý nguồn hay không.
+    Lần chạy này mất khoảng nửa phút đến vài phút vì mô hình chạy trên CPU; ô sau in thời gian thực đo.'''),
     code('KG-05','''
+    from deployment.chapter04.app import rag, agent
+    engine = rag()
+    t0 = time.perf_counter(); engine.generator.load(); print('Nạp mô hình sinh: %.1f giây' % (time.perf_counter()-t0))
+    question = 'Xét nghiệm A1C cho biết điều gì?'
+    answer = engine.answer(question,'diabetes')
+    print('Câu hỏi        :', question)
+    print('Truy vấn tiếng Anh:', answer['query_used'])
+    print('Bản tiếng Anh  :', answer['english_answer'])
+    print('Câu trả lời    :', answer['answer'])
+    print('Trạng thái     :', answer['status'], '| thời gian %.1f giây' % answer['seconds'])
+    display(pd.DataFrame([{'id':e['id'],'văn bản':e['text'][:160]} for e in answer['evidence']]))
+    '''),
+    md('''## 5. Khi tài liệu không có câu trả lời: từ chối thay vì bịa
+
+    Có hai lớp bảo vệ. Lớp một là `lexical_support`: nếu không từ khóa nội dung nào của truy vấn xuất hiện trong ba đoạn tìm được
+    thì dừng ngay, không gọi mô hình. Lớp hai là chính mô hình, được dặn trả lời đúng một từ `INSUFFICIENT` khi các đoạn không chứa đáp án.
+    Hai lớp này không hoàn hảo, nhưng làm giảm nguy cơ mô hình bịa.'''),
+    code('KG-06','''
+    from src.chapter04.rag import lexical_support, content_tokens
+    refused = engine.answer('Giá vàng hôm nay là bao nhiêu?','diabetes')
+    print('Truy vấn:', refused['query_used'], '| từ khóa nội dung:', content_tokens(refused['query_used']))
+    print('Trạng thái:', refused['status'], '|', refused['answer'])
+    assert refused['status'] == 'insufficient_evidence'
+    '''),
+    md('''## 6. Công cụ thống kê: hiểu nhiều dạng câu hỏi tự nhiên
+
+    `DiabetesStats` nhận ý định bằng luật và từ khóa (đã bỏ dấu để khớp cả câu không dấu): đếm, tỉ lệ, so sánh hai nhóm,
+    phân theo nhóm, BMI trung bình, kèm bộ lọc như nhóm tuổi, giới, BMI, huyết áp cao, hút thuốc, bang. Mọi con số tính bằng pandas
+    nên chính xác theo dữ liệu. Câu không hiểu được trả lời lịch sự kèm danh sách câu mẫu, không báo lỗi.'''),
+    code('KG-07','''
+    from src.chapter04.stats import DiabetesStats
+    stats = DiabetesStats(ROOT/'data/chapter05/brfss2023_diabetes_150k.csv')
+    questions = ['Có bao nhiêu người trong dữ liệu khảo sát?',
+                 'Tỉ lệ người mắc tiểu đường là bao nhiêu?',
+                 'So sánh tỉ lệ tiểu đường giữa nam và nữ',
+                 'BMI trung bình của người bị tiểu đường là bao nhiêu?',
+                 'Tỉ lệ tiểu đường ở người huyết áp cao',
+                 'What percentage of people over 65 have diabetes?',
+                 'Diabetes rate in Texas']
+    rows = []
+    for q in questions:
+        r = stats.answer(q); rows.append({'câu hỏi': q, 'câu trả lời': r['answer']})
+    display(pd.DataFrame(rows))
+    table = stats.answer('Tỉ lệ tiểu đường theo nhóm tuổi')['table']
+    display(pd.DataFrame(table['rows'], columns=table['columns']))
+    print(stats.answer('Hôm nay trời đẹp'))
+    # Kiểm chứng độc lập bằng pandas thuần:
+    assert stats.answer('Tỉ lệ người mắc tiểu đường là bao nhiêu?')['value'] == (survey.diabetes_status == 'yes').mean()*100
+    '''),
+    md('''## 7. Bộ định tuyến công cụ (ToolAgent): chọn đúng đường cho từng câu
+
+    `ToolAgent.route` đọc câu hỏi và chọn: có phép tính hai số thì dùng máy tính; có tên công ty kèm từ "báo cáo" thì tra đồ thị;
+    có từ khóa thống kê thì dùng công cụ thống kê; còn lại là RAG. Đây là bộ định tuyến luật, không phải agent LLM tự lập kế hoạch.
+    Ô dưới chạy các đường không cần mô hình sinh để thấy câu trả lời bằng văn xuôi cùng "cách agent xử lý".'''),
+    code('KG-08','''
+    worker = agent()
+    rows = []
+    for q, dom in [('Tính tăng trưởng doanh thu từ 100 lên 130','finance'),
+                   ('250 chia 5','finance'),
+                   ('Công ty V có những báo cáo nào?','finance'),
+                   ('So sánh tỉ lệ tiểu đường giữa nam và nữ','diabetes')]:
+        r = worker.ask(q, dom)
+        rows.append({'câu hỏi': q, 'đường xử lý': r['route'], 'câu trả lời': r['answer'], 'nhãn tin cậy': r['confidence']['kind']})
+    display(pd.DataFrame(rows))
+    print(worker.ask('So sánh tỉ lệ tiểu đường giữa nam và nữ','diabetes')['steps'])
     print(safe_calculate('growth',[100,120],['USD','USD']))
-    for operation, values, units in [
-        ('divide',[1,0],['USD','USD']),
-        ('growth',[100,120],['USD','VND'])]:
+    for operation, values, units in [('divide',[1,0],['USD','USD']), ('growth',[100,120],['USD','VND'])]:
         try:
             safe_calculate(operation,values,units)
         except ValueError as exc:
@@ -380,81 +450,84 @@ def knowledge_notebook():
         else:
             raise AssertionError('Đầu vào sai không bị chặn')
     '''),
-    md('''## 5. Đọc kết quả thực nghiệm đã lưu
+    md('''## 8. Đọc kết quả thực nghiệm đã lưu
 
-    Các bảng này đọc từ JSON thí nghiệm gốc, không chạy lại benchmark trong
-    notebook demo. So sánh global với oracle_report phải ghi đúng điều kiện.
-    Explain: Hit@5, Recall@5, Complete@5 khác nhau thế nào?'''),
-    code('KG-06','''
+    Các bảng này đọc từ JSON của thí nghiệm truy hồi trên FinQA ở bài Chương 4, không chạy lại benchmark. Chúng được đo với bộ sinh cũ
+    (flan-t5-small), nên cột sinh văn bản không áp dụng cho Qwen. So sánh global với oracle_report phải ghi đúng điều kiện.
+    Câu hỏi để giải thích: Hit@5, Recall@5, Complete@5 khác nhau thế nào?'''),
+    code('KG-09','''
     result = json.loads((ROOT/'results/chapter04/finance_rag_results.json')
                         .read_text(encoding='utf8'))
     display(pd.DataFrame(result['retrieval'])[
         ['method','scope','hit_at_5','recall_at_5','complete_at_5']])
-    display(pd.DataFrame(result['generation']))
     (OUT/'kg_demo.json').write_text(json.dumps({
-        'question':question,'answer':answer['answer'],
-        'status':answer['status'],
-        'evidence_ids':[e['id'] for e in evidence]},
+        'question':question,'answer':answer['answer'],'english_answer':answer['english_answer'],
+        'query_used':answer['query_used'],'status':answer['status'],'model':answer['model'],
+        'evidence_ids':[e['id'] for e in answer['evidence']],
+        'survey_rows':len(survey)},
         ensure_ascii=False,indent=2),encoding='utf8')
     '''),
     md('''## Giải thích từng hàm khi bảo vệ
 
-    build_document_graph: tạo schema và cạnh có nguồn; retrieve: chọn đoạn;
-    reciprocal_rank_fusion: hợp hạng; build_prompt: ghép câu hỏi và ngữ cảnh;
-    generate: sinh văn bản; answer: đóng gói nguồn và trạng thái;
-    safe_calculate: tính số theo toán hạng cấu trúc. RAG không bảo đảm hết ảo giác.''')]
+    `build_document_graph`: tạo schema và cạnh có nguồn. `RAGEngine.retrieve`: chọn đoạn (BM25 + vector + RRF).
+    `RAGEngine.to_english_query`: dịch truy vấn. `ChatGenerator.generate_full`: viết tiếng Anh từ ba đoạn rồi dịch.
+    `lexical_support`: chặn trường hợp không có từ khóa nào khớp. `DiabetesStats.answer`: nhận ý định rồi tính bằng pandas.
+    `safe_calculate`: tính số theo toán hạng cấu trúc, không dùng eval. `ToolAgent.route`: chọn công cụ.
+    RAG không bảo đảm hết ảo giác; chỉ số liệu do công cụ tính mới đáng tin tuyệt đối.''')]
 
 
 def agents_notebook():
-    return [md('''# Chương 6: Hệ đa Agent – State, Message, hợp hàm và kiểm tra lỗi
+    return [md('''# Chương 7: Hệ đa agent: State, Message, hợp hàm và kiểm tra lỗi
 
-    Hệ điều phối xác định với bốn vai trò; chưa phải nhóm LLM tự lập kế hoạch.
-    Chạy trên corpus và FLAN-T5-small cục bộ. Mỗi cell đi kèm điều cần giải thích.'''),
+    Hệ điều phối xác định với bốn vai trò (truy hồi, đồ thị, viết, kiểm tra); chưa phải nhóm LLM tự lập kế hoạch.
+    Chạy cục bộ trên cùng kho tài liệu và mô hình Qwen2.5-1.5B-Instruct của Chương 5. Demo localhost của chương này ở `/agents`
+    (cổng 8044). Mỗi ô đi kèm điều cần giải thích.'''),
     code('AGENT-01',SETUP),
-    md('''## 1. Mã thực của State, Message và các tác tử
+    md('''## 1. Mã thực của State, Message và các agent
 
-    State chứa câu hỏi, evidence, graph_context, answer, status và messages.
-    Message ghi sender, receiver và payload. Bốn phép chuyển trạng thái hợp thành
-    S4 = Verifier ∘ Writer ∘ Graph ∘ Retrieval (S0).
-    Cell tiếp theo định nghĩa đầy đủ các lớp, không chỉ import tên.'''),
+    State chứa câu hỏi, truy vấn tiếng Anh, evidence, graph_context, answer, status và messages. Message ghi sender, receiver và payload.
+    Bốn phép chuyển trạng thái hợp thành S4 = Verifier ∘ Writer ∘ Graph ∘ Retrieval (S0).
+    Ô tiếp theo định nghĩa đầy đủ các lớp, không chỉ import tên. Vai trò đời thường: Agent truy hồi là người đi tìm tài liệu,
+    Agent đồ thị là người tra nguồn của từng đoạn, Agent viết là người soạn câu trả lời, Agent kiểm tra là người soát nguồn trích dẫn.'''),
     code('AGENT-02',(ROOT/'scripts/tieuluan/complete_agents.py').read_text(encoding='utf8')),
     md('''## 2. Khởi tạo phụ thuộc
 
-    `rag()` nạp corpus, hai bộ truy hồi và generator; `load_graph` nạp đồ thị
-    JSON nén; MultiAgentTeam gắn từng phụ thuộc cho vai trò cần dùng.
-    Chỉ dùng một generator chung, không gọi bốn mô hình độc lập.'''),
+    `rag()` nạp kho tài liệu, hai bộ truy hồi và mô hình sinh; `load_graph` nạp hai đồ thị (tài chính và tài liệu NIDDK);
+    MultiAgentTeam gắn từng phụ thuộc cho vai trò cần dùng. Chỉ dùng một mô hình sinh chung, không gọi bốn mô hình độc lập.'''),
     code('AGENT-03','''
-    from deployment.chapter04.app import rag, agent
+    from deployment.chapter04.app import rag, agent, summarize
     from src.chapter04.knowledge import load_graph
-    graphs = {'finance':load_graph(
-        ROOT/'knowledge_graph/chapter04/finance_graph.json.gz')}
-    team = MultiAgentTeam(rag(),graphs)
+    graphs = {'finance':load_graph(ROOT/'knowledge_graph/chapter04/finance_graph.json.gz'),
+              'diabetes':load_graph(ROOT/'knowledge_graph/chapter04/diabetes_documents_graph.json.gz')}
+    engine = rag(); engine.generator.load()
+    team = MultiAgentTeam(engine,graphs)
     print([type(a).__name__ for a in team.agents])
     '''),
-    md('''## 3. Quan sát hợp hàm bằng cách chạy riêng từng tác tử
+    md('''## 3. Quan sát hợp hàm bằng cách chạy riêng từng agent
 
-    Sau mỗi act, in số bằng chứng, ngữ cảnh đồ thị, câu trả lời, status và
-    thông điệp vừa tạo. Retrieval không viết đáp án; Graph bổ sung nguồn cha;
-    Writer sinh; Verifier chỉ kiểm tra cấu trúc nguồn, chưa xác minh ngữ nghĩa.'''),
+    Sau mỗi `act`, in câu kể lại việc agent vừa làm (hàm `summarize` của demo), số bằng chứng, ngữ cảnh đồ thị, trạng thái và thông điệp vừa tạo.
+    Agent truy hồi không viết đáp án; Agent đồ thị bổ sung nguồn cha; Agent viết sinh câu trả lời; Agent kiểm tra chỉ kiểm tra mã nguồn,
+    chưa xác minh ngữ nghĩa nên trạng thái cuối là `generated_unverified`.'''),
     code('AGENT-04','''
-    state = State('What is the percentage change in revenue?','finance')
+    state = State('Xét nghiệm A1C cho biết điều gì?','diabetes')
     trace = []
     for worker in team.agents:
-        worker.act(state)
-        trace.append({'agent':type(worker).__name__,
-            'evidence':len(state.evidence),'graph':len(state.graph_context),
-            'answer':state.answer,'status':state.status})
+        t0 = time.perf_counter(); worker.act(state); seconds = time.perf_counter()-t0
+        story, outcome = summarize(type(worker).__name__, state, worker, seconds)
+        trace.append({'agent':type(worker).__name__,'kết quả':outcome,'evidence':len(state.evidence),
+                      'graph':len(state.graph_context),'status':state.status,'giây':round(seconds,1)})
         message = state.messages[-1]
-        print(message.sender,'->',message.receiver,message.payload)
+        print(type(worker).__name__, '=>', story)
+        print('   Thông điệp:', message.sender,'->',message.receiver,message.payload)
     display(pd.DataFrame(trace))
+    print('Câu trả lời cuối:', state.answer)
     assert len(state.messages)==4
     assert not state.messages[-1].payload['semantic_support_checked']
     '''),
     md('''## 4. Kiểm tra các đường lỗi
 
-    `ask` chặn domain sai và câu hỏi rỗng. Khi report không tồn tại, truy hồi
-    trả rỗng, Writer không sinh và Verifier trả insufficient_evidence.
-    Điểm dừng: mỗi tác tử chạy một lần, không vòng lặp đến khi đồng ý.'''),
+    `ask` chặn domain sai và câu hỏi rỗng. Khi report không tồn tại, truy hồi trả rỗng, Agent viết không sinh và Agent kiểm tra
+    trả `insufficient_evidence`. Điểm dừng: mỗi agent chạy một lần, không có vòng lặp đến khi đồng ý.'''),
     code('AGENT-05','''
     missing = team.ask('Find revenue','finance',report='__missing_report__')
     print('Không có nguồn:',missing.status,missing.answer)
@@ -467,75 +540,82 @@ def agents_notebook():
         else:
             raise AssertionError('Đầu vào sai không bị chặn')
     '''),
-    md('''## 5. Vì sao nguồn tồn tại chưa chứng minh câu trả lời đúng?
+    md('''## 5. Câu hỏi không có trong tài liệu: từ chối "không đủ bằng chứng"
 
-    Chạy một câu hỏi đếm qua bộ sinh rồi đối chiếu công cụ statistics của
-    ToolAgent. Chỉ statistics đọc số từ bảng thật; không dùng câu trả lời
-    sai của generator như dữ kiện. Đây là phép thử giới hạn Verifier.'''),
+    Với câu hỏi ngoài kho tài liệu, nhóm agent phải từ chối thay vì bịa. Agent truy hồi vẫn trả về ba đoạn gần nhất, nhưng không đoạn nào chứa
+    từ khóa của câu hỏi; Agent viết nhận ra điều đó và Agent kiểm tra giữ nguyên lời từ chối.'''),
     code('AGENT-06','''
-    question = 'How many encounters are in the dataset?'
+    gold = team.ask('Giá vàng hôm nay là bao nhiêu?','diabetes')
+    print('Trạng thái:', gold.status, '| truy vấn:', gold.query)
+    print('Câu trả lời:', gold.answer)
+    assert gold.status=='insufficient_evidence'
+    '''),
+    md('''## 6. Vì sao nguồn tồn tại chưa chứng minh câu trả lời đúng?
+
+    Chạy một câu hỏi đếm qua nhóm agent rồi đối chiếu công cụ thống kê của ToolAgent. Chỉ công cụ thống kê đọc số từ dữ liệu thật
+    (CDC BRFSS 2023, 150.000 dòng). Câu mô hình viết có thể lấy một con số trong tài liệu (ví dụ số người mắc bệnh ở Hoa Kỳ) hoàn toàn
+    không liên quan đến dữ liệu khảo sát. Mã nguồn trích dẫn vẫn hợp lệ, vì vậy Agent kiểm tra không bắt được lỗi này: đó là giới hạn của kiểm tra cấu trúc.'''),
+    code('AGENT-07','''
+    question = 'Có bao nhiêu người trong dữ liệu khảo sát?'
     generated = team.ask(question,'diabetes')
-    computed = agent().ask(question,'diabetes',task='statistics')
-    print('Sinh:',generated.answer,generated.status)
-    print('Thống kê:',computed['answer'],computed['status'])
-    print('Nguồn id hợp lệ:',
-          generated.messages[-1].payload['citation_ids_valid'])
-    payload = {'finance_trace':trace,
+    computed = agent().ask(question,'diabetes')
+    print('Nhóm agent viết:', generated.answer, '|', generated.status)
+    print('Công cụ thống kê:', computed['answer'], '|', computed['status'])
+    print('Nguồn id hợp lệ:', generated.messages[-1].payload['citation_ids_valid'])
+    payload = {'trace':trace,
         'messages':[vars(m) for m in state.messages],
         'generated_count':generated.answer,
         'computed_count':computed['answer'],
-        'missing_status':missing.status}
+        'missing_status':missing.status,'gold_status':gold.status}
     (OUT/'agents_demo.json').write_text(
         json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf8')
     '''),
     md('''## Câu hỏi trình bày
 
-    Hãy giải thích riêng State.send, RetrievalAgent.act, GraphAgent.act,
-    WriterAgent.act, VerifierAgent.act và MultiAgentTeam.ask. Chỉ ra trường
-    State nào bị đổi ở từng bước, Message gửi cho ai và điều kiện dừng/lỗi.
-    Tại sao không được đổi generated_unverified thành verified chỉ vì id hợp lệ?''')]
+    Hãy giải thích riêng State.send, RetrievalAgent.act, GraphAgent.act, WriterAgent.act, VerifierAgent.act và MultiAgentTeam.ask.
+    Chỉ ra trường State nào bị đổi ở từng bước, Message gửi cho ai và điều kiện dừng/lỗi. Tại sao không được đổi generated_unverified
+    thành verified chỉ vì id hợp lệ?''')]
 
 
 def main():
+    """Mặc định chỉ dựng ba notebook Chương 2–4 (xem chapter_notebooks.py).
+
+    Các notebook 05 (KG/RAG) và 07 (multi-agent) có hàm dựng ở trên nhưng do phần khác phụ trách;
+    chỉ dựng lại khi truyền tường minh --legacy-extra, vì sẽ ghi đè tệp hiện có.
+    """
+    import argparse
     sys.stdout.reconfigure(encoding='utf8')
-    NBROOT.mkdir(parents=True,exist_ok=True)
-    OUT.mkdir(parents=True,exist_ok=True)
-    specs = [('03_cnn_6_layers',model_notebook('cnn')),
-             ('04a_rnn_6_layers',model_notebook('rnn')),
-             ('04b_lstm_6_layers',model_notebook('lstm')),
-             ('05_knowledge_rag',knowledge_notebook()),
-             ('06_multi_agent',agents_notebook())]
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--only', nargs='*', help='tên notebook cần dựng, ví dụ 03_cnn 04_rnn_lstm')
+    parser.add_argument('--no-run', action='store_true', help='chỉ dựng, không chạy')
+    parser.add_argument('--legacy-extra', action='store_true', help='dựng lại 05_knowledge_rag và 07_multi_agent')
+    args = parser.parse_args()
+    from scripts.tieuluan import chapter_notebooks
+    chapter_notebooks.build(args.only, run=not args.no_run)
+    if not args.legacy_extra:
+        return
+    NBROOT.mkdir(parents=True, exist_ok=True)
+    OUT.mkdir(parents=True, exist_ok=True)
+    specs = [('05_knowledge_rag', knowledge_notebook()), ('07_multi_agent', agents_notebook())]
     manifest = []
     for name, cells in specs:
-        notebook = nbf.v4.new_notebook(cells=cells,metadata={
-            'kernelspec':{'display_name':'Python 3','language':'python','name':'python3'},
-            'language_info':{'name':'python','version':sys.version.split()[0]}})
-        path = NBROOT/(name+'.ipynb')
-        # Catch malformed generated Python before starting a kernel.
+        notebook = nbf.v4.new_notebook(cells=cells, metadata={
+            'kernelspec': {'display_name': 'Python 3', 'language': 'python', 'name': 'python3'},
+            'language_info': {'name': 'python', 'version': sys.version.split()[0]}})
+        path = NBROOT / (name + '.ipynb')
         for cell in cells:
-            if cell.cell_type=='code':
+            if cell.cell_type == 'code':
                 ast.parse(cell.source)
-        nbf.write(notebook,path)
-        print('Executing',name,flush=True)
+        nbf.write(notebook, path)
+        print('Executing', name, flush=True)
         start = time.perf_counter()
-        client = NotebookClient(notebook,timeout=900,kernel_name='python3',
-                                resources={'metadata':{'path':str(ROOT)}})
+        client = NotebookClient(notebook, timeout=900, kernel_name='python3', resources={'metadata': {'path': str(ROOT)}})
         client.execute()
         nbf.validate(notebook)
-        for c in notebook.cells:
-            if c.cell_type=='code':
-                assert c.execution_count is not None
-                assert not any(o.output_type=='error' for o in c.outputs)
-        nbf.write(notebook,path)
-        row = {'notebook':str(path.relative_to(ROOT)),
-            'code_cells':sum(c.cell_type=='code' for c in cells),
-            'executed':True,'seconds':time.perf_counter()-start}
-        manifest.append(row)
-        print(json.dumps(row),flush=True)
-    (OUT/'execution.json').write_text(
-        json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf8')
-    print('All five notebooks executed with no error outputs',flush=True)
+        nbf.write(notebook, path)
+        manifest.append({'notebook': str(path.relative_to(ROOT)), 'seconds': time.perf_counter() - start})
+    (OUT / 'execution.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf8')
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     main()

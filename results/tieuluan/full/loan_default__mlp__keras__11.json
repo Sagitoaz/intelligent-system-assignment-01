@@ -1,0 +1,192 @@
+{
+  "dataset": "loan_default",
+  "kind": "mlp",
+  "framework": "keras",
+  "seed": 11,
+  "epochs_budget": 25,
+  "patience": 5,
+  "batch_size": 256,
+  "n_train": 87535,
+  "n_val": 20384,
+  "n_test": 42081,
+  "representation": "tabular",
+  "architecture": "d → Dense(16) → ReLU → Dense(1)",
+  "run_fingerprint": "28dfcb1fb4cd3d836eb376b161a9f4772addbcb8f3ea14bd050f9a0530a4958e",
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.48340415318028446,
+      "val_loss": 0.4061832031797602
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.37742610430706575,
+      "val_loss": 0.39859229678968544
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.37175138573722266,
+      "val_loss": 0.39359514501270104
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.36910470789849004,
+      "val_loss": 0.3914644725964646
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.36741466021023,
+      "val_loss": 0.3910893432558632
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.3663271705121161,
+      "val_loss": 0.3891652659870509
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.36560327386559194,
+      "val_loss": 0.3900046797774332
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.3649933657201809,
+      "val_loss": 0.3886005914895447
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.3646752078072732,
+      "val_loss": 0.38930008080234874
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.3642804431552351,
+      "val_loss": 0.38996149172716005
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.3639193211088939,
+      "val_loss": 0.3886033436733246
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.3637655619715081,
+      "val_loss": 0.38857167220461714
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.36350765883796604,
+      "val_loss": 0.3879953266318508
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.363301425624113,
+      "val_loss": 0.38845928611520253
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.3631016506662972,
+      "val_loss": 0.3889769250833567
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.36301824647415953,
+      "val_loss": 0.3892967216855114
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.3628464063602165,
+      "val_loss": 0.38859321784053413
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.3627230650306722,
+      "val_loss": 0.38795444591281836
+    },
+    {
+      "epoch": 19,
+      "train_loss": 0.36258463087424825,
+      "val_loss": 0.38909669409170794
+    },
+    {
+      "epoch": 20,
+      "train_loss": 0.36254483680807625,
+      "val_loss": 0.38846859528305366
+    },
+    {
+      "epoch": 21,
+      "train_loss": 0.3625586701166679,
+      "val_loss": 0.38773217698212653
+    },
+    {
+      "epoch": 22,
+      "train_loss": 0.36249008586958664,
+      "val_loss": 0.3875454095576318
+    },
+    {
+      "epoch": 23,
+      "train_loss": 0.3624136750260392,
+      "val_loss": 0.38865751821955435
+    },
+    {
+      "epoch": 24,
+      "train_loss": 0.36235430135394364,
+      "val_loss": 0.3880643196138492
+    },
+    {
+      "epoch": 25,
+      "train_loss": 0.3621971651512544,
+      "val_loss": 0.38659690500529487
+    }
+  ],
+  "best_epoch": 25,
+  "epochs_run": 25,
+  "training_seconds": 46.758776699978625,
+  "parameters": 593,
+  "metrics": {
+    "accuracy": 0.5970865711366174,
+    "balanced_accuracy": 0.6281433566226793,
+    "roc_auc": 0.6756151166269989,
+    "average_precision": 0.25321084275906736,
+    "f1": 0.337151569646976,
+    "precision": 0.22493479394887847,
+    "recall": 0.6728038695584334,
+    "mcc": 0.1849063721532491,
+    "log_loss": 0.4049007519162316,
+    "confusion_matrix": [
+      [
+        20814,
+        14858
+      ],
+      [
+        2097,
+        4312
+      ]
+    ],
+    "threshold": 0.12,
+    "accuracy_at_05": 0.8474133219267603
+  },
+  "validation_metrics": {
+    "accuracy": 0.577855180533752,
+    "balanced_accuracy": 0.6285611267069426,
+    "roc_auc": 0.6783380183650731,
+    "average_precision": 0.2467732432317371,
+    "f1": 0.32163973196689005,
+    "precision": 0.20882383048418465,
+    "recall": 0.6995884773662552,
+    "mcc": 0.1802062971636452,
+    "log_loss": 0.38659690500529487,
+    "confusion_matrix": [
+      [
+        9739,
+        7729
+      ],
+      [
+        876,
+        2040
+      ]
+    ],
+    "threshold": 0.12,
+    "accuracy_at_05": 0.8569466248037677
+  }
+}

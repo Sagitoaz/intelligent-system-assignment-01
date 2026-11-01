@@ -3,93 +3,149 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Demo tiểu luận · 7 chương</title>
+<title>Demo tiểu luận · Chương 2–7</title>
 <style>
-:root{--ink:#14203d;--line:#cfe0fa;--blue:#2589e0;--coral:#f0603a;--teal:#0d9f8f;--violet:#7060d8;--amber:#e8a317;--green:#22b05a}
+:root{--ink:#14203d;--line:#cfe0fa;--blue:#2589e0;--green:#22b05a;--amber:#e8a317;--mute:#5a6b8c;--sw:310px}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;font-weight:600;color:var(--ink);background:linear-gradient(135deg,#e6f2ff,#fff3e6 60%,#f3eaff);display:flex;flex-direction:column;overflow:hidden}
-header{display:flex;align-items:center;gap:14px;padding:8px 16px;background:#fff;border-bottom:3px solid var(--line)}
-header h1{font-size:18px;margin:0;white-space:nowrap}
-header small{color:#4a5b7f}
-nav{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
-.tab{border:2.5px solid #bfd0ee;background:#fff;border-radius:12px;padding:6px 12px;font:inherit;font-weight:800;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;align-items:flex-start;line-height:1.2}
-.tab span{font-size:11.5px;font-weight:600;color:#5a6b8c}
-.tab.active{color:#fff;border-color:var(--c);background:var(--c)}
-.tab.active span{color:#fff}
-.tab i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#c4cfe3;margin-right:5px}
-.tab i.up{background:var(--green)} .tab i.down{background:var(--amber)}
-main{flex:1;display:flex;min-height:0}
-.view{flex:1;min-width:0;position:relative;background:#fff}
+body{font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;font-weight:600;color:var(--ink);background:#f7fbff;display:flex;overflow:hidden}
+#side{width:var(--sw);flex:none;display:flex;flex-direction:column;background:#fff;border-right:3px solid var(--line);transition:width .2s;min-height:0;z-index:20}
+body.collapsed #side{width:64px}
+.top{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:2px solid #e3edfb}
+.top h1{font-size:15px;margin:0;line-height:1.25;flex:1}
+.top h1 small{display:block;font-size:11.5px;color:var(--mute);font-weight:600}
+.cbtn{border:2px solid #bfd0ee;background:#fff;border-radius:10px;width:34px;height:34px;font:inherit;font-weight:900;font-size:16px;cursor:pointer;color:var(--ink);flex:none}
+.cbtn:hover{background:#eef5ff}
+body.collapsed .top h1{display:none}
+body.collapsed .top{justify-content:center;padding:10px 0}
+#list{flex:1;overflow-y:auto;padding:8px}
+.item{border:2px solid transparent;border-radius:13px;margin-bottom:6px;background:#fff}
+.item.active{border-color:var(--c);background:#fbfdff}
+.hd{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;font:inherit;text-align:left;cursor:pointer;padding:8px 8px;color:var(--ink);border-radius:11px}
+.hd:hover{background:#eef5ff}
+.num{position:relative;flex:none;width:36px;height:36px;border-radius:50%;background:var(--c);color:#fff;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center}
+.num i{position:absolute;right:-2px;bottom:-2px;width:12px;height:12px;border-radius:50%;background:#c4cfe3;border:2px solid #fff}
+.num i.up{background:var(--green)} .num i.down{background:var(--amber)}
+.nm{flex:1;min-width:0;line-height:1.25}
+.nm b{display:block;font-size:14.5px}
+.nm span{font-size:12px;color:var(--mute);font-weight:600}
+body.collapsed .nm,body.collapsed .item.active .more,body.collapsed .more{display:none}
+body.collapsed .hd{justify-content:center;padding:6px 0}
+body.collapsed .item{border-color:transparent}
+body.collapsed .item.active .num{outline:3px solid var(--c);outline-offset:2px}
+.more{display:none;padding:2px 12px 12px 12px;font-size:13px;line-height:1.5;font-weight:600}
+.item.active .more{display:block}
+.more h4{margin:8px 0 2px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute)}
+.more p{margin:0}
+.more ol{margin:0;padding-left:18px}
+.more li{margin:2px 0}
+.lk{margin-top:8px;border:2px solid var(--c);background:#fff;color:var(--ink);border-radius:9px;padding:4px 10px;font:inherit;font-weight:800;font-size:12.5px;cursor:pointer}
+.lk:hover{background:#eef5ff}
+.note{padding:8px 12px;font-size:11.5px;color:#7a5b00;background:#fff7e0;border-top:2px solid #f3d98a;line-height:1.4}
+body.collapsed .note{display:none}
+#st{padding:4px 12px;font-size:11.5px;color:var(--mute);border-top:1px solid #e3edfb}
+body.collapsed #st{display:none}
+#main{flex:1;min-width:0;position:relative;display:flex}
+#view{flex:1;min-width:0;position:relative;background:#fff}
 iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
-.loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;background:#f7fbff;color:#4a5b7f;z-index:2}
+.pane{position:absolute;inset:0}
+.loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;background:#f7fbff;color:#4a5b7f;z-index:2;text-align:center;padding:20px}
 .spin{width:36px;height:36px;border:5px solid #d7e5fa;border-top-color:var(--blue);border-radius:50%;animation:s 1s linear infinite}
 @keyframes s{to{transform:rotate(360deg)}}
-aside{width:330px;overflow-y:auto;padding:12px;background:#f7fbff;border-left:2px solid var(--line)}
-aside.hide{display:none}
-aside h2{font-size:15px;margin:0 0 4px;color:var(--c)}
-aside .card{background:#fff;border:2px solid #dbe6f8;border-radius:13px;padding:10px 12px;margin-bottom:10px;font-size:13.5px;line-height:1.45}
-aside .card b.h{display:block;font-size:12.5px;letter-spacing:.03em;text-transform:uppercase;color:#5a6b8c;margin-bottom:3px}
-aside ul{margin:2px 0 0;padding-left:18px}
-aside li{margin:2px 0}
-.chip{display:inline-block;border-radius:99px;padding:1px 9px;font-size:12px;background:#e9f1ff;margin:2px 3px 0 0;color:#244b7a}
-.toggle{margin-left:8px;border:2px solid #bfd0ee;background:#fff;border-radius:10px;padding:4px 10px;font:inherit;font-weight:700;font-size:13px;cursor:pointer}
-footer{padding:4px 16px;font-size:12.5px;background:#fff7e0;border-top:2px solid #f3d98a;display:flex;gap:12px;justify-content:space-between}
-a{color:var(--blue)}
+#ref{width:340px;flex:none;overflow-y:auto;padding:12px;background:#f7fbff;border-left:3px solid var(--line)}
+body.noref #ref{display:none}
+#ref h2{font-size:15px;margin:0 0 8px;color:var(--c)}
+#ref .card{background:#fff;border:2px solid #dbe6f8;border-radius:13px;padding:10px 12px;margin-bottom:10px;font-size:13.5px;line-height:1.45}
+#ref .card b.h{display:block;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--mute);margin-bottom:3px}
+#ref ul{margin:2px 0 0;padding-left:18px}
+#ref li{margin:2px 0}
+#ref code{font-size:11.5px;word-break:break-all;background:#f2f4f8;padding:1px 4px;border-radius:4px}
+.fab{position:absolute;z-index:15;border:2.5px solid #bfd0ee;background:#fff;border-radius:12px;padding:6px 12px;font:inherit;font-weight:800;font-size:13px;cursor:pointer;color:var(--ink);box-shadow:0 2px 8px rgba(20,32,61,.15)}
+.fab:hover{background:#eef5ff}
+#refbtn{right:12px;bottom:12px}
+body:not(.noref) #refbtn{display:none}
+#menubtn{display:none;left:10px;top:10px}
+#scrim{display:none}
+.close{float:right;border:2px solid #bfd0ee;background:#fff;border-radius:8px;width:28px;height:28px;font:inherit;font-weight:900;cursor:pointer}
+@media(max-width:800px){
+  #side{position:fixed;left:0;top:0;bottom:0;width:min(310px,86vw)!important;transform:translateX(-102%);transition:transform .2s}
+  body.drawer #side{transform:none}
+  body.drawer #scrim{display:block;position:fixed;inset:0;background:rgba(20,32,61,.35);z-index:19}
+  body.collapsed .nm{display:block}
+  body.collapsed .item.active .more{display:block}
+  body.collapsed .top h1{display:block}
+  #menubtn{display:block}
+  #ref{position:absolute;right:0;top:0;bottom:0;width:min(340px,92vw);z-index:16;box-shadow:-4px 0 14px rgba(20,32,61,.2)}
+  #cbtn{display:none}
+}
 </style>
 </head>
-<body>
-<header>
-  <h1>🎓 Demo tiểu luận · AI trong đầu tư tài chính</h1><small>7 chương, chạy trên localhost</small>
-  <nav id="nav"></nav>
-  <button class="toggle" id="toggle">Ẩn đối chiếu</button>
-</header>
-<main>
-  <div class="view" id="view"></div>
-  <aside id="aside"></aside>
-</main>
-<footer><span>Chỉ để học tập: không phải khuyến nghị đầu tư. Mỗi tab là demo của đúng một chương; cột bên phải ghi mục, hình, bảng của báo cáo để đối chiếu.</span><span id="st"></span></footer>
+<body class="noref">
+<aside id="side">
+  <div class="top"><h1>Demo tiểu luận<small>AI trong đầu tư tài chính · Chương 2–7</small></h1><button class="cbtn" id="cbtn" title="Thu gọn hoặc mở rộng thanh bên" aria-label="Thu gọn thanh bên">&#9664;</button></div>
+  <div id="list"></div>
+  <div id="st"></div>
+  <div class="note">Chỉ để học tập, không phải khuyến nghị đầu tư.</div>
+</aside>
+<div id="scrim"></div>
+<div id="main">
+  <button class="fab" id="menubtn">&#9776; Chương</button>
+  <div id="view"></div>
+  <aside id="ref"></aside>
+  <button class="fab" id="refbtn">Đối chiếu báo cáo</button>
+</div>
 <script>
 (function () {
   var H = location.protocol + '//127.0.0.1:';
   var CH = [
-    { n: 1, short: 'Lịch sử AI', sub: 'dòng thời gian, dữ liệu', color: '#7060d8', child: null, url: '/ch1.html',
-      sec: ['1.7 AI trong tài chính: lịch sử song hành', '1.8 Dữ liệu minh họa: ba chỉ số thị trường'], refs: ['Bảng 1.1: 13 mốc phát triển của AI', 'Bảng 1.2: số phiên, trung bình, độ lệch chuẩn, biến động năm, độ nhọn dư, % phiên tăng', 'Hình 1.4: giá thang logarit của ba chỉ số', 'Hình 1.5: phân phối lợi suất so với phân phối chuẩn'],
-      try_: ['Đổi giữa S&P 500, VN-Index, Bitcoin và đọc lại từng ô của Bảng 1.2 (số được tính lại từ dữ liệu).', 'Lọc dòng thời gian theo giai đoạn để so với Bảng 1.1.'] },
-    { n: 2, short: 'Học máy', sub: 'MLP trên dữ liệu bảng', color: '#2589e0', child: 'streamlit', url: H + '8502/?embed=true&chapter=2&dataset=credit_default&kind=mlp',
-      sec: ['2.9 Dữ liệu thực nghiệm', '2.10 Cài đặt bằng ba cách', '2.11 Kết quả và thảo luận'], refs: ['Hình 2.4: phân bố lớp của hai bộ dữ liệu', 'Hình 2.7: đường ROC trên tập test', 'Mục 2.11: ROC-AUC của rừng ngẫu nhiên, MLP, hồi quy logistic'],
-      try_: ['Tab “Thử trên dữ liệu kiểm tra”: chọn bộ dữ liệu và mô hình MLP, lấy một dòng.', 'Tab “Tự chấm điểm tín dụng”: nhập hồ sơ và xem xác suất.', 'Tab “So sánh mô hình”: đối chiếu với kết quả trong báo cáo.'] },
-    { n: 3, short: 'CNN', sub: 'đọc ảnh GASF', color: '#0d9f8f', child: 'streamlit', url: H + '8502/?embed=true&chapter=3&dataset=vnindex&kind=cnn4',
-      sec: ['3.7 Dữ liệu thực nghiệm: ảnh GASF', '3.9 Kết quả và thảo luận'], refs: ['Hình 3.5: cửa sổ 20 phiên đầu tiên của tập test', 'Hình 3.8: ROC-AUC trên tập test và khoảng tin cậy'],
-      try_: ['Chọn VN-Index, mô hình CNN4, rồi chọn một ngày cuối cửa sổ.', 'Đọc xác suất tăng và đối chiếu nhãn thật.'] },
-    { n: 4, short: 'RNN · LSTM', sub: 'chuỗi, backtest', color: '#e8a317', child: 'streamlit', url: H + '8502/?embed=true&chapter=4&dataset=vnindex&kind=lstm',
-      sec: ['4.8 Kết quả và thảo luận', '4.9 Từ dự báo đến quyết định đầu tư'], refs: ['Hình 4.6: ROC-AUC trên tập test và khoảng tin cậy', 'Hình 4.8: giá trị danh mục của các chiến lược trên tập test'],
-      try_: ['Tab “Thử trên dữ liệu kiểm tra”: chọn LSTM hoặc GRU.', 'Tab “Backtest”: so chiến lược theo mô hình với mua và giữ, trước và sau phí.', 'Tab “Dự báo phiên tới” cần internet khi bấm tải giá mới.'] },
-    { n: 5, short: 'KG · RAG', sub: 'hỏi đáp có nguồn', color: '#d6458a', child: 'fastapi', url: H + '8044/',
-      sec: ['5.4 KB và RAG cho bệnh tiểu đường', '5.5 KB và RAG cho chứng khoán', '5.8 Deploy với Agent'], refs: ['Hình 5.7: ToolAgent định tuyến yêu cầu tới bốn công cụ', 'Bảng 5.3: so sánh truy hồi BM25, vector, hybrid', 'Mục 5.7: ảo giác và cách kiểm soát'],
-      try_: ['Dùng ba câu hỏi mẫu; câu cần tính toán sẽ đi qua công cụ, câu mở đi qua RAG.', 'Lần hỏi RAG đầu tiên mất 30–60 giây vì nạp mô hình trên CPU.', 'Tài liệu API: cổng 8044, đường dẫn /docs.'] },
-    { n: 6, short: 'Deep Graph', sub: 'GCN trên VN30', color: '#f0603a', child: 'deepgraph', url: H + '8300/',
-      sec: ['6.3 Bài toán và dữ liệu', '6.5 Kết quả và phân tích', '6.6 Triển khai và demo'], refs: ['Hình 6.2: đồ thị tương quan VN30', 'Bảng 6.5 và Hình 6.4: độ chính xác bài toán đoán ngành', 'Hình 6.5–6.7: ba màn hình demo'],
-      try_: ['Màn hình 3: chọn 9 mã biết nhãn, bấm chạy, so MLP với GCN (trung bình 40 lần chia trong báo cáo: 73,1% so với 63,9%).', 'Màn hình 2: tăng số lớp để thấy làm trơn quá mức.'] },
-    { n: 7, short: 'Hệ đa agent', sub: 'bốn agent, State/Message', color: '#22b05a', child: 'fastapi', url: H + '8044/agents',
-      sec: ['7.2 Kiến trúc, vai trò và dữ liệu trao đổi', '7.4 Mã nguồn và biểu diễn luồng phối hợp', '7.5 Đánh giá và phân tích lỗi', '7.7.1 Kịch bản demo'], refs: ['Hình 7.3: State và Message qua bốn lượt', 'Hình 7.8: đường lỗi (insufficient_evidence, đầu vào bị chặn)', 'Hình 7.9: bộ sinh trả 2, thống kê trả 101.766'],
-      try_: ['Chạy câu “Thay đổi doanh thu” rồi xem Message ở từng agent.', 'Chạy “Báo cáo không tồn tại” để thấy insufficient_evidence.', 'Chạy “Đếm số lượt khám” rồi bấm công cụ thống kê để so 2 với 101.766.'] }
+    { n: 2, nb: 'notebooks/tieuluan/complete/02_ml.ipynb', short: 'Học máy', sub: 'mạng nơ-ron trên dữ liệu bảng', color: '#2589e0', child: 'streamlit', url: H + '8502/?embed=true&chapter=2',
+      what: 'Máy học từ một bảng dữ liệu tín dụng (mỗi dòng là một khách hàng) để đoán xem khách có khả năng trả nợ hay không. Bạn tự nhập hồ sơ hoặc lấy một dòng có sẵn, rồi xem xác suất mô hình đưa ra và so với kết quả thật. Phần mô tả bộ dữ liệu nằm ngay trong demo.',
+      try_: ['Đọc phần mô tả dữ liệu ở đầu trang demo để biết bảng gồm những cột nào.', 'Lấy một dòng dữ liệu kiểm tra, xem xác suất mô hình đoán và đáp án thật.', 'Tự nhập một hồ sơ rồi đổi từng thông tin để xem xác suất thay đổi ra sao.', 'Xem phần so sánh các mô hình và đối chiếu với báo cáo.'],
+      sec: ['2.9 Dữ liệu thực nghiệm', '2.10 Cài đặt bằng ba cách', '2.11 Kết quả và thảo luận'], refs: ['Các hình phân bố lớp và đường ROC của chương', 'Bảng so sánh ROC-AUC của mục 2.11'] },
+    { n: 3, nb: 'notebooks/tieuluan/complete/03_cnn.ipynb', short: 'CNN', sub: 'đọc biểu đồ giá như ảnh', color: '#0d9f8f', child: 'streamlit', url: H + '8502/?embed=true&chapter=3&dataset=vnindex&kind=cnn4',
+      what: 'Chuỗi giá của 20 phiên được vẽ thành một bức ảnh nhỏ (ảnh GASF), rồi mạng CNN nhìn ảnh đó để đoán giá phiên sau tăng hay giảm. Demo cho bạn chọn một ngày, xem bức ảnh và xác suất tăng mà mô hình đưa ra, rồi so với thực tế.',
+      try_: ['Chọn VN-Index và mô hình CNN, rồi chọn một ngày cuối cửa sổ.', 'Nhìn bức ảnh của cửa sổ 20 phiên: màu đậm nhạt thể hiện quan hệ giữa các phiên.', 'Đọc xác suất tăng và đối chiếu nhãn thật của ngày đó.'],
+      sec: ['3.7 Dữ liệu thực nghiệm: ảnh GASF', '3.9 Kết quả và thảo luận'], refs: ['Hình cửa sổ 20 phiên đầu tiên của tập test', 'Hình ROC-AUC trên tập test và khoảng tin cậy'] },
+    { n: 4, nb: 'notebooks/tieuluan/complete/04_rnn_lstm.ipynb', short: 'RNN · LSTM', sub: 'đọc chuỗi, thử đầu tư', color: '#e8a317', child: 'streamlit', url: H + '8502/?embed=true&chapter=4&dataset=vnindex&kind=lstm',
+      what: 'Mô hình RNN/LSTM đọc lần lượt từng phiên giao dịch (như đọc một câu) để dự báo phiên tiếp theo. Demo còn cho thử "nếu làm theo dự báo của mô hình thì lời hay lỗ" (backtest) và so với việc mua rồi giữ.',
+      try_: ['Chọn LSTM hoặc GRU và lấy một ngày trong dữ liệu kiểm tra.', 'Mở phần backtest: so đường giá trị danh mục của chiến lược với mua và giữ.', 'Để ý khác biệt trước và sau phí giao dịch.'],
+      sec: ['4.8 Kết quả và thảo luận', '4.9 Từ dự báo đến quyết định đầu tư'], refs: ['Hình ROC-AUC trên tập test và khoảng tin cậy', 'Hình giá trị danh mục của các chiến lược'] },
+    { n: 5, nb: 'notebooks/tieuluan/complete/05_knowledge_rag.ipynb', short: 'Hỏi đáp có nguồn', sub: 'đồ thị tri thức và RAG', color: '#d6458a', child: 'fastapi', url: H + '8044/',
+      what: 'Hỏi một câu về bệnh tiểu đường hoặc tài chính; agent tìm đoạn tài liệu liên quan rồi viết câu trả lời kèm nguồn. Giao diện là một khung trò chuyện: bạn gõ câu hỏi, agent trả lời và ghi rõ đoạn tài liệu nó dựa vào.',
+      try_: ['Bấm một câu hỏi mẫu hoặc tự gõ câu hỏi bằng tiếng Việt.', 'Đọc phần nguồn đi kèm để thấy câu trả lời dựa vào đoạn tài liệu nào.', 'Thử hỏi điều không có trong tài liệu để xem agent từ chối thay vì bịa.', 'Lần hỏi đầu tiên có thể mất vài chục giây vì phải nạp mô hình.'],
+      sec: ['5.4 KB và RAG cho bệnh tiểu đường', '5.5 KB và RAG cho chứng khoán', '5.7 Ảo giác và cách kiểm soát', '5.8 Deploy với agent'], refs: ['Hình agent định tuyến yêu cầu tới các công cụ', 'Bảng so sánh truy hồi BM25, vector, hybrid'] },
+    { n: 6, nb: 'notebooks/tieuluan/complete/06_deep_graph_gcn.ipynb', short: 'Deep Graph', sub: 'GCN trên đồ thị cổ phiếu', color: '#f0603a', child: 'deepgraph', url: H + '8300/',
+      what: 'Vẽ 27 cổ phiếu VN30 thành mạng lưới, nối những mã có giá lên xuống giống nhau. Demo cho xem từng bước mỗi mã "hỏi ý kiến" hàng xóm, rồi thử đoán ngành của một mã khi chỉ biết ngành của vài mã khác. Kết luận trung thực: đồ thị giúp đoán ngành, nhưng không giúp đoán lợi suất.',
+      try_: ['Đọc phần giới thiệu ba bước khi mở demo, rồi bấm vào một chấm ở tab 1.', 'Tab 2: bấm "Bước kế tiếp" vài lần và đọc phép tính của một mã.', 'Tab 3: chọn ngẫu nhiên 9 mã, bấm chạy so sánh và đọc câu kết luận.'],
+      sec: ['6.3 Bài toán và dữ liệu', '6.5 Kết quả và phân tích', '6.6 Triển khai và demo'], refs: ['Hình đồ thị tương quan VN30', 'Bảng độ chính xác bài toán đoán ngành', 'Ba hình chụp màn hình demo'] },
+    { n: 7, nb: 'notebooks/tieuluan/complete/07_multi_agent.ipynb', short: 'Hệ đa agent', sub: 'bốn agent phối hợp', color: '#22b05a', child: 'fastapi', url: H + '8044/agents',
+      what: 'Một câu hỏi được bốn agent cùng xử lý, mỗi agent đảm nhận một việc. Giao diện kể lại từng bước: agent nào nhận gì, làm gì, rồi chuyển kết quả cho agent nào, cho tới câu trả lời cuối. Nhờ vậy bạn thấy rõ vì sao hệ nhiều agent trả lời đáng tin hơn.',
+      try_: ['Chọn một câu hỏi mẫu và bấm chạy.', 'Đọc lời kể của từng agent theo thứ tự từ trên xuống.', 'Thử câu hỏi không có dữ liệu để thấy hệ thống báo thiếu bằng chứng thay vì bịa.'],
+      sec: ['7.2 Kiến trúc, vai trò và dữ liệu trao đổi', '7.4 Mã nguồn và biểu diễn luồng phối hợp', '7.5 Đánh giá và phân tích lỗi', '7.7.1 Kịch bản demo'], refs: ['Hình State và Message qua các lượt', 'Hình đường lỗi (thiếu bằng chứng, đầu vào bị chặn)'] }
   ];
   var cur = 0, status = {}, loaded = {};
   var $ = function (s) { return document.querySelector(s); };
-  var nav = $('#nav'), view = $('#view'), aside = $('#aside');
+  var body = document.body, list = $('#list'), view = $('#view'), ref = $('#ref');
+  function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+  function li(arr) { return arr.map(function (x) { return '<li>' + x + '</li>'; }).join(''); }
+
   CH.forEach(function (c, i) {
-    var b = document.createElement('button'); b.className = 'tab'; b.style.setProperty('--c', c.color);
-    b.innerHTML = '<div><i></i>Chương ' + c.n + ' · ' + c.short + '</div><span>' + c.sub + '</span>'; b.onclick = function () { show(i); }; nav.appendChild(b); c.btn = b;
-    var f = document.createElement('div'); f.style.display = 'none'; f.style.position = 'absolute'; f.style.inset = '0'; f.id = 'v' + i;
-    f.innerHTML = '<div class="loading"><div class="spin"></div><div>Đang khởi động demo của Chương ' + c.n + '…</div></div>'; view.appendChild(f); c.pane = f;
+    var d = document.createElement('div'); d.className = 'item'; d.style.setProperty('--c', c.color);
+    d.innerHTML = '<button class="hd" title="Chương ' + c.n + ' · ' + c.short + '"><span class="num">' + c.n + '<i></i></span><span class="nm"><b>Chương ' + c.n + ' · ' + c.short + '</b><span>' + c.sub + '</span></span></button>' +
+      '<div class="more"><h4>Demo này làm gì?</h4><p>' + c.what + '</p><h4>Nên thử</h4><ol>' + li(c.try_) + '</ol><h4>Đối chiếu với báo cáo</h4><p>' + c.sec[0] + (c.sec.length > 1 ? ' và ' + (c.sec.length - 1) + ' mục khác' : '') + '; hình, bảng và notebook ở cột đối chiếu.</p><button class="lk">Mở đối chiếu</button></div>';
+    d.querySelector('.hd').onclick = function () { show(i); if (window.innerWidth <= 800) body.classList.remove('drawer'); };
+    d.querySelector('.lk').onclick = function () { setRef(true); };
+    list.appendChild(d); c.item = d;
+    var f = document.createElement('div'); f.className = 'pane'; f.style.display = 'none';
+    f.innerHTML = '<div class="loading"><div class="spin"></div><div>Đang khởi động demo của Chương ' + c.n + '…<br><small>Lần đầu có thể mất vài chục giây.</small></div></div>'; view.appendChild(f); c.pane = f;
   });
   function side(c) {
-    aside.style.setProperty('--c', c.color);
-    aside.innerHTML = '<h2>Đối chiếu · Chương ' + c.n + '</h2>' +
-      '<div class="card"><b class="h">Mục của báo cáo</b><ul>' + c.sec.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>' +
-      '<div class="card"><b class="h">Hình, bảng nên so</b><ul>' + c.refs.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>' +
-      '<div class="card"><b class="h">Nên thử trong demo</b><ul>' + c.try_.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul></div>';
+    ref.style.setProperty('--c', c.color);
+    ref.innerHTML = '<button class="close" id="refclose" title="Ẩn cột đối chiếu">&times;</button><h2>Đối chiếu · Chương ' + c.n + '</h2>' +
+      '<div class="card"><b class="h">Mục của báo cáo</b><ul>' + li(c.sec) + '</ul></div>' +
+      '<div class="card"><b class="h">Hình, bảng nên so</b><ul>' + li(c.refs) + '</ul></div>' +
+      '<div class="card"><b class="h">Notebook của chương</b><ul><li><code>' + c.nb + '</code></li></ul></div>';
+    $('#refclose').onclick = function () { setRef(false); };
   }
   function ensure(i) {
     var c = CH[i]; if (loaded[i]) return;
@@ -97,18 +153,26 @@ a{color:var(--blue)}
     var fr = document.createElement('iframe'); fr.src = c.url; fr.title = 'Chương ' + c.n; c.pane.innerHTML = ''; c.pane.appendChild(fr); loaded[i] = true;
   }
   function show(i) {
-    cur = i; CH.forEach(function (c, k) { c.btn.classList.toggle('active', k === i); c.pane.style.display = k === i ? 'block' : 'none'; });
-    side(CH[i]); ensure(i); location.hash = '#c' + CH[i].n;
+    cur = i; CH.forEach(function (c, k) { c.item.classList.toggle('active', k === i); c.pane.style.display = k === i ? 'block' : 'none'; });
+    side(CH[i]); ensure(i); try { history.replaceState(null, '', '#c' + CH[i].n); } catch (e) { location.hash = '#c' + CH[i].n; }
+    var a = CH[i].item; if (a.scrollIntoView) a.scrollIntoView({ block: 'nearest' });
   }
+  function setRef(on) { body.classList.toggle('noref', !on); ls('hub_ref', on ? '1' : '0'); }
+  function setCollapsed(on) { body.classList.toggle('collapsed', on); $('#cbtn').innerHTML = on ? '&#9654;' : '&#9664;'; $('#cbtn').setAttribute('aria-label', on ? 'Mở rộng thanh bên' : 'Thu gọn thanh bên'); ls('hub_collapsed', on ? '1' : '0'); }
   function poll() {
     fetch('/api/status').then(function (r) { return r.json(); }).then(function (s) {
-      status = s; CH.forEach(function (c) { var up = c.child ? s[c.child] : true; var d = c.btn.querySelector('i'); d.className = up ? 'up' : 'down'; });
+      status = s; CH.forEach(function (c) { var up = c.child ? s[c.child] : true; c.item.querySelector('.num i').className = up ? 'up' : 'down'; });
       ensure(cur);
       var down = Object.keys(s).filter(function (k) { return !s[k]; }); $('#st').textContent = down.length ? 'Đang khởi động: ' + down.join(', ') : 'Mọi demo đã sẵn sàng';
     }, function () { $('#st').textContent = 'Mất kết nối máy chủ'; });
   }
-  $('#toggle').onclick = function () { aside.classList.toggle('hide'); this.textContent = aside.classList.contains('hide') ? 'Hiện đối chiếu' : 'Ẩn đối chiếu'; };
-  var start = parseInt((location.hash.match(/#c(\d)/) || [0, 1])[1], 10) - 1; if (!(start >= 0 && start < 7)) start = 0;
+  $('#cbtn').onclick = function () { setCollapsed(!body.classList.contains('collapsed')); };
+  $('#refbtn').onclick = function () { setRef(true); };
+  $('#menubtn').onclick = function () { body.classList.add('drawer'); };
+  $('#scrim').onclick = function () { body.classList.remove('drawer'); };
+  if (ls('hub_collapsed') === '1') setCollapsed(true);
+  if (ls('hub_ref') === '1') body.classList.remove('noref');
+  var m = location.hash.match(/#c(\d)/), start = m ? parseInt(m[1], 10) - 2 : 0; if (!(start >= 0 && start < CH.length)) start = 0;
   show(start); poll(); setInterval(poll, 3000);
 })();
 </script>

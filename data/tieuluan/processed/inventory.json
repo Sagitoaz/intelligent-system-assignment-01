@@ -290,5 +290,125 @@
         "AGE": 34
       }
     ]
+  },
+  "loan_default": {
+    "source": "https://huggingface.co/datasets/codesignal/lending-club-loan-accepted",
+    "license": "CC0-1.0",
+    "origin": "Lending Club accepted loans 2007–2018Q4",
+    "source_rows": 2260701,
+    "eligible_rows": 427252,
+    "raw_rows": 150000,
+    "features": 35,
+    "raw_columns": 18,
+    "positive": 20638,
+    "base_rate": 0.13758666813373566,
+    "issue_range": [
+      "2012-01-01",
+      "2015-06-01"
+    ],
+    "split": "theo ngày phát hành: train ≤ 2014-08-31; val 2014-09…2014-12; test 2015-01…2015-06",
+    "splits": {
+      "train": {
+        "n": 87535,
+        "positive": 11313,
+        "first": "2012-01-01",
+        "last": "2014-08-01"
+      },
+      "val": {
+        "n": 20384,
+        "positive": 2916,
+        "first": "2014-09-01",
+        "last": "2014-12-01"
+      },
+      "test": {
+        "n": 42081,
+        "positive": 6409,
+        "first": "2015-01-01",
+        "last": "2015-06-01"
+      }
+    },
+    "missing_share": {
+      "emp_length": 0.055113333333333334,
+      "revol_util": 0.0005466666666666667
+    },
+    "sha256": "88f4e19dc8f145432abb394ad528f0e738cc51fefec9a60b6ed93bc415d63634",
+    "created_at": "2026-11-01T08:00:04+00:00",
+    "raw_sample": [
+      {
+        "issue_d": "2012-01-01",
+        "loan_status": "Fully Paid",
+        "grade": "C",
+        "sub_grade": "C3",
+        "loan_amnt": "11000.0",
+        "int_rate": "14.65",
+        "annual_inc": "51600.0",
+        "dti": "14.93",
+        "fico": "677.0",
+        "emp_length": "8.0",
+        "delinq_2yrs": "0.0",
+        "inq_last_6mths": "1.0",
+        "open_acc": "14.0",
+        "total_acc": "20.0",
+        "pub_rec": "0.0",
+        "pub_rec_bankruptcies": "0.0",
+        "revol_bal": "13047.0",
+        "revol_util": "71.0",
+        "credit_history_years": "8.999315537303216",
+        "home_ownership": "MORTGAGE",
+        "verification_status": "Not Verified",
+        "purpose": "debt_consolidation",
+        "default": "0"
+      },
+      {
+        "issue_d": "2012-01-01",
+        "loan_status": "Charged Off",
+        "grade": "B",
+        "sub_grade": "B4",
+        "loan_amnt": "9200.0",
+        "int_rate": "12.42",
+        "annual_inc": "35000.0",
+        "dti": "24.45",
+        "fico": "687.0",
+        "emp_length": "8.0",
+        "delinq_2yrs": "0.0",
+        "inq_last_6mths": "0.0",
+        "open_acc": "8.0",
+        "total_acc": "28.0",
+        "pub_rec": "0.0",
+        "pub_rec_bankruptcies": "0.0",
+        "revol_bal": "9035.0",
+        "revol_util": "53.1",
+        "credit_history_years": "11.835728952772074",
+        "home_ownership": "RENT",
+        "verification_status": "Not Verified",
+        "purpose": "debt_consolidation",
+        "default": "1"
+      },
+      {
+        "issue_d": "2012-01-01",
+        "loan_status": "Fully Paid",
+        "grade": "D",
+        "sub_grade": "D4",
+        "loan_amnt": "13250.0",
+        "int_rate": "17.58",
+        "annual_inc": "75000.0",
+        "dti": "0.8",
+        "fico": "667.0",
+        "emp_length": "3.0",
+        "delinq_2yrs": "1.0",
+        "inq_last_6mths": "1.0",
+        "open_acc": "7.0",
+        "total_acc": "9.0",
+        "pub_rec": "0.0",
+        "pub_rec_bankruptcies": "0.0",
+        "revol_bal": "1321.0",
+        "revol_util": "3.9",
+        "credit_history_years": "12.999315537303216",
+        "home_ownership": "MORTGAGE",
+        "verification_status": "Verified",
+        "purpose": "debt_consolidation",
+        "default": "0"
+      }
+    ]
   }
 }

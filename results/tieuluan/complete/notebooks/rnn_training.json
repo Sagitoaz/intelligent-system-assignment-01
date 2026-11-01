@@ -40,7 +40,7 @@
       "test_auc": 0.481883368234025,
       "test_accuracy": 0.45703125,
       "initial_max_error": 0.0,
-      "seconds": 0.7537914999993518
+      "seconds": 0.2630176999955438
     },
     {
       "kind": "rnn",
@@ -56,7 +56,7 @@
       "test_auc": 0.481883368234025,
       "test_accuracy": 0.45703125,
       "initial_max_error": 2.384185791015625e-07,
-      "seconds": 52.299797999992734
+      "seconds": 21.405377799994312
     },
     {
       "kind": "rnn",
@@ -72,7 +72,7 @@
       "test_auc": 0.481883368234025,
       "test_accuracy": 0.45703125,
       "initial_max_error": 3.7997961044311523e-07,
-      "seconds": 1.5533774999785237
+      "seconds": 0.5752203000010923
     }
   ],
   "history": {

@@ -766,5 +766,14 @@
     "files": [
       "default of credit card clients.xls"
     ]
+  },
+  "raw/lending_club/loans_36m_2012_2015_150k.csv": {
+    "source": "https://huggingface.co/datasets/codesignal/lending-club-loan-accepted",
+    "license": "CC0-1.0",
+    "source_rows": 2260701,
+    "eligible_rows": 427252,
+    "raw_rows": 150000,
+    "sha256": "88f4e19dc8f145432abb394ad528f0e738cc51fefec9a60b6ed93bc415d63634",
+    "downloaded_at": "2026-11-01T08:00:04+00:00"
   }
 }

@@ -1,10 +1,14 @@
 {
-  "question": "What are the symptoms of diabetes?",
-  "answer": "NIDDK-funded research",
+  "question": "Xét nghiệm A1C cho biết điều gì?",
+  "answer": "Xét nghiệm A1C cho thấy mức đường huyết trung bình trong 3 tháng gần nhất.",
+  "english_answer": "An A1C test indicates your average blood glucose level over the last 3 months.",
+  "query_used": "What does an A1C test indicate?",
   "status": "generated_unverified",
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
   "evidence_ids": [
-    "symptoms-causes:112",
-    "symptoms-causes:114",
-    "symptoms-causes:107"
-  ]
+    "managing-diabetes:21",
+    "tests-diagnosis:41",
+    "tests-diagnosis:43"
+  ],
+  "survey_rows": 150000
 }

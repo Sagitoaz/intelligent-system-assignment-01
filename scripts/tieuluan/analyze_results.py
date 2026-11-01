@@ -74,7 +74,7 @@ def main():
         analysis["equity"][dataset] = {"dates": [str(t) for t in target_dates],
                                        **{name: r["equity"].round(6).tolist() for name, r in curves.items()}}
     # Hai bộ dữ liệu bảng: khoảng tin cậy AUC và so sánh có ghép cặp giữa các mô hình.
-    for dataset in ("taiwan_bankruptcy", "credit_default"):
+    for dataset in ("taiwan_bankruptcy", "credit_default", "loan_default"):
         y, p_mlp, _, _ = ensemble(dataset, "mlp", "pytorch")
         _, p_rf, _, _ = ensemble(dataset, "random_forest", "sklearn")
         p_lr = load_prediction(dataset, "logistic", "sklearn", 11)["probability"]

@@ -5,130 +5,185 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Deep Graph · VN30</title>
 <style>
-:root{--ink:#14203d;--line:#cfe0fa;--blue:#2589e0;--green:#22b05a;--red:#e5342d;--amber:#f5a623;--purple:#7060d8}
+:root{--ink:#14203d;--line:#cfe0fa;--blue:#2589e0;--green:#22b05a;--red:#e5342d;--amber:#f5a623;--purple:#7060d8;--mute:#4a5b7f}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
 body{font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;font-weight:600;color:var(--ink);background:linear-gradient(135deg,#e6f2ff,#fff3e6 60%,#f3eaff);display:flex;flex-direction:column;overflow:hidden}
-header{display:flex;align-items:center;gap:16px;padding:10px 18px;background:#fff;border-bottom:3px solid var(--line)}
-header h1{font-size:19px;margin:0}header small{color:#4a5b7f;font-weight:600}
-.tabs{display:flex;gap:8px;margin-left:auto}
-.tab{border:2.5px solid #bfd0ee;background:#fff;border-radius:999px;padding:7px 16px;font:inherit;font-weight:800;cursor:pointer;color:var(--ink)}
+header{display:flex;align-items:center;gap:12px;padding:6px 14px;background:#fff;border-bottom:3px solid var(--line)}
+header h1{font-size:16px;margin:0;white-space:nowrap}header small{color:var(--mute);font-weight:600;font-size:12.5px}
+.tabs{display:flex;gap:6px;margin-left:auto}
+.tab{border:2.5px solid #bfd0ee;background:#fff;border-radius:999px;padding:5px 14px;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer;color:var(--ink)}
 .tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.help{border:2.5px solid #bfd0ee;background:#fff;border-radius:50%;width:30px;height:30px;font:inherit;font-weight:900;cursor:pointer;color:var(--blue)}
 main{flex:1;display:flex;min-height:0}
 .stage{flex:1;position:relative;min-width:0}
 canvas{width:100%;height:100%;display:block}
-.panel{width:390px;overflow-y:auto;padding:14px;background:#f7fbff;border-left:2px solid var(--line)}
-.card{background:#fff;border:2px solid #dbe6f8;border-radius:14px;padding:12px 14px;margin-bottom:12px}
-.card h3{margin:0 0 6px;font-size:15px}
-.card p{margin:4px 0;font-size:13.5px;line-height:1.45;color:#2b3a5e}
+.panel{width:410px;overflow-y:auto;padding:12px;background:#f7fbff;border-left:2px solid var(--line)}
+.card{background:#fff;border:2px solid #dbe6f8;border-radius:14px;padding:11px 14px;margin-bottom:11px}
+.card h3{margin:0 0 5px;font-size:15px}
+.card p{margin:4px 0;font-size:14px;line-height:1.5;color:#2b3a5e;font-weight:600}
 .btn{border:2.5px solid var(--blue);background:var(--blue);color:#fff;border-radius:11px;padding:8px 14px;font:inherit;font-weight:800;cursor:pointer}
 .btn.alt{background:#fff;color:var(--blue)}
 .btn:disabled{opacity:.5;cursor:default}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
 input[type=range]{flex:1;accent-color:var(--blue)}
-.val{min-width:34px;text-align:right;font-weight:900;color:var(--blue)}
-.legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12.5px;margin-top:6px}
+.val{min-width:30px;text-align:right;font-weight:900;color:var(--blue);font-size:17px}
+.legend{display:flex;flex-wrap:wrap;gap:5px 12px;font-size:12.5px;margin-top:6px}
 .legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 .stat{display:flex;justify-content:space-between;font-size:14px;padding:5px 0;border-bottom:1px dashed #d4e0f5}
-.stat b{font-size:17px}
-.bar{height:10px;border-radius:99px;background:#e6edf9;overflow:hidden;margin-top:3px}.bar>i{display:block;height:100%}
-.hint{background:#fff7e0;border:2px solid #f3d98a;border-radius:12px;padding:8px 12px;font-size:13px;margin-bottom:12px}
-.err{background:#ffe4e1;border:2px solid #f2a39b;border-radius:12px;padding:8px 12px;font-size:13px;margin-bottom:12px}
-.chip{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:800;background:#e9f1ff;margin:2px 3px 0 0}
-footer{padding:6px 18px;font-size:12.5px;background:#fff7e0;border-top:2px solid #f3d98a}
+.stat b{font-size:16px}
+.hint{background:#fff7e0;border:2px solid #f3d98a;border-radius:12px;padding:8px 12px;font-size:13.5px;margin-bottom:11px;line-height:1.5}
+.err{background:#ffe4e1;border:2px solid #f2a39b;border-radius:12px;padding:8px 12px;font-size:13px;margin-top:8px}
+.chip{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12.5px;font-weight:800;background:#e9f1ff;margin:2px 3px 0 0}
+.steps{margin:6px 0 0;padding-left:20px;font-size:14px;line-height:1.5}
+.verdict{background:#eaf7ee;border:2px solid #9bd8ae;border-radius:12px;padding:9px 12px;font-size:14.5px;line-height:1.5;margin-top:8px}
+.verdict.warn{background:#fff3e0;border-color:#f3c88a}
+.bars{margin-top:8px}.bars .b{display:grid;grid-template-columns:150px 1fr 48px;gap:8px;align-items:center;margin:6px 0;font-size:12.5px;line-height:1.25}
+.bars .tr{height:16px;border-radius:6px;background:#e9eff9;position:relative;overflow:hidden}
+.bars .tr>i{display:block;height:100%;border-radius:6px;transition:width .6s}
+.bars .tr>u{position:absolute;top:0;bottom:0;width:2px;background:#14203d;opacity:.6}
+.bars .n{font-weight:900;text-align:right;font-size:14px}
+.cap{font-size:12px;color:var(--mute);margin-top:4px;line-height:1.4}
+.wrap{border:2px solid #dbe6f8;border-radius:10px;background:#fff;margin-top:6px}
+table.nb{width:100%;border-collapse:collapse;font-size:13px}
+table.nb td{padding:3px 6px;border-bottom:1px dashed #d4e0f5}
+table.nb td:last-child{text-align:right;font-weight:900}
+.sw{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:5px;border:1px solid #9aa9c6}
+.ramp{height:12px;border-radius:6px;background:linear-gradient(90deg,rgb(85,155,255),#fff,rgb(255,105,85));border:1px solid #c7d4ee;margin-top:6px}
+.rampl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mute)}
+footer{padding:4px 14px;font-size:12px;background:#fff7e0;border-top:2px solid #f3d98a}
+#intro{position:absolute;inset:0;background:rgba(247,251,255,.97);display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto;z-index:5}
+#intro .box{max-width:880px}
+#intro h2{margin:0 0 4px;font-size:22px}
+#intro .lead{font-size:15px;color:#2b3a5e;margin:0 0 12px;line-height:1.5}
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.cards3 .c{background:#fff;border:2px solid #dbe6f8;border-radius:14px;padding:10px 12px;font-size:14px;line-height:1.5}
+.cards3 .c b.t{display:block;font-size:15px;margin:2px 0 4px}
+.cards3 svg{width:100%;height:96px;display:block;background:#f4f9ff;border-radius:10px}
+@media(max-width:900px){main{flex-direction:column}.panel{width:100%;height:55%;border-left:0;border-top:2px solid var(--line)}.cards3{grid-template-columns:1fr}header small{display:none}.tab{padding:5px 9px;font-size:12px}}
 </style>
 </head>
 <body>
 <header>
-  <h1>🕸️ Deep Graph · đồ thị cổ phiếu VN30</h1><small id="sub">đang tải...</small>
+  <h1>Đồ thị cổ phiếu VN30</h1><small id="sub">đang tải...</small>
   <div class="tabs">
-    <button class="tab active" data-m="graph">1 · Đồ thị</button>
-    <button class="tab" data-m="pass">2 · Lan truyền thông điệp</button>
-    <button class="tab" data-m="guess">3 · Đoán ngành bằng GCN</button>
+    <button class="tab active" data-m="graph">1 · Đồ thị là gì</button>
+    <button class="tab" data-m="pass">2 · Trộn thông tin</button>
+    <button class="tab" data-m="guess">3 · Thử đoán ngành</button>
+    <button class="help" id="helpbtn" title="Xem lại phần giới thiệu">?</button>
   </div>
 </header>
 <main>
-  <div class="stage"><canvas id="cv"></canvas></div>
-  <aside class="panel" id="panel">
-    <div class="card" id="cGraph">
-      <h3>Đồ thị tương quan</h3>
-      <p>Mỗi nút là một cổ phiếu. Mỗi nút nối với <b>k</b> cổ phiếu có lợi suất ngày giống nó nhất (tính trên giai đoạn huấn luyện, 2018–2022).</p>
-      <div class="row"><span>k =</span><input type="range" id="k" min="1" max="8" value="4"><span class="val" id="kv">4</span></div>
-      <div class="stat"><span>Số nút</span><b id="nN">–</b></div>
-      <div class="stat"><span>Số cạnh</span><b id="nE">–</b></div>
-      <div class="stat"><span>Cạnh nối cùng ngành</span><b id="nH">–</b></div>
-      <div class="legend" id="legend"></div>
-    </div>
-    <div class="card" id="cInfo"><h3>Nút đang chọn</h3><p id="info">Bấm vào một cổ phiếu để xem hàng xóm của nó.</p></div>
-    <div id="cPass" style="display:none">
-      <div class="card">
-        <h3>Mỗi lớp GCN là một lần lấy trung bình với hàng xóm</h3>
-        <p>Màu nút là <b id="fname"></b> (đỏ: cao hơn rổ, xanh: thấp hơn). Qua mỗi lớp, giá trị của một nút bị kéo về giá trị của hàng xóm.</p>
-        <div class="row"><span>Số lớp</span><input type="range" id="layers" min="0" max="6" value="0"><span class="val" id="lv">0</span></div>
-        <div class="row"><button class="btn alt" id="play">▶ Chạy từng lớp</button></div>
-        <div class="stat"><span>Độ phân tán giữa các nút</span><b id="var">–</b></div>
-        <div class="bar"><i id="varbar" style="background:var(--purple);width:100%"></i></div>
-        <p>Làm trơn quá nhiều lớp (over-smoothing) khiến mọi nút giống nhau: đó là lý do GNN thường chỉ dùng 2–3 lớp.</p>
+  <div class="stage"><canvas id="cv"></canvas>
+    <div id="intro"><div class="box">
+      <h2>Chào bạn! Demo này cho thấy một ý tưởng đơn giản</h2>
+      <p class="lead">Các cổ phiếu không chạy độc lập: nhiều mã hay lên xuống cùng nhau. Nếu vẽ các mã thành một <b>mạng lưới</b> thì máy có thể dùng thông tin của <b>hàng xóm</b> để hiểu thêm về một mã. Mô hình làm việc đó tên là <b>GCN</b>. Bạn không cần biết trước điều gì: chỉ cần bấm theo ba bước dưới đây.</p>
+      <div class="cards3">
+        <div class="c"><svg viewBox="0 0 200 96"><g fill="#2589e0" stroke="#fff" stroke-width="3"><circle cx="40" cy="30" r="14"/><circle cx="100" cy="62" r="14" fill="#f0603a"/><circle cx="160" cy="28" r="14" fill="#0d9f8f"/></g><g fill="#fff" font-size="9" font-weight="800" text-anchor="middle"><text x="40" y="33">VCB</text><text x="100" y="65">VHM</text><text x="160" y="31">FPT</text></g></svg>
+          <b class="t">1. Mỗi cổ phiếu là một chấm</b>Có 27 mã trong rổ VN30. Màu chấm là ngành: xanh dương là ngân hàng, cam là bất động sản.</div>
+        <div class="c"><svg viewBox="0 0 200 96"><g stroke="#8aa0c8" stroke-width="3"><line x1="40" y1="30" x2="100" y2="62"/><line x1="100" y1="62" x2="160" y2="28"/></g><g stroke="#fff" stroke-width="3"><circle cx="40" cy="30" r="14" fill="#2589e0"/><circle cx="100" cy="62" r="14" fill="#2589e0"/><circle cx="160" cy="28" r="14" fill="#0d9f8f"/></g></svg>
+          <b class="t">2. Hai mã hay lên xuống cùng nhau thì được nối</b>Đường nối cho biết hai mã &quot;giống nhau&quot; về giá. Mạng lưới các chấm và đường nối gọi là <b>đồ thị</b>.</div>
+        <div class="c"><svg viewBox="0 0 200 96"><g stroke="#8aa0c8" stroke-width="3"><line x1="40" y1="48" x2="100" y2="48"/><line x1="160" y1="48" x2="100" y2="48"/></g><g stroke="#fff" stroke-width="3"><circle cx="40" cy="48" r="14" fill="#ff6955"/><circle cx="100" cy="48" r="14" fill="#fff" stroke="#8aa0c8"/><circle cx="160" cy="48" r="14" fill="#5b9bff"/></g><path d="M58 30 Q80 14 92 32M142 30 Q120 14 108 32" stroke="#7060d8" stroke-width="2.5" fill="none"/></svg>
+          <b class="t">3. GCN cho mỗi mã &quot;hỏi ý kiến&quot; hàng xóm</b>Mỗi mã lấy trung bình thông tin của chính nó và các mã nối với nó, rồi mới đưa ra dự đoán.</div>
       </div>
+      <div class="row" style="margin-top:16px"><button class="btn" id="go">Bắt đầu xem đồ thị</button><span style="font-size:13px;color:var(--mute)">Ba tab phía trên: 1 xem đồ thị, 2 xem từng bước trộn thông tin, 3 thử đoán ngành và đọc kết luận.</span></div>
+    </div></div>
+  </div>
+  <aside class="panel" id="panel">
+    <div id="cGraph">
+      <div class="hint"><b>Màn hình này làm gì?</b> Vẽ 27 cổ phiếu VN30 thành mạng lưới. Mỗi mã được nối với những mã có giá lên xuống giống nó nhất. <b>Bấm vào một chấm</b> để xem hàng xóm của nó.</div>
+      <div class="card">
+        <h3>Mỗi mã nối với mấy mã giống nó nhất?</h3>
+        <div class="row" style="margin-top:2px"><input type="range" id="k" min="1" max="8" value="4"><span class="val" id="kv">4</span></div>
+        <div class="cap">Kéo thử: số nhỏ thì mạng thưa, số lớn thì mạng dày.</div>
+        <div class="stat"><span>Số cổ phiếu (chấm)</span><b id="nN">–</b></div>
+        <div class="stat"><span>Số đường nối</span><b id="nE">–</b></div>
+        <div class="stat"><span>Đường nối giữa hai mã cùng ngành</span><b id="nH">–</b></div>
+        <div class="cap" id="nHc"></div>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="card"><h3>Chấm đang chọn</h3><p id="info">Chưa chọn. Bấm vào một cổ phiếu trên hình.</p></div>
+    </div>
+    <div id="cPass" style="display:none">
+      <div class="hint"><b>Màn hình này làm gì?</b> Cho thấy GCN &quot;trộn thông tin hàng xóm&quot; từng bước. Mỗi chấm mang một con số: <b id="fname"></b>. Bấm <b>Bước kế tiếp</b>: mỗi mã thay số của mình bằng trung bình số của chính nó và các hàng xóm. (GCN thật dùng trọng số hơi khác một chút, ý tưởng vẫn là trung bình.)</div>
+      <div class="card">
+        <div class="row" style="margin-top:0"><button class="btn" id="next">Bước kế tiếp ▶</button><button class="btn alt" id="reset">Về đầu</button><button class="btn alt" id="play">Tự chạy</button></div>
+        <div class="row"><span>Đã trộn</span><input type="range" id="layers" min="0" max="8" value="0"><span class="val" id="lv">0</span><span>lần</span></div>
+        <div class="ramp"></div><div class="rampl"><span>thấp hơn mức chung (xanh)</span><span>cao hơn (đỏ)</span></div>
+        <p id="stepmsg"></p>
+      </div>
+      <div class="card"><h3>Xem một mã cụ thể: <span id="pnode">–</span></h3><div id="ptable"><p>Bấm vào một chấm để xem phép tính của nó.</p></div></div>
+      <div class="card"><h3>Các mã còn khác nhau không?</h3>
+        <div class="stat"><span>Độ khác biệt giữa các mã (so với ban đầu)</span><b id="var">–</b></div>
+        <div class="bars"><div class="tr"><i id="varbar" style="background:#7060d8;width:100%"></i></div></div>
+        <p id="smooth" class="cap"></p></div>
     </div>
     <div id="cGuess" style="display:none">
-      <div class="hint">Giả sử bạn chỉ biết ngành của vài mã. Bấm vào mã để đánh dấu <b>đã biết nhãn</b> (viền đậm), rồi để máy đoán xem mã còn lại có phải <b>ngân hàng</b> hay không.</div>
+      <div class="hint"><b>Màn hình này làm gì?</b> Thử một bài kiểm tra: máy chỉ biết ngành của vài mã, rồi phải đoán các mã còn lại có phải <b>ngân hàng</b> hay không. Mô hình nhìn thêm hàng xóm có đoán tốt hơn không?</div>
       <div class="card">
-        <div class="row" style="margin-top:0"><button class="btn alt" id="rand">🎲 Chọn ngẫu nhiên 9 mã</button><button class="btn alt" id="clear">Xóa</button></div>
-        <div class="stat"><span>Đã biết nhãn</span><b id="nL">0</b></div>
-        <div class="row"><button class="btn" id="run">▶ Chạy MLP và GCN</button></div>
+        <ol class="steps"><li>Bấm <b>Chọn ngẫu nhiên 9 mã</b> (hoặc tự bấm vào các chấm): đó là những mã bạn &quot;đã biết ngành&quot;, được tô viền đậm.</li><li>Bấm <b>Chạy so sánh</b> và đọc kết luận.</li></ol>
+        <div class="row"><button class="btn alt" id="rand">Chọn ngẫu nhiên 9 mã</button><button class="btn alt" id="clear">Xóa</button><span style="font-size:13px">Đã biết: <b id="nL">0</b> mã</span></div>
+        <div class="row"><button class="btn" id="run">Chạy so sánh</button></div>
         <div id="gerr"></div>
         <div id="gres" style="display:none">
-          <div class="stat"><span>MLP (không dùng đồ thị)</span><b id="aM">–</b></div><div class="bar"><i id="bM" style="background:#8896b0"></i></div>
-          <div class="stat"><span>GCN (đồ thị tương quan)</span><b id="aG">–</b></div><div class="bar"><i id="bG" style="background:var(--blue)"></i></div>
-          <p id="gnote"></p>
+          <div class="bars" id="gbars"></div>
+          <div class="verdict" id="gverd"></div>
+          <div class="cap">Vòng ngoài trên hình: xanh lá là GCN đoán đúng, đỏ là đoán sai. Chữ dưới chấm là điều GCN đoán (NH là ngân hàng).</div>
         </div>
-        <div class="legend"><span><i style="background:#22b05a"></i>GCN đoán đúng</span><span><i style="background:#e5342d"></i>GCN đoán sai</span></div>
+      </div>
+      <div class="card">
+        <h3>Kết quả chính thức của báo cáo</h3>
+        <p id="rhead"></p>
+        <div class="bars" id="rbars"></div>
+        <div class="verdict" id="rverd"></div>
+        <p style="margin-top:10px"><b>Còn việc đoán lợi suất cổ phiếu thì sao?</b></p>
+        <div class="bars" id="abars"></div>
+        <div class="verdict warn" id="averd"></div>
       </div>
     </div>
   </aside>
 </main>
-<footer>Chỉ để học tập: dữ liệu giá VN30 (27 mã có dữ liệu liên tục từ 06/2018), chạy hoàn toàn trên máy bạn tại localhost.</footer>
+<footer id="foot">Chỉ để học tập, không phải khuyến nghị đầu tư. Chạy hoàn toàn trên máy bạn.</footer>
 <script>
 (function () {
   var SC = { 'Ngân hàng': '#2589e0', 'Bất động sản': '#f0603a', 'Tiêu dùng': '#0d9f8f', 'Dầu khí - năng lượng': '#e8a317', 'Chứng khoán': '#7060d8', 'Công nghệ': '#d6458a', 'Vật liệu': '#6b8e23', 'Hàng không': '#8896b0' };
   var $ = function (s) { return document.querySelector(s); };
-  var cv = $('#cv'), ctx = cv.getContext('2d'), D = null, A = null, pos = [], vel = [], sel = -1, mode = 'graph', layers = 0, labelled = {}, guess = null, W = 0, H = 0, dpr = 1;
+  var cv = $('#cv'), ctx = cv.getContext('2d'), D = null, A = null, N = null, pos = [], vel = [], sel = -1, mode = 'graph', layers = 0, labelled = {}, guess = null, W = 0, H = 0, dpr = 1, hist = [], timer = null;
   var feat = [];
+  var pc = function (x) { return Math.round(x * 100) + '%'; };
+  var dec = function (x, d) { return x.toFixed(d).replace('.', ','); };
 
   function knn(k) { var n = D.tickers.length, a = []; for (var i = 0; i < n; i++) { a.push(new Array(n).fill(0)); }
     for (i = 0; i < n; i++) { var idx = []; for (var j = 0; j < n; j++) if (j !== i) idx.push(j); idx.sort(function (x, y) { return D.corr[i][y] - D.corr[i][x]; });
       for (var t = 0; t < k; t++) { a[i][idx[t]] = 1; a[idx[t]][i] = 1; } } return a; }
-  function normAdj(a) { var n = a.length, m = a.map(function (r, i) { return r.map(function (v, j) { return v + (i === j ? 1 : 0); }); }), d = m.map(function (r) { return r.reduce(function (s, v) { return s + v; }, 0); });
-    return m.map(function (r, i) { return r.map(function (v, j) { return v / Math.sqrt(d[i] * d[j]); }); }); }
-  function propagate(h, nl) { var N = normAdj(A); for (var l = 0; l < nl; l++) h = h.map(function (_, i) { return N[i].reduce(function (s, w, j) { return s + w * h[j]; }, 0); }); return h; }
+  function normAdj(a) { var m = a.map(function (r, i) { return r.map(function (v, j) { return v + (i === j ? 1 : 0); }); }), d = m.map(function (r) { return r.reduce(function (s, v) { return s + v; }, 0); });
+    return m.map(function (r, i) { return r.map(function (v) { return v / d[i]; }); }); }
+  function step(h) { return h.map(function (_, i) { return N[i].reduce(function (s, w, j) { return s + w * h[j]; }, 0); }); }
+  function build() { hist = [D.feature.slice()]; for (var l = 1; l <= 8; l++) hist.push(step(hist[l - 1])); setLayers(Math.min(layers, 8)); }
   function variance(h) { var m = h.reduce(function (s, v) { return s + v; }, 0) / h.length; return h.reduce(function (s, v) { return s + (v - m) * (v - m); }, 0) / h.length; }
 
   function resize() { dpr = window.devicePixelRatio || 1; var r = cv.getBoundingClientRect(); W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
   function initPos() { var n = D.tickers.length; pos = []; vel = []; for (var i = 0; i < n; i++) { var a = i / n * Math.PI * 2; pos.push([Math.cos(a) * 0.5 + (Math.random() - .5) * .1, Math.sin(a) * 0.5 + (Math.random() - .5) * .1]); vel.push([0, 0]); } }
-  var ticks = 0;
   function layout() { var n = pos.length;
     for (var i = 0; i < n; i++) { var fx = 0, fy = 0;
       for (var j = 0; j < n; j++) if (i !== j) { var dx = pos[i][0] - pos[j][0], dy = pos[i][1] - pos[j][1], d2 = dx * dx + dy * dy + 0.002; fx += dx / d2 * 0.007; fy += dy / d2 * 0.007; }
       for (j = 0; j < n; j++) if (A[i][j]) { fx -= (pos[i][0] - pos[j][0]) * 0.035; fy -= (pos[i][1] - pos[j][1]) * 0.035; }
       fx -= pos[i][0] * 0.006; fy -= pos[i][1] * 0.006; vel[i][0] = (vel[i][0] + fx) * 0.82; vel[i][1] = (vel[i][1] + fy) * 0.82; }
-    for (i = 0; i < n; i++) { pos[i][0] += vel[i][0]; pos[i][1] += vel[i][1]; } ticks++; }
-
+    for (i = 0; i < n; i++) { pos[i][0] += vel[i][0]; pos[i][1] += vel[i][1]; } }
   var bb = [-1, 1, -1, 1];
   function fit() { var x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9; pos.forEach(function (p) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); });
     var t = [x0, x1, y0, y1]; for (var i = 0; i < 4; i++) bb[i] += (t[i] - bb[i]) * 0.15; }
-  function px(p) { var m = 56, sx = (W - 2 * m) / Math.max(0.2, bb[1] - bb[0]), sy = (H - 2 * m) / Math.max(0.2, bb[3] - bb[2]), s = Math.min(sx, sy);
+  function px(p) { var m = 50, sx = (W - 2 * m) / Math.max(0.2, bb[1] - bb[0]), sy = (H - 2 * m) / Math.max(0.2, bb[3] - bb[2]), s = Math.min(sx, sy);
     return [W / 2 + (p[0] - (bb[0] + bb[1]) / 2) * s, H / 2 + (p[1] - (bb[2] + bb[3]) / 2) * s]; }
   function diverge(v) { v = Math.max(-2, Math.min(2, v)) / 2; var r, g, b; if (v >= 0) { r = 255; g = Math.round(255 - 150 * v); b = Math.round(255 - 170 * v); } else { r = Math.round(255 + 170 * v); g = Math.round(255 + 100 * v); b = 255; } return 'rgb(' + r + ',' + g + ',' + b + ')'; }
 
   function draw() {
     layout(); fit(); ctx.clearRect(0, 0, W, H); var n = pos.length, P = pos.map(px);
     for (var i = 0; i < n; i++) for (var j = i + 1; j < n; j++) if (A[i][j]) {
-      var hot = sel >= 0 && (i === sel || j === sel); ctx.strokeStyle = hot ? '#2589e0' : 'rgba(150,170,205,.55)'; ctx.lineWidth = hot ? 3.2 : 1.6; ctx.beginPath(); ctx.moveTo(P[i][0], P[i][1]); ctx.lineTo(P[j][0], P[j][1]); ctx.stroke(); }
-    var vals = mode === 'pass' ? feat : null;
+      var hot = sel >= 0 && (i === sel || j === sel); ctx.strokeStyle = hot ? '#2589e0' : 'rgba(150,170,205,.55)'; ctx.lineWidth = hot ? 3.4 : 1.6; ctx.beginPath(); ctx.moveTo(P[i][0], P[i][1]); ctx.lineTo(P[j][0], P[j][1]); ctx.stroke(); }
     for (i = 0; i < n; i++) {
       var r = 21, fill = SC[D.sector[i]], nb = sel >= 0 && A[sel][i];
-      if (mode === 'pass') fill = diverge(vals[i]);
+      if (mode === 'pass') fill = diverge(feat[i]);
       ctx.beginPath(); ctx.arc(P[i][0], P[i][1], r + (i === sel ? 4 : 0), 0, 7); ctx.fillStyle = fill; ctx.fill();
       ctx.lineWidth = 3; ctx.strokeStyle = i === sel ? '#14203d' : nb ? '#2589e0' : (mode === 'pass' ? SC[D.sector[i]] : '#fff'); ctx.stroke();
       if (mode === 'guess') {
@@ -136,17 +191,33 @@ footer{padding:6px 18px;font-size:12.5px;background:#fff7e0;border-top:2px solid
         else if (guess) { var ok = (guess.gcn.prob[i] > 0.5) === !!D.label[i]; ctx.lineWidth = 5; ctx.strokeStyle = ok ? '#22b05a' : '#e5342d'; ctx.beginPath(); ctx.arc(P[i][0], P[i][1], r + 4, 0, 7); ctx.stroke(); }
       }
       ctx.fillStyle = mode === 'pass' ? '#14203d' : '#fff'; ctx.font = '800 11.5px "Segoe UI",Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(D.tickers[i], P[i][0], P[i][1]);
-      if (mode === 'guess' && guess && !labelled[i]) { ctx.fillStyle = '#14203d'; ctx.font = '800 10.5px "Segoe UI",Arial'; ctx.fillText(guess.gcn.prob[i] > 0.5 ? 'NH' : 'khác', P[i][0], P[i][1] + r + 11); }
+      if (mode === 'pass') { ctx.fillStyle = '#14203d'; ctx.font = '800 11px "Segoe UI",Arial'; ctx.fillText(dec(feat[i], 2), P[i][0], P[i][1] + r + 10); }
+      if (mode === 'guess') { ctx.fillStyle = '#14203d'; ctx.font = '800 11px "Segoe UI",Arial';
+        if (labelled[i]) ctx.fillText(D.label[i] ? 'NH (đã biết)' : 'khác (đã biết)', P[i][0], P[i][1] + r + 12);
+        else if (guess) ctx.fillText(guess.gcn.prob[i] > 0.5 ? 'đoán: NH' : 'đoán: khác', P[i][0], P[i][1] + r + 12);
+        else ctx.fillText('?', P[i][0], P[i][1] + r + 11); }
     }
     requestAnimationFrame(draw);
   }
-  function rebuild() { A = knn(+$('#k').value); var n = A.length, e = 0, same = 0; for (var i = 0; i < n; i++) for (var j = i + 1; j < n; j++) if (A[i][j]) { e++; if (D.sector[i] === D.sector[j]) same++; }
-    $('#nN').textContent = n; $('#nE').textContent = e; $('#nH').textContent = Math.round(same / e * 100) + '%'; feat = propagate(D.feature, layers); showVar(); ticks = 0; guess = null; $('#gres').style.display = 'none'; showInfo(); }
-  function showVar() { var v0 = variance(D.feature), v = variance(feat); $('#var').textContent = (v / v0 * 100).toFixed(0) + '%'; $('#varbar').style.width = Math.max(2, v / v0 * 100) + '%'; $('#lv').textContent = layers; $('#layers').value = layers; }
-  function showInfo() { var el = $('#info'); if (sel < 0) { el.textContent = 'Bấm vào một cổ phiếu để xem hàng xóm của nó.'; return; }
+
+  function rebuild() { A = knn(+$('#k').value); N = normAdj(A); var n = A.length, e = 0, same = 0; for (var i = 0; i < n; i++) for (var j = i + 1; j < n; j++) if (A[i][j]) { e++; if (D.sector[i] === D.sector[j]) same++; }
+    var base = 0; $('#nN').textContent = n; $('#nE').textContent = e; $('#nH').textContent = Math.round(same / e * 100) + '%';
+    $('#nHc').textContent = 'Chỉ dựa vào giá, mạng lưới vẫn tự nối các mã cùng ngành với nhau nhiều hơn là ngẫu nhiên. Đó là lý do đồ thị có thể giúp đoán ngành.';
+    build(); guess = null; $('#gres').style.display = 'none'; showInfo(); }
+  function setLayers(n) { layers = n; feat = hist[n]; var v0 = Math.sqrt(variance(D.feature)), v = Math.sqrt(variance(feat)), q = v / v0 * 100;
+    $('#lv').textContent = n; $('#layers').value = n; $('#var').textContent = q.toFixed(0) + '%'; $('#varbar').style.width = Math.max(2, q) + '%';
+    $('#stepmsg').innerHTML = n === 0 ? 'Đây là số ban đầu của mỗi mã. Bấm <b>Bước kế tiếp</b> để bắt đầu trộn.' : 'Sau <b>' + n + '</b> lần trộn: mỗi mã đã lấy trung bình với hàng xóm ' + n + ' lần, nên các màu đang xích lại gần nhau.';
+    $('#smooth').innerHTML = n === 0 ? 'Chưa trộn: mỗi mã giữ nguyên số của riêng mình.' : n <= 2 ? 'Các mã đã xích lại gần nhau nhưng vẫn còn phân biệt được. Báo cáo dùng đúng 2 lần trộn (2 lớp GCN): đủ để học từ hàng xóm mà chưa mất hết sự khác biệt.' : n < 5 ? 'Các mã đã gần như giống nhau. Trộn thêm nữa thì máy sẽ khó phân biệt mã này với mã khác.' : 'Gần như mọi mã đã mang cùng một số: máy không còn phân biệt được mã nào với mã nào. Hiện tượng này gọi là <b>làm trơn quá mức</b> (over-smoothing), nên GCN thường chỉ dùng 2 đến 3 lớp.';
+    showInfo(); }
+  function showInfo() { var el = $('#info'); if (sel < 0) { el.textContent = 'Chưa chọn. Bấm vào một cổ phiếu trên hình.'; $('#pnode').textContent = '–'; $('#ptable').innerHTML = '<p>Bấm vào một chấm để xem phép tính của nó.</p>'; return; }
     var nb = []; for (var j = 0; j < A.length; j++) if (A[sel][j]) nb.push(j);
-    el.innerHTML = '<b>' + D.tickers[sel] + '</b> · ' + D.sector[sel] + '<br>Có ' + nb.length + ' hàng xóm: ' + nb.map(function (j) { return '<span class="chip" style="background:' + SC[D.sector[j]] + '22;color:' + SC[D.sector[j]] + '">' + D.tickers[j] + ' (' + D.corr[sel][j].toFixed(2).replace('.', ',') + ')</span>'; }).join('') + '<br><span style="font-size:12px;color:#4a5b7f">Số trong ngoặc là tương quan lợi suất ngày.</span>' + (mode === 'pass' ? '<br>Giá trị: ' + D.feature[sel].toFixed(2) + ' → sau ' + layers + ' lớp: ' + feat[sel].toFixed(2) : ''); }
-  function setMode(m) { mode = m; document.querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.m === m); });
+    el.innerHTML = '<b>' + D.tickers[sel] + '</b> · ngành ' + D.sector[sel] + '<br>Có ' + nb.length + ' hàng xóm: ' + nb.map(function (j) { return '<span class="chip" style="background:' + SC[D.sector[j]] + '22;color:' + SC[D.sector[j]] + '">' + D.tickers[j] + ' (' + dec(D.corr[sel][j], 2) + ')</span>'; }).join('') + '<div class="cap">Số trong ngoặc là mức giống nhau về giá (tối đa 1,00).</div>';
+    $('#pnode').textContent = D.tickers[sel];
+    if (layers === 0) { $('#ptable').innerHTML = '<p>Số ban đầu của <b>' + D.tickers[sel] + '</b> là <b>' + dec(hist[0][sel], 2) + '</b>. Bấm <b>Bước kế tiếp</b> để thấy nó được tính lại từ hàng xóm.</p>'; return; }
+    var prev = hist[layers - 1], rows = [sel].concat(nb).map(function (j) { return '<tr><td><i class="sw" style="background:' + diverge(prev[j]) + '"></i>' + D.tickers[j] + (j === sel ? ' (chính nó)' : '') + '</td><td>' + dec(prev[j], 2) + '</td></tr>'; }).join('');
+    $('#ptable').innerHTML = '<p>Số của ' + D.tickers[sel] + ' ở bước ' + layers + ' là <b>trung bình cộng</b> các số ở bước ' + (layers - 1) + ' của nó và hàng xóm:</p><table class="nb">' + rows + '</table><p><b>Kết quả: ' + dec(prev[sel], 2) + ' → ' + dec(feat[sel], 2) + '</b></p>'; }
+  function setMode(m) { mode = m; if (timer) { clearInterval(timer); timer = null; $('#play').textContent = 'Tự chạy'; }
+    document.querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.m === m); });
     $('#cGraph').style.display = m === 'graph' ? '' : 'none'; $('#cPass').style.display = m === 'pass' ? '' : 'none'; $('#cGuess').style.display = m === 'guess' ? '' : 'none'; showInfo(); }
   function pick(ev) { var r = cv.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, P = pos.map(px), best = -1, bd = 26 * 26;
     for (var i = 0; i < P.length; i++) { var d = (P[i][0] - x) * (P[i][0] - x) + (P[i][1] - y) * (P[i][1] - y); if (d < bd) { bd = d; best = i; } }
@@ -157,28 +228,48 @@ footer{padding:6px 18px;font-size:12.5px;background:#fff7e0;border-top:2px solid
     order.forEach(function (i) { var c = D.label[i]; if (Object.keys(labelled).length < 9 && (Object.keys(labelled).length < 2 ? seen[c] < 1 || seen[1 - c] >= 1 : true)) { labelled[i] = 1; seen[c]++; } });
     var guard = 0; while ((seen[0] < 1 || seen[1] < 1) && guard++ < 50) { var i = Math.floor(Math.random() * n); labelled[i] = 1; seen[D.label[i]]++; }
     guess = null; $('#gres').style.display = 'none'; $('#nL').textContent = Object.keys(labelled).length; }
-  function runGuess() { $('#gerr').innerHTML = ''; var b = $('#run'); b.disabled = true; b.textContent = '⏳ Đang huấn luyện...';
+
+  function bars(el, items, max) { el.innerHTML = items.map(function (it) { return '<div class="b"><span>' + it.name + '</span><div class="tr"><i style="width:' + Math.min(100, it.v / max * 100) + '%;background:' + it.c + '"></i>' + (it.mark != null ? '<u style="left:' + it.mark / max * 100 + '%"></u>' : '') + '</div><span class="n">' + (it.txt || pc(it.v)) + '</span></div>'; }).join(''); }
+  function runGuess() { $('#gerr').innerHTML = ''; var b = $('#run'); b.disabled = true; b.textContent = 'Đang huấn luyện...';
     fetch('/api/sector', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ labelled: Object.keys(labelled).map(Number), k: +$('#k').value }) })
       .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || 'Lỗi'); return j; }); })
-      .then(function (j) { guess = j; $('#gres').style.display = ''; var pm = Math.round(j.mlp.accuracy * 100), pg = Math.round(j.gcn.accuracy * 100);
-        $('#aM').textContent = pm + '%'; $('#aG').textContent = pg + '%'; $('#bM').style.width = pm + '%'; $('#bG').style.width = pg + '%';
-        $('#gnote').textContent = 'Trên ' + j.n_test + ' mã chưa biết nhãn (đoán luôn lớp đông thì đúng ' + Math.round(j.majority * 100) + '%). ' + (pg > pm ? 'GCN nhỉnh hơn nhờ mượn thông tin từ hàng xóm.' : pg === pm ? 'Hai mô hình bằng nhau lần này.' : 'Lần này MLP nhỉnh hơn; với ít nút, kết quả dao động mạnh giữa các lần chọn.'); })
+      .then(function (j) { guess = j; $('#gres').style.display = ''; var pm = j.mlp.accuracy, pg = j.gcn.accuracy;
+        bars($('#gbars'), [{ name: 'Đoán bừa theo số đông', v: j.majority, c: '#b8c4da' }, { name: 'MLP: chỉ nhìn riêng từng mã', v: pm, c: '#8896b0' }, { name: 'GCN: nhìn thêm hàng xóm', v: pg, c: '#2589e0' }], 1);
+        var t = 'Trên <b>' + j.n_test + '</b> mã chưa biết ngành, GCN đoán đúng <b>' + pc(pg) + '</b>, MLP <b>' + pc(pm) + '</b>, đoán theo số đông <b>' + pc(j.majority) + '</b>. ';
+        t += pg > pm ? 'Lần này nhìn thêm hàng xóm giúp đoán đúng hơn.' : pg === pm ? 'Lần này hai mô hình bằng nhau.' : 'Lần này MLP nhỉnh hơn: chỉ với ' + Object.keys(labelled).length + ' mã đã biết, kết quả dao động mạnh giữa các lần chọn. Hãy bấm chọn ngẫu nhiên và chạy vài lần, hoặc xem số trung bình ở dưới.';
+        $('#gverd').innerHTML = t; })
       .catch(function (e) { $('#gerr').innerHTML = '<div class="err">' + e.message + '</div>'; })
-      .then(function () { b.disabled = false; b.textContent = '▶ Chạy MLP và GCN'; }); }
+      .then(function () { b.disabled = false; b.textContent = 'Chạy so sánh'; }); }
 
+  function fillReport() { var R = D.report, s = R.sector, a = R.auc;
+    var gt = s['GCN, đồ thị tương quan'], mlp = s['MLP (không đồ thị)'], lg = s['Logistic Regression'], rd = s['GCN, đồ thị ngẫu nhiên'], sc = s['GCN, đồ thị ngành (tham khảo)'];
+    $('#rhead').innerHTML = 'Chạy thử một lần có thể may rủi, nên báo cáo lặp <b>' + R.splits + ' lần</b> chọn ngẫu nhiên 9 mã đã biết ngành rồi lấy trung bình. Đây là tỷ lệ đoán đúng ngành các mã còn lại:';
+    bars($('#rbars'), [{ name: 'Đoán bừa theo số đông', v: R.majority, c: '#b8c4da' }, { name: 'Hồi quy logistic (không đồ thị)', v: lg, c: '#8896b0' }, { name: 'MLP (không đồ thị)', v: mlp, c: '#8896b0' },
+      { name: 'GCN, đồ thị ngẫu nhiên (nối sai)', v: rd, c: '#e5342d' }, { name: 'GCN, đồ thị theo giá (nối đúng)', v: gt, c: '#2589e0' }, { name: 'GCN, đồ thị theo ngành (gian lận)', v: sc, c: '#d8dfec' }], 1);
+    $('#rverd').innerHTML = 'Kết luận: <b>khi đồ thị đúng, GCN giúp đoán ngành</b> (' + pc(gt) + ' so với ' + pc(mlp) + ' của MLP). Khi nối ngẫu nhiên, GCN còn <b>tệ hơn</b> mô hình không dùng đồ thị (' + pc(rd) + '). Cột cuối chỉ để tham khảo: đồ thị theo ngành được dựng từ chính đáp án nên là gian lận, không dùng để kết luận.';
+    var names = [['Logistic Regression', 'Hồi quy logistic'], ['MLP (không đồ thị)', 'MLP (không đồ thị)'], ['GCN, đồ thị ngẫu nhiên', 'GCN, đồ thị ngẫu nhiên'], ['GCN, đồ thị ngành', 'GCN, đồ thị theo ngành'], ['GCN, đồ thị tương quan', 'GCN, đồ thị theo giá']];
+    bars($('#abars'), names.map(function (x) { return { name: x[1], v: a[x[0]], c: '#8896b0', txt: dec(a[x[0]], 3) }; }), 0.7);
+    document.querySelectorAll('#abars .tr').forEach(function (t) { var u = document.createElement('u'); u.style.left = (0.5 / 0.7 * 100) + '%'; t.appendChild(u); });
+    $('#averd').innerHTML = 'Đoán xem mã nào <b>tăng nhiều hơn cả rổ trong 5 phiên tới</b> (thang AUC: 0,5 nghĩa là đoán mò, vạch đen). Mọi mô hình, kể cả GCN, đều nằm quanh 0,50: <b>đồ thị không giúp đoán lợi suất</b>. Giá cổ phiếu quá nhiễu, nên báo cáo kết luận không dùng mô hình này để giao dịch.'; }
+
+  document.addEventListener('click', function () {}, false);
+  function intro(show) { $('#intro').style.display = show ? '' : 'none'; }
   fetch('/api/graph').then(function (r) { return r.json(); }).then(function (d) {
-    D = d; $('#sub').textContent = d.tickers.length + ' cổ phiếu · dữ liệu đến ' + d.last; $('#fname').textContent = d.feature_name;
+    D = d; $('#sub').textContent = d.tickers.length + ' cổ phiếu · giá từ ' + d.first + ' đến ' + d.last; $('#fname').textContent = d.feature_name;
+    $('#foot').textContent = 'Chỉ để học tập, không phải khuyến nghị đầu tư. Dữ liệu giá ' + d.tickers.length + ' mã VN30 (' + d.first + ' đến ' + d.last + '), chạy hoàn toàn trên máy bạn.';
     $('#legend').innerHTML = d.sectors.map(function (s) { return '<span><i style="background:' + SC[s] + '"></i>' + s + '</span>'; }).join('');
-    resize(); initPos(); rebuild(); draw();
+    resize(); initPos(); rebuild(); fillReport(); sel = d.tickers.indexOf('VCB'); showInfo(); draw();
   }, function () { $('#sub').textContent = 'Không kết nối được máy chủ localhost'; });
   window.addEventListener('resize', resize); cv.addEventListener('click', pick);
   document.querySelectorAll('.tab').forEach(function (t) { t.onclick = function () { setMode(t.dataset.m); }; });
   $('#k').oninput = function () { $('#kv').textContent = this.value; rebuild(); };
-  $('#layers').oninput = function () { layers = +this.value; feat = propagate(D.feature, layers); showVar(); showInfo(); };
-  $('#play').onclick = function () { layers = 0; var t = setInterval(function () { layers++; feat = propagate(D.feature, layers); showVar(); showInfo(); if (layers >= 6) clearInterval(t); }, 900); layers = 0; feat = propagate(D.feature, 0); showVar(); };
+  $('#layers').oninput = function () { setLayers(+this.value); };
+  $('#next').onclick = function () { setLayers(layers >= 8 ? 8 : layers + 1); };
+  $('#reset').onclick = function () { setLayers(0); };
+  $('#play').onclick = function () { if (timer) { clearInterval(timer); timer = null; this.textContent = 'Tự chạy'; return; } setLayers(0); var b = this; b.textContent = 'Dừng'; timer = setInterval(function () { if (layers >= 8) { clearInterval(timer); timer = null; b.textContent = 'Tự chạy'; return; } setLayers(layers + 1); }, 1100); };
   $('#rand').onclick = randomLabels; $('#clear').onclick = function () { labelled = {}; guess = null; $('#gres').style.display = 'none'; $('#nL').textContent = 0; };
-  $('#run').onclick = runGuess;
-  window.__dg = { setMode: setMode, get state() { return { layers: layers, sel: sel, labelled: Object.keys(labelled).length, guess: !!guess }; }, setLayers: function (n) { layers = n; feat = propagate(D.feature, n); showVar(); showInfo(); }, select: function (i) { sel = i; showInfo(); } };
+  $('#run').onclick = runGuess; $('#go').onclick = function () { intro(false); }; $('#helpbtn').onclick = function () { intro(true); };
+  window.__dg = { setMode: setMode, intro: intro, get state() { return { layers: layers, sel: sel, labelled: Object.keys(labelled).length, guess: !!guess }; }, setLayers: setLayers, select: function (i) { sel = i; showInfo(); }, randomLabels: randomLabels, run: runGuess };
 })();
 </script>
 </body>

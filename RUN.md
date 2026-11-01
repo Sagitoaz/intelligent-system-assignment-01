@@ -6,13 +6,13 @@ Mở **PowerShell tại thư mục gốc dự án** rồi chạy lệnh của ph
 | Phần | Địa chỉ mở trên trình duyệt | Cổng |
 |---|---|---|
 | Agent 01 & Agent 02 (demo mèo đuổi chuột, hai người bán) | http://localhost:8100 | 8100 |
-| **Tiểu luận: demo gộp 7 chương (mỗi chương một tab)** | http://localhost:8500 | 8500 (tự mở thêm 8502, 8044, 8300) |
+| **Tiểu luận: demo gộp 6 chương, Chương 2–7 (sidebar bên trái)** | http://localhost:8500 | 8500 (tự mở thêm 8502, 8044, 8300) |
 | Project 01: Phòng khám AI 3D (hệ đa agent tiểu đường) | http://localhost:8200 | 8200 |
 | Tiểu luận Chương 6: Deep Graph (GCN trên đồ thị VN30) | http://localhost:8300 | 8300 |
 | Assignment 01–02: API (FastAPI) | http://localhost:8000/docs | 8000 |
 | Assignment 01–02: Web (React) | http://localhost:5173 | 5173 |
 | Assignment 06: Dự báo RNN (Streamlit) | http://localhost:8501 | 8501 |
-| Chương 4: Knowledge & RAG agent | http://localhost:8044 | 8044 |
+| Chương 5 (KG, RAG) và Chương 7 (hệ đa agent): `/` và `/agents` | http://localhost:8044 | 8044 |
 | Tiểu luận: Hiểu AI qua dữ liệu tài chính (Streamlit) | http://localhost:8502 | 8502 |
 
 Các cổng khác nhau nên có thể chạy nhiều phần cùng lúc, mỗi phần trong một cửa sổ PowerShell riêng.
@@ -30,15 +30,17 @@ cd web; npm install; cd ..
 
 Nếu không kích hoạt venv, thay `python` bằng `.\.venv\Scripts\python.exe` trong mọi lệnh bên dưới.
 
-## 0a. Tiểu luận: demo gộp bảy chương (một lệnh, mỗi chương một tab)
+## 0a. Tiểu luận: demo gộp sáu chương, Chương 2–7 (một lệnh, sidebar bên trái)
 
 ```powershell
 python tieuluan_demo/server.py --open            # mở http://localhost:8500
 ```
 
-Máy chủ tự khởi động các demo con trên 127.0.0.1 (Streamlit 8502 cho Chương 2–4, FastAPI 8044 cho Chương 5 và 7, Deep Graph 8300 cho Chương 6); Chương 1 do chính máy chủ này phục vụ.
-Mỗi tab có cột bên phải ghi mục, hình, bảng của báo cáo để đối chiếu. Log của từng demo con nằm ở thư mục tạm (`tieuluan_demo_<tên>.log`).
-Lần đầu các tab cần vài chục giây; lần hỏi RAG đầu tiên (Chương 5, 7) cần thêm 30–60 giây vì nạp mô hình sinh văn bản trên CPU.
+Máy chủ tự khởi động các demo con trên 127.0.0.1 (Streamlit 8502 cho Chương 2–4, FastAPI 8044 cho Chương 5 và 7, Deep Graph 8300 cho Chương 6). Chương 1 (lịch sử AI) không có demo.
+Sidebar bên trái liệt kê sáu chương (chấm xanh lá là demo đã sẵn sàng, cam là đang khởi động); bấm một chương để xem phần "Demo này làm gì?" và "Nên thử". Nút mũi tên trên cùng thu gọn sidebar thành thanh hẹp (nhớ lựa chọn), nút "Đối chiếu báo cáo" ở góc dưới bên phải mở cột mục, hình, bảng của báo cáo (mặc định ẩn). Mở thẳng một chương bằng `http://localhost:8500/#c6`.
+Mỗi chương một notebook, theo thứ tự trong `notebooks/tieuluan/complete/`: `02_ml.ipynb`, `03_cnn.ipynb`, `04_rnn_lstm.ipynb`, `05_knowledge_rag.ipynb`, `06_deep_graph_gcn.ipynb`, `07_multi_agent.ipynb`.
+ Log của từng demo con nằm ở thư mục tạm (`tieuluan_demo_<tên>.log`).
+Lần đầu các tab cần vài chục giây; lần hỏi RAG đầu tiên (Chương 5, 7) cần chờ mô hình ngôn ngữ nạp xong (khoảng 1–2 phút kể từ khi máy chủ 8044 khởi động) rồi mất thêm 15–60 giây trên CPU.
 Nếu đã chạy riêng một demo con thì thêm `--no-children`.
 
 ## 0. Project 01: Phòng khám AI 3D (hệ đa agent cho bệnh tiểu đường)
@@ -147,15 +149,30 @@ python -m streamlit run deployment/assignment06/app.py --server.port 8501
 Ứng dụng đọc trọng số đã lưu trong `models/assignment06/`, không huấn luyện lại khi mở. Lần mở đầu mất 20–40 giây để nạp PyTorch và TensorFlow.
 Notebook của bài: `python -m jupyter lab notebooks/assignment06`.
 
-## 5. Chương 4: Knowledge Graph và RAG agent
+## 5. Chương 5 và 7: Knowledge Graph, RAG và hệ đa agent (cùng một ứng dụng FastAPI)
+
+Lần đầu, tải mô hình sinh câu trả lời và dữ liệu thống kê (một lần, cần internet; mô hình nặng khoảng 3 GB nên không đưa lên Git):
+
+```powershell
+python scripts/chapter05/download_llm.py      # Qwen/Qwen2.5-1.5B-Instruct -> models/chapter05/llm
+python scripts/chapter05/prepare_brfss.py     # CDC BRFSS 2023 -> data/chapter05/brfss2023_diabetes_150k.csv (đã có sẵn trong repo)
+```
+
+Chạy ứng dụng:
 
 ```powershell
 python -m uvicorn deployment.chapter04.app:app --host 127.0.0.1 --port 8044
 ```
 
-Mở http://localhost:8044 để hỏi đáp (có sẵn ba câu hỏi mẫu); tài liệu API tại http://localhost:8044/docs.
-Lần hỏi RAG đầu tiên có thể mất 30–60 giây vì phải nạp mô hình sinh văn bản chạy trên CPU.
-Notebook của chương: `python -m jupyter lab notebooks/chapter04`.
+- http://localhost:8044 là giao diện **Chương 5** (khung hội thoại, câu mẫu tiếng Việt; trả lời bằng văn xuôi kèm "cách agent xử lý", thẻ nguồn và nhãn tin cậy; JSON chỉ nằm trong mục "Chi tiết kỹ thuật").
+- http://localhost:8044/agents là giao diện **Chương 7** (bốn agent làm việc nhóm: truy hồi, đồ thị, viết, kiểm tra).
+- Tài liệu API (Swagger): http://localhost:8044/docs. Trạng thái nạp mô hình: `/api/v1/status`.
+- Khi máy chủ khởi động, mô hình ngôn ngữ và dữ liệu được nạp ở luồng nền (khoảng 1–2 phút); giao diện hiện thanh trạng thái "đang nạp mô hình". Một câu hỏi RAG sau đó mất khoảng 15–60 giây trên CPU; câu thống kê, tính toán, đồ thị trả lời dưới 1 giây.
+- Câu hỏi tiếng Việt được dịch sang truy vấn tiếng Anh (kho tài liệu bằng tiếng Anh); giao diện hiển thị truy vấn đã dùng. Thống kê dùng CDC BRFSS 2023 (150.000 người), tính bằng pandas.
+- Muốn tắt nạp nền (ví dụ khi chạy kiểm thử): đặt biến môi trường `CH5_NO_WARMUP=1`.
+
+Notebook: `notebooks/tieuluan/complete/05_knowledge_rag.ipynb` (Chương 5) và `07_multi_agent.ipynb` (Chương 7); dựng và chạy lại bằng
+`python scripts/chapter05/build_notebooks.py` (dừng máy chủ 8044 trước để tiết kiệm RAM). Notebook bài tập cũ của Chương 4: `python -m jupyter lab notebooks/chapter04`.
 
 ## 6. Tiểu luận: ứng dụng minh họa "Hiểu AI qua dữ liệu tài chính"
 
@@ -163,8 +180,11 @@ Notebook của chương: `python -m jupyter lab notebooks/chapter04`.
 python -m streamlit run deployment/tieuluan/app.py --server.port 8502
 ```
 
-Ứng dụng chỉ suy luận bằng trọng số đã lưu, không huấn luyện lại. Tab "Dự báo phiên tới" cần internet để tải giá mới
-(chỉ tải khi bấm nút); các tab còn lại chạy offline. Notebook: `python -m jupyter lab notebooks/tieuluan`.
+Ứng dụng chỉ suy luận bằng trọng số đã lưu, không huấn luyện lại. Mỗi chương mở bằng `?chapter=2|3|4` (không có tham số thì
+chọn chương bằng nút radio; thêm `&embed=true` để ẩn thanh công cụ). Chương 2 chấm điểm một hồ sơ vay (Lending Club, 150.000 khoản vay);
+Chương 3 và 4 thử trên một ngày đã biết kết quả, dự báo phiên sắp tới và (Chương 4) backtest 100 triệu đồng.
+Tab "Dự báo phiên sắp tới" cần internet để tải giá mới (chỉ tải khi bấm nút); các tab còn lại chạy offline.
+Notebook mỗi chương một tệp: `python -m jupyter lab notebooks/tieuluan/complete`.
 
 ## 7. Chạy nhiều phần cùng lúc (tùy chọn)
 

@@ -3,104 +3,223 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chương 7: Hệ bốn agent</title>
+<title>Chương 7: Hệ bốn agent làm việc nhóm</title>
 <style>
-:root{--ink:#101828;--mute:#3d4c63;--line:#a9c2da;--coral:#f0603a;--teal:#0d9f8f;--sky:#2589e0;--violet:#7060d8;--amber:#e8a317}
+:root{--bg:#f3f8ff;--ink:#14213d;--mute:#44546f;--line:#c9d9ee;
+--a1:#2a7de1;--a1bg:#e0eeff;--a2:#0b9a8a;--a2bg:#dcf7f2;--a3:#6c5ce7;--a3bg:#efecff;--a4:#d98a00;--a4bg:#fff1d1;--stop:#c2415d;--stopbg:#ffe6ec}
 *{box-sizing:border-box}
-body{margin:0;background:linear-gradient(180deg,#d8ebfc,#eaf3fc 240px,#f1f7fd);color:var(--ink);font:15px/1.5 "Segoe UI",system-ui,sans-serif}
-header{padding:18px 28px 0}
-h1{margin:0;font-size:24px;font-weight:800;background:linear-gradient(90deg,#e8502c,#6a58dc 55%,#1b7fdc);-webkit-background-clip:text;background-clip:text;color:transparent}
-header p{margin:4px 0 0;color:var(--mute)}
-main{display:grid;grid-template-columns:minmax(290px,380px) 1fr;gap:18px;padding:16px 28px 36px;max-width:1240px;margin:auto}
-section{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 6px 24px rgba(56,163,245,.10)}
-label{display:block;font-weight:700;font-size:13px;color:var(--mute);margin:10px 0 4px}
-select,textarea,input{width:100%;font:inherit;padding:8px 10px;border:1.5px solid #8fb0cf;border-radius:8px;background:#fff;color:var(--ink)}
-textarea{min-height:78px;resize:vertical}
-button{border:0;border-radius:10px;padding:10px 18px;font:inherit;font-weight:700;color:#fff;cursor:pointer;background:linear-gradient(135deg,#f0603a,#f58a3c);box-shadow:0 3px 10px rgba(240,96,58,.3)}
-button.alt{background:#fff;color:var(--sky);border:2px solid var(--sky);box-shadow:none}
-button.chip{background:#eef5ff;color:#244b7a;border:1.5px solid #b7cfee;box-shadow:none;padding:5px 10px;font-weight:600;font-size:13px;margin:3px 4px 0 0}
-button:disabled{opacity:.55;cursor:wait}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.steps{display:flex;flex-direction:column;gap:6px}
-.step{border:2px solid var(--c,#9db4d0);border-left-width:8px;border-radius:12px;padding:10px 14px;background:#fbfdff}
-.step h3{margin:0;font-size:16px;display:flex;justify-content:space-between;gap:8px;align-items:center}
-.step .n{display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;background:var(--c);color:#fff;font-size:13px;margin-right:8px}
-.kv{display:flex;gap:14px;flex-wrap:wrap;font-size:13.5px;margin:6px 0;color:var(--mute)}
-.kv b{color:var(--ink)}
-.msg{font-family:Consolas,monospace;font-size:12.5px;background:#f2f6fb;border-radius:8px;padding:6px 10px;word-break:break-all;color:#27405f}
-.arrow{text-align:center;color:#6b86a8;font-size:18px;line-height:1}
-.badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12.5px;font-weight:800;color:#fff}
-.b-ok{background:var(--amber)} .b-bad{background:#e5342d} .b-pend{background:#8aa0bd} .b-good{background:#22b05a}
-.final{border:2.5px solid var(--violet);border-radius:14px;padding:12px 16px;margin-top:12px;background:#f7f5ff}
-.ev{font-size:13px;border-top:1px dashed #cfd9ea;padding:6px 0}
-.ev code{color:#4a3fb5;font-size:12px}
-.warn{background:#fff7e0;border:2px solid #f3d98a;border-radius:12px;padding:8px 12px;font-size:13.5px;margin-top:10px}
-.err{background:#ffe4e1;border:2px solid #f2a39b;border-radius:12px;padding:8px 12px;margin-top:10px}
-.hint{color:var(--mute);font-size:13px}
-.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
-.cmp div{border:2px solid #cfe0fa;border-radius:12px;padding:8px 12px;text-align:center}
-.cmp b{font-size:22px;display:block}
-@media(max-width:900px){main{grid-template-columns:1fr}}
+body{margin:0;background:linear-gradient(180deg,#dcecff 0,#f3f8ff 260px);color:var(--ink);font:16px/1.6 "Segoe UI",system-ui,sans-serif}
+a{color:#1d6fd6}
+header{max-width:1180px;margin:0 auto;padding:22px 20px 4px}
+h1{margin:0;font-size:28px;font-weight:800;background:linear-gradient(90deg,#e8502c,#6a58dc 55%,#1b7fdc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin:4px 0 0;color:var(--mute)}
+main{max-width:1180px;margin:0 auto;padding:12px 20px 60px}
+.card{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:0 6px 22px rgba(42,125,225,.10);margin-bottom:16px}
+h2{margin:0 0 8px;font-size:19px}
+.roles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.role{border-radius:12px;padding:12px 14px;font-size:15.5px}
+.role b{display:block;font-size:16px}
+.role .n{display:inline-block;width:24px;height:24px;border-radius:50%;color:#fff;text-align:center;line-height:24px;font-weight:800;margin-right:6px;font-size:14px}
+.r1{background:var(--a1bg)}.r1 .n{background:var(--a1)}.r2{background:var(--a2bg)}.r2 .n{background:var(--a2)}.r3{background:var(--a3bg)}.r3 .n{background:var(--a3)}.r4{background:var(--a4bg)}.r4 .n{background:var(--a4)}
+.banner{border-radius:12px;padding:10px 14px;margin-bottom:14px;font-weight:600;display:none}
+.banner.loading{display:block;background:#fff4d6;border:1.5px solid #f2cf75;color:#7a5600}
+.banner.error{display:block;background:var(--stopbg);border:1.5px solid #f2a9b8;color:#8a1c36}
+.bar{height:8px;background:#e5eefb;border-radius:99px;overflow:hidden;margin-top:6px}
+.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#6c5ce7,#2a7de1,#0b9a8a);border-radius:99px;transition:width .4s}
+.samples{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;margin:8px 0 14px}
+.sample{display:block;text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;font:inherit;cursor:pointer;color:var(--ink);transition:transform .1s,box-shadow .1s}
+.sample:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.10)}
+.sample b{display:block;font-size:15.5px}.sample small{display:block;color:var(--mute);font-size:15px;margin-top:2px}
+.sample.ok{border-left:6px solid var(--a2)}.sample.stop{border-left:6px solid var(--stop)}.sample.cnt{border-left:6px solid var(--a4)}.sample.fin{border-left:6px solid var(--a1)}
+.ask{display:flex;gap:10px;align-items:stretch}
+.ask textarea{flex:1;font:inherit;font-size:17px;padding:12px 14px;border:2px solid #8fb0cf;border-radius:12px;min-height:64px;resize:vertical;color:var(--ink)}
+.ask textarea:focus{outline:none;border-color:#2a7de1}
+.seg{border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:5px 14px;font:inherit;font-size:15px;cursor:pointer;font-weight:600;color:var(--ink)}
+.seg.on{background:#2a7de1;border-color:#2a7de1;color:#fff}
+.domain{display:flex;gap:8px;margin:0 0 10px;flex-wrap:wrap;align-items:center}.domain span{font-weight:700;color:var(--mute)}
+.go{border:0;border-radius:12px;padding:0 26px;font:inherit;font-size:17px;font-weight:800;color:#fff;cursor:pointer;background:linear-gradient(135deg,#f0603a,#f58a3c);box-shadow:0 3px 10px rgba(240,96,58,.35)}
+.go:disabled{opacity:.55;cursor:wait}
+.meta{font-size:14.5px;color:var(--mute)}
+.question{background:#2a7de1;color:#fff;border-radius:14px;padding:10px 16px;font-size:18px;margin:6px 0 14px;display:inline-block}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;align-items:stretch}
+.step{position:relative;border:2px solid var(--line);border-radius:14px;padding:14px;background:#fff;margin:0 22px 0 0;display:flex;flex-direction:column;opacity:.55;transition:all .4s}
+.step:last-child{margin-right:0}
+.step.work{opacity:1;box-shadow:0 0 0 4px rgba(42,125,225,.18);animation:pulse 1.2s infinite}
+.step.done{opacity:1}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(42,125,225,.08)}}
+.step h3{margin:0;font-size:17px}
+.step .role-d{color:var(--mute);font-size:15px;margin-bottom:6px}
+.step .what{font-size:15.5px;flex:1}
+.step .chip{display:inline-block;border-radius:99px;padding:2px 10px;font-size:14.5px;font-weight:800;margin:8px 0 2px;align-self:flex-start}
+.step .hand{font-size:14.5px;color:var(--mute);border-top:1.5px dashed var(--line);margin-top:8px;padding-top:6px}
+.step:not(:last-child)::after{content:"→";position:absolute;right:-22px;top:46%;width:22px;text-align:center;font-size:24px;font-weight:800;color:#8aa3c4}
+.s1.done{border-color:var(--a1);background:#fafdff}.s1 h3,.s1 .chip{color:var(--a1)}.s1 .chip{background:var(--a1bg)}
+.s2.done{border-color:var(--a2);background:#fafffe}.s2 h3,.s2 .chip{color:#087a6d}.s2 .chip{background:var(--a2bg)}
+.s3.done{border-color:var(--a3);background:#fcfbff}.s3 h3,.s3 .chip{color:var(--a3)}.s3 .chip{background:var(--a3bg)}
+.s4.done{border-color:var(--a4);background:#fffdf8}.s4 h3,.s4 .chip{color:#a56700}.s4 .chip{background:var(--a4bg)}
+.final{border-radius:14px;padding:16px 18px;margin-top:16px;border:2px solid #8fdccd;background:#effcf9}
+.final.stop{border-color:#f2a9b8;background:var(--stopbg)}
+.final h3{margin:14px 0 6px;font-size:17px}.final h3:first-child{margin-top:0}
+.final .ans{font-size:20px;font-weight:600;line-height:1.55}
+.badge{display:inline-block;border-radius:99px;padding:3px 14px;font-weight:800;font-size:15.5px;background:#fff4d6;border:1.5px solid #f2cf75;color:#6b4a00;margin-top:10px}
+.final.stop .badge{background:#fff;border-color:#f2a9b8;color:#8a1c36}
+.explain{margin:6px 0 0;font-size:15.5px;color:#33415c}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.cmp>div{border-radius:12px;padding:12px 14px;font-size:16px}
+.cmp .m{background:var(--a3bg);border:1.5px solid #cfc7ff}.cmp .t{background:var(--a2bg);border:1.5px solid #8fdccd}
+.cmp b{display:block;margin-bottom:2px}
+.warnbox{background:#fff4d6;border:1.5px solid #f2cf75;color:#6b4a00;border-radius:10px;padding:8px 12px;margin-top:10px;font-weight:600;font-size:15.5px}
+.src{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin:8px 0}
+.s{border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;background:#fcfdff;font-size:15.5px}
+.s b{display:block}.s p{margin:4px 0;color:#2a3a55}
+mark{background:#ffe27a;border-radius:3px;padding:0 2px}
+table.t{border-collapse:collapse;font-size:15.5px;margin:6px 0}
+table.t th{background:#e6f0fd;text-align:left;padding:5px 10px;border:1px solid var(--line)}table.t td{padding:4px 10px;border:1px solid var(--line)}
+details{margin-top:12px}summary{cursor:pointer;font-weight:700;color:#1d6fd6;font-size:15.5px}
+pre{background:#f3f6fa;border:1.5px solid var(--line);border-radius:10px;padding:12px;overflow:auto;max-height:380px;font:13.5px/1.45 Consolas,monospace}
+@media(max-width:980px){.roles,.timeline{grid-template-columns:1fr 1fr}.step{margin:0 0 22px 0}.step:not(:last-child)::after{display:none}.cmp{grid-template-columns:1fr}}
+@media(max-width:620px){.roles,.timeline{grid-template-columns:1fr}.ask{flex-direction:column}.go{padding:12px}}
 </style>
 </head>
 <body>
 <header>
-  <h1>Chương 7 · Hệ bốn agent: truy hồi → đồ thị → viết → kiểm tra</h1>
-  <p>Mỗi agent chạy đúng một lượt; State và Message được hiện sau từng bước. Khớp với mục 7.2–7.5 của tiểu luận.</p>
+  <h1>Chương 7 · Hệ bốn agent làm việc nhóm</h1>
+  <p class="sub">Một câu hỏi đi qua bốn agent, mỗi agent làm một việc rồi chuyển kết quả cho agent kế tiếp. Chạy trên máy bạn, không cần API key. Chương 5 (hỏi đáp có công cụ): <a href="/">trang chủ</a> · API: <a href="/docs">/docs</a></p>
 </header>
 <main>
-  <section>
-    <label for="domain">Miền dữ liệu</label>
-    <select id="domain"><option value="finance">finance (báo cáo tài chính FinQA)</option><option value="diabetes">diabetes (tài liệu NIDDK, UCI)</option></select>
-    <label for="q">Câu hỏi (tiếng Anh, theo kho tài liệu)</label>
-    <textarea id="q">What is the percentage change in revenue?</textarea>
-    <div class="hint">Câu hỏi mẫu:</div>
-    <div>
-      <button class="chip" data-d="finance" data-q="What is the percentage change in revenue?">Thay đổi doanh thu</button>
-      <button class="chip" data-d="finance" data-q="Find revenue" data-r="__missing_report__">Báo cáo không tồn tại</button>
-      <button class="chip" data-d="diabetes" data-q="How many encounters are in the dataset?">Đếm số lượt khám</button>
-      <button class="chip" data-d="diabetes" data-q="What organ makes insulin?">Cơ quan tạo insulin</button>
-    </div>
-    <label for="report">Bộ lọc báo cáo (tùy chọn, finance)</label>
-    <input id="report" placeholder="ví dụ ETR/2008/page_377.pdf, hoặc __missing_report__ để thử lỗi">
-    <div class="row"><button id="run">▶ Chạy bốn agent</button></div>
-    <div class="warn" id="note">Lần chạy đầu cần nạp mô hình sinh văn bản trên CPU nên có thể mất 30–60 giây.</div>
-    <div class="warn">Hai câu hỏi sai đầu vào (câu rỗng, miền lạ) bị chặn trước khi agent chạy: đó là chốt kiểm soát đầu vào ở mục 7.5.3.</div>
-  </section>
-  <section id="out"><div class="hint">Bấm “Chạy bốn agent” để xem từng lượt.</div></section>
+<div class="card">
+  <h2>Bốn agent là ai?</h2>
+  <div class="roles">
+    <div class="role r1"><b><span class="n">1</span>Agent truy hồi</b>Người đi tìm tài liệu: đọc câu hỏi rồi lôi ra vài đoạn tài liệu liên quan nhất.</div>
+    <div class="role r2"><b><span class="n">2</span>Agent đồ thị</b>Người tra xem mỗi đoạn đó thuộc báo cáo, công ty hay tài liệu nào trong đồ thị tri thức.</div>
+    <div class="role r3"><b><span class="n">3</span>Agent viết</b>Người soạn câu trả lời, chỉ được dựa vào các đoạn tìm được, không được bịa.</div>
+    <div class="role r4"><b><span class="n">4</span>Agent kiểm tra</b>Người soát xem nguồn trích dẫn có hợp lệ không; nếu thiếu bằng chứng thì từ chối.</div>
+  </div>
+</div>
+
+<div id="banner" class="banner"></div>
+
+<div class="card">
+  <div class="domain"><span>Lĩnh vực:</span>
+    <button class="seg on" data-d="diabetes">Bệnh tiểu đường</button>
+    <button class="seg" data-d="finance">Tài chính (báo cáo công ty)</button>
+  </div>
+  <div class="ask">
+    <textarea id="q" placeholder="Gõ câu hỏi, ví dụ: Insulin do cơ quan nào tạo ra?"></textarea>
+    <button class="go" id="go">Giao việc cho nhóm agent</button>
+  </div>
+  <p class="meta" style="margin:10px 0 0">Hoặc bấm một câu mẫu (dòng nhỏ giải thích câu đó minh họa điều gì):</p>
+  <div class="samples" id="samples"></div>
+</div>
+
+<div id="run"></div>
 </main>
 <script>
-(function(){
-  var COL = {RetrievalAgent:'#2589e0', GraphAgent:'#0d9f8f', WriterAgent:'#e8a317', VerifierAgent:'#7060d8'};
-  var ROLE = {RetrievalAgent:'Tìm 3 đoạn bằng chứng', GraphAgent:'Đối chiếu nguồn trong đồ thị', WriterAgent:'Sinh câu trả lời từ bằng chứng', VerifierAgent:'Kiểm tra id nguồn hợp lệ'};
-  var $ = function(s){return document.querySelector(s);};
-  function esc(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-  function badge(s){var c = s==='generated_unverified'?'b-ok':s==='insufficient_evidence'?'b-bad':s==='pending'?'b-pend':'b-good';return '<span class="badge '+c+'">'+esc(s)+'</span>';}
-  document.querySelectorAll('.chip').forEach(function(b){b.onclick=function(){$('#domain').value=b.dataset.d;$('#q').value=b.dataset.q;$('#report').value=b.dataset.r||'';};});
-  function post(path, body){return fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json().then(function(j){if(!r.ok) throw new Error(typeof j.detail==='string'?j.detail:JSON.stringify(j.detail)); return j;});});}
-  $('#run').onclick=function(){
-    var b=$('#run'); b.disabled=true; b.textContent='⏳ Đang chạy...'; $('#out').innerHTML='<div class="hint">Đang chạy bốn agent...</div>';
-    var body={domain:$('#domain').value,question:$('#q').value}; if($('#report').value.trim()) body.report=$('#report').value.trim();
-    post('/api/v1/agents/run',body).then(function(r){render(r);}).catch(function(e){$('#out').innerHTML='<div class="err"><b>Không chạy được.</b> '+esc(e.message)+'</div>';}).then(function(){b.disabled=false;b.textContent='▶ Chạy bốn agent';});
-  };
-  function render(r){
-    var h='<div class="steps">';
-    r.steps.forEach(function(s,i){
-      h+='<div class="step" style="--c:'+COL[s.agent]+'"><h3><span><span class="n">'+(i+1)+'</span>'+s.agent+'</span>'+badge(s.status)+'</h3><div class="hint">'+ROLE[s.agent]+'</div>'+
-         '<div class="kv"><span>evidence: <b>'+s.evidence+'</b></span><span>graph_context: <b>'+s.graph+'</b></span><span>answer: <b>'+esc(s.answer||'(rỗng)')+'</b></span></div>'+
-         '<div class="msg">Message '+esc(s.message.sender)+' → '+esc(s.message.receiver)+' '+esc(JSON.stringify(s.message.payload))+'</div></div>';
-      if(i<r.steps.length-1) h+='<div class="arrow">↓</div>';
-    });
-    h+='</div><div class="final"><b>Kết quả cuối:</b> '+badge(r.status)+'<div style="margin-top:6px;font-size:17px"><b>'+esc(r.answer)+'</b></div>'+
-       '<div class="hint">Chạy trong '+r.seconds.toFixed(1)+' giây · id nguồn hợp lệ chưa chứng minh câu trả lời đúng (generated_unverified).</div>';
-    if(r.evidence.length){h+='<div style="margin-top:8px"><b>Bằng chứng:</b>';r.evidence.forEach(function(e){h+='<div class="ev"><code>'+esc(e.id)+'</code><br>'+esc(e.text)+'</div>';});h+='</div>';}
-    h+='</div>';
-    if(r.domain==='diabetes'){h+='<div class="final" style="border-color:#22b05a;background:#f2fbf5"><b>So với công cụ thống kê xác định (ToolAgent)</b><div class="hint">Cùng câu hỏi đếm, công cụ đọc bảng thật thay vì để bộ sinh đoán.</div><div class="row"><button class="alt" id="stat">Chạy công cụ thống kê</button></div><div id="statOut"></div></div>';}
-    $('#out').innerHTML=h;
-    var sb=$('#stat'); if(sb) sb.onclick=function(){sb.disabled=true;post('/api/v1/knowledge/ask',{domain:'diabetes',question:r.question,task:'statistics'}).then(function(s){
-      $('#statOut').innerHTML='<div class="cmp"><div>Bộ sinh (hệ bốn agent)<b>'+esc(r.answer)+'</b></div><div>Công cụ thống kê<b>'+esc(s.answer)+'</b><span class="hint">'+esc(s.status||'')+'</span></div></div>';}).catch(function(e){$('#statOut').innerHTML='<div class="err">'+esc(e.message)+'</div>';}).then(function(){sb.disabled=false;});};
+const SAMPLES=[
+ {d:'diabetes',k:'ok',q:'Xét nghiệm A1C cho biết điều gì?',n:'Câu bình thường: cả bốn agent làm việc, câu trả lời có nguồn để kiểm tra'},
+ {d:'diabetes',k:'stop',q:'Giá vàng hôm nay là bao nhiêu?',n:'Câu không có trong tài liệu: hệ từ chối "không đủ bằng chứng" thay vì bịa'},
+ {d:'diabetes',k:'cnt',q:'Có bao nhiêu người trong dữ liệu khảo sát?',n:'Câu đếm: so câu mô hình viết với con số công cụ thống kê tính, để thấy mô hình có thể sai số liệu'},
+ {d:'finance',k:'fin',q:'Những mạng thanh toán điện tử lớn nhất là gì?',n:'Lĩnh vực tài chính: agent đồ thị chỉ ra đoạn thuộc báo cáo của công ty nào'}
+];
+const $=id=>document.getElementById(id);
+let domain='diabetes',busy=false;
+function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function hl(text,terms){let h=esc(text);(terms||[]).forEach(t=>{h=h.replace(new RegExp('\\b('+t.replace(/[^a-z0-9]/gi,'')+')\\b','gi'),'<mark>$1</mark>')});return h}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+document.querySelectorAll('.seg').forEach(b=>b.onclick=()=>setDomain(b.dataset.d));
+function setDomain(d){domain=d;document.querySelectorAll('.seg').forEach(x=>x.classList.toggle('on',x.dataset.d===d))}
+SAMPLES.forEach(s=>{const b=el('button','sample '+s.k);b.append(el('b','',s.q),el('small','',s.n));b.onclick=()=>{setDomain(s.d);$('q').value=s.q;go()};$('samples').append(b)});
+
+async function pollStatus(){
+  try{
+    const s=await (await fetch('/api/v1/status')).json();const b=$('banner');
+    if(s.stage==='ready'||s.stage==='idle'){b.className='banner';b.textContent='';return}
+    if(s.stage==='error'){b.className='banner error';b.textContent=s.message;return}
+    b.className='banner loading';b.innerHTML='';
+    b.append(el('div','','Đang nạp mô hình ngôn ngữ (Qwen2.5-1.5B) và dữ liệu, khoảng 1–2 phút (đã chạy '+Math.round(s.elapsed||0)+' giây). Bạn vẫn có thể giao việc, nhóm agent sẽ chạy ngay khi mô hình nạp xong.'));
+    const bar=el('div','bar');const i=el('i');i.style.width=Math.min(95,(s.elapsed||0)/120*100)+'%';bar.append(i);b.append(bar);
+  }catch(e){}
+  setTimeout(pollStatus,2000);
+}
+pollStatus();
+
+function estimate(){let v=NaN;try{v=parseFloat(localStorage.getItem('est_team'))}catch(e){}return isNaN(v)?50:v}
+function saveEst(sec){try{const o=parseFloat(localStorage.getItem('est_team'));localStorage.setItem('est_team',String(isNaN(o)?sec:(o+sec)/2))}catch(e){}}
+
+const CARDS=[['Agent truy hồi','Người đi tìm tài liệu','s1'],['Agent đồ thị','Người tra nguồn của từng đoạn','s2'],['Agent viết','Người soạn câu trả lời','s3'],['Agent kiểm tra','Người soát nguồn trích dẫn','s4']];
+function makeCards(){
+  const tl=el('div','timeline');const cards=[];
+  CARDS.forEach(([t,r,c],i)=>{const s=el('div','step '+c);s.append(el('h3','',(i+1)+'. '+t),el('div','role-d',r));const w=el('div','what','Đang chờ đến lượt…');s.append(w);tl.append(s);cards.push({s,w})});
+  return {tl,cards};
+}
+function fillCard(card,st,i){
+  card.s.classList.remove('work');card.s.classList.add('done');
+  card.w.textContent=st.summary||'';
+  card.s.append(el('span','chip',st.outcome||''));
+  card.s.append(el('div','hand','Gửi tiếp: '+st.handoff+(st.seconds>=0.1?' (agent làm trong '+st.seconds.toFixed(1)+' giây)':'')));
+}
+function numbersOf(t){return (String(t).match(/\d[\d.,]*/g)||[]).map(x=>x.replace(/[.,]/g,''))}
+async function go(){
+  if(busy)return;const q=$('q').value.trim();if(!q){$('q').focus();return}
+  busy=true;$('go').disabled=true;
+  const run=$('run');run.innerHTML='';
+  const you=el('div','question',q);run.append(you);
+  const {tl,cards}=makeCards();run.append(tl);
+  cards[0].s.classList.add('work');cards[0].w.textContent='Đang đọc câu hỏi và tìm tài liệu…';
+  const est=estimate();const pend=el('div','meta');const bar=el('div','bar');const i=el('i');bar.append(i);pend.append(el('span','','Nhóm agent đang làm việc trên CPU, ước tính khoảng '+Math.round(est)+' giây. '),el('span','','Đã chờ 0 giây'));run.append(bar,pend);
+  const t0=performance.now();const iv=setInterval(()=>{const t=(performance.now()-t0)/1000;i.style.width=Math.min(95,(1-Math.exp(-t/(est*0.7)))*100)+'%';pend.lastChild.textContent='Đã chờ '+Math.round(t)+' giây'},300);
+  try{
+    const r=await fetch('/api/v1/agents/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:domain,question:q})});
+    const j=await r.json();clearInterval(iv);
+    if(!r.ok)throw new Error(typeof j.detail==='string'?j.detail:'máy chủ trả về lỗi '+r.status);
+    saveEst((performance.now()-t0)/1000);
+    bar.remove();pend.remove();
+    if(!j.steps||!j.steps.length)throw new Error(j.answer||'không có kết quả');
+    for(let k=0;k<j.steps.length;k++){
+      if(k+1<cards.length){cards[k+1].s.classList.add('work');cards[k+1].w.textContent='Đang làm việc…'}
+      fillCard(cards[k],j.steps[k],k);await sleep(450);
+    }
+    run.append(renderFinal(j));
+  }catch(e){
+    clearInterval(iv);bar.remove();pend.remove();
+    cards.forEach(c=>c.s.classList.remove('work'));
+    const f=el('div','final stop');f.append(el('h3','','Chưa chạy được'),el('div','ans','Lỗi: '+e.message+'. Hãy kiểm tra máy chủ còn chạy rồi thử lại.'));run.append(f);
   }
-})();
+  busy=false;$('go').disabled=false;
+}
+function renderFinal(j){
+  const stop=j.status==='insufficient_evidence';
+  const f=el('div','final'+(stop?' stop':''));
+  f.append(el('h3','','Câu trả lời cuối cùng của nhóm'));
+  f.append(el('div','ans',j.answer));
+  if(j.english_answer&&j.language==='vi')f.append(el('div','explain','Bản tiếng Anh Agent viết soạn trước khi dịch: "'+j.english_answer+'"'));
+  f.append(el('span','badge','Nhãn trạng thái: '+(j.status_label||j.status)));
+  f.append(el('p','explain',j.status_explanation||''));
+  if(j.stats_check){
+    const c=el('div','cmp');
+    const m=el('div','m');m.append(el('b','','Câu mô hình viết (qua bốn agent)'),el('span','',j.answer));
+    const t=el('div','t');t.append(el('b','','Công cụ thống kê tính trực tiếp từ dữ liệu'),el('span','',j.stats_check.answer));
+    c.append(m,t);f.append(c);
+    const want=j.stats_check.value!=null?String(Math.round(j.stats_check.value)):null;
+    if(want&&!stop&&!numbersOf(j.answer).includes(want))f.append(el('div','warnbox','Chú ý: con số mô hình viết khác con số công cụ tính ('+j.stats_check.value.toLocaleString('vi-VN')+'). Đây là lý do câu hỏi số liệu nên giao cho công cụ thống kê, không giao cho mô hình sinh văn bản.'));
+    else if(want&&!stop)f.append(el('div','explain','Lần này con số của mô hình trùng với công cụ, nhưng không có gì đảm bảo điều đó luôn đúng.'));
+    else if(stop)f.append(el('div','warnbox','Mô hình không dám trả lời, còn công cụ thống kê vẫn cho con số đúng: câu hỏi số liệu là việc của công cụ.'));
+  }
+  if(j.evidence&&j.evidence.length){
+    f.append(el('h3','','Các đoạn tài liệu agent đã đọc'));
+    const g=el('div','src');
+    j.evidence.forEach(x=>{const c=el('div','s');c.append(el('b','',x.title));const p=el('p');p.innerHTML=hl(x.snippet||x.text,x.highlights);c.append(p);
+      if(x.url){const a=el('a','','Mở nguồn');a.href=x.url;a.target='_blank';a.rel='noopener';c.append(a)}g.append(c)});f.append(g);
+  }
+  if(j.query_used&&j.query_used!==j.question)f.append(el('p','meta','Truy vấn tiếng Anh Agent truy hồi đã dùng: "'+j.query_used+'"'));
+  f.append(el('p','meta','Tổng thời gian: '+j.seconds.toFixed(1)+' giây'));
+  const d=el('details');d.append(el('summary','','Chi tiết kỹ thuật: State và Message (JSON)'));
+  d.append(el('pre','',JSON.stringify(j,null,2)));f.append(d);
+  return f;
+}
+$('go').onclick=go;
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();go()}});
 </script>
 </body>
 </html>

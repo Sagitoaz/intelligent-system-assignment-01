@@ -1,0 +1,64 @@
+{
+  "dataset": "loan_default",
+  "kind": "majority",
+  "framework": "baseline",
+  "seed": 0,
+  "epochs_budget": 25,
+  "patience": 5,
+  "batch_size": 256,
+  "n_train": 87535,
+  "n_val": 20384,
+  "n_test": 42081,
+  "representation": "tabular",
+  "architecture": "majority",
+  "run_fingerprint": "28dfcb1fb4cd3d836eb376b161a9f4772addbcb8f3ea14bd050f9a0530a4958e",
+  "training_seconds": 0.0,
+  "parameters": 0,
+  "history": [],
+  "metrics": {
+    "accuracy": 0.8476984862527032,
+    "balanced_accuracy": 0.5,
+    "roc_auc": 0.5,
+    "average_precision": 0.1523015137472969,
+    "f1": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "mcc": 0.0,
+    "log_loss": 0.4289338290691376,
+    "confusion_matrix": [
+      [
+        35672,
+        0
+      ],
+      [
+        6409,
+        0
+      ]
+    ],
+    "threshold": 0.5,
+    "accuracy_at_05": 0.8476984862527032
+  },
+  "validation_metrics": {
+    "accuracy": 0.8569466248037677,
+    "balanced_accuracy": 0.5,
+    "roc_auc": 0.5,
+    "average_precision": 0.14305337519623235,
+    "f1": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "mcc": 0.0,
+    "log_loss": 0.4112911522388458,
+    "confusion_matrix": [
+      [
+        17468,
+        0
+      ],
+      [
+        2916,
+        0
+      ]
+    ],
+    "threshold": 0.5,
+    "accuracy_at_05": 0.8569466248037677
+  }
+}

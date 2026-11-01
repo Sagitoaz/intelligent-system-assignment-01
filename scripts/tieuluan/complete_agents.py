@@ -19,6 +19,9 @@ class State:
     answer: str = ''
     status: str = 'pending'
     messages: list = field(default_factory=list)
+    query: str = ''
+    language: str = ''
+    english_answer: str = ''
 
     def send(self, sender, receiver, **payload):
         self.messages.append(Message(sender, receiver, payload))
@@ -29,8 +32,13 @@ class RetrievalAgent:
         self.engine = engine
 
     def act(self, state):
+        # Câu tiếng Việt được dịch sang truy vấn tiếng Anh vì kho tài liệu bằng tiếng Anh.
+        if hasattr(self.engine, 'to_english_query'):
+            state.query, state.language = self.engine.to_english_query(state.question)
+        else:
+            state.query, state.language = state.question, 'en'
         state.evidence = self.engine.retrieve(
-            state.question, state.domain, k=3, report=state.report)
+            state.query, state.domain, k=3, report=state.report)
         state.send('retrieval', 'graph',
                    ids=[e['id'] for e in state.evidence])
 
@@ -57,8 +65,19 @@ class WriterAgent:
         self.generator = generator
 
     def act(self, state):
-        if not state.evidence:
+        from src.chapter04.rag import INSUFFICIENT_EN, INSUFFICIENT_VI, lexical_support
+        refuse = INSUFFICIENT_VI if state.language == 'vi' else INSUFFICIENT_EN
+        if not state.evidence or not lexical_support(state.query or state.question, state.evidence):
             state.status = 'insufficient_evidence'
+            state.answer = refuse
+        elif hasattr(self.generator, 'generate_full'):
+            full = self.generator.generate_full(
+                state.question, state.evidence, state.language or None,
+                state.query or None)
+            state.answer = full['answer']
+            state.english_answer = full['english_answer'] or ''
+            if full['insufficient']:
+                state.status = 'insufficient_evidence'
         else:
             state.answer = self.generator.generate(
                 state.question, state.evidence)
@@ -74,8 +93,11 @@ class VerifierAgent:
         ids = [e['id'] for e in state.evidence]
         valid = bool(ids) and all(
             cid in self.allowed[state.domain] for cid in ids)
-        if not valid or not state.answer.strip():
-            state.answer = 'Insufficient evidence'
+        if state.status == 'insufficient_evidence' and state.answer.strip():
+            pass  # Agent viết đã từ chối: giữ nguyên câu từ chối.
+        elif not valid or not state.answer.strip():
+            state.answer = ('Không đủ bằng chứng.' if state.language == 'vi'
+                            else 'Insufficient evidence')
             state.status = 'insufficient_evidence'
         else:
             state.status = 'generated_unverified'
