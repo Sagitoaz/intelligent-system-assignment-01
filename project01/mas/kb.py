@@ -1,7 +1,7 @@
 """Agent tri thức: đồ thị tri thức (KB) + RAG trích dẫn tài liệu NIDDK.
 
 - KB: đồ thị nút/cạnh về tiểu đường (artifacts/kg.json), có thể nạp vào Neo4j bằng artifacts/kg_neo4j.cypher.
-- RAG: BM25 trên 183 đoạn tài liệu NIDDK (data/chapter04/diabetes_corpus.jsonl). Graph-RAG mở rộng truy vấn bằng các nút liên quan
+- RAG: BM25 trên 183 đoạn tài liệu NIDDK (project01/artifacts/diabetes_corpus_niddk183.jsonl, bản đóng băng của kho 183 đoạn). Graph-RAG mở rộng truy vấn bằng các nút liên quan
   trong đồ thị trước khi truy xuất, rồi trả về đoạn trích có nguồn.
 """
 from __future__ import annotations
@@ -14,7 +14,7 @@ import unicodedata
 from collections import Counter, defaultdict
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-CORPUS = os.path.join(ROOT, "data", "chapter04", "diabetes_corpus.jsonl")
+CORPUS = os.path.join(ROOT, "project01", "artifacts", "diabetes_corpus_niddk183.jsonl")
 KG_PATH = os.path.join(ROOT, "project01", "artifacts", "kg.json")
 STOP = set("the a an of to and or in is are for with you your can may be it as that this on by from at have has if not more most".split())
 

@@ -1,0 +1,245 @@
+{
+  "corpus_chunks": 183,
+  "corpus_pages": 4,
+  "words_mean": 40.48087431693989,
+  "words_min": 12,
+  "words_max": 125,
+  "questions": 16,
+  "metrics": {
+    "bm25": {
+      "questions": 16,
+      "hit_at_1": 0.375,
+      "hit_at_3": 0.6875,
+      "hit_at_5": 0.6875,
+      "mrr_at_5": 0.5104166666666666
+    },
+    "dense": {
+      "questions": 16,
+      "hit_at_1": 0.5,
+      "hit_at_3": 0.8125,
+      "hit_at_5": 0.8125,
+      "mrr_at_5": 0.6354166666666666
+    },
+    "hybrid": {
+      "questions": 16,
+      "hit_at_1": 0.4375,
+      "hit_at_3": 0.75,
+      "hit_at_5": 0.875,
+      "mrr_at_5": 0.6145833333333334
+    },
+    "bm25_project01": {
+      "questions": 16,
+      "hit_at_1": 0.375,
+      "hit_at_3": 0.5625,
+      "hit_at_5": 0.625,
+      "mrr_at_5": 0.484375
+    },
+    "graph_rag": {
+      "questions": 16,
+      "hit_at_1": 0.4375,
+      "hit_at_3": 0.625,
+      "hit_at_5": 0.625,
+      "mrr_at_5": 0.5208333333333334
+    }
+  },
+  "embedding_shape": [
+    183,
+    384
+  ],
+  "embedding_seconds": 0.055018599989125505,
+  "per_question": [
+    {
+      "id": "DM01",
+      "question": "What organ makes insulin?",
+      "gold_ids": [
+        "what-is-diabetes:9"
+      ],
+      "bm25": null,
+      "dense": 1,
+      "hybrid": 3,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM02",
+      "question": "Which hormone helps glucose enter cells?",
+      "gold_ids": [
+        "what-is-diabetes:9"
+      ],
+      "bm25": 2,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 2,
+      "graph_rag": 2
+    },
+    {
+      "id": "DM03",
+      "question": "What is the most common type of diabetes?",
+      "gold_ids": [
+        "what-is-diabetes:16"
+      ],
+      "bm25": 3,
+      "dense": null,
+      "hybrid": 2,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM04",
+      "question": "When does gestational diabetes develop?",
+      "gold_ids": [
+        "what-is-diabetes:19"
+      ],
+      "bm25": null,
+      "dense": 1,
+      "hybrid": 4,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM05",
+      "question": "Are glucose levels in prediabetes above normal?",
+      "gold_ids": [
+        "what-is-diabetes:21"
+      ],
+      "bm25": 1,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM06",
+      "question": "What attacks insulin-producing cells in type 1 diabetes?",
+      "gold_ids": [
+        "what-is-diabetes:14"
+      ],
+      "bm25": 1,
+      "dense": 2,
+      "hybrid": 2,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM07",
+      "question": "What causes monogenic diabetes?",
+      "gold_ids": [
+        "what-is-diabetes:23"
+      ],
+      "bm25": null,
+      "dense": 2,
+      "hybrid": 4,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM08",
+      "question": "How many months are reflected in an A1C blood test?",
+      "gold_ids": [
+        "tests-diagnosis:41"
+      ],
+      "bm25": 2,
+      "dense": 2,
+      "hybrid": 2,
+      "bm25_project01": 2,
+      "graph_rag": 2
+    },
+    {
+      "id": "DM09",
+      "question": "How many hours should a person fast before the fasting plasma glucose test?",
+      "gold_ids": [
+        "tests-diagnosis:39"
+      ],
+      "bm25": 2,
+      "dense": 3,
+      "hybrid": 2,
+      "bm25_project01": 2,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM10",
+      "question": "Can an over-the-counter blood glucose meter diagnose diabetes?",
+      "gold_ids": [
+        "tests-diagnosis:14"
+      ],
+      "bm25": 1,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM11",
+      "question": "During which pregnancy weeks is gestational diabetes screening recommended?",
+      "gold_ids": [
+        "tests-diagnosis:34"
+      ],
+      "bm25": 3,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 4,
+      "graph_rag": 3
+    },
+    {
+      "id": "DM12",
+      "question": "Which health measure corresponds to B in the diabetes ABCs?",
+      "gold_ids": [
+        "managing-diabetes:23"
+      ],
+      "bm25": null,
+      "dense": null,
+      "hybrid": null,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM13",
+      "question": "Which health measure corresponds to C in the diabetes ABCs?",
+      "gold_ids": [
+        "managing-diabetes:25"
+      ],
+      "bm25": null,
+      "dense": null,
+      "hybrid": null,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM14",
+      "question": "How many minutes of moderate activity per week does this source suggest?",
+      "gold_ids": [
+        "managing-diabetes:34"
+      ],
+      "bm25": 1,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM15",
+      "question": "How many hours of sleep per night should most adults aim for according to this source?",
+      "gold_ids": [
+        "managing-diabetes:38"
+      ],
+      "bm25": 1,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM16",
+      "question": "Can type 2 diabetes occur during childhood?",
+      "gold_ids": [
+        "what-is-diabetes:16"
+      ],
+      "bm25": 1,
+      "dense": 3,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    }
+  ],
+  "note": "rank = vị trí đầu tiên của một đoạn đúng trong top 5 (null = không có). Graph-RAG và BM25 project01 dùng bộ BM25 riêng của project01/mas/kb.py."
+}

@@ -1,0 +1,543 @@
+{
+  "corpus_chunks": 492,
+  "corpus_pages": 28,
+  "words_mean": 93.95325203252033,
+  "words_min": 17,
+  "words_max": 203,
+  "questions": 40,
+  "metrics": {
+    "bm25": {
+      "questions": 40,
+      "hit_at_1": 0.35,
+      "hit_at_3": 0.575,
+      "hit_at_5": 0.8,
+      "mrr_at_5": 0.5
+    },
+    "dense": {
+      "questions": 40,
+      "hit_at_1": 0.425,
+      "hit_at_3": 0.75,
+      "hit_at_5": 0.85,
+      "mrr_at_5": 0.5891666666666666
+    },
+    "hybrid": {
+      "questions": 40,
+      "hit_at_1": 0.425,
+      "hit_at_3": 0.75,
+      "hit_at_5": 0.85,
+      "mrr_at_5": 0.6070833333333334
+    },
+    "bm25_project01": {
+      "questions": 40,
+      "hit_at_1": 0.35,
+      "hit_at_3": 0.5,
+      "hit_at_5": 0.7,
+      "mrr_at_5": 0.45499999999999996
+    },
+    "graph_rag": {
+      "questions": 40,
+      "hit_at_1": 0.35,
+      "hit_at_3": 0.5,
+      "hit_at_5": 0.675,
+      "mrr_at_5": 0.45
+    }
+  },
+  "embedding_shape": [
+    492,
+    384
+  ],
+  "embedding_seconds": 38.2446555000206,
+  "per_question": [
+    {
+      "id": "DM01",
+      "question": "What organ makes insulin?",
+      "gold_ids": [
+        "what-is-diabetes:0"
+      ],
+      "bm25": null,
+      "dense": 4,
+      "hybrid": null,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM02",
+      "question": "What is diabetes?",
+      "gold_ids": [
+        "what-is-diabetes:0"
+      ],
+      "bm25": null,
+      "dense": 1,
+      "hybrid": 2,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM03",
+      "question": "What are the common symptoms of diabetes?",
+      "gold_ids": [
+        "symptoms-causes:0"
+      ],
+      "bm25": 4,
+      "dense": 2,
+      "hybrid": 2,
+      "bm25_project01": 5,
+      "graph_rag": 5
+    },
+    {
+      "id": "DM04",
+      "question": "What are the symptoms of type 1 diabetes in children?",
+      "gold_ids": [
+        "symptoms-causes:1",
+        "type-1-diabetes:10"
+      ],
+      "bm25": 1,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM05",
+      "question": "Do people with type 2 diabetes always have symptoms?",
+      "gold_ids": [
+        "symptoms-causes:4"
+      ],
+      "bm25": 2,
+      "dense": 5,
+      "hybrid": 2,
+      "bm25_project01": 5,
+      "graph_rag": null
+    },
+    {
+      "id": "DM06",
+      "question": "Does gestational diabetes cause symptoms?",
+      "gold_ids": [
+        "symptoms-causes:5"
+      ],
+      "bm25": 3,
+      "dense": 4,
+      "hybrid": 2,
+      "bm25_project01": 3,
+      "graph_rag": 3
+    },
+    {
+      "id": "DM07",
+      "question": "What causes type 1 diabetes?",
+      "gold_ids": [
+        "symptoms-causes:6",
+        "type-1-diabetes:0",
+        "type-1-diabetes:12"
+      ],
+      "bm25": 2,
+      "dense": 2,
+      "hybrid": 1,
+      "bm25_project01": 5,
+      "graph_rag": 4
+    },
+    {
+      "id": "DM08",
+      "question": "What causes type 2 diabetes?",
+      "gold_ids": [
+        "symptoms-causes:8"
+      ],
+      "bm25": 4,
+      "dense": 2,
+      "hybrid": 1,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM09",
+      "question": "Which medicines can cause diabetes?",
+      "gold_ids": [
+        "symptoms-causes:19"
+      ],
+      "bm25": 4,
+      "dense": 3,
+      "hybrid": 1,
+      "bm25_project01": 4,
+      "graph_rag": 5
+    },
+    {
+      "id": "DM10",
+      "question": "Who should be tested for type 2 diabetes?",
+      "gold_ids": [
+        "tests-diagnosis:3"
+      ],
+      "bm25": null,
+      "dense": 2,
+      "hybrid": 2,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM11",
+      "question": "When is gestational diabetes tested?",
+      "gold_ids": [
+        "gestational-diabetes:7"
+      ],
+      "bm25": 2,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM12",
+      "question": "Is there a cure for type 1 diabetes?",
+      "gold_ids": [
+        "type-1-diabetes:3"
+      ],
+      "bm25": 1,
+      "dense": 5,
+      "hybrid": 2,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM13",
+      "question": "What eye problems can diabetes cause?",
+      "gold_ids": [
+        "eye-disease:0"
+      ],
+      "bm25": 3,
+      "dense": 3,
+      "hybrid": 2,
+      "bm25_project01": 3,
+      "graph_rag": 3
+    },
+    {
+      "id": "DM14",
+      "question": "What is diabetic kidney disease?",
+      "gold_ids": [
+        "kidney-disease:0"
+      ],
+      "bm25": 2,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 2,
+      "graph_rag": 2
+    },
+    {
+      "id": "DM15",
+      "question": "Is diabetes a leading cause of kidney disease?",
+      "gold_ids": [
+        "kidney-disease:0"
+      ],
+      "bm25": 1,
+      "dense": 3,
+      "hybrid": 2,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM16",
+      "question": "What is peripheral neuropathy?",
+      "gold_ids": [
+        "neuropathy:12"
+      ],
+      "bm25": 1,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM17",
+      "question": "What does autonomic neuropathy damage?",
+      "gold_ids": [
+        "neuropathy:2",
+        "neuropathy:25"
+      ],
+      "bm25": 1,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM18",
+      "question": "How often should I check my feet?",
+      "gold_ids": [
+        "foot-problems:4",
+        "foot-problems:5"
+      ],
+      "bm25": null,
+      "dense": 3,
+      "hybrid": 4,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM19",
+      "question": "How does diabetes affect the heart?",
+      "gold_ids": [
+        "heart-disease-stroke:0"
+      ],
+      "bm25": null,
+      "dense": null,
+      "hybrid": null,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM20",
+      "question": "What should I do when my blood glucose is below 70 mg/dL?",
+      "gold_ids": [
+        "hypoglycemia:11"
+      ],
+      "bm25": 5,
+      "dense": null,
+      "hybrid": 5,
+      "bm25_project01": 5,
+      "graph_rag": 5
+    },
+    {
+      "id": "DM21",
+      "question": "What are the complications of severe low blood glucose?",
+      "gold_ids": [
+        "hypoglycemia:5"
+      ],
+      "bm25": 1,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM22",
+      "question": "What is the plate method?",
+      "gold_ids": [
+        "healthy-living:8"
+      ],
+      "bm25": 1,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM23",
+      "question": "What drinks should a person with diabetes choose?",
+      "gold_ids": [
+        "healthy-living:3"
+      ],
+      "bm25": 1,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM24",
+      "question": "How many minutes of physical activity per week are recommended?",
+      "gold_ids": [
+        "cdc-physical-activity:3"
+      ],
+      "bm25": 3,
+      "dense": 2,
+      "hybrid": 2,
+      "bm25_project01": 3,
+      "graph_rag": 3
+    },
+    {
+      "id": "DM25",
+      "question": "Should I eat before, during, or after physical activity?",
+      "gold_ids": [
+        "healthy-living:5"
+      ],
+      "bm25": 1,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 2,
+      "graph_rag": 2
+    },
+    {
+      "id": "DM26",
+      "question": "What is a normal A1C level?",
+      "gold_ids": [
+        "a1c-test:1"
+      ],
+      "bm25": 1,
+      "dense": 2,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM27",
+      "question": "What does the A1C test measure?",
+      "gold_ids": [
+        "a1c-test:0",
+        "a1c-test:5"
+      ],
+      "bm25": null,
+      "dense": null,
+      "hybrid": 4,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM28",
+      "question": "What blood glucose targets do many people aim for before a meal?",
+      "gold_ids": [
+        "managing-diabetes:18",
+        "cdc-treatment:3"
+      ],
+      "bm25": 1,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM29",
+      "question": "What is continuous glucose monitoring?",
+      "gold_ids": [
+        "cgm:0"
+      ],
+      "bm25": 1,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM30",
+      "question": "What is an artificial pancreas?",
+      "gold_ids": [
+        "insulin-medicines:14"
+      ],
+      "bm25": 2,
+      "dense": 1,
+      "hybrid": 2,
+      "bm25_project01": 5,
+      "graph_rag": 5
+    },
+    {
+      "id": "DM31",
+      "question": "Can insulin be taken with an inhaler?",
+      "gold_ids": [
+        "insulin-medicines:12"
+      ],
+      "bm25": 1,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM32",
+      "question": "What do most people with type 2 diabetes take first?",
+      "gold_ids": [
+        "insulin-medicines:15"
+      ],
+      "bm25": 5,
+      "dense": null,
+      "hybrid": null,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM33",
+      "question": "How does metformin work?",
+      "gold_ids": [
+        "insulin-medicines:15"
+      ],
+      "bm25": 5,
+      "dense": 3,
+      "hybrid": 2,
+      "bm25_project01": 5,
+      "graph_rag": 5
+    },
+    {
+      "id": "DM34",
+      "question": "How can I lower my chances of developing type 2 diabetes?",
+      "gold_ids": [
+        "preventing-type-2:2"
+      ],
+      "bm25": 5,
+      "dense": 2,
+      "hybrid": 4,
+      "bm25_project01": 4,
+      "graph_rag": 4
+    },
+    {
+      "id": "DM35",
+      "question": "How much weight loss may prevent or delay diabetes?",
+      "gold_ids": [
+        "preventing-type-2:2"
+      ],
+      "bm25": null,
+      "dense": 1,
+      "hybrid": null,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM36",
+      "question": "What is prediabetes?",
+      "gold_ids": [
+        "prediabetes:0"
+      ],
+      "bm25": 4,
+      "dense": null,
+      "hybrid": null,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM37",
+      "question": "What is diabetic ketoacidosis?",
+      "gold_ids": [
+        "symptoms-causes:3",
+        "type-1-diabetes:6"
+      ],
+      "bm25": 2,
+      "dense": 2,
+      "hybrid": 2,
+      "bm25_project01": 2,
+      "graph_rag": 2
+    },
+    {
+      "id": "DM38",
+      "question": "What are the symptoms of diabetic ketoacidosis?",
+      "gold_ids": [
+        "symptoms-causes:2",
+        "managing-diabetes:23",
+        "type-1-diabetes:11"
+      ],
+      "bm25": 1,
+      "dense": 1,
+      "hybrid": 1,
+      "bm25_project01": 1,
+      "graph_rag": 1
+    },
+    {
+      "id": "DM39",
+      "question": "What is hyperglycemia?",
+      "gold_ids": [
+        "medlineplus-hyperglycemia:5"
+      ],
+      "bm25": 5,
+      "dense": null,
+      "hybrid": null,
+      "bm25_project01": null,
+      "graph_rag": null
+    },
+    {
+      "id": "DM40",
+      "question": "What are the symptoms of low blood glucose?",
+      "gold_ids": [
+        "managing-diabetes:20"
+      ],
+      "bm25": null,
+      "dense": 1,
+      "hybrid": 3,
+      "bm25_project01": null,
+      "graph_rag": null
+    }
+  ],
+  "note": "rank = vị trí đầu tiên của một đoạn đúng trong top 5 (null = không có). Graph-RAG và BM25 project01 dùng bộ BM25 riêng của project01/mas/kb.py."
+}

@@ -1,4 +1,5 @@
 from .knowledge import safe_calculate
+from .suggest import explain_refusal
 from .nlu import OP_VI, find_company, parse_calculation, wants_graph
 from .stats import DiabetesStats, detect_language, fmt_int, fmt_num, strip_accents
 import re
@@ -22,6 +23,10 @@ CONFIDENCE = {
 def doc_title(chunk):
     if chunk.get('domain') == 'finance' or 'company' in chunk:
         return f"{chunk.get('company')} · báo cáo năm {chunk.get('year')} ({chunk.get('filename')})"
+    if chunk.get('title'):
+        section = chunk.get('section')
+        label = f"{chunk.get('source_org', 'NIDDK')} · {chunk['title']}"
+        return f'{label} · {section}' if section and section != chunk['title'] else label
     slug = chunk['source_url'].rstrip('/').rsplit('/', 1)[-1]
     return DOC_TITLES.get(slug, slug.replace('-', ' ').title())
 
@@ -261,6 +266,8 @@ class ToolAgent:
                           + '; chưa kiểm tra được câu viết có đúng ý nguồn hay không.'})
             conf = 'generated'
         extra = {k: result[k] for k in ('query_used', 'translated', 'model', 'seconds', 'translate_seconds', 'english_answer') if k in result}
+        if result['status'] == 'insufficient_evidence':
+            extra.update(explain_refusal(question, domain, evidence))
         out = {'answer': result['answer'], 'status': result['status'], 'citations': result['citations'],
                'evidence': [{'id': x['id'], 'text': x['text']} for x in evidence], 'trace': trace, 'citation_ids_valid': valid, **extra}
         return self._finish('rag', 'Tìm tài liệu rồi viết (RAG)', out, steps, conf, sources, lang)

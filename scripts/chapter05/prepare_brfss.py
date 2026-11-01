@@ -81,7 +81,7 @@ def main():
                                labels=['underweight', 'normal', 'overweight', 'obese']).astype(str),
         'physical_activity': (sample._TOTINDA == 1).astype(int),
         'high_blood_pressure': (sample._RFHYPE6 == 2).astype(int),
-        'high_cholesterol': (sample._RFCHOL3 == 1).astype(int),
+        'high_cholesterol': (sample._RFCHOL3 == 2).astype(int),
         'smoker_status': sample._SMOKER3.astype(int).map(SMOKER),
         'general_health': sample.GENHLTH.astype(int),
         'heart_disease': (sample._MICHD == 1).astype(int),

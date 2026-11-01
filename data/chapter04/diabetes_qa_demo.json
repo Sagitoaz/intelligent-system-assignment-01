@@ -7,184 +7,512 @@
       "the pancreas"
     ],
     "gold_ids": [
-      "what-is-diabetes:9"
+      "what-is-diabetes:0"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "Insulin is a hormone made by the pancreas",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   },
   {
     "id": "DM02",
-    "question": "Which hormone helps glucose enter cells?",
+    "question": "What is diabetes?",
     "references": [
-      "insulin"
+      "blood glucose is too high"
     ],
     "gold_ids": [
-      "what-is-diabetes:9"
+      "what-is-diabetes:0"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "Diabetes is a disease that occurs when your blood glucose",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   },
   {
     "id": "DM03",
-    "question": "What is the most common type of diabetes?",
+    "question": "What are the common symptoms of diabetes?",
     "references": [
-      "type 2 diabetes",
-      "type 2"
+      "increased urination",
+      "feeling very thirsty"
     ],
     "gold_ids": [
-      "what-is-diabetes:16"
+      "symptoms-causes:0"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "Common symptoms of diabetes include",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   },
   {
     "id": "DM04",
-    "question": "When does gestational diabetes develop?",
+    "question": "What are the symptoms of type 1 diabetes in children?",
     "references": [
-      "during pregnancy",
-      "pregnancy"
+      "urinate more often",
+      "losing weight"
     ],
     "gold_ids": [
-      "what-is-diabetes:19"
+      "symptoms-causes:1",
+      "type-1-diabetes:10"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "eating more but losing weight",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   },
   {
     "id": "DM05",
-    "question": "Are glucose levels in prediabetes above normal?",
+    "question": "Do people with type 2 diabetes always have symptoms?",
     "references": [
-      "yes",
-      "higher than normal"
+      "no",
+      "many people have no symptoms"
     ],
     "gold_ids": [
-      "what-is-diabetes:21"
+      "symptoms-causes:4"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "Symptoms of type 2 diabetes can develop slowly",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   },
   {
     "id": "DM06",
-    "question": "What attacks insulin-producing cells in type 1 diabetes?",
+    "question": "Does gestational diabetes cause symptoms?",
     "references": [
-      "the immune system",
-      "immune system"
+      "most people have no symptoms"
     ],
     "gold_ids": [
-      "what-is-diabetes:14"
+      "symptoms-causes:5"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "Most people with this type of diabetes have no symptoms",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   },
   {
     "id": "DM07",
-    "question": "What causes monogenic diabetes?",
+    "question": "What causes type 1 diabetes?",
     "references": [
-      "a change in a single gene",
-      "single gene mutation"
+      "immune system",
+      "the immune system destroys beta cells"
     ],
     "gold_ids": [
-      "what-is-diabetes:23"
+      "symptoms-causes:6",
+      "type-1-diabetes:0",
+      "type-1-diabetes:12"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "Type 1 diabetes develops when the body’s immune system destroys the cells in the pancreas",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   },
   {
     "id": "DM08",
-    "question": "How many months are reflected in an A1C blood test?",
+    "question": "What causes type 2 diabetes?",
     "references": [
-      "3 months",
-      "the last 3 months",
-      "three months"
+      "insulin resistance",
+      "the pancreas cannot make enough insulin"
     ],
     "gold_ids": [
-      "tests-diagnosis:41"
+      "symptoms-causes:8"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "Type 2 diabetes is the most common form of diabetes. Type 2 diabetes develops",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   },
   {
     "id": "DM09",
-    "question": "How many hours should a person fast before the fasting plasma glucose test?",
+    "question": "Which medicines can cause diabetes?",
     "references": [
-      "at least 8 hours",
-      "8 hours"
+      "antipsychotics",
+      "glucocorticoids"
     ],
     "gold_ids": [
-      "tests-diagnosis:39"
+      "symptoms-causes:19"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "antipsychotics that are used",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   },
   {
     "id": "DM10",
-    "question": "Can an over-the-counter blood glucose meter diagnose diabetes?",
+    "question": "Who should be tested for type 2 diabetes?",
     "references": [
-      "no"
+      "age 35 or older",
+      "people with risk factors"
     ],
     "gold_ids": [
-      "tests-diagnosis:14"
+      "tests-diagnosis:3"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "Experts recommend routine testing for type 2 diabetes if you have certain risk factors",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   },
   {
     "id": "DM11",
-    "question": "During which pregnancy weeks is gestational diabetes screening recommended?",
+    "question": "When is gestational diabetes tested?",
     "references": [
       "24 to 28 weeks",
       "between 24 and 28 weeks"
     ],
     "gold_ids": [
-      "tests-diagnosis:34"
+      "gestational-diabetes:7"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "usually occurs between 24 and 28 weeks of pregnancy",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   },
   {
     "id": "DM12",
-    "question": "Which health measure corresponds to B in the diabetes ABCs?",
+    "question": "Is there a cure for type 1 diabetes?",
     "references": [
-      "blood pressure"
+      "no",
+      "for the rest of their lives"
     ],
     "gold_ids": [
-      "managing-diabetes:23"
+      "type-1-diabetes:3"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "have the disease for the rest of their lives",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   },
   {
     "id": "DM13",
-    "question": "Which health measure corresponds to C in the diabetes ABCs?",
+    "question": "What eye problems can diabetes cause?",
     "references": [
-      "cholesterol"
+      "retinopathy",
+      "macular edema",
+      "cataracts",
+      "glaucoma"
     ],
     "gold_ids": [
-      "managing-diabetes:25"
+      "eye-disease:0"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "These conditions include diabetic retinopathy, diabetic macular edema, cataracts, and glaucoma",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   },
   {
     "id": "DM14",
-    "question": "How many minutes of moderate activity per week does this source suggest?",
+    "question": "What is diabetic kidney disease?",
+    "references": [
+      "kidney disease caused by diabetes"
+    ],
+    "gold_ids": [
+      "kidney-disease:0"
+    ],
+    "needle": "Diabetic kidney disease is a type of kidney disease caused by diabetes",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM15",
+    "question": "Is diabetes a leading cause of kidney disease?",
+    "references": [
+      "yes"
+    ],
+    "gold_ids": [
+      "kidney-disease:0"
+    ],
+    "needle": "Diabetes is the leading cause of kidney disease",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM16",
+    "question": "What is peripheral neuropathy?",
+    "references": [
+      "nerve damage in the feet and legs"
+    ],
+    "gold_ids": [
+      "neuropathy:12"
+    ],
+    "needle": "Peripheral neuropathy is a type of nerve damage that typically affects the feet and legs",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM17",
+    "question": "What does autonomic neuropathy damage?",
+    "references": [
+      "nerves that control internal organs"
+    ],
+    "gold_ids": [
+      "neuropathy:2",
+      "neuropathy:25"
+    ],
+    "needle": "Autonomic neuropathy is damage to nerves that control your internal organs",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM18",
+    "question": "How often should I check my feet?",
+    "references": [
+      "every day",
+      "each day"
+    ],
+    "gold_ids": [
+      "foot-problems:4",
+      "foot-problems:5"
+    ],
+    "needle": "Check your feet every day",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM19",
+    "question": "How does diabetes affect the heart?",
+    "references": [
+      "more likely to develop heart disease"
+    ],
+    "gold_ids": [
+      "heart-disease-stroke:0"
+    ],
+    "needle": "Having diabetes means you are more likely to develop heart disease",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM20",
+    "question": "What should I do when my blood glucose is below 70 mg/dL?",
+    "references": [
+      "15 to 20 grams of glucose",
+      "glucose tablets"
+    ],
+    "gold_ids": [
+      "hypoglycemia:11"
+    ],
+    "needle": "Eat or drink 15 to 20 grams of glucose or carbohydrates right away",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM21",
+    "question": "What are the complications of severe low blood glucose?",
+    "references": [
+      "passing out",
+      "coma",
+      "death"
+    ],
+    "gold_ids": [
+      "hypoglycemia:5"
+    ],
+    "needle": "severely low blood glucose can cause serious complications, including passing out, coma, or death",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM22",
+    "question": "What is the plate method?",
+    "references": [
+      "control portion sizes",
+      "divides a plate into three sections"
+    ],
+    "gold_ids": [
+      "healthy-living:8"
+    ],
+    "needle": "The plate method helps you control portion sizes",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM23",
+    "question": "What drinks should a person with diabetes choose?",
+    "references": [
+      "water",
+      "drinks with little or no added sugar"
+    ],
+    "gold_ids": [
+      "healthy-living:3"
+    ],
+    "needle": "Also try to choose drinks with little or no added sugar",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM24",
+    "question": "How many minutes of physical activity per week are recommended?",
     "references": [
       "150 minutes",
       "at least 150 minutes"
     ],
     "gold_ids": [
-      "managing-diabetes:34"
+      "cdc-physical-activity:3"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "at least 150 minutes of moderate-intensity physical activity every week",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   },
   {
-    "id": "DM15",
-    "question": "How many hours of sleep per night should most adults aim for according to this source?",
+    "id": "DM25",
+    "question": "Should I eat before, during, or after physical activity?",
     "references": [
-      "7 to 8 hours",
-      "about 7 to 8 hours"
+      "ask your health care team"
     ],
     "gold_ids": [
-      "managing-diabetes:38"
+      "healthy-living:5"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "Some diabetes medicines, such as sulfonylureas",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   },
   {
-    "id": "DM16",
-    "question": "Can type 2 diabetes occur during childhood?",
+    "id": "DM26",
+    "question": "What is a normal A1C level?",
     "references": [
-      "yes"
+      "below 5.7 percent",
+      "5.7 percent"
     ],
     "gold_ids": [
-      "what-is-diabetes:16"
+      "a1c-test:1"
     ],
-    "annotation": "authored demonstration; source-anchored; not independently reviewed"
+    "needle": "A normal A1C level is below 5.7 percent",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM27",
+    "question": "What does the A1C test measure?",
+    "references": [
+      "average blood glucose over 3 months",
+      "3 months"
+    ],
+    "gold_ids": [
+      "a1c-test:0",
+      "a1c-test:5"
+    ],
+    "needle": "average blood glucose levels over the past 3 months",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM28",
+    "question": "What blood glucose targets do many people aim for before a meal?",
+    "references": [
+      "80 to 130 mg/dL"
+    ],
+    "gold_ids": [
+      "managing-diabetes:18",
+      "cdc-treatment:3"
+    ],
+    "needle": "Before a meal: 80 to 130 mg/dL",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM29",
+    "question": "What is continuous glucose monitoring?",
+    "references": [
+      "a device that estimates blood glucose all day and night"
+    ],
+    "gold_ids": [
+      "cgm:0"
+    ],
+    "needle": "Continuous glucose monitoring means using a device to automatically estimate your blood glucose level",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM30",
+    "question": "What is an artificial pancreas?",
+    "references": [
+      "a system of three devices"
+    ],
+    "gold_ids": [
+      "insulin-medicines:14"
+    ],
+    "needle": "An artificial pancreas is a system of three devices",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM31",
+    "question": "Can insulin be taken with an inhaler?",
+    "references": [
+      "yes",
+      "powdered insulin"
+    ],
+    "gold_ids": [
+      "insulin-medicines:12"
+    ],
+    "needle": "breathing powdered insulin into your mouth",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM32",
+    "question": "What do most people with type 2 diabetes take first?",
+    "references": [
+      "metformin"
+    ],
+    "gold_ids": [
+      "insulin-medicines:15"
+    ],
+    "needle": "Most people with type 2 diabetes start with metformin pills",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM33",
+    "question": "How does metformin work?",
+    "references": [
+      "helps your liver make less glucose"
+    ],
+    "gold_ids": [
+      "insulin-medicines:15"
+    ],
+    "needle": "Metformin helps your liver make less glucose and helps your body use insulin better",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM34",
+    "question": "How can I lower my chances of developing type 2 diabetes?",
+    "references": [
+      "lose weight",
+      "be physically active"
+    ],
+    "gold_ids": [
+      "preventing-type-2:2"
+    ],
+    "needle": "Here are some things you can change to lower your risk",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM35",
+    "question": "How much weight loss may prevent or delay diabetes?",
+    "references": [
+      "5 to 7 percent"
+    ],
+    "gold_ids": [
+      "preventing-type-2:2"
+    ],
+    "needle": "losing 5 to 7 percent of your starting weight",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM36",
+    "question": "What is prediabetes?",
+    "references": [
+      "blood glucose higher than normal but not diabetes"
+    ],
+    "gold_ids": [
+      "prediabetes:0"
+    ],
+    "needle": "People have prediabetes if they have blood glucose levels that are higher than normal",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM37",
+    "question": "What is diabetic ketoacidosis?",
+    "references": [
+      "a medical emergency caused by ketones"
+    ],
+    "gold_ids": [
+      "symptoms-causes:3",
+      "type-1-diabetes:6"
+    ],
+    "needle": "High levels of ketones can cause DKA",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM38",
+    "question": "What are the symptoms of diabetic ketoacidosis?",
+    "references": [
+      "fruity-smelling breath",
+      "nausea or vomiting"
+    ],
+    "gold_ids": [
+      "symptoms-causes:2",
+      "managing-diabetes:23",
+      "type-1-diabetes:11"
+    ],
+    "needle": "having fruity-smelling breath",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM39",
+    "question": "What is hyperglycemia?",
+    "references": [
+      "high blood glucose"
+    ],
+    "gold_ids": [
+      "medlineplus-hyperglycemia:5"
+    ],
+    "needle": "Hyperglycemia is",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
+  },
+  {
+    "id": "DM40",
+    "question": "What are the symptoms of low blood glucose?",
+    "references": [
+      "shaky",
+      "sweating"
+    ],
+    "gold_ids": [
+      "managing-diabetes:20"
+    ],
+    "needle": "shaky",
+    "annotation": "authored demonstration; needle-anchored to source text; not independently reviewed"
   }
 ]

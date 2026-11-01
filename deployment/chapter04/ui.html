@@ -71,6 +71,15 @@ details{margin-top:8px}summary{cursor:pointer;font-weight:700;color:#1d6fd6;font
 pre{background:#f3f6fa;border:1.5px solid var(--line);border-radius:10px;padding:12px;overflow:auto;max-height:340px;font:13.5px/1.45 Consolas,monospace}
 .pending{color:var(--mute)}
 .meta{font-size:14.5px;color:var(--mute)}
+.ask-what h3{margin:0 0 4px;font-size:18px}
+.ask-what .grp{margin:10px 0 2px;font-weight:800;color:#33415c;font-size:15.5px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid #b9cdea;background:#f4f8ff;border-radius:99px;padding:5px 14px;font:inherit;font-size:15px;cursor:pointer;color:var(--ink);font-weight:600}
+.chip:hover{background:#e3eeff;border-color:#2a7de1}
+.chip.fin{background:#fff6e3;border-color:#efd39a}
+.why{margin:8px 0 6px;padding:12px 14px;border-radius:12px;background:#fff1f4;border:1.5px solid #f2a9b8;color:#5b1427;font-size:16px}
+.why b{display:block;margin-bottom:4px}
+.why .switch{margin-top:8px;border:0;border-radius:99px;background:#c2415d;color:#fff;font:inherit;font-weight:700;padding:6px 16px;cursor:pointer}
 @media(max-width:760px){.what .cols{grid-template-columns:1fr}.ask{flex-direction:column}.go{padding:12px}}
 </style>
 </head>
@@ -104,6 +113,12 @@ pre{background:#f3f6fa;border:1.5px solid var(--line);border-radius:10px;padding
   <div class="samples" id="samples"></div>
 </div>
 
+<div class="card ask-what" id="askwhat">
+  <h3>Nên hỏi gì?</h3>
+  <p class="meta" style="margin:0 0 4px">Bấm một câu để hỏi ngay. Mọi câu dưới đây đã được chạy thử và hệ thống trả lời được từ kho tài liệu. Câu ngoài kho (giá vàng, thời tiết, nấu ăn...) sẽ bị từ chối và được giải thích vì sao.</p>
+  <div id="chips"></div>
+</div>
+
 <div class="chat" id="chat"></div>
 </main>
 <script>
@@ -118,13 +133,23 @@ const SAMPLES=[
  {d:'diabetes',k:'stop',q:'Giá vàng hôm nay là bao nhiêu?',n:'Ngoài tài liệu: hệ thống từ chối thay vì bịa'}
 ];
 const $=id=>document.getElementById(id);
-let domain='diabetes',busy=false,ready=false;
+let domain='diabetes',busy=false,ready=false,domainOfAsk='diabetes';
 function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
 function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function hl(text,terms){let h=esc(text);(terms||[]).forEach(t=>{h=h.replace(new RegExp('\\b('+t.replace(/[^a-z0-9]/gi,'')+')\\b','gi'),'<mark>$1</mark>')});return h}
 document.querySelectorAll('.seg').forEach(b=>b.onclick=()=>setDomain(b.dataset.d));
 function setDomain(d){domain=d;document.querySelectorAll('.seg').forEach(x=>x.classList.toggle('on',x.dataset.d===d))}
 SAMPLES.forEach(s=>{const b=el('button','sample '+s.k);b.append(el('b','',s.q),el('small','',s.n));b.onclick=()=>{setDomain(s.d);$('q').value=s.q;go()};$('samples').append(b)});
+
+const ASK_WHAT=[
+ {d:'diabetes',g:'Triệu chứng và nguyên nhân',qs:['Triệu chứng của bệnh tiểu đường là gì?','Tại sao bị tiểu đường?','Ai có nguy cơ mắc tiểu đường?']},
+ {d:'diabetes',g:'Các loại tiểu đường',qs:['Tiểu đường típ 1 khác típ 2 chỗ nào?','Tiểu đường thai kỳ là gì?','Tiền tiểu đường là gì?']},
+ {d:'diabetes',g:'Biến chứng',qs:['Biến chứng của tiểu đường là gì?','Biến chứng ở mắt do tiểu đường là gì?','Bệnh tiểu đường ảnh hưởng đến thận như thế nào?']},
+ {d:'diabetes',g:'Ăn uống và vận động',qs:['Người bị tiểu đường nên ăn gì?','Nên tập thể dục bao nhiêu phút mỗi tuần?','Người bị tiểu đường cần chăm sóc bàn chân như thế nào?']},
+ {d:'diabetes',g:'Thuốc, xét nghiệm, đường huyết',qs:['Metformin dùng để làm gì?','Xét nghiệm A1C cho biết điều gì?','Hạ đường huyết là gì và xử lý thế nào?','Đường huyết bình thường là bao nhiêu?']},
+ {d:'finance',g:'Tài chính: chỉ hỏi được về công ty có trong kho (báo cáo thường niên trong bộ FinQA)',qs:['Công ty Visa hoạt động trong lĩnh vực nào?','Những mạng thanh toán điện tử lớn nhất là gì?'],fin:true}
+];
+ASK_WHAT.forEach(x=>{$('chips').append(el('div','grp',x.g));const w=el('div','chips');x.qs.forEach(q=>{const b=el('button','chip'+(x.fin?' fin':''),q);b.onclick=()=>{setDomain(x.d);$('q').value=q;go()};w.append(b)});$('chips').append(w)});
 
 // ---- trạng thái nạp mô hình
 async function pollStatus(){
@@ -151,6 +176,12 @@ function renderBot(j){
   const stop=j.status==='insufficient_evidence'&&route==='rag';
   box.append(el('span','route r-'+route,(stop?'Từ chối: ':'Cách xử lý: ')+(j.route_label||'')));
   box.append(el('div','answer a-'+(stop?'stop':route),j.answer||'(không có câu trả lời)'));
+  if(stop&&j.why_refused){
+    const w=el('div','why');w.append(el('b','','Vì sao hệ thống từ chối?'),document.createTextNode(j.why_refused));
+    if(j.switch_domain){const sb=el('button','switch','Đổi sang '+(j.switch_label||j.switch_domain)+' và hỏi lại');const qq=j.question_asked;sb.onclick=()=>{setDomain(j.switch_domain);$('q').value=qq;go()};w.append(sb)}
+    if(j.suggestions&&j.suggestions.length){w.append(el('div','meta','Bạn có thể thử các câu sau:'));const cs=el('div','chips');j.suggestions.forEach(q=>{const b=el('button','chip',q);b.onclick=()=>{setDomain(j.switch_domain||domainOfAsk);$('q').value=q;go()};cs.append(b)});w.append(cs)}
+    box.append(w);
+  }
   if(j.english_answer&&j.language==='vi')box.append(el('div','query','Bản tiếng Anh mô hình viết trước khi dịch (để bạn đối chiếu): "'+j.english_answer+'"'));
   if(j.translated&&j.query_used)box.append(el('div','query','Truy vấn tiếng Anh đã dùng để tìm tài liệu (kho tài liệu bằng tiếng Anh): "'+j.query_used+'"'));
   if(j.table&&j.table.rows&&j.table.rows.length){
@@ -191,6 +222,7 @@ async function go(){
     const j=await r.json();
     if(!r.ok||!j.answer){throw new Error(typeof j.detail==='string'?j.detail:'máy chủ trả về phản hồi không đọc được')}
     saveEst(k,(performance.now()-t0)/1000);
+    j.question_asked=q;domainOfAsk=domain;
     pend.replaceWith(renderBot(j));
   }catch(e){
     const b=el('div','bot');b.append(el('div','answer a-stop','Chưa lấy được câu trả lời: '+e.message+'. Hãy kiểm tra máy chủ còn chạy và thử lại.'));pend.replaceWith(b);

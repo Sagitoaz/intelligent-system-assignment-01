@@ -37,23 +37,11 @@ finqa = {}
 for split in ['train','dev','test']:
     finqa[split] = json.loads(download(f'https://raw.githubusercontent.com/czyssrs/FinQA/main/dataset/{split}.json',f'finqa_{split}.json'))
 download('https://raw.githubusercontent.com/czyssrs/FinQA/main/LICENSE', 'FINQA_LICENSE.txt')
-pages = [
- ('what-is-diabetes','https://www.niddk.nih.gov/health-information/diabetes/overview/what-is-diabetes'),
- ('symptoms-causes','https://www.niddk.nih.gov/health-information/diabetes/overview/symptoms-causes'),
- ('tests-diagnosis','https://www.niddk.nih.gov/health-information/diabetes/overview/tests-diagnosis'),
- ('managing-diabetes','https://www.niddk.nih.gov/health-information/diabetes/overview/managing-diabetes')]
-corpus=[]
-for slug,url in pages:
-    html=download(url,slug+'.html')
-    soup=BeautifulSoup(html,'html.parser')
-    main=soup.find('main') or soup
-    for tag in main(['script','style','nav','header','footer']): tag.decompose()
-    blocks=[p.get_text(' ',strip=True) for p in main.find_all(['h1','h2','h3','p','li'])]
-    (DATA/(slug+'.txt')).write_text('\n\n'.join(blocks),encoding='utf-8')
-    for i,block in enumerate(blocks):
-        if len(block.split())>=12:
-            corpus.append({'id':f'{slug}:{i}','text':block,'source_url':url,'domain':'diabetes','language':'en','accessed':'2026-10-13'})
-(DATA/'diabetes_corpus.jsonl').write_text('\n'.join(json.dumps(x,ensure_ascii=False) for x in corpus)+'\n',encoding='utf-8')
+# Kho tài liệu tiểu đường: 28 trang NIDDK/CDC/MedlinePlus, tách đoạn giữ danh sách và tiêu đề mục.
+# Việc tải và tách đoạn nằm ở scripts/chapter04/build_diabetes_corpus.py.
+import subprocess, sys
+subprocess.run([sys.executable, str(ROOT / 'scripts/chapter04/build_diabetes_corpus.py')], check=True)
+corpus = [json.loads(line) for line in (DATA / 'diabetes_corpus.jsonl').read_text(encoding='utf-8').splitlines()]
 
 def tokens(text): return re.findall(r'[a-z0-9]+',text.lower())
 class BM25:

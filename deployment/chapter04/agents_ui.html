@@ -3,34 +3,40 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chương 7: Hệ bốn agent làm việc nhóm</title>
+<title>Chương 7: Nhóm agent phối hợp và phản biện nhau</title>
 <style>
 :root{--bg:#f3f8ff;--ink:#14213d;--mute:#44546f;--line:#c9d9ee;
---a1:#2a7de1;--a1bg:#e0eeff;--a2:#0b9a8a;--a2bg:#dcf7f2;--a3:#6c5ce7;--a3bg:#efecff;--a4:#d98a00;--a4bg:#fff1d1;--stop:#c2415d;--stopbg:#ffe6ec}
+--plan:#2a7de1;--planbg:#e0eeff;--stat:#0b9a8a;--statbg:#dcf7f2;--calc:#d98a00;--calcbg:#fff1d1;--ret:#6c5ce7;--retbg:#efecff;--gra:#2d9d52;--grabg:#e1f7e8;
+--wri:#e8502c;--wribg:#ffe9e2;--cri:#c2415d;--cribg:#ffe6ec;--crd:#8a5a00;--ok:#16794a;--okbg:#e2f8ec}
 *{box-sizing:border-box}
 body{margin:0;background:linear-gradient(180deg,#dcecff 0,#f3f8ff 260px);color:var(--ink);font:16px/1.6 "Segoe UI",system-ui,sans-serif}
 a{color:#1d6fd6}
 header{max-width:1180px;margin:0 auto;padding:22px 20px 4px}
 h1{margin:0;font-size:28px;font-weight:800;background:linear-gradient(90deg,#e8502c,#6a58dc 55%,#1b7fdc);-webkit-background-clip:text;background-clip:text;color:transparent}
-.sub{margin:4px 0 0;color:var(--mute)}
+.sub{margin:4px 0 0;color:var(--mute);font-size:16px}
 main{max-width:1180px;margin:0 auto;padding:12px 20px 60px}
 .card{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:0 6px 22px rgba(42,125,225,.10);margin-bottom:16px}
-h2{margin:0 0 8px;font-size:19px}
-.roles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.role{border-radius:12px;padding:12px 14px;font-size:15.5px}
-.role b{display:block;font-size:16px}
-.role .n{display:inline-block;width:24px;height:24px;border-radius:50%;color:#fff;text-align:center;line-height:24px;font-weight:800;margin-right:6px;font-size:14px}
-.r1{background:var(--a1bg)}.r1 .n{background:var(--a1)}.r2{background:var(--a2bg)}.r2 .n{background:var(--a2)}.r3{background:var(--a3bg)}.r3 .n{background:var(--a3)}.r4{background:var(--a4bg)}.r4 .n{background:var(--a4)}
+h2{margin:0 0 8px;font-size:20px}
+h3{margin:0;font-size:17px}
+.why p{margin:6px 0}
+.why .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px}
+.why .box{border-radius:12px;padding:10px 14px;font-size:15.5px}
+.b1{background:var(--statbg)}.b2{background:var(--calcbg)}.b3{background:var(--cribg)}
+.why .box b{display:block;font-size:16px}
+.ask-hint{background:#fff9e6;border:1.5px solid #f2dc9a;border-radius:12px;padding:10px 14px;margin-top:12px;font-size:15.5px}
+.ask-hint ul{margin:4px 0 0 20px;padding:0}
 .banner{border-radius:12px;padding:10px 14px;margin-bottom:14px;font-weight:600;display:none}
 .banner.loading{display:block;background:#fff4d6;border:1.5px solid #f2cf75;color:#7a5600}
-.banner.error{display:block;background:var(--stopbg);border:1.5px solid #f2a9b8;color:#8a1c36}
-.bar{height:8px;background:#e5eefb;border-radius:99px;overflow:hidden;margin-top:6px}
-.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#6c5ce7,#2a7de1,#0b9a8a);border-radius:99px;transition:width .4s}
-.samples{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;margin:8px 0 14px}
+.banner.error{display:block;background:var(--cribg);border:1.5px solid #f2a9b8;color:#8a1c36}
+.bar{height:9px;background:#e5eefb;border-radius:99px;overflow:hidden;margin-top:6px}
+.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#6c5ce7,#2a7de1,#0b9a8a);border-radius:99px;transition:width .5s}
+.samples{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:10px;margin:8px 0 14px}
 .sample{display:block;text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;font:inherit;cursor:pointer;color:var(--ink);transition:transform .1s,box-shadow .1s}
 .sample:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.10)}
-.sample b{display:block;font-size:15.5px}.sample small{display:block;color:var(--mute);font-size:15px;margin-top:2px}
-.sample.ok{border-left:6px solid var(--a2)}.sample.stop{border-left:6px solid var(--stop)}.sample.cnt{border-left:6px solid var(--a4)}.sample.fin{border-left:6px solid var(--a1)}
+.sample b{display:block;font-size:15.5px}.sample small{display:block;color:var(--mute);font-size:15px;margin-top:3px}
+.sample.cx{border-left:6px solid var(--stat)}.sample.fix{border-left:6px solid var(--cri)}.sample.simple{border-left:6px solid var(--plan)}.sample.stop{border-left:6px solid #7a7f8c}.sample.fin{border-left:6px solid var(--gra)}
+.tag{display:inline-block;border-radius:99px;font-size:14px;font-weight:800;padding:1px 9px;margin-bottom:3px}
+.tag.cx{background:var(--statbg);color:#087a6d}.tag.fix{background:var(--cribg);color:var(--cri)}.tag.simple{background:var(--planbg);color:#1d62b8}.tag.stop{background:#eceef2;color:#4a505d}.tag.fin{background:var(--grabg);color:#1f7a3f}
 .ask{display:flex;gap:10px;align-items:stretch}
 .ask textarea{flex:1;font:inherit;font-size:17px;padding:12px 14px;border:2px solid #8fb0cf;border-radius:12px;min-height:64px;resize:vertical;color:var(--ink)}
 .ask textarea:focus{outline:none;border-color:#2a7de1}
@@ -39,187 +45,207 @@ h2{margin:0 0 8px;font-size:19px}
 .domain{display:flex;gap:8px;margin:0 0 10px;flex-wrap:wrap;align-items:center}.domain span{font-weight:700;color:var(--mute)}
 .go{border:0;border-radius:12px;padding:0 26px;font:inherit;font-size:17px;font-weight:800;color:#fff;cursor:pointer;background:linear-gradient(135deg,#f0603a,#f58a3c);box-shadow:0 3px 10px rgba(240,96,58,.35)}
 .go:disabled{opacity:.55;cursor:wait}
-.meta{font-size:14.5px;color:var(--mute)}
+.meta{font-size:15px;color:var(--mute)}
 .question{background:#2a7de1;color:#fff;border-radius:14px;padding:10px 16px;font-size:18px;margin:6px 0 14px;display:inline-block}
-.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;align-items:stretch}
-.step{position:relative;border:2px solid var(--line);border-radius:14px;padding:14px;background:#fff;margin:0 22px 0 0;display:flex;flex-direction:column;opacity:.55;transition:all .4s}
-.step:last-child{margin-right:0}
-.step.work{opacity:1;box-shadow:0 0 0 4px rgba(42,125,225,.18);animation:pulse 1.2s infinite}
-.step.done{opacity:1}
-@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(42,125,225,.08)}}
-.step h3{margin:0;font-size:17px}
-.step .role-d{color:var(--mute);font-size:15px;margin-bottom:6px}
-.step .what{font-size:15.5px;flex:1}
-.step .chip{display:inline-block;border-radius:99px;padding:2px 10px;font-size:14.5px;font-weight:800;margin:8px 0 2px;align-self:flex-start}
-.step .hand{font-size:14.5px;color:var(--mute);border-top:1.5px dashed var(--line);margin-top:8px;padding-top:6px}
-.step:not(:last-child)::after{content:"→";position:absolute;right:-22px;top:46%;width:22px;text-align:center;font-size:24px;font-weight:800;color:#8aa3c4}
-.s1.done{border-color:var(--a1);background:#fafdff}.s1 h3,.s1 .chip{color:var(--a1)}.s1 .chip{background:var(--a1bg)}
-.s2.done{border-color:var(--a2);background:#fafffe}.s2 h3,.s2 .chip{color:#087a6d}.s2 .chip{background:var(--a2bg)}
-.s3.done{border-color:var(--a3);background:#fcfbff}.s3 h3,.s3 .chip{color:var(--a3)}.s3 .chip{background:var(--a3bg)}
-.s4.done{border-color:var(--a4);background:#fffdf8}.s4 h3,.s4 .chip{color:#a56700}.s4 .chip{background:var(--a4bg)}
+.plan{border:2px solid var(--plan);background:#f6faff;border-radius:14px;padding:14px 16px;margin-bottom:14px}
+.chip{display:inline-block;border-radius:99px;padding:2px 12px;font-size:15px;font-weight:800;margin:2px 4px 2px 0}
+.chip.simple{background:var(--planbg);color:#1d62b8}.chip.data{background:var(--statbg);color:#087a6d}.chip.off_topic{background:#eceef2;color:#4a505d}
+.agentline{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.ag{border-radius:99px;padding:2px 12px;font-weight:700;font-size:15px;border:1.5px solid}
+.ag.PlannerAgent{background:var(--planbg);border-color:var(--plan);color:#1d62b8}.ag.StatsAgent{background:var(--statbg);border-color:var(--stat);color:#087a6d}
+.ag.CalculatorAgent{background:var(--calcbg);border-color:var(--calc);color:var(--crd)}.ag.RetrievalAgent{background:var(--retbg);border-color:var(--ret);color:#4a3bc4}
+.ag.GraphAgent{background:var(--grabg);border-color:var(--gra);color:#1f7a3f}.ag.WriterAgent{background:var(--wribg);border-color:var(--wri);color:#b93a1a}
+.ag.CriticAgent{background:var(--cribg);border-color:var(--cri);color:#a02a47}.ag.Coordinator{background:#eceef2;border-color:#8a909e;color:#3d4350}
+.tl{position:relative;margin:0;padding:0 0 0 0;list-style:none}
+.tl li{border:2px solid var(--line);border-radius:14px;padding:12px 16px;margin:0 0 12px 18px;background:#fff;position:relative}
+.tl li::before{content:"";position:absolute;left:-18px;top:0;bottom:-12px;width:3px;background:#c9d9ee}
+.tl li::after{content:"";position:absolute;left:-26px;top:18px;width:15px;height:15px;border-radius:50%;background:#fff;border:4px solid var(--c,#2a7de1)}
+.tl li:last-child::before{display:none}
+.tl .hd{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline}
+.tl .hd h3{color:var(--c)}
+.tl .sec{font-size:15px;color:var(--mute);font-weight:600}
+.tl .tx{margin:4px 0 6px;font-size:16px}
+.tl .out{display:inline-block;font-size:15px;font-weight:800;border-radius:99px;padding:1px 11px;background:var(--bgc);color:var(--c)}
+.tl li.PlannerAgent{--c:var(--plan);--bgc:var(--planbg)}.tl li.StatsAgent{--c:#087a6d;--bgc:var(--statbg)}.tl li.CalculatorAgent{--c:var(--crd);--bgc:var(--calcbg)}
+.tl li.RetrievalAgent{--c:#4a3bc4;--bgc:var(--retbg)}.tl li.GraphAgent{--c:#1f7a3f;--bgc:var(--grabg)}.tl li.WriterAgent{--c:#b93a1a;--bgc:var(--wribg)}
+.tl li.CriticAgent{--c:#a02a47;--bgc:var(--cribg)}.tl li.Coordinator{--c:#3d4350;--bgc:#eceef2}
+.evid{margin-top:8px;font-size:15px}
+table.t{border-collapse:collapse;font-size:15px;margin:6px 0;width:100%}
+table.t th{background:#e6f0fd;text-align:left;padding:5px 10px;border:1px solid var(--line)}table.t td{padding:4px 10px;border:1px solid var(--line);vertical-align:top}
+td.ok{color:var(--ok);font-weight:700}td.bad{color:#b3203f;font-weight:700}
+.pass{border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;margin:6px 0;background:#fcfdff;font-size:15px}
+.pass b{color:#4a3bc4}
+.chat{background:#fff;border:2px solid var(--cri);border-radius:14px;padding:14px 16px;margin:14px 0}
+.msg{display:flex;margin:10px 0}
+.msg .bub{max-width:88%;border-radius:14px;padding:9px 14px;font-size:16px}
+.msg.w{justify-content:flex-start}.msg.w .bub{background:var(--wribg);border:1.5px solid #f6b9a7}
+.msg.c{justify-content:flex-end}.msg.c .bub{background:var(--cribg);border:1.5px solid #f2a9b8}
+.msg.c.good .bub{background:var(--okbg);border-color:#8fdcb5}
+.msg .who{display:block;font-weight:800;font-size:15px;margin-bottom:2px}
+.msg.w .who{color:#b93a1a}.msg.c .who{color:#a02a47}.msg.c.good .who{color:var(--ok)}
+.msg ul{margin:4px 0 0 18px;padding:0}
 .final{border-radius:14px;padding:16px 18px;margin-top:16px;border:2px solid #8fdccd;background:#effcf9}
-.final.stop{border-color:#f2a9b8;background:var(--stopbg)}
-.final h3{margin:14px 0 6px;font-size:17px}.final h3:first-child{margin-top:0}
-.final .ans{font-size:20px;font-weight:600;line-height:1.55}
-.badge{display:inline-block;border-radius:99px;padding:3px 14px;font-weight:800;font-size:15.5px;background:#fff4d6;border:1.5px solid #f2cf75;color:#6b4a00;margin-top:10px}
-.final.stop .badge{background:#fff;border-color:#f2a9b8;color:#8a1c36}
+.final.stop{border-color:#f2a9b8;background:var(--cribg)}
+.final.warn{border-color:#f2cf75;background:#fff9e6}
+.final .ans{font-size:19px;font-weight:600;line-height:1.55;white-space:pre-wrap}
+.badge{display:inline-block;border-radius:99px;padding:3px 14px;font-weight:800;font-size:15.5px;background:#fff;border:1.5px solid #8fdccd;color:#087a6d;margin-top:10px}
+.final.stop .badge{border-color:#f2a9b8;color:#8a1c36}.final.warn .badge{border-color:#f2cf75;color:#6b4a00}
 .explain{margin:6px 0 0;font-size:15.5px;color:#33415c}
-.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
-.cmp>div{border-radius:12px;padding:12px 14px;font-size:16px}
-.cmp .m{background:var(--a3bg);border:1.5px solid #cfc7ff}.cmp .t{background:var(--a2bg);border:1.5px solid #8fdccd}
-.cmp b{display:block;margin-bottom:2px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.col{border-radius:14px;padding:14px 16px;font-size:16px}
+.col h3{margin-bottom:6px}
+.col.one{background:var(--retbg);border:2px solid #cfc7ff}.col.team{background:var(--statbg);border:2px solid #8fdccd}
+.col .ans2{font-size:16.5px;margin:6px 0;white-space:pre-wrap}
+.kpis{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kpi{background:#fff;border-radius:10px;border:1.5px solid var(--line);padding:3px 10px;font-size:15px;font-weight:700}
+.verdict{border-radius:10px;padding:7px 11px;font-weight:700;font-size:15.5px;margin-top:8px}
+.verdict.good{background:var(--okbg);color:var(--ok);border:1.5px solid #8fdcb5}.verdict.badv{background:var(--cribg);color:#a02a47;border:1.5px solid #f2a9b8}.verdict.neu{background:#eef2f8;color:#34425c;border:1.5px solid var(--line)}
 .warnbox{background:#fff4d6;border:1.5px solid #f2cf75;color:#6b4a00;border-radius:10px;padding:8px 12px;margin-top:10px;font-weight:600;font-size:15.5px}
-.src{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin:8px 0}
-.s{border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;background:#fcfdff;font-size:15.5px}
-.s b{display:block}.s p{margin:4px 0;color:#2a3a55}
-mark{background:#ffe27a;border-radius:3px;padding:0 2px}
-table.t{border-collapse:collapse;font-size:15.5px;margin:6px 0}
-table.t th{background:#e6f0fd;text-align:left;padding:5px 10px;border:1px solid var(--line)}table.t td{padding:4px 10px;border:1px solid var(--line)}
 details{margin-top:12px}summary{cursor:pointer;font-weight:700;color:#1d6fd6;font-size:15.5px}
 pre{background:#f3f6fa;border:1.5px solid var(--line);border-radius:10px;padding:12px;overflow:auto;max-height:380px;font:13.5px/1.45 Consolas,monospace}
-@media(max-width:980px){.roles,.timeline{grid-template-columns:1fr 1fr}.step{margin:0 0 22px 0}.step:not(:last-child)::after{display:none}.cmp{grid-template-columns:1fr}}
-@media(max-width:620px){.roles,.timeline{grid-template-columns:1fr}.ask{flex-direction:column}.go{padding:12px}}
+@media(max-width:980px){.cmp,.why .grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header>
-  <h1>Chương 7 · Hệ bốn agent làm việc nhóm</h1>
-  <p class="sub">Một câu hỏi đi qua bốn agent, mỗi agent làm một việc rồi chuyển kết quả cho agent kế tiếp. Chạy trên máy bạn, không cần API key. Chương 5 (hỏi đáp có công cụ): <a href="/">trang chủ</a> · API: <a href="/docs">/docs</a></p>
+<h1>Chương 7: Nhóm agent phối hợp và phản biện nhau</h1>
+<p class="sub">Mỗi agent làm một việc khác nhau. Một agent viết nháp, một agent khác kiểm từng con số và có thể bắt agent kia sửa. Bên dưới luôn đặt kết quả cạnh một RAG đơn để bạn thấy nhóm agent hơn ở đâu và không hơn ở đâu.</p>
 </header>
 <main>
-<div class="card">
-  <h2>Bốn agent là ai?</h2>
-  <div class="roles">
-    <div class="role r1"><b><span class="n">1</span>Agent truy hồi</b>Người đi tìm tài liệu: đọc câu hỏi rồi lôi ra vài đoạn tài liệu liên quan nhất.</div>
-    <div class="role r2"><b><span class="n">2</span>Agent đồ thị</b>Người tra xem mỗi đoạn đó thuộc báo cáo, công ty hay tài liệu nào trong đồ thị tri thức.</div>
-    <div class="role r3"><b><span class="n">3</span>Agent viết</b>Người soạn câu trả lời, chỉ được dựa vào các đoạn tìm được, không được bịa.</div>
-    <div class="role r4"><b><span class="n">4</span>Agent kiểm tra</b>Người soát xem nguồn trích dẫn có hợp lệ không; nếu thiếu bằng chứng thì từ chối.</div>
-  </div>
+<div class="card why">
+<h2>Vì sao cần nhiều agent?</h2>
+<p>Một RAG đơn chỉ biết đọc tài liệu rồi viết lại. Nó <b>không có số liệu từ dữ liệu</b> (tài liệu nói về cả nước Mỹ, không biết 150.000 người trong khảo sát), <b>không tự tính chính xác</b> (mô hình ngôn ngữ hay làm sai phép chia) và <b>không tự kiểm tra</b> (một mô hình tự đồng ý với chính nó).</p>
+<div class="grid">
+<div class="box b1"><b>Số liệu thật</b>Agent thống kê đếm trên dữ liệu CDC BRFSS 2023 bằng pandas, nên con số là kết quả đo được.</div>
+<div class="box b2"><b>Tính chính xác</b>Agent tính toán gọi công cụ tính tỉ số và chênh lệch, không để mô hình tự nhẩm.</div>
+<div class="box b3"><b>Kiểm tra độc lập</b>Agent phản biện không phải mô hình ngôn ngữ: nó trích mọi con số trong bản nháp và đối chiếu với công cụ. Số sai thì bản nháp bị trả về để sửa, tối đa 2 vòng.</div>
+</div>
+<p class="meta" style="margin-top:10px">Nhưng nếu câu hỏi chỉ cần kiến thức (ví dụ &ldquo;Insulin là gì?&rdquo;) thì một RAG đơn là đủ. Khi đó hệ thống nói thẳng điều này, và nhóm agent chỉ chậm hơn chứ không đúng hơn.</p>
+<div class="ask-hint"><b>Nên hỏi gì?</b> Câu cần so sánh hoặc tính số trên dữ liệu và còn muốn lời giải thích:
+<ul><li>&ldquo;Tỉ lệ tiểu đường ở người huyết áp cao gấp mấy lần cả mẫu, và vì sao huyết áp cao làm tăng nguy cơ?&rdquo;</li>
+<li>&ldquo;Chênh lệch tỉ lệ tiểu đường giữa nam và nữ là bao nhiêu điểm phần trăm?&rdquo;</li>
+<li>&ldquo;Nhóm tuổi nào có tỉ lệ tiểu đường cao nhất và gấp mấy lần nhóm thấp nhất?&rdquo;</li></ul>
+Câu một bước như &ldquo;Insulin do cơ quan nào tạo ra?&rdquo; để xem trường hợp hai bên hòa; câu như &ldquo;Giá vàng hôm nay?&rdquo; để xem hệ thống từ chối.</div>
 </div>
 
+<div class="card">
 <div id="banner" class="banner"></div>
-
-<div class="card">
-  <div class="domain"><span>Lĩnh vực:</span>
-    <button class="seg on" data-d="diabetes">Bệnh tiểu đường</button>
-    <button class="seg" data-d="finance">Tài chính (báo cáo công ty)</button>
-  </div>
-  <div class="ask">
-    <textarea id="q" placeholder="Gõ câu hỏi, ví dụ: Insulin do cơ quan nào tạo ra?"></textarea>
-    <button class="go" id="go">Giao việc cho nhóm agent</button>
-  </div>
-  <p class="meta" style="margin:10px 0 0">Hoặc bấm một câu mẫu (dòng nhỏ giải thích câu đó minh họa điều gì):</p>
-  <div class="samples" id="samples"></div>
+<h2>Chọn một câu mẫu hoặc tự đặt câu hỏi</h2>
+<div class="samples" id="samples"></div>
+<div class="domain"><span>Lĩnh vực:</span>
+<button class="seg on" data-d="diabetes">Tiểu đường (tài liệu + dữ liệu khảo sát)</button><button class="seg" data-d="finance">Tài chính (báo cáo công ty)</button></div>
+<div class="ask"><textarea id="q" placeholder="Ví dụ: Chênh lệch tỉ lệ tiểu đường giữa nam và nữ là bao nhiêu điểm phần trăm?"></textarea><button class="go" id="go">Cho nhóm agent làm</button></div>
+<p class="meta" id="hintline">Một lượt chạy mất khoảng 40–90 giây trên CPU vì mô hình ngôn ngữ phải viết (và dịch) câu trả lời. Các agent sẽ lần lượt hiện bên dưới ngay khi xong việc.</p>
 </div>
 
-<div id="run"></div>
+<div id="prog" class="card" style="display:none"><b id="progtxt">Đang chạy…</b> <span class="meta" id="progt"></span><div class="bar"><i id="barfill"></i></div></div>
+<div id="out"></div>
 </main>
 <script>
 const SAMPLES=[
- {d:'diabetes',k:'ok',q:'Xét nghiệm A1C cho biết điều gì?',n:'Câu bình thường: cả bốn agent làm việc, câu trả lời có nguồn để kiểm tra'},
- {d:'diabetes',k:'stop',q:'Giá vàng hôm nay là bao nhiêu?',n:'Câu không có trong tài liệu: hệ từ chối "không đủ bằng chứng" thay vì bịa'},
- {d:'diabetes',k:'cnt',q:'Có bao nhiêu người trong dữ liệu khảo sát?',n:'Câu đếm: so câu mô hình viết với con số công cụ thống kê tính, để thấy mô hình có thể sai số liệu'},
- {d:'finance',k:'fin',q:'Những mạng thanh toán điện tử lớn nhất là gì?',n:'Lĩnh vực tài chính: agent đồ thị chỉ ra đoạn thuộc báo cáo của công ty nào'}
+{t:'cx',tag:'Phức hợp: số liệu + tính toán + giải thích',q:'Tỉ lệ tiểu đường ở người huyết áp cao gấp mấy lần cả mẫu, và vì sao huyết áp cao làm tăng nguy cơ?',n:'Cần 3 loại việc: đếm trên dữ liệu, chia chính xác, giải thích từ tài liệu. Một RAG đơn không có số này.'},
+{t:'cx',tag:'Phức hợp: so sánh hai nhóm',q:'Chênh lệch tỉ lệ tiểu đường giữa nam và nữ là bao nhiêu điểm phần trăm?',n:'Thống kê ra hai tỉ lệ, tính toán lấy hiệu. Xem RAG đơn trả lời gì.'},
+{t:'cx',tag:'Phức hợp: BMI hai nhóm',q:'BMI trung bình của nhóm mắc tiểu đường cao hơn nhóm không mắc bao nhiêu?',n:'Hai giá trị trung bình rồi lấy hiệu; tài liệu không có số này.'},
+{t:'fix',tag:'Phức hợp: dễ viết nhầm số',q:'Tỉ lệ tiểu đường ở người béo phì gấp mấy lần cả mẫu, và vì sao béo phì làm tăng nguy cơ?',n:'Tài liệu có nhiều số về cả nước Mỹ; nếu bản nháp lấy nhầm, agent phản biện sẽ bắt và trả về để sửa.'},
+{t:'cx',tag:'Phức hợp: nhóm tuổi cực trị',q:'Nhóm tuổi nào có tỉ lệ tiểu đường cao nhất và gấp mấy lần nhóm thấp nhất?',n:'Thống kê tìm nhóm cao nhất, thấp nhất rồi tính tỉ số.'},
+{t:'cx',tag:'Phức hợp: lối sống',q:'Người không vận động hơn người có vận động bao nhiêu điểm phần trăm về tỉ lệ tiểu đường, và vì sao vận động giúp ích?',n:'Hai nhóm so sánh kèm giải thích tại sao vận động có ích.'},
+{t:'simple',tag:'Đơn giản: một RAG là đủ',q:'Insulin do cơ quan nào trong cơ thể tạo ra?',n:'Chỉ cần đọc tài liệu. Nhóm agent chỉ gọi truy hồi và viết, kết quả giống RAG đơn nhưng chậm hơn.'},
+{t:'simple',tag:'Đơn giản: một RAG là đủ',q:'Xét nghiệm A1C cho biết điều gì?',n:'Kiến thức một bước, không có số liệu để kiểm chứng.'},
+{t:'stop',tag:'Ngoài phạm vi: bị từ chối',q:'Giá vàng hôm nay là bao nhiêu?',n:'Không liên quan đến tiểu đường; nhóm từ chối ngay và giải thích vì sao.'},
+{t:'fin',tag:'Tài chính',q:'Công ty Visa hoạt động trong lĩnh vực nào?',d:'finance',n:'Agent đồ thị tra đoạn báo cáo thuộc công ty nào; không có dữ liệu thống kê nên là bài toán RAG đơn giản.'}
 ];
+const E=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const $=id=>document.getElementById(id);
-let domain='diabetes',busy=false;
-function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
-function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function hl(text,terms){let h=esc(text);(terms||[]).forEach(t=>{h=h.replace(new RegExp('\\b('+t.replace(/[^a-z0-9]/gi,'')+')\\b','gi'),'<mark>$1</mark>')});return h}
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-document.querySelectorAll('.seg').forEach(b=>b.onclick=()=>setDomain(b.dataset.d));
+let domain='diabetes',busy=false,timer=null;
+const box=$('samples');
+SAMPLES.forEach(s=>{const b=document.createElement('button');b.className='sample '+s.t;b.innerHTML='<span class="tag '+s.t+'">'+E(s.tag)+'</span><b>'+E(s.q)+'</b><small>'+E(s.n)+'</small>';
+ b.onclick=()=>{$('q').value=s.q;setDomain(s.d||'diabetes');run();};box.appendChild(b)});
 function setDomain(d){domain=d;document.querySelectorAll('.seg').forEach(x=>x.classList.toggle('on',x.dataset.d===d))}
-SAMPLES.forEach(s=>{const b=el('button','sample '+s.k);b.append(el('b','',s.q),el('small','',s.n));b.onclick=()=>{setDomain(s.d);$('q').value=s.q;go()};$('samples').append(b)});
-
+document.querySelectorAll('.seg').forEach(b=>b.onclick=()=>setDomain(b.dataset.d));
+$('go').onclick=()=>run();
+const fmt=(x,d=1)=>Number(x).toLocaleString('vi-VN',{minimumFractionDigits:d,maximumFractionDigits:d});
+const sec=x=>x==null?'':(x<1?'<1 giây':fmt(x,1)+' giây');
 async function pollStatus(){
-  try{
-    const s=await (await fetch('/api/v1/status')).json();const b=$('banner');
-    if(s.stage==='ready'||s.stage==='idle'){b.className='banner';b.textContent='';return}
-    if(s.stage==='error'){b.className='banner error';b.textContent=s.message;return}
-    b.className='banner loading';b.innerHTML='';
-    b.append(el('div','','Đang nạp mô hình ngôn ngữ (Qwen2.5-1.5B) và dữ liệu, khoảng 1–2 phút (đã chạy '+Math.round(s.elapsed||0)+' giây). Bạn vẫn có thể giao việc, nhóm agent sẽ chạy ngay khi mô hình nạp xong.'));
-    const bar=el('div','bar');const i=el('i');i.style.width=Math.min(95,(s.elapsed||0)/120*100)+'%';bar.append(i);b.append(bar);
-  }catch(e){}
-  setTimeout(pollStatus,2000);
-}
+ try{const r=await (await fetch('/api/v1/status')).json();const b=$('banner');
+  if(r.stage==='loading'){b.className='banner loading';b.innerHTML='Mô hình ngôn ngữ đang nạp ('+Math.round(r.elapsed||0)+' giây, thường 1–2 phút). Bạn có thể bấm câu mẫu, hệ thống sẽ chạy ngay khi sẵn sàng.';setTimeout(pollStatus,2500)}
+  else if(r.stage==='error'){b.className='banner error';b.textContent=r.message}else{b.className='banner'}
+ }catch(e){}}
 pollStatus();
 
-function estimate(){let v=NaN;try{v=parseFloat(localStorage.getItem('est_team'))}catch(e){}return isNaN(v)?50:v}
-function saveEst(sec){try{const o=parseFloat(localStorage.getItem('est_team'));localStorage.setItem('est_team',String(isNaN(o)?sec:(o+sec)/2))}catch(e){}}
+function evidenceHTML(step){
+ const ev=step.evidence||{};let h='';
+ if(ev.facts){h+='<table class="t"><tr><th>Số liệu</th><th>Giá trị</th><th>Mẫu số</th></tr>'+ev.facts.map(f=>'<tr><td>'+E(f.id)+'. '+E(f.label_vi)+'</td><td><b>'+(f.unit==='%'?fmt(f.value,1)+'%':f.unit==='BMI'?fmt(f.value,1):fmt(f.value,0))+'</b></td><td>'+(f.denominator!=null?fmt(f.denominator,0)+' người':'')+'</td></tr>').join('')+'</table><div class="meta">Nguồn: '+E((ev.facts[0]||{}).source||'')+'</div>'}
+ if(ev.derived){h+='<div class="pass"><b>'+E(ev.derived.id)+'</b> '+E(ev.derived.formula)+' &rarr; <b>'+fmt(ev.derived.value,ev.derived.digits||2)+'</b></div>'}
+ if(ev.passages&&ev.passages.length){h+=ev.passages.map(p=>'<div class="pass"><b>'+E(p.id)+'</b> '+E(p.title||'')+': '+E(p.text)+'…</div>').join('')}
+ if(ev.review){const r=ev.review;h+='<table class="t"><tr><th>Số trong bản nháp</th><th>Đối chiếu</th><th>Nguồn</th></tr>'+(r.numbers||[]).map(n=>'<tr><td>'+E(n.text)+'</td><td class="'+(n.verdict==='ok'?'ok':'bad')+'">'+E(n.verdict==='ok'?'khớp':n.verdict)+'</td><td>'+E(n.source)+'</td></tr>').join('')+'</table>'}
+ return h}
+function stepHTML(s){
+ return '<li class="'+E(s.agent)+'"><div class="hd"><h3>'+E(s.role)+'</h3><span class="sec">'+E(s.role_description||'')+' · '+sec(s.seconds)+'</span></div><div class="tx">'+E(s.summary)+'</div><span class="out">'+E(s.outcome||'')+'</span><div class="evid">'+evidenceHTML(s)+'</div></li>'}
 
-const CARDS=[['Agent truy hồi','Người đi tìm tài liệu','s1'],['Agent đồ thị','Người tra nguồn của từng đoạn','s2'],['Agent viết','Người soạn câu trả lời','s3'],['Agent kiểm tra','Người soát nguồn trích dẫn','s4']];
-function makeCards(){
-  const tl=el('div','timeline');const cards=[];
-  CARDS.forEach(([t,r,c],i)=>{const s=el('div','step '+c);s.append(el('h3','',(i+1)+'. '+t),el('div','role-d',r));const w=el('div','what','Đang chờ đến lượt…');s.append(w);tl.append(s);cards.push({s,w})});
-  return {tl,cards};
-}
-function fillCard(card,st,i){
-  card.s.classList.remove('work');card.s.classList.add('done');
-  card.w.textContent=st.summary||'';
-  card.s.append(el('span','chip',st.outcome||''));
-  card.s.append(el('div','hand','Gửi tiếp: '+st.handoff+(st.seconds>=0.1?' (agent làm trong '+st.seconds.toFixed(1)+' giây)':'')));
-}
-function numbersOf(t){return (String(t).match(/\d[\d.,]*/g)||[]).map(x=>x.replace(/[.,]/g,''))}
-async function go(){
-  if(busy)return;const q=$('q').value.trim();if(!q){$('q').focus();return}
-  busy=true;$('go').disabled=true;
-  const run=$('run');run.innerHTML='';
-  const you=el('div','question',q);run.append(you);
-  const {tl,cards}=makeCards();run.append(tl);
-  cards[0].s.classList.add('work');cards[0].w.textContent='Đang đọc câu hỏi và tìm tài liệu…';
-  const est=estimate();const pend=el('div','meta');const bar=el('div','bar');const i=el('i');bar.append(i);pend.append(el('span','','Nhóm agent đang làm việc trên CPU, ước tính khoảng '+Math.round(est)+' giây. '),el('span','','Đã chờ 0 giây'));run.append(bar,pend);
-  const t0=performance.now();const iv=setInterval(()=>{const t=(performance.now()-t0)/1000;i.style.width=Math.min(95,(1-Math.exp(-t/(est*0.7)))*100)+'%';pend.lastChild.textContent='Đã chờ '+Math.round(t)+' giây'},300);
-  try{
-    const r=await fetch('/api/v1/agents/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:domain,question:q})});
-    const j=await r.json();clearInterval(iv);
-    if(!r.ok)throw new Error(typeof j.detail==='string'?j.detail:'máy chủ trả về lỗi '+r.status);
-    saveEst((performance.now()-t0)/1000);
-    bar.remove();pend.remove();
-    if(!j.steps||!j.steps.length)throw new Error(j.answer||'không có kết quả');
-    for(let k=0;k<j.steps.length;k++){
-      if(k+1<cards.length){cards[k+1].s.classList.add('work');cards[k+1].w.textContent='Đang làm việc…'}
-      fillCard(cards[k],j.steps[k],k);await sleep(450);
-    }
-    run.append(renderFinal(j));
-  }catch(e){
-    clearInterval(iv);bar.remove();pend.remove();
-    cards.forEach(c=>c.s.classList.remove('work'));
-    const f=el('div','final stop');f.append(el('h3','','Chưa chạy được'),el('div','ans','Lỗi: '+e.message+'. Hãy kiểm tra máy chủ còn chạy rồi thử lại.'));run.append(f);
+function startTimer(){const t0=Date.now();$('prog').style.display='block';
+ timer=setInterval(()=>{const s=(Date.now()-t0)/1000;$('progt').textContent='đã chạy '+Math.round(s)+' giây (ước lượng 40–90 giây)';$('barfill').style.width=Math.min(95,s/75*100)+'%'},400)}
+function stopTimer(){clearInterval(timer);$('barfill').style.width='100%';setTimeout(()=>$('prog').style.display='none',700)}
+
+async function run(){
+ if(busy)return;const q=$('q').value.trim();
+ if(!q){$('out').innerHTML='<div class="card">Bạn chưa nhập câu hỏi. Hãy gõ một câu hỏi hoặc bấm một câu mẫu bên trên.</div>';return}
+ busy=true;$('go').disabled=true;startTimer();
+ $('out').innerHTML='<div class="card"><div class="question">'+E(q)+'</div><div id="live"></div><ol class="tl" id="steps"></ol><div class="meta" id="livenote">Đang gửi câu hỏi cho agent điều phối…</div></div>';
+ try{
+  const start=await (await fetch('/api/v1/agents/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:domain,question:q})})).json();
+  let since=0,done=null;
+  while(!done){
+   await new Promise(r=>setTimeout(r,800));
+   const st=await (await fetch('/api/v1/agents/job/'+start.job_id+'?since='+since)).json();
+   if(st.status==='unknown'){throw new Error(st.message)}
+   since=st.next;
+   st.events.forEach(ev=>{
+    if(ev.type==='step'){const li=document.createElement('div');li.innerHTML=stepHTML(ev.step);$('steps').appendChild(li.firstChild);
+      if(ev.step.agent==='PlannerAgent'){const p=ev.step.evidence.plan;$('live').innerHTML=planHTML(p)}
+      $('livenote').textContent='Agent vừa xong: '+ev.step.role+'. Đang chờ agent tiếp theo…'}
+    if(ev.type==='baseline_start')$('livenote').textContent='Nhóm agent đã xong. Đang chạy RAG đơn để so sánh…';
+   });
+   if(st.status==='done')done=st.result;
   }
-  busy=false;$('go').disabled=false;
-}
-function renderFinal(j){
-  const stop=j.status==='insufficient_evidence';
-  const f=el('div','final'+(stop?' stop':''));
-  f.append(el('h3','','Câu trả lời cuối cùng của nhóm'));
-  f.append(el('div','ans',j.answer));
-  if(j.english_answer&&j.language==='vi')f.append(el('div','explain','Bản tiếng Anh Agent viết soạn trước khi dịch: "'+j.english_answer+'"'));
-  f.append(el('span','badge','Nhãn trạng thái: '+(j.status_label||j.status)));
-  f.append(el('p','explain',j.status_explanation||''));
-  if(j.stats_check){
-    const c=el('div','cmp');
-    const m=el('div','m');m.append(el('b','','Câu mô hình viết (qua bốn agent)'),el('span','',j.answer));
-    const t=el('div','t');t.append(el('b','','Công cụ thống kê tính trực tiếp từ dữ liệu'),el('span','',j.stats_check.answer));
-    c.append(m,t);f.append(c);
-    const want=j.stats_check.value!=null?String(Math.round(j.stats_check.value)):null;
-    if(want&&!stop&&!numbersOf(j.answer).includes(want))f.append(el('div','warnbox','Chú ý: con số mô hình viết khác con số công cụ tính ('+j.stats_check.value.toLocaleString('vi-VN')+'). Đây là lý do câu hỏi số liệu nên giao cho công cụ thống kê, không giao cho mô hình sinh văn bản.'));
-    else if(want&&!stop)f.append(el('div','explain','Lần này con số của mô hình trùng với công cụ, nhưng không có gì đảm bảo điều đó luôn đúng.'));
-    else if(stop)f.append(el('div','warnbox','Mô hình không dám trả lời, còn công cụ thống kê vẫn cho con số đúng: câu hỏi số liệu là việc của công cụ.'));
-  }
-  if(j.evidence&&j.evidence.length){
-    f.append(el('h3','','Các đoạn tài liệu agent đã đọc'));
-    const g=el('div','src');
-    j.evidence.forEach(x=>{const c=el('div','s');c.append(el('b','',x.title));const p=el('p');p.innerHTML=hl(x.snippet||x.text,x.highlights);c.append(p);
-      if(x.url){const a=el('a','','Mở nguồn');a.href=x.url;a.target='_blank';a.rel='noopener';c.append(a)}g.append(c)});f.append(g);
-  }
-  if(j.query_used&&j.query_used!==j.question)f.append(el('p','meta','Truy vấn tiếng Anh Agent truy hồi đã dùng: "'+j.query_used+'"'));
-  f.append(el('p','meta','Tổng thời gian: '+j.seconds.toFixed(1)+' giây'));
-  const d=el('details');d.append(el('summary','','Chi tiết kỹ thuật: State và Message (JSON)'));
-  d.append(el('pre','',JSON.stringify(j,null,2)));f.append(d);
-  return f;
-}
-$('go').onclick=go;
-$('q').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();go()}});
+  render(done);
+ }catch(e){$('out').innerHTML='<div class="card"><div class="banner error" style="display:block">Chưa chạy được: '+E(e.message||e)+'. Hãy kiểm tra mô hình đã nạp xong chưa (băng vàng ở đầu trang) rồi thử lại.</div></div>'}
+ stopTimer();busy=false;$('go').disabled=false}
+
+function planHTML(p){
+ const labels={'PlannerAgent':'Điều phối','StatsAgent':'Thống kê','CalculatorAgent':'Tính toán','RetrievalAgent':'Truy hồi','GraphAgent':'Đồ thị','WriterAgent':'Viết','CriticAgent':'Phản biện'};
+ const seq=['PlannerAgent'].concat(p.agents||[]);
+ return '<div class="plan"><h3>Kế hoạch của agent điều phối</h3><span class="chip '+E(p.mode)+'">'+E(p.mode_label)+'</span><div>'+E(p.summary)+'</div><div class="agentline">'+seq.map((a,i)=>'<span class="ag '+a+'">'+(i+1)+'. '+labels[a]+'</span>').join('')+'</div></div>'}
+
+function dialogueHTML(d){
+ if(!d||!d.length)return '';
+ const rounds=d.filter(x=>x.kind==='objection').length;
+ let h='<div class="chat"><h3>Cuộc trao đổi viết &mdash; phản biện</h3><div class="meta">'+(rounds?'Agent phản biện đã bắt lỗi '+rounds+' lần; mỗi lần agent viết phải sửa.':'Lần này bản nháp đầu đã đúng, nên agent phản biện chấp nhận ngay (đúng là điều xảy ra khi bản nháp đúng, không phải lúc nào cũng có tranh cãi).')+'</div>';
+ d.forEach(m=>{
+  if(m.speaker==='Agent viết'){h+='<div class="msg w"><div class="bub"><span class="who">Agent viết &middot; '+(m.kind==='draft'?'bản nháp':'bản sửa lần '+m.round)+' ('+E(m.by)+')</span>'+E(m.text)+'</div></div>'}
+  else{h+='<div class="msg c '+(m.ok?'good':'')+'"><div class="bub"><span class="who">Agent phản biện &middot; '+(m.ok?'chấp nhận':'phản đối')+'</span>'+E(m.text)+(m.issues&&m.issues.length?'<ul>'+m.issues.map(i=>'<li>'+E(i)+'</li>').join('')+'</ul>':'')+'</div></div>'}
+ });return h+'</div>'}
+
+function render(r){
+ const cls=r.status==='insufficient_evidence'||r.status==='error'?'stop':(r.status==='warnings'?'warn':'');
+ const b=r.baseline;let h='<div class="card"><div class="question">'+E(r.question)+'</div>';
+ if(r.plan&&r.plan.summary)h+=planHTML(r.plan);
+ h+='<h2>Từng agent đã làm gì</h2><ol class="tl">'+(r.steps||[]).map(stepHTML).join('')+'</ol>';
+ h+=dialogueHTML(r.dialogue);
+ h+='<div class="final '+cls+'"><h3>Câu trả lời cuối của nhóm agent</h3><div class="ans">'+E(r.answer)+'</div><span class="badge">'+E(r.status_label)+'</span><p class="explain">'+E(r.status_explanation)+'</p></div>';
+ // so sánh hai cột
+ h+='<h2 style="margin-top:20px">So sánh: một RAG đơn và nhóm agent</h2><div class="cmp">';
+ h+='<div class="col one"><h3>Một RAG đơn (như Chương 5)</h3><div class="kpis"><span class="kpi">2 bước</span><span class="kpi">'+(b?sec(b.seconds):'chưa chạy')+'</span></div><div class="ans2">'+E(b?b.answer:'(không chạy RAG đơn)')+'</div>';
+ if(b&&b.comparable){h+='<div class="verdict '+(b.has_all_numbers?'good':'badv')+'">'+(b.has_all_numbers?'Câu trả lời có đủ các số mà công cụ tính được.':'Thiếu số đúng: câu trả lời chứa '+b.matched+'/'+b.total+' số đúng (số công cụ tính được). '+(b.foreign_numbers&&b.foreign_numbers.length?'Có số không đến từ dữ liệu: '+b.foreign_numbers.join(', ')+'.':''))+'</div>'}
+ h+='</div>';
+ h+='<div class="col team"><h3>Nhóm agent</h3><div class="kpis"><span class="kpi">'+(r.step_count||0)+' bước ('+(r.agent_count||0)+' agent)</span><span class="kpi">'+sec(r.team_seconds)+'</span><span class="kpi">'+(r.revisions||0)+' vòng sửa</span></div><div class="ans2">'+E(r.answer)+'</div>';
+ if(r.facts&&r.facts.length){h+='<div class="verdict good">Mọi số đã được đối chiếu với công cụ'+(r.revisions?' sau '+r.revisions+' vòng sửa':'')+'.</div>'}
+ h+='</div></div>';
+ if(r.note)h+='<div class="warnbox">'+E(r.note)+'</div>';
+ if(r.mode==='data'&&b&&b.status==='insufficient_evidence')h+='<div class="warnbox">RAG đơn từ chối vì tài liệu không chứa số liệu; nhóm agent trả lời được nhờ agent thống kê và agent tính toán.</div>';
+ if(r.evidence&&r.evidence.length){h+='<h2 style="margin-top:20px">Đoạn tài liệu được dùng</h2>'+r.evidence.map(e=>'<div class="pass"><b>'+E(e.id)+'</b> '+(e.url?'<a href="'+E(e.url)+'" target="_blank" rel="noopener">'+E(e.title||e.url)+'</a>':E(e.title))+'<br>'+E(e.text)+'…</div>').join('')}
+ h+='<details><summary>Xem State và Message dạng JSON (dành cho người lập trình)</summary><pre>'+E(JSON.stringify({plan:r.plan,facts:r.facts,derived:r.derived,rounds:r.rounds,messages:r.messages},null,2))+'</pre></details>';
+ h+='<p class="meta">Tổng thời gian cả hai hệ: '+sec(r.seconds)+'. Hạn chế: agent phản biện chỉ kiểm con số, nên không biết lời giải thích có đúng ý nguồn hay không.</p></div>';
+ $('out').innerHTML=h;window.scrollTo({top:$('out').offsetTop-10,behavior:'smooth'})}
 </script>
 </body>
 </html>

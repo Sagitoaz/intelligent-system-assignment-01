@@ -165,14 +165,16 @@ python -m uvicorn deployment.chapter04.app:app --host 127.0.0.1 --port 8044
 ```
 
 - http://localhost:8044 là giao diện **Chương 5** (khung hội thoại, câu mẫu tiếng Việt; trả lời bằng văn xuôi kèm "cách agent xử lý", thẻ nguồn và nhãn tin cậy; JSON chỉ nằm trong mục "Chi tiết kỹ thuật").
-- http://localhost:8044/agents là giao diện **Chương 7** (bốn agent làm việc nhóm: truy hồi, đồ thị, viết, kiểm tra).
+- http://localhost:8044/agents là giao diện **Chương 7** (nhóm agent điều phối, thống kê, truy hồi, tính toán, đồ thị, viết và phản biện). Mỗi lượt chạy hiện đường thời gian từng agent, cuộc trao đổi viết - phản biện và hai cột so sánh "một RAG đơn" với "nhóm agent"; mất khoảng 40–90 giây trên CPU. API: `POST /api/v1/agents/run` (chạy một mạch), `POST /api/v1/agents/start` + `GET /api/v1/agents/job/{id}` (theo dõi tiến độ).
 - Tài liệu API (Swagger): http://localhost:8044/docs. Trạng thái nạp mô hình: `/api/v1/status`.
 - Khi máy chủ khởi động, mô hình ngôn ngữ và dữ liệu được nạp ở luồng nền (khoảng 1–2 phút); giao diện hiện thanh trạng thái "đang nạp mô hình". Một câu hỏi RAG sau đó mất khoảng 15–60 giây trên CPU; câu thống kê, tính toán, đồ thị trả lời dưới 1 giây.
 - Câu hỏi tiếng Việt được dịch sang truy vấn tiếng Anh (kho tài liệu bằng tiếng Anh); giao diện hiển thị truy vấn đã dùng. Thống kê dùng CDC BRFSS 2023 (150.000 người), tính bằng pandas.
 - Muốn tắt nạp nền (ví dụ khi chạy kiểm thử): đặt biến môi trường `CH5_NO_WARMUP=1`.
 
 Notebook: `notebooks/tieuluan/complete/05_knowledge_rag.ipynb` (Chương 5) và `07_multi_agent.ipynb` (Chương 7); dựng và chạy lại bằng
-`python scripts/chapter05/build_notebooks.py` (dừng máy chủ 8044 trước để tiết kiệm RAM). Notebook bài tập cũ của Chương 4: `python -m jupyter lab notebooks/chapter04`.
+`python scripts/chapter05/build_notebooks.py` (Chương 5) và `python scripts/chapter05/build_agent_notebook.py` (Chương 7); dừng máy chủ 8044 trước để tiết kiệm RAM.
+Đánh giá định lượng Chương 7 (một RAG đơn so với nhóm agent, 21 câu phức hợp + 5 câu đơn giản + 4 câu ngoài phạm vi; cần máy chủ 8044 đang chạy, mất khoảng 1–2 giờ): `python scripts/chapter05/eval_multiagent.py --resume`, kết quả ở `results/chapter05/multiagent_eval.json`.
+Nếu máy thiếu bộ nhớ ảo khiến mô hình float32 không nạp được (tiến trình sập, `access violation`), mở máy chủ bằng `python scripts/chapter05/lowmem_llm.py --serve 8044` (nạp lượng tử hóa int8, đỉnh khoảng 2,5 GB). Notebook bài tập cũ của Chương 4: `python -m jupyter lab notebooks/chapter04`.
 
 ## 6. Tiểu luận: ứng dụng minh họa "Hiểu AI qua dữ liệu tài chính"
 

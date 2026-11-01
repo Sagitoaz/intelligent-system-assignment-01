@@ -1,0 +1,169 @@
+{
+  "note": "Một RAG đơn = RAGEngine.answer (Chương 5). Nhóm agent = MultiAgentTeam (Chương 7). Đáp án tính bằng pandas từ BRFSS 150.000 dòng.",
+  "csv": "data\\chapter05\\brfss2023_diabetes_150k.csv",
+  "questions": 1,
+  "summary": {
+    "rag": {
+      "complex_headline_correct": [
+        0,
+        1
+      ],
+      "complex_all_numbers_correct": [
+        0,
+        1
+      ],
+      "complex_wrongly_refused": [
+        1,
+        1
+      ],
+      "complex_has_source": [
+        0,
+        1
+      ],
+      "simple_correct": [
+        0,
+        0
+      ],
+      "simple_has_source": [
+        0,
+        0
+      ],
+      "off_scope_refused": [
+        0,
+        0
+      ],
+      "seconds_complex": 75.933678100002,
+      "seconds_simple": null,
+      "seconds_off_scope": null,
+      "steps_mean": 2.0
+    },
+    "team": {
+      "complex_headline_correct": [
+        1,
+        1
+      ],
+      "complex_all_numbers_correct": [
+        1,
+        1
+      ],
+      "complex_wrongly_refused": [
+        0,
+        1
+      ],
+      "complex_has_source": [
+        1,
+        1
+      ],
+      "simple_correct": [
+        0,
+        0
+      ],
+      "simple_has_source": [
+        0,
+        0
+      ],
+      "off_scope_refused": [
+        0,
+        0
+      ],
+      "seconds_complex": 302.44078669999726,
+      "seconds_simple": null,
+      "seconds_off_scope": null,
+      "steps_mean": 12.0
+    },
+    "critic": {
+      "complex_questions": 1,
+      "first_draft_rejected": 1,
+      "first_draft_headline_correct": [
+        1,
+        1
+      ],
+      "first_draft_all_correct": [
+        0,
+        1
+      ],
+      "final_headline_correct": [
+        1,
+        1
+      ],
+      "final_all_correct": [
+        1,
+        1
+      ],
+      "revisions_total": 2,
+      "questions_with_revision": 1,
+      "fixed_after_revision": 1,
+      "ended_with_warning": 0,
+      "simple_first_draft_rejected": 0
+    }
+  },
+  "results": [
+    {
+      "id": "C01",
+      "kind": "phức hợp",
+      "question": "Tỉ lệ tiểu đường ở người huyết áp cao gấp mấy lần cả mẫu, và vì sao huyết áp cao làm tăng nguy cơ?",
+      "expected": [
+        [
+          1.707,
+          "ratio",
+          "tỉ số"
+        ],
+        [
+          25.152,
+          "pct",
+          "tỉ lệ nhóm"
+        ],
+        [
+          14.734,
+          "pct",
+          "tỉ lệ chung"
+        ]
+      ],
+      "team": {
+        "refused": false,
+        "headline_correct": true,
+        "all_correct": true,
+        "numbers_found": [
+          "64.924",
+          "25,2 %",
+          "16.330",
+          "150.000",
+          "14,7 %",
+          "22.101",
+          "1,71 lần",
+          "150.000"
+        ],
+        "correct": true,
+        "seconds": 302.44078669999726,
+        "steps": 12,
+        "agents": 7,
+        "revisions": 2,
+        "status": "verified_numbers",
+        "has_source": true,
+        "answer": "Trong 64.924 người có huyết áp cao, 25,2% (16.330 người) được chẩn đoán mắc bệnh tiểu đường. Trong 150.000 người được thăm dò, 14,7% (22.101 người) được chẩn đoán mắc bệnh tiểu đường. Giá trị nhóm có huyết áp cao là 1,71 lần giá trị cho toàn bộ mẫu. Theo tài liệu (CDC): Khi có huyết áp cao và tiểu đường, nguy cơ mắc bệnh tim rất cao. Các số liệu này mô tả cuộc thăm dò BRFSS năm 2023 của CDC với mẫu 150.000 người, không tính trọng số thăm dò, nên mô tả mẫu này và không phản ánh tổng dân số Mỹ.",
+        "draft_headline_correct": true,
+        "draft_all_correct": false,
+        "draft_review_ok": false,
+        "draft_issues": [
+          "Thiếu số kết quả chính F1 = 25,2%. Trong 64.924 người bị huyết áp cao, 25,2% (16.330 người) được chẩn đoán tiểu đường.",
+          "Thiếu số kết quả chính F2 = 14,7%. Trong 150.000 người được khảo sát, 14,7% (22.101 người) được chẩn đoán tiểu đường."
+        ],
+        "draft_text": "Tỉ lệ tiểu đường ở người huyết áp cao là 1.71 lần tỉ lệ của cả mẫu. Huyết áp cao làm tăng nguy cơ bởi vì nó có thể gây ra sự căng thẳng lên cơ tim và làm tổn thương các mạch máu, đồng thời tăng nguy cơ mắc bệnh tim, đột quỵ và các vấn đề về mắt hoặc thận."
+      },
+      "rag": {
+        "refused": true,
+        "headline_correct": false,
+        "all_correct": false,
+        "numbers_found": [],
+        "correct": false,
+        "seconds": 75.933678100002,
+        "steps": 2,
+        "status": "insufficient_evidence",
+        "has_source": false,
+        "answer": "Không đủ thông tin trong tài liệu để trả lời câu hỏi này.",
+        "foreign_numbers": []
+      },
+      "plan_mode": "data"
+    }
+  ]
+}
