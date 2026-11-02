@@ -1,0 +1,815 @@
+{
+ "question": "Tỉ lệ tiểu đường ở người huyết áp cao gấp mấy lần cả mẫu, và vì sao huyết áp cao làm tăng nguy cơ?",
+ "domain": "diabetes",
+ "report": null,
+ "steps": [
+  {
+   "agent": "PlannerAgent",
+   "role": "Agent điều phối",
+   "role_description": "Đọc câu hỏi, quyết định cần những agent nào và gọi theo thứ tự.",
+   "summary": "Câu hỏi cần số liệu thật từ dữ liệu khảo sát (agent thống kê), một phép tính chính xác (agent tính toán, không để mô hình tự tính), một phần giải thích từ tài liệu (agent truy hồi). Một RAG đơn chỉ đọc tài liệu nên không có các con số này; agent phản biện sẽ đối chiếu từng số trong bản nháp với công cụ.",
+   "outcome": "Phức hợp: cần số liệu thật",
+   "seconds": 0.020665000018198043,
+   "evidence": {
+    "plan": {
+     "scope": "diabetes",
+     "mode": "data",
+     "facts": [
+      {
+       "kind": "rate",
+       "target": "diabetes",
+       "filters": [
+        [
+         "cond",
+         "hbp"
+        ]
+       ],
+       "short_vi": "",
+       "short_en": "",
+       "id": "F1"
+      },
+      {
+       "kind": "rate",
+       "target": "diabetes",
+       "filters": [],
+       "short_vi": "cả mẫu",
+       "short_en": "the whole sample",
+       "id": "F2"
+      }
+     ],
+     "calc": {
+      "op": "divide",
+      "a": "F1",
+      "b": "F2",
+      "unit": "%",
+      "id": "D1"
+     },
+     "explain": true,
+     "explain_question": "vì sao huyết áp cao làm tăng nguy cơ?",
+     "agents": [
+      "StatsAgent",
+      "CalculatorAgent",
+      "RetrievalAgent",
+      "WriterAgent",
+      "CriticAgent"
+     ],
+     "summary": "Câu hỏi cần số liệu thật từ dữ liệu khảo sát (agent thống kê), một phép tính chính xác (agent tính toán, không để mô hình tự tính), một phần giải thích từ tài liệu (agent truy hồi). Một RAG đơn chỉ đọc tài liệu nên không có các con số này; agent phản biện sẽ đối chiếu từng số trong bản nháp với công cụ.",
+     "mode_label": "Phức hợp: cần số liệu thật"
+    }
+   }
+  },
+  {
+   "agent": "StatsAgent",
+   "role": "Agent thống kê",
+   "role_description": "Tính số liệu thật từ dữ liệu khảo sát CDC BRFSS 2023 (150.000 người) bằng pandas.",
+   "summary": "Agent thống kê đọc dữ liệu CDC BRFSS 2023 (150.000 dòng) và tính 2 số liệu bằng pandas: F1: Tỉ lệ người được chẩn đoán tiểu đường trong nhóm bị huyết áp cao = 25,2% (16.330/64.924); F2: Tỉ lệ người được chẩn đoán tiểu đường trong cả mẫu = 14,7% (22.101/150.000).",
+   "outcome": "2 sự kiện",
+   "seconds": 0.19460119999712333,
+   "evidence": {
+    "facts": [
+     {
+      "metric": "rate",
+      "value": 25.152485983611605,
+      "unit": "%",
+      "numerator": 16330,
+      "denominator": 64924,
+      "label_vi": "Tỉ lệ người được chẩn đoán tiểu đường trong nhóm bị huyết áp cao",
+      "label_en": "Share of people diagnosed with diabetes among those with high blood pressure",
+      "sentence_vi": "Trong 64.924 người bị huyết áp cao, 25,2% (16.330 người) được chẩn đoán tiểu đường.",
+      "sentence_en": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes.",
+      "short_vi": "nhóm bị huyết áp cao",
+      "short_en": "the group with high blood pressure",
+      "id": "F1",
+      "source": "CDC BRFSS 2023",
+      "source_url": "https://www.cdc.gov/brfss/annual_data/annual_2023.html",
+      "tool": "DiabetesStats + pandas",
+      "sample": 150000
+     },
+     {
+      "metric": "rate",
+      "value": 14.734,
+      "unit": "%",
+      "numerator": 22101,
+      "denominator": 150000,
+      "label_vi": "Tỉ lệ người được chẩn đoán tiểu đường trong cả mẫu",
+      "label_en": "Share of people diagnosed with diabetes in the whole sample",
+      "sentence_vi": "Trong 150.000 người được khảo sát, 14,7% (22.101 người) được chẩn đoán tiểu đường.",
+      "sentence_en": "Among 150,000 surveyed people, 14.7% (22,101 people) are diagnosed with diabetes.",
+      "short_vi": "cả mẫu",
+      "short_en": "the whole sample",
+      "id": "F2",
+      "source": "CDC BRFSS 2023",
+      "source_url": "https://www.cdc.gov/brfss/annual_data/annual_2023.html",
+      "tool": "DiabetesStats + pandas",
+      "sample": 150000
+     }
+    ]
+   }
+  },
+  {
+   "agent": "CalculatorAgent",
+   "role": "Agent tính toán",
+   "role_description": "Tính tỉ số, chênh lệch từ các sự kiện bằng safe_calculate, không để mô hình ngôn ngữ tự tính.",
+   "summary": "Agent tính toán lấy F1 = 25,15 và F2 = 14,73 từ agent thống kê rồi gọi safe_calculate: F1 / F2 = 25.152485983611605 / 14.734. Kết quả 1,71 lần. Mô hình ngôn ngữ không được tự làm phép tính này.",
+   "outcome": "Tỉ số = 1,71",
+   "seconds": 0.00013359999866224825,
+   "evidence": {
+    "derived": {
+     "id": "D1",
+     "metric": "divide",
+     "value": 1.7071,
+     "unit": "lần",
+     "formula": "F1 / F2 = 25.152485983611605 / 14.734",
+     "label_vi": "Tỉ số",
+     "label_en": "Ratio",
+     "sentence_vi": "Tỉ lệ ở nhóm bị huyết áp cao gấp 1,71 lần ở cả mẫu.",
+     "sentence_en": "The value for the group with high blood pressure is 1.71 times the value for the whole sample.",
+     "inputs": [
+      "F1",
+      "F2"
+     ],
+     "digits": 2,
+     "source": "safe_calculate (src/chapter04/knowledge.py)",
+     "tool": "safe_calculate"
+    }
+   }
+  },
+  {
+   "agent": "RetrievalAgent",
+   "role": "Agent truy hồi",
+   "role_description": "Tìm đoạn tài liệu liên quan (NIDDK, CDC, MedlinePlus) và rút ra câu giải thích ngắn kèm mã nguồn.",
+   "summary": "Agent truy hồi dịch phần giải thích của câu hỏi thành truy vấn \"What causes high blood pressure to increase the risk?\" và tìm được 4 đoạn từ kho tài liệu. Câu giải thích tốt nhất (nguồn NIDDK heart-disease-stroke:4): «Having both high blood pressure and diabetes can greatly increase your risk for heart disease.»",
+   "outcome": "4 đoạn",
+   "seconds": 8.393259100004798,
+   "evidence": {
+    "query": "What causes high blood pressure to increase the risk?",
+    "passages": [
+     {
+      "id": "heart-disease-stroke:4",
+      "title": "Diabetes, Heart Disease, & Stroke",
+      "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/heart-disease-stroke",
+      "text": "Diabetes, Heart Disease, & Stroke — What else increases my chances of heart disease or stroke if I have diabetes? — High blood pressure. If you have high blood pressure, your heart works harder to pump blood. High blood pressure can strain your heart, damage blood vessels, and increase your risk of "
+     },
+     {
+      "id": "cdc-heart:2",
+      "title": "Diabetes and Your Heart",
+      "url": "https://www.cdc.gov/diabetes/diabetes-complications/diabetes-and-your-heart.html",
+      "text": "Diabetes and Your Heart — How diabetes affects your heart. Over time, high blood sugar can damage blood vessels and the nerves that control your heart. People with diabetes are more likely to have other conditions that raise the risk for heart disease: High blood pressure increases the force of bloo"
+     },
+     {
+      "id": "heart-disease-stroke:0",
+      "title": "Diabetes, Heart Disease, & Stroke",
+      "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/heart-disease-stroke",
+      "text": "Diabetes, Heart Disease, & Stroke. Having diabetes means you are more likely to develop heart disease. People with diabetes are also more likely to have certain risk factors, such as high blood pressure or high cholesterol, that increase their chances of having a heart attack or a stroke. If you hav"
+     },
+     {
+      "id": "prediabetes:4",
+      "title": "Insulin Resistance & Prediabetes",
+      "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/what-is-diabetes/prediabetes-insulin-resistance",
+      "text": "Insulin Resistance & Prediabetes — What health problems can people with insulin resistance and prediabetes develop? Some people with prediabetes may have changes in their blood vessels. Changes in your blood vessels can lead to some of the same health problems caused by type 2 diabetes. People with "
+     }
+    ],
+    "explanation": [
+     {
+      "id": "cdc-heart:2",
+      "sentence": "Having both high blood pressure and diabetes can greatly increase your risk for heart disease.",
+      "score": 1.158,
+      "url": "https://www.cdc.gov/diabetes/diabetes-complications/diabetes-and-your-heart.html",
+      "org": "CDC"
+     },
+     {
+      "id": "heart-disease-stroke:4",
+      "sentence": "High blood pressure can strain your heart, damage blood vessels, and increase your risk of heart attack, stroke, and eye or kidney problems.",
+      "score": 1.054,
+      "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/heart-disease-stroke",
+      "org": "NIDDK"
+     }
+    ]
+   }
+  },
+  {
+   "agent": "WriterAgent",
+   "role": "Agent viết",
+   "role_description": "Viết câu trả lời từ sự kiện của công cụ và các đoạn tài liệu (bản nháp đầu do mô hình Qwen viết tự do).",
+   "seconds": 58.45365780001157,
+   "summary": "Agent viết soạn bản nháp (Qwen viết tự do): «The percentage of people with high blood pressure who are diagnosed with diabetes is 1.71 times higher than the overall sample percentage. This indicates that individuals with high blood pressure are at a significantly increased risk of developing diabetes compared to those without high blood pressure. The reason behind this increased risk is that high blood pressure can lead to damage of blood vessels and the nerves that control the heart, increasing the likelihood of developing heart disease and other complications associated with diabetes.»",
+   "outcome": "bản nháp",
+   "evidence": {
+    "draft": "The percentage of people with high blood pressure who are diagnosed with diabetes is 1.71 times higher than the overall sample percentage. This indicates that individuals with high blood pressure are at a significantly increased risk of developing diabetes compared to those without high blood pressure. The reason behind this increased risk is that high blood pressure can lead to damage of blood vessels and the nerves that control the heart, increasing the likelihood of developing heart disease and other complications associated with diabetes.",
+    "round": 0
+   }
+  },
+  {
+   "agent": "CriticAgent",
+   "role": "Agent phản biện",
+   "role_description": "Đối chiếu từng con số trong bản nháp với sự kiện của công cụ và với đoạn tài liệu; không dùng mô hình ngôn ngữ.",
+   "summary": "Agent phản biện đối chiếu bản nháp và tìm thấy 2 lỗi: Thiếu số kết quả chính F1 = 25,2%. Trong 64.924 người bị huyết áp cao, 25,2% (16.330 người) được chẩn đoán tiểu đường. | Thiếu số kết quả chính F2 = 14,7%. Trong 150.000 người được khảo sát, 14,7% (22.101 người) được chẩn đoán tiểu đường.. Gửi yêu cầu sửa cho agent viết.",
+   "outcome": "2 lỗi, yêu cầu sửa",
+   "seconds": 0.002358099998673424,
+   "evidence": {
+    "review": {
+     "ok": false,
+     "issues": [
+      {
+       "type": "missing_headline",
+       "number": "25,2%",
+       "sentence": "",
+       "message": "Thiếu số kết quả chính F1 = 25,2%. Trong 64.924 người bị huyết áp cao, 25,2% (16.330 người) được chẩn đoán tiểu đường.",
+       "message_en": "Missing key number: Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes."
+      },
+      {
+       "type": "missing_headline",
+       "number": "14,7%",
+       "sentence": "",
+       "message": "Thiếu số kết quả chính F2 = 14,7%. Trong 150.000 người được khảo sát, 14,7% (22.101 người) được chẩn đoán tiểu đường.",
+       "message_en": "Missing key number: Among 150,000 surveyed people, 14.7% (22,101 people) are diagnosed with diabetes."
+      }
+     ],
+     "numbers": [
+      {
+       "text": "1.71 times",
+       "value": 1.71,
+       "verdict": "ok",
+       "source": "công cụ D1",
+       "sentence": "The percentage of people with high blood pressure who are diagnosed with diabetes is 1.71 times higher than the overall sample percentage."
+      }
+     ],
+     "citations_valid": true,
+     "checked_numbers": 1,
+     "round": 0
+    }
+   }
+  },
+  {
+   "agent": "WriterAgent",
+   "role": "Agent viết",
+   "role_description": "Viết câu trả lời từ sự kiện của công cụ và các đoạn tài liệu (bản nháp đầu do mô hình Qwen viết tự do).",
+   "seconds": 82.25953060001484,
+   "summary": "Agent viết soạn bản sửa lần 1 (Qwen sửa theo phản biện): «Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes. This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate. The reason why high blood pressure increases the risk of developing diabetes is that it can strain the heart, damage blood vessels, and lead to other conditions like high blood pressure and high cholesterol, which are known risk factors for heart disease.»",
+   "outcome": "bản sửa lần 1",
+   "evidence": {
+    "draft": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes. This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate. The reason why high blood pressure increases the risk of developing diabetes is that it can strain the heart, damage blood vessels, and lead to other conditions like high blood pressure and high cholesterol, which are known risk factors for heart disease.",
+    "round": 1
+   }
+  },
+  {
+   "agent": "CriticAgent",
+   "role": "Agent phản biện",
+   "role_description": "Đối chiếu từng con số trong bản nháp với sự kiện của công cụ và với đoạn tài liệu; không dùng mô hình ngôn ngữ.",
+   "summary": "Agent phản biện trích 7 con số trong bản nháp và đối chiếu từng số với công cụ và tài liệu: tất cả đều khớp; mã nguồn trích dẫn hợp lệ; câu trả lời có nhắc giới hạn của mẫu. Chấp nhận.",
+   "outcome": "chấp nhận",
+   "seconds": 0.0016069999837782234,
+   "evidence": {
+    "review": {
+     "ok": true,
+     "issues": [],
+     "numbers": [
+      {
+       "text": "64,924",
+       "value": 64924.0,
+       "verdict": "ok",
+       "source": "công cụ F1",
+       "sentence": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes."
+      },
+      {
+       "text": "25.2 %",
+       "value": 25.2,
+       "verdict": "ok",
+       "source": "công cụ F1",
+       "sentence": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes."
+      },
+      {
+       "text": "16,330",
+       "value": 16330.0,
+       "verdict": "ok",
+       "source": "công cụ F1",
+       "sentence": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes."
+      },
+      {
+       "text": "1.71 times",
+       "value": 1.71,
+       "verdict": "ok",
+       "source": "công cụ D1",
+       "sentence": "This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate."
+      },
+      {
+       "text": "150,000",
+       "value": 150000.0,
+       "verdict": "ok",
+       "source": "công cụ F2",
+       "sentence": "This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate."
+      },
+      {
+       "text": "14.7 %",
+       "value": 14.7,
+       "verdict": "ok",
+       "source": "công cụ F2",
+       "sentence": "This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate."
+      },
+      {
+       "text": "22,101",
+       "value": 22101.0,
+       "verdict": "ok",
+       "source": "công cụ F2",
+       "sentence": "This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate."
+      }
+     ],
+     "citations_valid": true,
+     "checked_numbers": 7,
+     "round": 1
+    }
+   }
+  },
+  {
+   "agent": "WriterAgent",
+   "role": "Agent viết",
+   "role_description": "Viết câu trả lời từ sự kiện của công cụ và các đoạn tài liệu (bản nháp đầu do mô hình Qwen viết tự do).",
+   "seconds": 109.8393029999861,
+   "summary": "Agent viết dịch bản đã được duyệt sang tiếng Việt, rồi agent phản biện kiểm lại các con số của bản dịch. Các con số vẫn khớp.",
+   "outcome": "bản tiếng Việt",
+   "evidence": {
+    "answer": "Trong 64.924 người được khảo sát có huyết áp cao, 25.2% (16.330 người) bị chẩn đoán mắc bệnh tiểu đường. Đây là 1.71 lần cao hơn so với tỷ lệ 14.7% (22.101 người) trong tổng số 150.000 người được khảo sát. Lý do tại sao huyết áp cao tăng nguy cơ phát triển bệnh tiểu đường là do nó có thể gánh chịu cho tim, gây tổn thương các mạch máu và dẫn đến các tình trạng khác như huyết áp cao và cholesterol cao, hai yếu tố nguy cơ đã được biết đến là nguyên nhân gây bệnh tim."
+   }
+  },
+  {
+   "agent": "Coordinator",
+   "role": "Bộ điều phối",
+   "role_description": "Tổng hợp trạng thái cuối bằng lời.",
+   "summary": "Đã kiểm chứng số liệu bằng công cụ. Mọi con số trong câu trả lời đã được đối chiếu với kết quả của công cụ thống kê/tính toán (và với tài liệu cho phần giải thích). Phần lời giải thích chưa được kiểm tra về ngữ nghĩa. Bản nháp đầu bị phản biện yêu cầu sửa; câu trả lời cuối là bản sau 1 vòng sửa.",
+   "outcome": "Đã kiểm chứng số liệu bằng công cụ",
+   "seconds": 0.0,
+   "evidence": {
+    "status": "verified_numbers",
+    "revisions": 1
+   }
+  }
+ ],
+ "answer": "Trong 64.924 người được khảo sát có huyết áp cao, 25.2% (16.330 người) bị chẩn đoán mắc bệnh tiểu đường. Đây là 1.71 lần cao hơn so với tỷ lệ 14.7% (22.101 người) trong tổng số 150.000 người được khảo sát. Lý do tại sao huyết áp cao tăng nguy cơ phát triển bệnh tiểu đường là do nó có thể gánh chịu cho tim, gây tổn thương các mạch máu và dẫn đến các tình trạng khác như huyết áp cao và cholesterol cao, hai yếu tố nguy cơ đã được biết đến là nguyên nhân gây bệnh tim.",
+ "status": "verified_numbers",
+ "status_label": "Đã kiểm chứng số liệu bằng công cụ",
+ "status_explanation": "Mọi con số trong câu trả lời đã được đối chiếu với kết quả của công cụ thống kê/tính toán (và với tài liệu cho phần giải thích). Phần lời giải thích chưa được kiểm tra về ngữ nghĩa.",
+ "query_used": "What causes high blood pressure to increase the risk?",
+ "english_answer": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes. This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate. The reason why high blood pressure increases the risk of developing diabetes is that it can strain the heart, damage blood vessels, and lead to other conditions like high blood pressure and high cholesterol, which are known risk factors for heart disease.",
+ "language": "vi",
+ "evidence": [
+  {
+   "id": "heart-disease-stroke:4",
+   "title": "Diabetes, Heart Disease, & Stroke",
+   "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/heart-disease-stroke",
+   "text": "Diabetes, Heart Disease, & Stroke — What else increases my chances of heart disease or stroke if I have diabetes? — High blood pressure. If you have high blood pressure, your heart works harder to pump blood. High blood pressure can strain your heart, damage blood vessels, and increase your risk of heart attack, stroke"
+  },
+  {
+   "id": "cdc-heart:2",
+   "title": "Diabetes and Your Heart",
+   "url": "https://www.cdc.gov/diabetes/diabetes-complications/diabetes-and-your-heart.html",
+   "text": "Diabetes and Your Heart — How diabetes affects your heart. Over time, high blood sugar can damage blood vessels and the nerves that control your heart. People with diabetes are more likely to have other conditions that raise the risk for heart disease: High blood pressure increases the force of blood through your arter"
+  },
+  {
+   "id": "heart-disease-stroke:0",
+   "title": "Diabetes, Heart Disease, & Stroke",
+   "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/heart-disease-stroke",
+   "text": "Diabetes, Heart Disease, & Stroke. Having diabetes means you are more likely to develop heart disease. People with diabetes are also more likely to have certain risk factors, such as high blood pressure or high cholesterol, that increase their chances of having a heart attack or a stroke. If you have diabetes, you can "
+  },
+  {
+   "id": "prediabetes:4",
+   "title": "Insulin Resistance & Prediabetes",
+   "url": "https://www.niddk.nih.gov/health-information/diabetes/overview/what-is-diabetes/prediabetes-insulin-resistance",
+   "text": "Insulin Resistance & Prediabetes — What health problems can people with insulin resistance and prediabetes develop? Some people with prediabetes may have changes in their blood vessels. Changes in your blood vessels can lead to some of the same health problems caused by type 2 diabetes. People with insulin resistance a"
+  }
+ ],
+ "seconds": 313.64176790000056,
+ "team_seconds": 259.1684827999852,
+ "mode": "data",
+ "plan": {
+  "scope": "diabetes",
+  "mode": "data",
+  "facts": [
+   {
+    "kind": "rate",
+    "target": "diabetes",
+    "filters": [
+     [
+      "cond",
+      "hbp"
+     ]
+    ],
+    "short_vi": "",
+    "short_en": "",
+    "id": "F1"
+   },
+   {
+    "kind": "rate",
+    "target": "diabetes",
+    "filters": [],
+    "short_vi": "cả mẫu",
+    "short_en": "the whole sample",
+    "id": "F2"
+   }
+  ],
+  "calc": {
+   "op": "divide",
+   "a": "F1",
+   "b": "F2",
+   "unit": "%",
+   "id": "D1"
+  },
+  "explain": true,
+  "explain_question": "vì sao huyết áp cao làm tăng nguy cơ?",
+  "agents": [
+   "StatsAgent",
+   "CalculatorAgent",
+   "RetrievalAgent",
+   "WriterAgent",
+   "CriticAgent"
+  ],
+  "summary": "Câu hỏi cần số liệu thật từ dữ liệu khảo sát (agent thống kê), một phép tính chính xác (agent tính toán, không để mô hình tự tính), một phần giải thích từ tài liệu (agent truy hồi). Một RAG đơn chỉ đọc tài liệu nên không có các con số này; agent phản biện sẽ đối chiếu từng số trong bản nháp với công cụ.",
+  "mode_label": "Phức hợp: cần số liệu thật"
+ },
+ "facts": [
+  {
+   "metric": "rate",
+   "value": 25.152485983611605,
+   "unit": "%",
+   "numerator": 16330,
+   "denominator": 64924,
+   "label_vi": "Tỉ lệ người được chẩn đoán tiểu đường trong nhóm bị huyết áp cao",
+   "label_en": "Share of people diagnosed with diabetes among those with high blood pressure",
+   "sentence_vi": "Trong 64.924 người bị huyết áp cao, 25,2% (16.330 người) được chẩn đoán tiểu đường.",
+   "sentence_en": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes.",
+   "short_vi": "nhóm bị huyết áp cao",
+   "short_en": "the group with high blood pressure",
+   "id": "F1",
+   "source": "CDC BRFSS 2023",
+   "source_url": "https://www.cdc.gov/brfss/annual_data/annual_2023.html",
+   "tool": "DiabetesStats + pandas",
+   "sample": 150000
+  },
+  {
+   "metric": "rate",
+   "value": 14.734,
+   "unit": "%",
+   "numerator": 22101,
+   "denominator": 150000,
+   "label_vi": "Tỉ lệ người được chẩn đoán tiểu đường trong cả mẫu",
+   "label_en": "Share of people diagnosed with diabetes in the whole sample",
+   "sentence_vi": "Trong 150.000 người được khảo sát, 14,7% (22.101 người) được chẩn đoán tiểu đường.",
+   "sentence_en": "Among 150,000 surveyed people, 14.7% (22,101 people) are diagnosed with diabetes.",
+   "short_vi": "cả mẫu",
+   "short_en": "the whole sample",
+   "id": "F2",
+   "source": "CDC BRFSS 2023",
+   "source_url": "https://www.cdc.gov/brfss/annual_data/annual_2023.html",
+   "tool": "DiabetesStats + pandas",
+   "sample": 150000
+  }
+ ],
+ "derived": [
+  {
+   "id": "D1",
+   "metric": "divide",
+   "value": 1.7071,
+   "unit": "lần",
+   "formula": "F1 / F2 = 25.152485983611605 / 14.734",
+   "label_vi": "Tỉ số",
+   "label_en": "Ratio",
+   "sentence_vi": "Tỉ lệ ở nhóm bị huyết áp cao gấp 1,71 lần ở cả mẫu.",
+   "sentence_en": "The value for the group with high blood pressure is 1.71 times the value for the whole sample.",
+   "inputs": [
+    "F1",
+    "F2"
+   ],
+   "digits": 2,
+   "source": "safe_calculate (src/chapter04/knowledge.py)",
+   "tool": "safe_calculate"
+  }
+ ],
+ "rounds": [
+  {
+   "round": 0,
+   "by": "Qwen viết tự do",
+   "draft": "The percentage of people with high blood pressure who are diagnosed with diabetes is 1.71 times higher than the overall sample percentage. This indicates that individuals with high blood pressure are at a significantly increased risk of developing diabetes compared to those without high blood pressure. The reason behind this increased risk is that high blood pressure can lead to damage of blood vessels and the nerves that control the heart, increasing the likelihood of developing heart disease and other complications associated with diabetes.",
+   "review": {
+    "ok": false,
+    "issues": [
+     {
+      "type": "missing_headline",
+      "number": "25,2%",
+      "sentence": "",
+      "message": "Thiếu số kết quả chính F1 = 25,2%. Trong 64.924 người bị huyết áp cao, 25,2% (16.330 người) được chẩn đoán tiểu đường.",
+      "message_en": "Missing key number: Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes."
+     },
+     {
+      "type": "missing_headline",
+      "number": "14,7%",
+      "sentence": "",
+      "message": "Thiếu số kết quả chính F2 = 14,7%. Trong 150.000 người được khảo sát, 14,7% (22.101 người) được chẩn đoán tiểu đường.",
+      "message_en": "Missing key number: Among 150,000 surveyed people, 14.7% (22,101 people) are diagnosed with diabetes."
+     }
+    ],
+    "numbers": [
+     {
+      "text": "1.71 times",
+      "value": 1.71,
+      "verdict": "ok",
+      "source": "công cụ D1",
+      "sentence": "The percentage of people with high blood pressure who are diagnosed with diabetes is 1.71 times higher than the overall sample percentage."
+     }
+    ],
+    "citations_valid": true,
+    "checked_numbers": 1,
+    "round": 0
+   }
+  },
+  {
+   "round": 1,
+   "by": "Qwen sửa theo phản biện",
+   "draft": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes. This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate. The reason why high blood pressure increases the risk of developing diabetes is that it can strain the heart, damage blood vessels, and lead to other conditions like high blood pressure and high cholesterol, which are known risk factors for heart disease.",
+   "review": {
+    "ok": true,
+    "issues": [],
+    "numbers": [
+     {
+      "text": "64,924",
+      "value": 64924.0,
+      "verdict": "ok",
+      "source": "công cụ F1",
+      "sentence": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes."
+     },
+     {
+      "text": "25.2 %",
+      "value": 25.2,
+      "verdict": "ok",
+      "source": "công cụ F1",
+      "sentence": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes."
+     },
+     {
+      "text": "16,330",
+      "value": 16330.0,
+      "verdict": "ok",
+      "source": "công cụ F1",
+      "sentence": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes."
+     },
+     {
+      "text": "1.71 times",
+      "value": 1.71,
+      "verdict": "ok",
+      "source": "công cụ D1",
+      "sentence": "This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate."
+     },
+     {
+      "text": "150,000",
+      "value": 150000.0,
+      "verdict": "ok",
+      "source": "công cụ F2",
+      "sentence": "This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate."
+     },
+     {
+      "text": "14.7 %",
+      "value": 14.7,
+      "verdict": "ok",
+      "source": "công cụ F2",
+      "sentence": "This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate."
+     },
+     {
+      "text": "22,101",
+      "value": 22101.0,
+      "verdict": "ok",
+      "source": "công cụ F2",
+      "sentence": "This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate."
+     }
+    ],
+    "citations_valid": true,
+    "checked_numbers": 7,
+    "round": 1
+   }
+  }
+ ],
+ "dialogue": [
+  {
+   "speaker": "Agent viết",
+   "kind": "draft",
+   "round": 0,
+   "by": "Qwen viết tự do",
+   "text": "The percentage of people with high blood pressure who are diagnosed with diabetes is 1.71 times higher than the overall sample percentage. This indicates that individuals with high blood pressure are at a significantly increased risk of developing diabetes compared to those without high blood pressure. The reason behind this increased risk is that high blood pressure can lead to damage of blood vessels and the nerves that control the heart, increasing the likelihood of developing heart disease and other complications associated with diabetes."
+  },
+  {
+   "speaker": "Agent phản biện",
+   "kind": "objection",
+   "round": 0,
+   "ok": false,
+   "text": "Phát hiện 2 lỗi trong bản này.",
+   "issues": [
+    "Thiếu số kết quả chính F1 = 25,2%. Trong 64.924 người bị huyết áp cao, 25,2% (16.330 người) được chẩn đoán tiểu đường.",
+    "Thiếu số kết quả chính F2 = 14,7%. Trong 150.000 người được khảo sát, 14,7% (22.101 người) được chẩn đoán tiểu đường."
+   ]
+  },
+  {
+   "speaker": "Agent viết",
+   "kind": "revision",
+   "round": 1,
+   "by": "Qwen sửa theo phản biện",
+   "text": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes. This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate. The reason why high blood pressure increases the risk of developing diabetes is that it can strain the heart, damage blood vessels, and lead to other conditions like high blood pressure and high cholesterol, which are known risk factors for heart disease."
+  },
+  {
+   "speaker": "Agent phản biện",
+   "kind": "approval",
+   "round": 1,
+   "ok": true,
+   "text": "Đã đối chiếu 7 con số với công cụ và tài liệu: tất cả khớp. Chấp nhận.",
+   "issues": []
+  }
+ ],
+ "revisions": 1,
+ "critic": {
+  "ok": true,
+  "issues": [],
+  "numbers": [
+   {
+    "text": "64,924",
+    "value": 64924.0,
+    "verdict": "ok",
+    "source": "công cụ F1",
+    "sentence": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes."
+   },
+   {
+    "text": "25.2 %",
+    "value": 25.2,
+    "verdict": "ok",
+    "source": "công cụ F1",
+    "sentence": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes."
+   },
+   {
+    "text": "16,330",
+    "value": 16330.0,
+    "verdict": "ok",
+    "source": "công cụ F1",
+    "sentence": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes."
+   },
+   {
+    "text": "1.71 times",
+    "value": 1.71,
+    "verdict": "ok",
+    "source": "công cụ D1",
+    "sentence": "This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate."
+   },
+   {
+    "text": "150,000",
+    "value": 150000.0,
+    "verdict": "ok",
+    "source": "công cụ F2",
+    "sentence": "This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate."
+   },
+   {
+    "text": "14.7 %",
+    "value": 14.7,
+    "verdict": "ok",
+    "source": "công cụ F2",
+    "sentence": "This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate."
+   },
+   {
+    "text": "22,101",
+    "value": 22101.0,
+    "verdict": "ok",
+    "source": "công cụ F2",
+    "sentence": "This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate."
+   }
+  ],
+  "citations_valid": true,
+  "checked_numbers": 7,
+  "round": 1
+ },
+ "baseline": {
+  "answer": "Không đủ thông tin trong tài liệu để trả lời câu hỏi này.",
+  "status": "insufficient_evidence",
+  "seconds": 54.279835399996955,
+  "steps": 2,
+  "step_names": [
+   "Truy hồi các đoạn",
+   "Mô hình viết câu trả lời từ các đoạn"
+  ],
+  "citations": [],
+  "english_answer": null,
+  "comparable": true,
+  "matched": 0,
+  "total": 3,
+  "has_all_numbers": false,
+  "missing": [
+   "Trong 64.924 người bị huyết áp cao, 25,2% (16.330 người) được chẩn đoán tiểu đường.",
+   "Trong 150.000 người được khảo sát, 14,7% (22.101 người) được chẩn đoán tiểu đường.",
+   "Tỉ lệ ở nhóm bị huyết áp cao gấp 1,71 lần ở cả mẫu."
+  ],
+  "foreign_numbers": []
+ },
+ "agent_count": 7,
+ "step_count": 10,
+ "note": "",
+ "messages": [
+  {
+   "sender": "planner",
+   "receiver": "coordinator",
+   "kind": "plan",
+   "payload": {
+    "mode": "data",
+    "agents": [
+     "StatsAgent",
+     "CalculatorAgent",
+     "RetrievalAgent",
+     "WriterAgent",
+     "CriticAgent"
+    ],
+    "facts": 2,
+    "calc": true
+   }
+  },
+  {
+   "sender": "stats",
+   "receiver": "calculator",
+   "kind": "facts",
+   "payload": {
+    "ids": [
+     "F1",
+     "F2"
+    ],
+    "values": [
+     25.152485983611605,
+     14.734
+    ]
+   }
+  },
+  {
+   "sender": "calculator",
+   "receiver": "writer",
+   "kind": "derived",
+   "payload": {
+    "id": "D1",
+    "value": 1.7071,
+    "formula": "F1 / F2 = 25.152485983611605 / 14.734"
+   }
+  },
+  {
+   "sender": "retrieval",
+   "receiver": "writer",
+   "kind": "passages",
+   "payload": {
+    "ids": [
+     "heart-disease-stroke:4",
+     "cdc-heart:2",
+     "heart-disease-stroke:0",
+     "prediabetes:4"
+    ],
+    "explanation": 2
+   }
+  },
+  {
+   "sender": "writer",
+   "receiver": "critic",
+   "kind": "draft",
+   "payload": {
+    "round": 0,
+    "by": "Qwen viết tự do",
+    "text": "The percentage of people with high blood pressure who are diagnosed with diabetes is 1.71 times higher than the overall sample percentage. This indicates that individuals with high blood pressure are at a significantly increased risk of developing diabetes compared to those without high blood pressure. The reason behind this increased risk is that high blood pressure can lead to damage of blood vessels and the nerves that control the heart, increasing the likelihood of developing heart disease and other complications associated with diabetes."
+   }
+  },
+  {
+   "sender": "critic",
+   "receiver": "writer",
+   "kind": "revision_request",
+   "payload": {
+    "round": 0,
+    "issues": [
+     "Thiếu số kết quả chính F1 = 25,2%. Trong 64.924 người bị huyết áp cao, 25,2% (16.330 người) được chẩn đoán tiểu đường.",
+     "Thiếu số kết quả chính F2 = 14,7%. Trong 150.000 người được khảo sát, 14,7% (22.101 người) được chẩn đoán tiểu đường."
+    ]
+   }
+  },
+  {
+   "sender": "writer",
+   "receiver": "critic",
+   "kind": "draft",
+   "payload": {
+    "round": 1,
+    "by": "Qwen sửa theo phản biện",
+    "text": "Among 64,924 respondents with high blood pressure, 25.2% (16,330 people) are diagnosed with diabetes. This represents a 1.71 times higher rate compared to the whole sample of 150,000 surveyed people, who have a 14.7% (22,101 people) diagnosis rate. The reason why high blood pressure increases the risk of developing diabetes is that it can strain the heart, damage blood vessels, and lead to other conditions like high blood pressure and high cholesterol, which are known risk factors for heart disease."
+   }
+  },
+  {
+   "sender": "critic",
+   "receiver": "coordinator",
+   "kind": "approval",
+   "payload": {
+    "round": 1,
+    "numbers": 7
+   }
+  },
+  {
+   "sender": "coordinator",
+   "receiver": "user",
+   "kind": "verdict",
+   "payload": {
+    "status": "verified_numbers",
+    "label": "Đã kiểm chứng số liệu bằng công cụ",
+    "revisions": 1
+   }
+  }
+ ]
+}

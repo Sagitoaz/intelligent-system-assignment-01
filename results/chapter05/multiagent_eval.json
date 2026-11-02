@@ -1,24 +1,24 @@
 {
   "note": "Một RAG đơn = RAGEngine.answer (Chương 5). Nhóm agent = MultiAgentTeam (Chương 7). Đáp án tính bằng pandas từ BRFSS 150.000 dòng.",
   "csv": "data\\chapter05\\brfss2023_diabetes_150k.csv",
-  "questions": 1,
+  "questions": 6,
   "summary": {
     "rag": {
       "complex_headline_correct": [
         0,
-        1
+        6
       ],
       "complex_all_numbers_correct": [
         0,
-        1
+        6
       ],
       "complex_wrongly_refused": [
-        1,
-        1
+        6,
+        6
       ],
       "complex_has_source": [
         0,
-        1
+        6
       ],
       "simple_correct": [
         0,
@@ -32,27 +32,27 @@
         0,
         0
       ],
-      "seconds_complex": 75.933678100002,
+      "seconds_complex": 50.780233583330606,
       "seconds_simple": null,
       "seconds_off_scope": null,
       "steps_mean": 2.0
     },
     "team": {
       "complex_headline_correct": [
-        1,
-        1
+        6,
+        6
       ],
       "complex_all_numbers_correct": [
-        1,
-        1
+        6,
+        6
       ],
       "complex_wrongly_refused": [
         0,
-        1
+        6
       ],
       "complex_has_source": [
-        1,
-        1
+        6,
+        6
       ],
       "simple_correct": [
         0,
@@ -66,34 +66,34 @@
         0,
         0
       ],
-      "seconds_complex": 302.44078669999726,
+      "seconds_complex": 216.7694815499999,
       "seconds_simple": null,
       "seconds_off_scope": null,
-      "steps_mean": 12.0
+      "steps_mean": 10.5
     },
     "critic": {
-      "complex_questions": 1,
-      "first_draft_rejected": 1,
+      "complex_questions": 6,
+      "first_draft_rejected": 5,
       "first_draft_headline_correct": [
-        1,
-        1
+        6,
+        6
       ],
       "first_draft_all_correct": [
-        0,
-        1
+        2,
+        6
       ],
       "final_headline_correct": [
-        1,
-        1
+        6,
+        6
       ],
       "final_all_correct": [
-        1,
-        1
+        6,
+        6
       ],
-      "revisions_total": 2,
-      "questions_with_revision": 1,
-      "fixed_after_revision": 1,
-      "ended_with_warning": 0,
+      "revisions_total": 9,
+      "questions_with_revision": 5,
+      "fixed_after_revision": 3,
+      "ended_with_warning": 2,
       "simple_first_draft_rejected": 0
     }
   },
@@ -157,6 +157,346 @@
         "numbers_found": [],
         "correct": false,
         "seconds": 75.933678100002,
+        "steps": 2,
+        "status": "insufficient_evidence",
+        "has_source": false,
+        "answer": "Không đủ thông tin trong tài liệu để trả lời câu hỏi này.",
+        "foreign_numbers": []
+      },
+      "plan_mode": "data"
+    },
+    {
+      "id": "C02",
+      "kind": "phức hợp",
+      "question": "Chênh lệch tỉ lệ tiểu đường giữa nam và nữ là bao nhiêu điểm phần trăm?",
+      "expected": [
+        [
+          2.276,
+          "pct",
+          "chênh lệch"
+        ],
+        [
+          15.907,
+          "pct",
+          "nhóm cao"
+        ],
+        [
+          13.631,
+          "pct",
+          "nhóm thấp"
+        ]
+      ],
+      "team": {
+        "refused": false,
+        "headline_correct": true,
+        "all_correct": true,
+        "numbers_found": [
+          "72.690",
+          "15,9 %",
+          "11.563",
+          "77.310",
+          "13,6 %",
+          "10.538",
+          "2,3 điểm phần trăm"
+        ],
+        "correct": true,
+        "seconds": 200.98098240001127,
+        "steps": 9,
+        "agents": 6,
+        "revisions": 1,
+        "status": "verified_numbers",
+        "has_source": true,
+        "answer": "Trong 72.690 nam giới được khảo sát, 15,9% (11.563 người) bị chẩn đoán mắc bệnh tiểu đường. Trong 77.310 phụ nữ được khảo sát, 13,6% (10.538 người) bị chẩn đoán mắc bệnh tiểu đường. Điều này cho thấy sự khác biệt là 2,3 điểm phần trăm giữa nam giới và nữ giới trong việc chẩn đoán bệnh tiểu đường.",
+        "draft_headline_correct": true,
+        "draft_all_correct": false,
+        "draft_review_ok": false,
+        "draft_issues": [
+          "Thiếu số kết quả chính F1 = 15,9%. Trong 72.690 người nam giới, 15,9% (11.563 người) được chẩn đoán tiểu đường.",
+          "Thiếu số kết quả chính F2 = 13,6%. Trong 77.310 người nữ giới, 13,6% (10.538 người) được chẩn đoán tiểu đường.",
+          "Thiếu câu nói rõ đây là số liệu của mẫu khảo sát (không đại diện cho toàn dân)."
+        ],
+        "draft_text": "The difference in the percentage of men and women diagnosed with diabetes is 2.3 percentage points."
+      },
+      "rag": {
+        "refused": true,
+        "headline_correct": false,
+        "all_correct": false,
+        "numbers_found": [],
+        "correct": false,
+        "seconds": 42.82172599999467,
+        "steps": 2,
+        "status": "insufficient_evidence",
+        "has_source": false,
+        "answer": "Không đủ thông tin trong tài liệu để trả lời câu hỏi này.",
+        "foreign_numbers": []
+      },
+      "plan_mode": "data"
+    },
+    {
+      "id": "C03",
+      "kind": "phức hợp",
+      "question": "BMI trung bình của nhóm mắc tiểu đường cao hơn nhóm không mắc bao nhiêu?",
+      "expected": [
+        [
+          3.72,
+          "bmi",
+          "chênh lệch BMI"
+        ],
+        [
+          31.924,
+          "bmi",
+          "BMI nhóm mắc"
+        ],
+        [
+          28.203,
+          "bmi",
+          "BMI nhóm không mắc"
+        ]
+      ],
+      "team": {
+        "refused": false,
+        "headline_correct": true,
+        "all_correct": true,
+        "numbers_found": [
+          "31.9",
+          "22,101",
+          "28.2",
+          "122,896",
+          "3.7",
+          "150,000"
+        ],
+        "correct": true,
+        "seconds": 230.8517171999847,
+        "steps": 11,
+        "agents": 6,
+        "revisions": 2,
+        "status": "verified_numbers",
+        "has_source": true,
+        "answer": "Bản dịch tự động chưa đáng tin nên hiển thị nguyên văn tiếng Anh từ mô hình: The average BMI of people with diabetes is 31.9 (over 22,101 people). The average BMI of people without diabetes is 28.2 (over 122,896 people). The diabetes group is higher than the group without diabetes by 3.7 BMI points. These figures describe the CDC BRFSS 2023 survey sample of 150,000 people, without survey weights, so they describe this sample and do not represent the whole US population.",
+        "draft_headline_correct": true,
+        "draft_all_correct": false,
+        "draft_review_ok": false,
+        "draft_issues": [
+          "Thiếu số kết quả chính F2 = 28,2. BMI trung bình của người không mắc tiểu đường là 28,2 (tính trên 122.896 người)."
+        ],
+        "draft_text": "The average BMI of people with diabetes is 31.9, which is 3.7 BMI points higher than the average BMI of people without diabetes, according to the survey sample."
+      },
+      "rag": {
+        "refused": true,
+        "headline_correct": false,
+        "all_correct": false,
+        "numbers_found": [],
+        "correct": false,
+        "seconds": 48.69153959999676,
+        "steps": 2,
+        "status": "insufficient_evidence",
+        "has_source": false,
+        "answer": "Không đủ thông tin trong tài liệu để trả lời câu hỏi này.",
+        "foreign_numbers": []
+      },
+      "plan_mode": "data"
+    },
+    {
+      "id": "C04",
+      "kind": "phức hợp",
+      "question": "Nhóm tuổi nào có tỉ lệ tiểu đường cao nhất và gấp mấy lần nhóm thấp nhất?",
+      "expected": [
+        [
+          15.147,
+          "ratio",
+          "tỉ số"
+        ],
+        [
+          23.064,
+          "pct",
+          "nhóm cao nhất"
+        ],
+        [
+          1.523,
+          "pct",
+          "nhóm thấp nhất"
+        ]
+      ],
+      "team": {
+        "refused": false,
+        "headline_correct": true,
+        "all_correct": true,
+        "numbers_found": [
+          "75",
+          "79",
+          "23,1 %",
+          "2.874",
+          "12.461",
+          "18",
+          "24",
+          "1,5 %",
+          "77",
+          "5.057",
+          "75",
+          "79",
+          "15,15 lần",
+          "18",
+          "24",
+          "150.000"
+        ],
+        "correct": true,
+        "seconds": 176.83429210001486,
+        "steps": 11,
+        "agents": 6,
+        "revisions": 2,
+        "status": "warnings",
+        "has_source": true,
+        "answer": "Nhóm có tỉ lệ cao nhất là người thuộc nhóm tuổi 75-79: 23,1% (2.874 trong 12.461 người) được chẩn đoán tiểu đường. Nhóm có tỉ lệ thấp nhất là người thuộc nhóm tuổi 18-24: 1,5% (77 trong 5.057 người) được chẩn đoán tiểu đường. Tỉ lệ ở nhóm tuổi 75-79 gấp 15,15 lần ở nhóm tuổi 18-24. Đây là số liệu của mẫu khảo sát CDC BRFSS 2023 gồm 150.000 người, chưa hiệu chỉnh trọng số, nên chỉ mô tả mẫu này chứ không đại diện cho toàn dân Mỹ.",
+        "draft_headline_correct": true,
+        "draft_all_correct": true,
+        "draft_review_ok": false,
+        "draft_issues": [
+          "Số 75 không có trong bằng chứng (không khớp công cụ hay đoạn tài liệu). Bằng chứng đúng: F1: Nhóm có tỉ lệ cao nhất là người thuộc nhóm tuổi 75-79: 23,1% (2.874 trong 12.461 người) được chẩn đoán tiểu đường.; F2: Nhóm có tỉ lệ thấp nhất là người thuộc nhóm tuổi 18-24: 1,5% (77 trong 5.057 người) được chẩn đoán tiểu đường.",
+          "Số 79 không có trong bằng chứng (không khớp công cụ hay đoạn tài liệu). Bằng chứng đúng: F1: Nhóm có tỉ lệ cao nhất là người thuộc nhóm tuổi 75-79: 23,1% (2.874 trong 12.461 người) được chẩn đoán tiểu đường.; F2: Nhóm có tỉ lệ thấp nhất là người thuộc nhóm tuổi 18-24: 1,5% (77 trong 5.057 người) được chẩn đoán tiểu đường.",
+          "Số 18 không có trong bằng chứng (không khớp công cụ hay đoạn tài liệu). Bằng chứng đúng: F1: Nhóm có tỉ lệ cao nhất là người thuộc nhóm tuổi 75-79: 23,1% (2.874 trong 12.461 người) được chẩn đoán tiểu đường.; F2: Nhóm có tỉ lệ thấp nhất là người thuộc nhóm tuổi 18-24: 1,5% (77 trong 5.057 người) được chẩn đoán tiểu đường.",
+          "Số 24 không có trong bằng chứng (không khớp công cụ hay đoạn tài liệu). Bằng chứng đúng: F1: Nhóm có tỉ lệ cao nhất là người thuộc nhóm tuổi 75-79: 23,1% (2.874 trong 12.461 người) được chẩn đoán tiểu đường.; F2: Nhóm có tỉ lệ thấp nhất là người thuộc nhóm tuổi 18-24: 1,5% (77 trong 5.057 người) được chẩn đoán tiểu đường.",
+          "Thiếu câu nói rõ đây là số liệu của mẫu khảo sát (không đại diện cho toàn dân)."
+        ],
+        "draft_text": "Nhóm tuổi 75-79 có tỷ lệ tiểu đường cao nhất với 23,1% (2,874 người), gấp 15,15 lần nhóm tuổi 18-24 với chỉ 1,5% (77 người)."
+      },
+      "rag": {
+        "refused": true,
+        "headline_correct": false,
+        "all_correct": false,
+        "numbers_found": [],
+        "correct": false,
+        "seconds": 35.97928939998383,
+        "steps": 2,
+        "status": "insufficient_evidence",
+        "has_source": false,
+        "answer": "Không đủ thông tin trong tài liệu để trả lời câu hỏi này.",
+        "foreign_numbers": []
+      },
+      "plan_mode": "data"
+    },
+    {
+      "id": "C05",
+      "kind": "phức hợp",
+      "question": "Tỉ lệ tiểu đường ở người béo phì gấp mấy lần cả mẫu, và vì sao béo phì làm tăng nguy cơ?",
+      "expected": [
+        [
+          1.547,
+          "ratio",
+          "tỉ số"
+        ],
+        [
+          22.792,
+          "pct",
+          "tỉ lệ nhóm"
+        ],
+        [
+          14.734,
+          "pct",
+          "tỉ lệ chung"
+        ]
+      ],
+      "team": {
+        "refused": false,
+        "headline_correct": true,
+        "all_correct": true,
+        "numbers_found": [
+          "52.768",
+          "30",
+          "22,8 %",
+          "12.027",
+          "150.000",
+          "14,7 %",
+          "22.101",
+          "30",
+          "1,55 lần",
+          "150.000"
+        ],
+        "correct": true,
+        "seconds": 236.15462149999803,
+        "steps": 12,
+        "agents": 7,
+        "revisions": 2,
+        "status": "warnings",
+        "has_source": true,
+        "answer": "Trong 52.768 người béo phì (BMI từ 30), 22,8% (12.027 người) được chẩn đoán tiểu đường. Trong 150.000 người được khảo sát, 14,7% (22.101 người) được chẩn đoán tiểu đường. Tỉ lệ ở nhóm béo phì (BMI từ 30) gấp 1,55 lần ở cả mẫu. Theo tài liệu (CDC): Có cả huyết áp cao và tiểu đường có thể tăng nguy cơ mắc bệnh tim rất nhiều. Đây là số liệu của mẫu khảo sát CDC BRFSS 2023 gồm 150.000 người, chưa hiệu chỉnh trọng số, nên chỉ mô tả mẫu này chứ không đại diện cho toàn dân Mỹ.",
+        "draft_headline_correct": true,
+        "draft_all_correct": false,
+        "draft_review_ok": false,
+        "draft_issues": [
+          "Thiếu số kết quả chính F1 = 22,8%. Trong 52.768 người béo phì (BMI từ 30), 22,8% (12.027 người) được chẩn đoán tiểu đường.",
+          "Thiếu số kết quả chính F2 = 14,7%. Trong 150.000 người được khảo sát, 14,7% (22.101 người) được chẩn đoán tiểu đường."
+        ],
+        "draft_text": "The percentage of people with obesity who are diagnosed with diabetes is 1.55 times higher than the overall sample. This indicates that obesity significantly increases the likelihood of developing diabetes."
+      },
+      "rag": {
+        "refused": true,
+        "headline_correct": false,
+        "all_correct": false,
+        "numbers_found": [],
+        "correct": false,
+        "seconds": 40.56874109999626,
+        "steps": 2,
+        "status": "insufficient_evidence",
+        "has_source": false,
+        "answer": "Không đủ thông tin trong tài liệu để trả lời câu hỏi này.",
+        "foreign_numbers": []
+      },
+      "plan_mode": "data"
+    },
+    {
+      "id": "C06",
+      "kind": "phức hợp",
+      "question": "Người không vận động hơn người có vận động bao nhiêu điểm phần trăm về tỉ lệ tiểu đường, và vì sao vận động giúp ích?",
+      "expected": [
+        [
+          12.689,
+          "pct",
+          "chênh lệch"
+        ],
+        [
+          24.515,
+          "pct",
+          "nhóm cao"
+        ],
+        [
+          11.826,
+          "pct",
+          "nhóm thấp"
+        ]
+      ],
+      "team": {
+        "refused": false,
+        "headline_correct": true,
+        "all_correct": true,
+        "numbers_found": [
+          "150.000",
+          "24,5 %",
+          "8.427",
+          "11,8 %",
+          "13.674",
+          "12,7 điểm phần trăm"
+        ],
+        "correct": true,
+        "seconds": 153.35448939999333,
+        "steps": 8,
+        "agents": 7,
+        "revisions": 0,
+        "status": "verified_numbers",
+        "has_source": true,
+        "answer": "Trong 150.000 người được khảo sát, những người ít vận động có 24,5% (8.427 người) bị mắc bệnh tiểu đường so với 11,8% (13.674 người) trong nhóm vận động. Điều này cho thấy nhóm ít vận động cao hơn nhóm vận động 12,7 điểm phần trăm. Vận động thể chất như tập aerobic như đi bộ, nhảy nhót, di chuyển bằng xe đạp hoặc bơi lội có thể giúp quản lý bệnh tiểu đường bằng cách cải thiện mức đường huyết và giảm nguy cơ mắc các bệnh tim và các biến chứng khác.",
+        "draft_headline_correct": true,
+        "draft_all_correct": true,
+        "draft_review_ok": true,
+        "draft_issues": [],
+        "draft_text": "Among the 150,000 adults surveyed, those who are physically inactive have a 24.5% (8,427 people) diagnosed with diabetes compared to 11.8% (13,674 people) among those who are physically active. This indicates that the inactive group is higher than the active group by 12.7 percentage points. Physical activity, such as aerobic exercises like walking, dancing, wheelchair rolling, or swimming, can help manage diabetes by improving blood sugar levels and reducing the risk of heart disease and other complications."
+      },
+      "rag": {
+        "refused": true,
+        "headline_correct": false,
+        "all_correct": false,
+        "numbers_found": [],
+        "correct": false,
+        "seconds": 60.68642730001011,
         "steps": 2,
         "status": "insufficient_evidence",
         "has_source": false,
