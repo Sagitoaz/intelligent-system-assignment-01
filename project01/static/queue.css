@@ -1,0 +1,59 @@
+/* Tab Hàng đợi và thẻ tải PDF */
+#view-queue h3{font-size:17px;margin-bottom:6px}
+#view-queue h4{font-size:14px;margin:12px 0 5px;color:var(--ink2)}
+.q-hero{background:linear-gradient(135deg,#ffe6f1,#efe8ff)!important;border-color:#f5c3da!important}
+.q-rule{margin-top:8px;background:#fff;border:2px dashed #e8508a;border-radius:12px;padding:8px 11px;font-size:13px}
+.q-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.q-card{display:flex;gap:10px;background:#fff;border:2.5px solid #e3ecfa;border-left:8px solid var(--lc);border-radius:16px;padding:10px 12px;box-shadow:var(--shadow);cursor:pointer;transition:.12s}
+.q-card:hover{transform:translateY(-1px)}
+.q-card.sel{border-color:var(--lc);background:linear-gradient(135deg,#fff,#f4f9ff)}
+.q-card.danger{background:linear-gradient(135deg,#fff,#fff0ee)}
+.q-rank{flex:0 0 30px;height:30px;border-radius:50%;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:15px}
+.q-rank.q-wait{background:#c3d0e6}
+.q-main{flex:1;min-width:0}
+.q-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.q-top b{font-size:16px}
+.q-lv{color:#fff;border-radius:999px;padding:2px 11px;font-size:12.5px;font-weight:900}
+.q-story{font-size:12.5px;color:var(--muted);margin:3px 0 6px;line-height:1.35}
+.q-mini{display:flex;height:9px;border-radius:99px;overflow:hidden;background:#e8eefa;gap:2px}
+.q-mini i{display:block}
+.q-meta{font-size:12.5px;margin:5px 0}
+.q-flags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
+.q-flag{border-radius:999px;padding:2px 9px;font-size:12px;font-weight:800;border:2px solid}
+.q-flag.danger{background:#ffe5e3;border-color:#f08c86;color:#a8201a}
+.q-flag.warn{background:#fff4d6;border-color:#f0d58a;color:#8a5a00}
+.q-flag.none{background:#e3f7f1;border-color:#a8e0d2;color:#0b6f63}
+.q-why{background:#fdeef5;border:2px solid #f4c3d9;border-radius:10px;padding:6px 9px;font-size:12.5px;margin:4px 0;line-height:1.4}
+.q-card .btn-row .btn{flex:1}
+.q-follow{border-color:#cdd9f5}
+.q-sim{background:#fff4d6;border:2px solid #f3d98b;border-radius:12px;padding:7px 11px;font-size:13px;margin-bottom:8px}
+.q-svg{width:100%;height:auto;background:#fff;border:2px solid #e3ecfa;border-radius:12px;display:block}
+.q-legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;margin:6px 0 8px}
+.q-legend span{display:inline-flex;align-items:center;gap:5px}
+.q-legend i{display:inline-block;width:18px;height:4px;border-radius:2px}
+.q-legend i.dash{height:0;border-top:3px dashed #7060d8;background:none!important}
+.q-legend i.zone{height:11px;width:14px;border:1.5px solid #c8d4ea;border-radius:3px}
+.q-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin:6px 0}
+.q-stat{background:#fff;border:2px solid var(--c);border-radius:12px;padding:6px 9px}
+.q-stat span{display:block;font-size:11.5px;color:var(--muted)}
+.q-stat b{font-size:14px;color:var(--c)}
+.q-comment{font-size:13.5px;margin:8px 0}
+.q-slider{background:#eef5ff;border:2px solid #cfe0fa;border-radius:12px;padding:8px 12px;margin:8px 0}
+.q-slider input{width:100%;accent-color:#2589e0}
+.q-ticks{display:flex;justify-content:space-between;font-size:12px;font-weight:800;padding:0 4px;color:var(--muted)}
+.q-week{background:#f7fbff;border:2px solid #dbe8fb;border-radius:14px;padding:9px 12px}
+.q-wk-h{font-size:13.5px}
+.q-chips{display:flex;flex-wrap:wrap;gap:6px}
+.q-chip{background:#fff;border:2px solid #cdd9f5;border-radius:999px;padding:3px 10px;font-size:13px;font-weight:800}
+.q-fine{font-size:12px;color:var(--muted);margin:6px 0 0}
+.q-chg{list-style:none;padding:0;margin:0 0 6px;display:flex;flex-direction:column;gap:5px}
+.q-chg li{border-radius:10px;padding:5px 9px;font-size:13px;border:2px solid}
+.q-chg li.chg{background:#fff4d6;border-color:#f0d58a}
+.q-chg li.add{background:#e3f7f1;border-color:#a8e0d2}
+.q-chg li.del{background:#ffe5e3;border-color:#f4b1ad}
+.q-why-l{margin:4px 0 0;padding-left:18px;font-size:13px}
+.q-why-l li{margin:3px 0}
+.q-rln{font-size:13px;font-weight:800;color:#1b5fb0;margin:8px 0 0}
+.q-foot{text-align:center;font-size:12px;color:var(--muted)}
+.q-pdf{background:linear-gradient(135deg,#ffe6f1,#e8f0ff);border-color:#f5c3da;margin-top:12px}
+.q-pdf-msg{font-size:13px;margin-left:8px}

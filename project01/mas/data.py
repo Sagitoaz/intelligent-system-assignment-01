@@ -28,6 +28,8 @@ PERSONAS = [
     dict(id="an", name="Em An, 24 tuổi", story="Sinh viên hay thức khuya, ăn vặt nhiều nhưng còn trẻ, cân nặng bình thường.",
          profile=dict(DEFAULT, name="Em An", age_years=24, sex="female", height_cm=158, weight_kg=51, phys_activity=False,
                       fruits_daily=False, veggies_daily=False, gen_health=3, mental_bad_days=10, fasting_glucose=92)),
+    dict(id="hoa", name="Cô Hoa, 41 tuổi", story="Trông khỏe, cân nặng bình thường, ăn uống ổn, nhưng lần xét nghiệm gần đây đường huyết đói lên 190 mg/dL. Mô hình dữ liệu thấy hồ sơ lành mạnh nên hai bên bất đồng.",
+         profile=dict(DEFAULT, name="Cô Hoa", age_years=41, sex="female", height_cm=160, weight_kg=54, gen_health=2, fasting_glucose=190)),
 ]
 
 

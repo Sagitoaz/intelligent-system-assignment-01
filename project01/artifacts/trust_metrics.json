@@ -1,0 +1,1359 @@
+{
+ "test_rows": 50736,
+ "class_counts_test": {
+  "none": 42741,
+  "pre": 926,
+  "diabetes": 7069
+ },
+ "decision_scale": [
+  1.0,
+  1.5,
+  0.8999999761581421
+ ],
+ "accuracy": 0.7519,
+ "accuracy_ci": [
+  0.7481,
+  0.7556
+ ],
+ "baseline_always_none": {
+  "accuracy": 0.8424,
+  "recall_pre": 0.0,
+  "recall_diabetes": 0.0
+ },
+ "per_class": [
+  {
+   "id": "none",
+   "name": "Không tiểu đường",
+   "support": 42741,
+   "predicted": 36707,
+   "precision": 0.9281,
+   "recall": 0.7971,
+   "f1": 0.8576
+  },
+  {
+   "id": "pre",
+   "name": "Tiền tiểu đường",
+   "support": 926,
+   "predicted": 4070,
+   "precision": 0.0398,
+   "recall": 0.1749,
+   "f1": 0.0649
+  },
+  {
+   "id": "diabetes",
+   "name": "Tiểu đường",
+   "support": 7069,
+   "predicted": 9959,
+   "precision": 0.3931,
+   "recall": 0.5538,
+   "f1": 0.4598
+  }
+ ],
+ "confusion_matrix": [
+  [
+   34069,
+   2977,
+   5695
+  ],
+  [
+   415,
+   162,
+   349
+  ],
+  [
+   2223,
+   931,
+   3915
+  ]
+ ],
+ "confusion_labels": [
+  "Không tiểu đường",
+  "Tiền tiểu đường",
+  "Tiểu đường"
+ ],
+ "macro_f1": 0.4608,
+ "pre_warning": "Recall nhóm tiền tiểu đường chỉ 17,5%: hơn 83% người tiền tiểu đường bị bỏ sót.",
+ "calibration": {
+  "diabetes": {
+   "bins": [
+    {
+     "lo": 0.0,
+     "hi": 0.1,
+     "n": 17699,
+     "mean_pred": 0.0382,
+     "observed": 0.0145
+    },
+    {
+     "lo": 0.1,
+     "hi": 0.2,
+     "n": 8211,
+     "mean_pred": 0.1469,
+     "observed": 0.0575
+    },
+    {
+     "lo": 0.2,
+     "hi": 0.3,
+     "n": 6998,
+     "mean_pred": 0.2502,
+     "observed": 0.1147
+    },
+    {
+     "lo": 0.3,
+     "hi": 0.4,
+     "n": 6275,
+     "mean_pred": 0.3473,
+     "observed": 0.1885
+    },
+    {
+     "lo": 0.4,
+     "hi": 0.5,
+     "n": 5071,
+     "mean_pred": 0.4488,
+     "observed": 0.2861
+    },
+    {
+     "lo": 0.5,
+     "hi": 0.6,
+     "n": 3973,
+     "mean_pred": 0.5467,
+     "observed": 0.3894
+    },
+    {
+     "lo": 0.6,
+     "hi": 0.7,
+     "n": 2030,
+     "mean_pred": 0.642,
+     "observed": 0.5074
+    },
+    {
+     "lo": 0.7,
+     "hi": 0.8,
+     "n": 460,
+     "mean_pred": 0.7347,
+     "observed": 0.6848
+    },
+    {
+     "lo": 0.8,
+     "hi": 0.9,
+     "n": 19,
+     "mean_pred": 0.8229,
+     "observed": 0.5789
+    },
+    {
+     "lo": 0.9,
+     "hi": 1.0,
+     "n": 0,
+     "mean_pred": null,
+     "observed": null
+    }
+   ],
+   "ece": 0.0955,
+   "brier": 0.1099,
+   "base_rate": 0.1393
+  },
+  "pre": {
+   "bins": [
+    {
+     "lo": 0.0,
+     "hi": 0.1,
+     "n": 15280,
+     "mean_pred": 0.0449,
+     "observed": 0.0043
+    },
+    {
+     "lo": 0.1,
+     "hi": 0.2,
+     "n": 13346,
+     "mean_pred": 0.1551,
+     "observed": 0.0131
+    },
+    {
+     "lo": 0.2,
+     "hi": 0.3,
+     "n": 21193,
+     "mean_pred": 0.2426,
+     "observed": 0.0305
+    },
+    {
+     "lo": 0.3,
+     "hi": 0.4,
+     "n": 917,
+     "mean_pred": 0.3142,
+     "observed": 0.0414
+    },
+    {
+     "lo": 0.4,
+     "hi": 0.5,
+     "n": 0,
+     "mean_pred": null,
+     "observed": null
+    },
+    {
+     "lo": 0.5,
+     "hi": 0.6,
+     "n": 0,
+     "mean_pred": null,
+     "observed": null
+    },
+    {
+     "lo": 0.6,
+     "hi": 0.7,
+     "n": 0,
+     "mean_pred": null,
+     "observed": null
+    },
+    {
+     "lo": 0.7,
+     "hi": 0.8,
+     "n": 0,
+     "mean_pred": null,
+     "observed": null
+    },
+    {
+     "lo": 0.8,
+     "hi": 0.9,
+     "n": 0,
+     "mean_pred": null,
+     "observed": null
+    },
+    {
+     "lo": 0.9,
+     "hi": 1.0,
+     "n": 0,
+     "mean_pred": null,
+     "observed": null
+    }
+   ],
+   "ece": 0.1431,
+   "brier": 0.0442,
+   "base_rate": 0.0183
+  },
+  "index": {
+   "bins": [
+    {
+     "lo": 0.0,
+     "hi": 0.1,
+     "n": 13050,
+     "mean_pred": 0.0434,
+     "observed": 0.0136
+    },
+    {
+     "lo": 0.1,
+     "hi": 0.2,
+     "n": 7074,
+     "mean_pred": 0.1479,
+     "observed": 0.0421
+    },
+    {
+     "lo": 0.2,
+     "hi": 0.3,
+     "n": 5765,
+     "mean_pred": 0.2492,
+     "observed": 0.0763
+    },
+    {
+     "lo": 0.3,
+     "hi": 0.4,
+     "n": 5803,
+     "mean_pred": 0.3509,
+     "observed": 0.1287
+    },
+    {
+     "lo": 0.4,
+     "hi": 0.5,
+     "n": 6076,
+     "mean_pred": 0.4485,
+     "observed": 0.1965
+    },
+    {
+     "lo": 0.5,
+     "hi": 0.6,
+     "n": 5264,
+     "mean_pred": 0.5497,
+     "observed": 0.2899
+    },
+    {
+     "lo": 0.6,
+     "hi": 0.7,
+     "n": 4719,
+     "mean_pred": 0.6481,
+     "observed": 0.4083
+    },
+    {
+     "lo": 0.7,
+     "hi": 0.8,
+     "n": 2570,
+     "mean_pred": 0.7406,
+     "observed": 0.5409
+    },
+    {
+     "lo": 0.8,
+     "hi": 0.9,
+     "n": 412,
+     "mean_pred": 0.8262,
+     "observed": 0.7184
+    },
+    {
+     "lo": 0.9,
+     "hi": 1.0,
+     "n": 3,
+     "mean_pred": 0.9091,
+     "observed": 0.0
+    }
+   ],
+   "ece": 0.158,
+   "brier": 0.1396,
+   "base_rate": 0.1576
+  }
+ },
+ "alerts": {
+  "main": {
+   "threshold": 0.25,
+   "alerts": 27625,
+   "alert_rate": 0.5445,
+   "precision_diabetes": {
+    "k": 6541,
+    "n": 27625,
+    "value": 0.2368,
+    "ci": [
+     0.2318,
+     0.2418
+    ]
+   },
+   "recall_diabetes": {
+    "k": 6541,
+    "n": 7069,
+    "value": 0.9253,
+    "ci": [
+     0.9189,
+     0.9312
+    ]
+   },
+   "false_alarm_rate": {
+    "k": 20305,
+    "n": 42741,
+    "value": 0.4751,
+    "ci": [
+     0.4703,
+     0.4798
+    ]
+   },
+   "false_alerts_among_alerts": {
+    "k": 20305,
+    "n": 27625,
+    "value": 0.735,
+    "ci": [
+     0.7298,
+     0.7402
+    ]
+   },
+   "precision_any": {
+    "k": 7320,
+    "n": 27625,
+    "value": 0.265,
+    "ci": [
+     0.2598,
+     0.2702
+    ]
+   },
+   "recall_any": {
+    "k": 7320,
+    "n": 7995,
+    "value": 0.9156,
+    "ci": [
+     0.9093,
+     0.9215
+    ]
+   },
+   "recall_pre": {
+    "k": 779,
+    "n": 926,
+    "value": 0.8413,
+    "ci": [
+     0.8163,
+     0.8634
+    ]
+   }
+  },
+  "loose": {
+   "threshold": 0.1,
+   "alerts": 37686,
+   "alert_rate": 0.7428,
+   "precision_diabetes": {
+    "k": 6949,
+    "n": 37686,
+    "value": 0.1844,
+    "ci": [
+     0.1805,
+     0.1883
+    ]
+   },
+   "recall_diabetes": {
+    "k": 6949,
+    "n": 7069,
+    "value": 0.983,
+    "ci": [
+     0.9797,
+     0.9858
+    ]
+   },
+   "false_alarm_rate": {
+    "k": 29868,
+    "n": 42741,
+    "value": 0.6988,
+    "ci": [
+     0.6944,
+     0.7031
+    ]
+   },
+   "false_alerts_among_alerts": {
+    "k": 29868,
+    "n": 37686,
+    "value": 0.7925,
+    "ci": [
+     0.7884,
+     0.7966
+    ]
+   },
+   "precision_any": {
+    "k": 7818,
+    "n": 37686,
+    "value": 0.2075,
+    "ci": [
+     0.2034,
+     0.2116
+    ]
+   },
+   "recall_any": {
+    "k": 7818,
+    "n": 7995,
+    "value": 0.9779,
+    "ci": [
+     0.9744,
+     0.9809
+    ]
+   },
+   "recall_pre": {
+    "k": 869,
+    "n": 926,
+    "value": 0.9384,
+    "ci": [
+     0.9211,
+     0.9522
+    ]
+   }
+  }
+ },
+ "groups": {
+  "age": {
+   "title": "Nhóm tuổi",
+   "rows": [
+    {
+     "group": "18–34 tuổi",
+     "n": 4840,
+     "diabetes_n": 101,
+     "pre_n": 32,
+     "accuracy": {
+      "k": 4627,
+      "n": 4840,
+      "value": 0.956,
+      "ci": [
+       0.9498,
+       0.9614
+      ]
+     },
+     "recall_diabetes": {
+      "k": 12,
+      "n": 101,
+      "value": 0.1188,
+      "ci": [
+       0.0693,
+       0.1963
+      ]
+     },
+     "recall_pre": {
+      "k": 5,
+      "n": 32,
+      "value": 0.1562,
+      "ci": [
+       0.0686,
+       0.3175
+      ]
+     },
+     "alert_rate": {
+      "k": 409,
+      "n": 4840,
+      "value": 0.0845,
+      "ci": [
+       0.077,
+       0.0927
+      ]
+     },
+     "alert_recall_diabetes": {
+      "k": 54,
+      "n": 101,
+      "value": 0.5347,
+      "ci": [
+       0.4379,
+       0.6289
+      ]
+     },
+     "alert_precision": {
+      "k": 54,
+      "n": 409,
+      "value": 0.132,
+      "ci": [
+       0.1026,
+       0.1683
+      ]
+     },
+     "diabetes_prevalence": {
+      "k": 101,
+      "n": 4840,
+      "value": 0.0209,
+      "ci": [
+       0.0172,
+       0.0253
+      ]
+     }
+    },
+    {
+     "group": "35–49 tuổi",
+     "n": 10145,
+     "diabetes_n": 688,
+     "pre_n": 117,
+     "accuracy": {
+      "k": 8834,
+      "n": 10145,
+      "value": 0.8708,
+      "ci": [
+       0.8641,
+       0.8772
+      ]
+     },
+     "recall_diabetes": {
+      "k": 223,
+      "n": 688,
+      "value": 0.3241,
+      "ci": [
+       0.2902,
+       0.36
+      ]
+     },
+     "recall_pre": {
+      "k": 28,
+      "n": 117,
+      "value": 0.2393,
+      "ci": [
+       0.1711,
+       0.3241
+      ]
+     },
+     "alert_rate": {
+      "k": 2869,
+      "n": 10145,
+      "value": 0.2828,
+      "ci": [
+       0.2741,
+       0.2916
+      ]
+     },
+     "alert_recall_diabetes": {
+      "k": 540,
+      "n": 688,
+      "value": 0.7849,
+      "ci": [
+       0.7526,
+       0.814
+      ]
+     },
+     "alert_precision": {
+      "k": 540,
+      "n": 2869,
+      "value": 0.1882,
+      "ci": [
+       0.1743,
+       0.2029
+      ]
+     },
+     "diabetes_prevalence": {
+      "k": 688,
+      "n": 10145,
+      "value": 0.0678,
+      "ci": [
+       0.0631,
+       0.0729
+      ]
+     }
+    },
+    {
+     "group": "50–59 tuổi",
+     "n": 11377,
+     "diabetes_n": 1427,
+     "pre_n": 199,
+     "accuracy": {
+      "k": 8725,
+      "n": 11377,
+      "value": 0.7669,
+      "ci": [
+       0.759,
+       0.7746
+      ]
+     },
+     "recall_diabetes": {
+      "k": 716,
+      "n": 1427,
+      "value": 0.5018,
+      "ci": [
+       0.4758,
+       0.5277
+      ]
+     },
+     "recall_pre": {
+      "k": 42,
+      "n": 199,
+      "value": 0.2111,
+      "ci": [
+       0.1601,
+       0.2729
+      ]
+     },
+     "alert_rate": {
+      "k": 5916,
+      "n": 11377,
+      "value": 0.52,
+      "ci": [
+       0.5108,
+       0.5292
+      ]
+     },
+     "alert_recall_diabetes": {
+      "k": 1279,
+      "n": 1427,
+      "value": 0.8963,
+      "ci": [
+       0.8794,
+       0.9111
+      ]
+     },
+     "alert_precision": {
+      "k": 1279,
+      "n": 5916,
+      "value": 0.2162,
+      "ci": [
+       0.2059,
+       0.2269
+      ]
+     },
+     "diabetes_prevalence": {
+      "k": 1427,
+      "n": 11377,
+      "value": 0.1254,
+      "ci": [
+       0.1195,
+       0.1316
+      ]
+     }
+    },
+    {
+     "group": "60–69 tuổi",
+     "n": 13202,
+     "diabetes_n": 2523,
+     "pre_n": 274,
+     "accuracy": {
+      "k": 9115,
+      "n": 13202,
+      "value": 0.6904,
+      "ci": [
+       0.6825,
+       0.6983
+      ]
+     },
+     "recall_diabetes": {
+      "k": 1542,
+      "n": 2523,
+      "value": 0.6112,
+      "ci": [
+       0.592,
+       0.63
+      ]
+     },
+     "recall_pre": {
+      "k": 42,
+      "n": 274,
+      "value": 0.1533,
+      "ci": [
+       0.1154,
+       0.2007
+      ]
+     },
+     "alert_rate": {
+      "k": 9128,
+      "n": 13202,
+      "value": 0.6914,
+      "ci": [
+       0.6835,
+       0.6992
+      ]
+     },
+     "alert_recall_diabetes": {
+      "k": 2406,
+      "n": 2523,
+      "value": 0.9536,
+      "ci": [
+       0.9447,
+       0.9612
+      ]
+     },
+     "alert_precision": {
+      "k": 2406,
+      "n": 9128,
+      "value": 0.2636,
+      "ci": [
+       0.2546,
+       0.2727
+      ]
+     },
+     "diabetes_prevalence": {
+      "k": 2523,
+      "n": 13202,
+      "value": 0.1911,
+      "ci": [
+       0.1845,
+       0.1979
+      ]
+     }
+    },
+    {
+     "group": "70 tuổi trở lên",
+     "n": 11172,
+     "diabetes_n": 2330,
+     "pre_n": 304,
+     "accuracy": {
+      "k": 6845,
+      "n": 11172,
+      "value": 0.6127,
+      "ci": [
+       0.6036,
+       0.6217
+      ]
+     },
+     "recall_diabetes": {
+      "k": 1422,
+      "n": 2330,
+      "value": 0.6103,
+      "ci": [
+       0.5903,
+       0.6299
+      ]
+     },
+     "recall_pre": {
+      "k": 45,
+      "n": 304,
+      "value": 0.148,
+      "ci": [
+       0.1125,
+       0.1923
+      ]
+     },
+     "alert_rate": {
+      "k": 9303,
+      "n": 11172,
+      "value": 0.8327,
+      "ci": [
+       0.8257,
+       0.8395
+      ]
+     },
+     "alert_recall_diabetes": {
+      "k": 2262,
+      "n": 2330,
+      "value": 0.9708,
+      "ci": [
+       0.9632,
+       0.9769
+      ]
+     },
+     "alert_precision": {
+      "k": 2262,
+      "n": 9303,
+      "value": 0.2431,
+      "ci": [
+       0.2345,
+       0.252
+      ]
+     },
+     "diabetes_prevalence": {
+      "k": 2330,
+      "n": 11172,
+      "value": 0.2086,
+      "ci": [
+       0.2011,
+       0.2162
+      ]
+     }
+    }
+   ],
+   "gaps": {
+    "accuracy": {
+     "max_gap": 0.3433,
+     "highest": "18–34 tuổi",
+     "lowest": "70 tuổi trở lên",
+     "highest_value": 0.956,
+     "lowest_value": 0.6127
+    },
+    "recall_diabetes": {
+     "max_gap": 0.4924,
+     "highest": "60–69 tuổi",
+     "lowest": "18–34 tuổi",
+     "highest_value": 0.6112,
+     "lowest_value": 0.1188
+    },
+    "alert_rate": {
+     "max_gap": 0.7482,
+     "highest": "70 tuổi trở lên",
+     "lowest": "18–34 tuổi",
+     "highest_value": 0.8327,
+     "lowest_value": 0.0845
+    },
+    "alert_recall_diabetes": {
+     "max_gap": 0.4361,
+     "highest": "70 tuổi trở lên",
+     "lowest": "18–34 tuổi",
+     "highest_value": 0.9708,
+     "lowest_value": 0.5347
+    }
+   }
+  },
+  "sex": {
+   "title": "Giới tính",
+   "rows": [
+    {
+     "group": "Nữ",
+     "n": 28209,
+     "diabetes_n": 3668,
+     "pre_n": 521,
+     "accuracy": {
+      "k": 21552,
+      "n": 28209,
+      "value": 0.764,
+      "ci": [
+       0.759,
+       0.7689
+      ]
+     },
+     "recall_diabetes": {
+      "k": 1970,
+      "n": 3668,
+      "value": 0.5371,
+      "ci": [
+       0.5209,
+       0.5532
+      ]
+     },
+     "recall_pre": {
+      "k": 97,
+      "n": 521,
+      "value": 0.1862,
+      "ci": [
+       0.1551,
+       0.2219
+      ]
+     },
+     "alert_rate": {
+      "k": 14424,
+      "n": 28209,
+      "value": 0.5113,
+      "ci": [
+       0.5055,
+       0.5172
+      ]
+     },
+     "alert_recall_diabetes": {
+      "k": 3384,
+      "n": 3668,
+      "value": 0.9226,
+      "ci": [
+       0.9135,
+       0.9308
+      ]
+     },
+     "alert_precision": {
+      "k": 3384,
+      "n": 14424,
+      "value": 0.2346,
+      "ci": [
+       0.2278,
+       0.2416
+      ]
+     },
+     "diabetes_prevalence": {
+      "k": 3668,
+      "n": 28209,
+      "value": 0.13,
+      "ci": [
+       0.1262,
+       0.134
+      ]
+     }
+    },
+    {
+     "group": "Nam",
+     "n": 22527,
+     "diabetes_n": 3401,
+     "pre_n": 405,
+     "accuracy": {
+      "k": 16594,
+      "n": 22527,
+      "value": 0.7366,
+      "ci": [
+       0.7308,
+       0.7423
+      ]
+     },
+     "recall_diabetes": {
+      "k": 1945,
+      "n": 3401,
+      "value": 0.5719,
+      "ci": [
+       0.5552,
+       0.5884
+      ]
+     },
+     "recall_pre": {
+      "k": 65,
+      "n": 405,
+      "value": 0.1605,
+      "ci": [
+       0.128,
+       0.1994
+      ]
+     },
+     "alert_rate": {
+      "k": 13201,
+      "n": 22527,
+      "value": 0.586,
+      "ci": [
+       0.5796,
+       0.5924
+      ]
+     },
+     "alert_recall_diabetes": {
+      "k": 3157,
+      "n": 3401,
+      "value": 0.9283,
+      "ci": [
+       0.9191,
+       0.9365
+      ]
+     },
+     "alert_precision": {
+      "k": 3157,
+      "n": 13201,
+      "value": 0.2391,
+      "ci": [
+       0.2319,
+       0.2465
+      ]
+     },
+     "diabetes_prevalence": {
+      "k": 3401,
+      "n": 22527,
+      "value": 0.151,
+      "ci": [
+       0.1464,
+       0.1557
+      ]
+     }
+    }
+   ],
+   "gaps": {
+    "accuracy": {
+     "max_gap": 0.0274,
+     "highest": "Nữ",
+     "lowest": "Nam",
+     "highest_value": 0.764,
+     "lowest_value": 0.7366
+    },
+    "recall_diabetes": {
+     "max_gap": 0.0348,
+     "highest": "Nam",
+     "lowest": "Nữ",
+     "highest_value": 0.5719,
+     "lowest_value": 0.5371
+    },
+    "alert_rate": {
+     "max_gap": 0.0747,
+     "highest": "Nam",
+     "lowest": "Nữ",
+     "highest_value": 0.586,
+     "lowest_value": 0.5113
+    },
+    "alert_recall_diabetes": {
+     "max_gap": 0.0057,
+     "highest": "Nam",
+     "lowest": "Nữ",
+     "highest_value": 0.9283,
+     "lowest_value": 0.9226
+    }
+   }
+  },
+  "income": {
+   "title": "Thu nhập",
+   "rows": [
+    {
+     "group": "Thu nhập thấp (dưới 25 nghìn USD/năm)",
+     "n": 11491,
+     "diabetes_n": 2619,
+     "pre_n": 308,
+     "accuracy": {
+      "k": 7045,
+      "n": 11491,
+      "value": 0.6131,
+      "ci": [
+       0.6041,
+       0.622
+      ]
+     },
+     "recall_diabetes": {
+      "k": 1762,
+      "n": 2619,
+      "value": 0.6728,
+      "ci": [
+       0.6546,
+       0.6905
+      ]
+     },
+     "recall_pre": {
+      "k": 71,
+      "n": 308,
+      "value": 0.2305,
+      "ci": [
+       0.187,
+       0.2807
+      ]
+     },
+     "alert_rate": {
+      "k": 8852,
+      "n": 11491,
+      "value": 0.7703,
+      "ci": [
+       0.7626,
+       0.7779
+      ]
+     },
+     "alert_recall_diabetes": {
+      "k": 2562,
+      "n": 2619,
+      "value": 0.9782,
+      "ci": [
+       0.9719,
+       0.9832
+      ]
+     },
+     "alert_precision": {
+      "k": 2562,
+      "n": 8852,
+      "value": 0.2894,
+      "ci": [
+       0.2801,
+       0.299
+      ]
+     },
+     "diabetes_prevalence": {
+      "k": 2619,
+      "n": 11491,
+      "value": 0.2279,
+      "ci": [
+       0.2203,
+       0.2357
+      ]
+     }
+    },
+    {
+     "group": "Thu nhập trung bình (25–50 nghìn)",
+     "n": 12483,
+     "diabetes_n": 1915,
+     "pre_n": 268,
+     "accuracy": {
+      "k": 8753,
+      "n": 12483,
+      "value": 0.7012,
+      "ci": [
+       0.6931,
+       0.7092
+      ]
+     },
+     "recall_diabetes": {
+      "k": 1079,
+      "n": 1915,
+      "value": 0.5634,
+      "ci": [
+       0.5411,
+       0.5855
+      ]
+     },
+     "recall_pre": {
+      "k": 60,
+      "n": 268,
+      "value": 0.2239,
+      "ci": [
+       0.1781,
+       0.2775
+      ]
+     },
+     "alert_rate": {
+      "k": 7952,
+      "n": 12483,
+      "value": 0.637,
+      "ci": [
+       0.6285,
+       0.6454
+      ]
+     },
+     "alert_recall_diabetes": {
+      "k": 1811,
+      "n": 1915,
+      "value": 0.9457,
+      "ci": [
+       0.9346,
+       0.955
+      ]
+     },
+     "alert_precision": {
+      "k": 1811,
+      "n": 7952,
+      "value": 0.2277,
+      "ci": [
+       0.2187,
+       0.2371
+      ]
+     },
+     "diabetes_prevalence": {
+      "k": 1915,
+      "n": 12483,
+      "value": 0.1534,
+      "ci": [
+       0.1472,
+       0.1598
+      ]
+     }
+    },
+    {
+     "group": "Thu nhập cao (từ 50 nghìn)",
+     "n": 26762,
+     "diabetes_n": 2535,
+     "pre_n": 350,
+     "accuracy": {
+      "k": 22348,
+      "n": 26762,
+      "value": 0.8351,
+      "ci": [
+       0.8306,
+       0.8395
+      ]
+     },
+     "recall_diabetes": {
+      "k": 1074,
+      "n": 2535,
+      "value": 0.4237,
+      "ci": [
+       0.4046,
+       0.443
+      ]
+     },
+     "recall_pre": {
+      "k": 31,
+      "n": 350,
+      "value": 0.0886,
+      "ci": [
+       0.0631,
+       0.123
+      ]
+     },
+     "alert_rate": {
+      "k": 10821,
+      "n": 26762,
+      "value": 0.4043,
+      "ci": [
+       0.3985,
+       0.4102
+      ]
+     },
+     "alert_recall_diabetes": {
+      "k": 2168,
+      "n": 2535,
+      "value": 0.8552,
+      "ci": [
+       0.841,
+       0.8684
+      ]
+     },
+     "alert_precision": {
+      "k": 2168,
+      "n": 10821,
+      "value": 0.2004,
+      "ci": [
+       0.1929,
+       0.208
+      ]
+     },
+     "diabetes_prevalence": {
+      "k": 2535,
+      "n": 26762,
+      "value": 0.0947,
+      "ci": [
+       0.0913,
+       0.0983
+      ]
+     }
+    }
+   ],
+   "gaps": {
+    "accuracy": {
+     "max_gap": 0.222,
+     "highest": "Thu nhập cao (từ 50 nghìn)",
+     "lowest": "Thu nhập thấp (dưới 25 nghìn USD/năm)",
+     "highest_value": 0.8351,
+     "lowest_value": 0.6131
+    },
+    "recall_diabetes": {
+     "max_gap": 0.2491,
+     "highest": "Thu nhập thấp (dưới 25 nghìn USD/năm)",
+     "lowest": "Thu nhập cao (từ 50 nghìn)",
+     "highest_value": 0.6728,
+     "lowest_value": 0.4237
+    },
+    "alert_rate": {
+     "max_gap": 0.366,
+     "highest": "Thu nhập thấp (dưới 25 nghìn USD/năm)",
+     "lowest": "Thu nhập cao (từ 50 nghìn)",
+     "highest_value": 0.7703,
+     "lowest_value": 0.4043
+    },
+    "alert_recall_diabetes": {
+     "max_gap": 0.123,
+     "highest": "Thu nhập thấp (dưới 25 nghìn USD/năm)",
+     "lowest": "Thu nhập cao (từ 50 nghìn)",
+     "highest_value": 0.9782,
+     "lowest_value": 0.8552
+    }
+   }
+  }
+ },
+ "fairness": {
+  "max_gaps": {
+   "age": {
+    "accuracy": {
+     "max_gap": 0.3433,
+     "highest": "18–34 tuổi",
+     "lowest": "70 tuổi trở lên",
+     "highest_value": 0.956,
+     "lowest_value": 0.6127
+    },
+    "recall_diabetes": {
+     "max_gap": 0.4924,
+     "highest": "60–69 tuổi",
+     "lowest": "18–34 tuổi",
+     "highest_value": 0.6112,
+     "lowest_value": 0.1188
+    },
+    "alert_rate": {
+     "max_gap": 0.7482,
+     "highest": "70 tuổi trở lên",
+     "lowest": "18–34 tuổi",
+     "highest_value": 0.8327,
+     "lowest_value": 0.0845
+    },
+    "alert_recall_diabetes": {
+     "max_gap": 0.4361,
+     "highest": "70 tuổi trở lên",
+     "lowest": "18–34 tuổi",
+     "highest_value": 0.9708,
+     "lowest_value": 0.5347
+    }
+   },
+   "sex": {
+    "accuracy": {
+     "max_gap": 0.0274,
+     "highest": "Nữ",
+     "lowest": "Nam",
+     "highest_value": 0.764,
+     "lowest_value": 0.7366
+    },
+    "recall_diabetes": {
+     "max_gap": 0.0348,
+     "highest": "Nam",
+     "lowest": "Nữ",
+     "highest_value": 0.5719,
+     "lowest_value": 0.5371
+    },
+    "alert_rate": {
+     "max_gap": 0.0747,
+     "highest": "Nam",
+     "lowest": "Nữ",
+     "highest_value": 0.586,
+     "lowest_value": 0.5113
+    },
+    "alert_recall_diabetes": {
+     "max_gap": 0.0057,
+     "highest": "Nam",
+     "lowest": "Nữ",
+     "highest_value": 0.9283,
+     "lowest_value": 0.9226
+    }
+   },
+   "income": {
+    "accuracy": {
+     "max_gap": 0.222,
+     "highest": "Thu nhập cao (từ 50 nghìn)",
+     "lowest": "Thu nhập thấp (dưới 25 nghìn USD/năm)",
+     "highest_value": 0.8351,
+     "lowest_value": 0.6131
+    },
+    "recall_diabetes": {
+     "max_gap": 0.2491,
+     "highest": "Thu nhập thấp (dưới 25 nghìn USD/năm)",
+     "lowest": "Thu nhập cao (từ 50 nghìn)",
+     "highest_value": 0.6728,
+     "lowest_value": 0.4237
+    },
+    "alert_rate": {
+     "max_gap": 0.366,
+     "highest": "Thu nhập thấp (dưới 25 nghìn USD/năm)",
+     "lowest": "Thu nhập cao (từ 50 nghìn)",
+     "highest_value": 0.7703,
+     "lowest_value": 0.4043
+    },
+    "alert_recall_diabetes": {
+     "max_gap": 0.123,
+     "highest": "Thu nhập thấp (dưới 25 nghìn USD/năm)",
+     "lowest": "Thu nhập cao (từ 50 nghìn)",
+     "highest_value": 0.9782,
+     "lowest_value": 0.8552
+    }
+   }
+  },
+  "conclusions": [
+   "Nhóm tuổi: nhóm bị bỏ sót nhiều nhất là «18–34 tuổi» (recall tiểu đường 11,9%), nhóm được phát hiện tốt nhất là «60–69 tuổi» (61,1%); chênh lệch 49,2 điểm phần trăm.",
+   "Nhóm tuổi: tỉ lệ bị cảnh báo «nguy cơ cao» dao động từ 8,5% («18–34 tuổi») đến 83,3% («70 tuổi trở lên»).",
+   "Giới tính: nhóm bị bỏ sót nhiều nhất là «Nữ» (recall tiểu đường 53,7%), nhóm được phát hiện tốt nhất là «Nam» (57,2%); chênh lệch 3,5 điểm phần trăm.",
+   "Giới tính: tỉ lệ bị cảnh báo «nguy cơ cao» dao động từ 51,1% («Nữ») đến 58,6% («Nam»).",
+   "Thu nhập: nhóm bị bỏ sót nhiều nhất là «Thu nhập cao (từ 50 nghìn)» (recall tiểu đường 42,4%), nhóm được phát hiện tốt nhất là «Thu nhập thấp (dưới 25 nghìn USD/năm)» (67,3%); chênh lệch 24,9 điểm phần trăm.",
+   "Thu nhập: tỉ lệ bị cảnh báo «nguy cơ cao» dao động từ 40,4% («Thu nhập cao (từ 50 nghìn)») đến 77,0% («Thu nhập thấp (dưới 25 nghìn USD/năm)»).",
+   "Khoảng tin cậy Wilson 95% cho biết độ chắc chắn của từng con số; nhóm có khoảng rộng (ít mẫu) thì chênh lệch có thể chỉ là ngẫu nhiên.",
+   "Chênh lệch giữa các nhóm một phần phản ánh tỉ lệ bệnh khác nhau thật sự giữa các nhóm, không hoàn toàn do mô hình thiên vị; nhưng nhóm nào recall thấp hơn thì người thuộc nhóm đó dễ bị bỏ sót hơn."
+  ],
+  "note": "Chỉ xét nhóm từ 30 mẫu trở lên."
+ },
+ "limitations": [
+  "Tiền tiểu đường chỉ chiếm 1,8% dữ liệu (4.631 hồ sơ) nên mô hình gần như không học được nhóm này; recall chỉ 17,5%.",
+  "Độ chính xác tổng 75,2% dễ gây hiểu lầm: luôn đoán «không tiểu đường» cũng đúng 84,2% số hồ sơ.",
+  "Dữ liệu BRFSS là khảo sát qua điện thoại do người dân tự khai (cân nặng, thói quen, bệnh nền), không có xét nghiệm, nên nhãn và đặc trưng đều có sai số.",
+  "Mô hình KHÔNG dùng đường huyết, A1C hay bất kỳ kết quả xét nghiệm nào; nó chỉ ước lượng nguy cơ từ lối sống và bệnh nền, không thể chẩn đoán.",
+  "Chỉ gồm dân số Mỹ năm 2015; chưa kiểm chứng trên người Việt hay các nhóm dân tộc khác nhau, nên chưa nên dùng để quyết định lâm sàng.",
+  "Nhãn là «từng được bác sĩ chẩn đoán»: người bệnh chưa được phát hiện bị tính là «không bệnh», làm số liệu độ chính xác bị lạc quan hoặc lệch.",
+  "Hệ số điều chỉnh ngưỡng (decision_scale) được chọn để cân bằng macro-F1 trên tập validation; nó tăng recall nhưng làm tăng cảnh báo sai.",
+  "Tập test cùng nguồn với tập huấn luyện (chia ngẫu nhiên), nên số liệu thực tế ở nơi khác có thể thấp hơn."
+ ]
+}

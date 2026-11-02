@@ -25,6 +25,7 @@ VOICES = {
     "coach": ("vi-VN-NamMinhNeural", "+12%", "+8%"),
     "guardian": ("vi-VN-HoaiMyNeural", "-8%", "0%"),
     "reporter": ("vi-VN-HoaiMyNeural", "+10%", "+4%"),
+    "critic": ("vi-VN-NamMinhNeural", "-18%", "-4%"),
 }
 DEFAULT_VOICE = VOICES["doctor"]
 

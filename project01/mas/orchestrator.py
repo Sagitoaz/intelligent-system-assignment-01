@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from . import rl, rules
+from . import critic as critic_mod
 from .data import SYMPTOMS, bmi, normalize
 from .dl_agent import DLAgent
 from .kb import REL_VI, KnowledgeBase
@@ -13,6 +14,7 @@ AGENTS = [
     dict(id="knowledge", name="Thủ thư tri thức", role="KB + RAG", color="#0d9f8f", blurb="Tra đồ thị tri thức tiểu đường và trích dẫn nguyên văn tài liệu của NIDDK."),
     dict(id="coach", name="Huấn luyện viên", role="Reinforcement Learning", color="#f0603a", blurb="Học bằng thử và sai cách ăn uống, vận động giữ đường huyết trong ngưỡng an toàn."),
     dict(id="guardian", name="Hộ lý an toàn", role="Luật (rule-based)", color="#e8a317", blurb="Kiểm tra các dấu hiệu nguy hiểm theo luật cố định và luôn được ưu tiên."),
+    dict(id="critic", name="Bác sĩ phản biện", role="Kiểm tra chéo", color="#8a5cf0", blurb="Đối chiếu kết luận của Bác sĩ dữ liệu với luật an toàn, số đo thật và tài liệu; nếu mâu thuẫn thì tranh luận tối đa 2 vòng."),
     dict(id="reporter", name="Thư ký báo cáo", role="Sinh hình và bảng", color="#e8508a", blurb="Tự vẽ biểu đồ và lập bảng tóm tắt cho hồ sơ vừa khám."),
 ]
 LEVELS = {"thấp": "#0d9f8f", "trung bình": "#e8a317", "cao": "#e8503a"}
@@ -77,7 +79,9 @@ class Clinic:
         pct = lambda v: f"{v * 100:.0f}%" if v >= 0.1 else f"{v * 100:.1f}%"
         risk = dl["risk"]
         rule_list = rules.evaluate(prof, dl["risk_index"], risk["diabetes"])
-        level = self.level(dl, rule_list)
+        base_level = self.level(dl, rule_list)
+        review = critic_mod.review(self, prof, dl, rule_list, base_level)
+        level = review["final_level"]
         nodes = self.kb_nodes(prof, dl)
         passages = self.kb.passages_for(nodes[:10], 3)
         facts = []
@@ -109,6 +113,13 @@ class Clinic:
                 add("guardian", "alert", f"[{r['id']}] {r['text']}", 3400, level=r["level"], focus="guardian", payload=dict(basis=r["basis"]))
         else:
             add("guardian", "speak", "Không có luật cảnh báo nào được kích hoạt với hồ sơ này. Mình vẫn nhắc: đây không phải chẩn đoán.", focus="guardian")
+        add("doctor", "handoff", "Bác sĩ phản biện, nhờ bạn kiểm tra chéo kết luận của Bác sĩ dữ liệu.", 1500, to="critic")
+        for e in review["events"]:
+            extra = {k: e[k] for k in ("round", "stance", "reply_to") if k in e}
+            payload = dict(checks=review["checks"], outcome=review["outcome"]) if e is review["events"][0] else None
+            if e["type"] == "cite" and review["quote"]:
+                payload = dict(passages=[review["quote"]])
+            add(e["agent"], e["type"], e["text"], focus=e["agent"], payload=payload, **extra)
         add("doctor", "handoff", "Huấn luyện viên hãy gợi ý một ngày sinh hoạt hợp lý.", 1500, to="coach")
         if plan:
             plan_txt = ", ".join(f"{p['hour']}h {p['label'].lower()}" for p in plan[:6])
@@ -134,7 +145,9 @@ class Clinic:
         add("doctor", "final", f"Tóm tắt cho {name}: {headline} Mình đã ghi lại lời khuyên và báo cáo bên dưới. Đây chỉ là công cụ học tập, không thay bác sĩ.", 3600, focus="doctor")
 
         citations = [dict(id=p["id"], quote=p["quote"], url=p["url"]) for p in passages]
-        summary = dict(risk=risk, level=level, level_color=LEVELS[level], headline=headline, advice=advice, red_flags=[dict(r) for r in rule_list if r["level"] != "info"],
+        critique = dict(checks=review["checks"], outcome=review["outcome"], rounds=review["rounds"], mlp_level=review["mlp_level"], base_level=base_level,
+                        final_level=level, escalated=review["escalated"], quote=review["quote"])
+        summary = dict(risk=risk, level=level, critique=critique, level_color=LEVELS[level], headline=headline, advice=advice, red_flags=[dict(r) for r in rule_list if r["level"] != "info"],
                        citations=citations, kg_nodes=nodes, label=dl["label"], risk_index=round(dl["risk_index"], 4), bmi=round(dl["bmi"], 1))
         report = build_report(prof, dl, rule_list, plan, cmp, passages, self.dl.population_risk_index(), self.dl.metrics)
         return dict(events=ev, summary=summary, report=report)

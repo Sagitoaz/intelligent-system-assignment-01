@@ -55,7 +55,7 @@ def test_night_hours_restrict_actions():
 def test_consult_script_contract(clinic):
     r = clinic.consult(PERSONAS[2]["profile"])
     agents = {e["agent"] for e in r["events"]}
-    assert {"doctor", "predictor", "knowledge", "coach", "guardian", "reporter"} <= agents
+    assert {"doctor", "predictor", "knowledge", "coach", "guardian", "reporter", "critic"} <= agents
     assert r["events"][-1]["type"] == "final"
     assert r["summary"]["level"] == "cao" and r["summary"]["red_flags"]
     assert len(r["report"]["figures"]) == 3 and all(f["png_base64"] for f in r["report"]["figures"])
@@ -66,7 +66,7 @@ def test_tts_text_cleaning_and_voice_map():
     from project01.mas.tts import Speaker, VOICES
     assert Speaker.clean("Chào 😀 bạn!  Xem https://x.org/a ok") == "Chào bạn! Xem ok"
     assert len(Speaker.clean("a" * 1000)) <= 320
-    assert set(VOICES) == {"doctor", "predictor", "knowledge", "coach", "guardian", "reporter"}
+    assert set(VOICES) == {"doctor", "predictor", "knowledge", "coach", "guardian", "reporter", "critic"}
 
 
 def test_deepgraph_demo_sector_api_runs():

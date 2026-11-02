@@ -481,7 +481,7 @@ for p in (PERSONAS[0], PERSONAS[2]):
 md(r"""
 # Phần 5. Bác sĩ trưởng: điều phối và báo cáo tự sinh
 
-`Clinic.consult(profile)` (trong `mas/orchestrator.py`) chạy các agent theo thứ tự cố định: bác sĩ dữ liệu → thủ thư tri thức → hộ lý an toàn → huấn luyện viên → thư ký báo cáo.
+`Clinic.consult(profile)` (trong `mas/orchestrator.py`) chạy các agent theo thứ tự cố định: bác sĩ dữ liệu → thủ thư tri thức → hộ lý an toàn → bác sĩ phản biện → huấn luyện viên → thư ký báo cáo.
 Các agent **không gọi trực tiếp nhau**; bác sĩ trưởng mời lần lượt từng agent và nhận kết quả có cấu trúc, nên mỗi bước đều truy vết được.
 
 Kết quả trả về là một **danh sách sự kiện** theo giao thức thống nhất, giao diện 3D diễn hoạt từng sự kiện:
@@ -536,6 +536,142 @@ print("\nTổng cộng:", len(rep["figures"]), "hình và", len(rep["tables"]), 
 
 # =====================================================================================================================
 md(r"""
+# Phần 5b. Bác sĩ phản biện: kiểm tra chéo và tranh luận
+
+**Vấn đề:** mô hình MLP chỉ nhìn 21 chỉ số khảo sát và **không có đường huyết trong đầu vào**. Một người trông khỏe mạnh nhưng xét nghiệm đường huyết đói 190 mg/dL vẫn có thể được mô hình báo nguy cơ thấp.
+Nếu chỉ hỏi lại chính mô hình thì nó sẽ tự đồng ý với mình, nên agent thứ bảy, **Bác sĩ phản biện** (`mas/critic.py`), dùng ba nguồn bằng chứng *chạy được và độc lập với mô hình*:
+
+1. **Luật an toàn** (`rules.py`) cùng ngưỡng ADA mà luật dựa vào (đường huyết đói ≥ 126 mg/dL).
+2. **Số liệu thật của hồ sơ** (đường huyết, triệu chứng) và **phép thử độ nhạy** chạy lại chính mô hình khi cân nặng lệch ±5 kg.
+3. **Đoạn trích có nguồn** từ kho tri thức 492 đoạn NIDDK/CDC/MedlinePlus (`data/chapter04/diabetes_corpus.jsonl`).
+
+Bốn phép thử: C1 đường huyết so với mô hình, C2 triệu chứng so với mô hình, C3 độ chắc chắn (hai nhóm đứng đầu cách nhau bao nhiêu), C4 độ nhạy với sai số đo.
+Khi có **mâu thuẫn thật** các agent tranh luận **tối đa 2 vòng**: vòng 1 bác sĩ phản biện nêu bằng chứng và bác sĩ dữ liệu bảo vệ; vòng 2 hộ lý an toàn nêu luật, thủ thư tri thức đọc nguyên văn tài liệu, bác sĩ phản biện kết luận.
+Nguyên tắc kết luận: khi mô hình và **số đo trực tiếp** mâu thuẫn thì ưu tiên số đo và nâng mức nguy cơ (vẫn đề nghị xét nghiệm xác nhận). Trên giao diện 3D, các lượt tranh luận hiện thành bong bóng hội thoại và được đọc bằng giọng nói.
+""")
+code(r"""
+from project01.mas import critic
+show_source(critic.review)
+""")
+code(r"""
+hoa = next(p for p in PERSONAS if p["id"] == "hoa")           # cô Hoa: đường huyết đói 190, hồ sơ lối sống lành mạnh
+res_hoa = clinic.consult(hoa["profile"])
+cr = res_hoa["summary"]["critique"]
+print(f"Mô hình nói: {cr['mlp_level']} | sau luật: {cr['base_level']} | sau phản biện: {cr['final_level']} | kết cục: {cr['outcome']} | số vòng: {cr['rounds']}\n")
+display(pd.DataFrame([{"phép thử": c["id"], "tên": c["title"], "kết quả": c["status"], "bằng chứng": c["evidence"], "nguồn": c["source"]} for c in cr["checks"]]))
+for e in res_hoa["events"]:
+    if e.get("round") is not None:
+        print(f"[vòng {e['round']}] {e['agent']:<10} ({e['type']}): {e['text']}\n")
+""")
+md(r"""
+**Kiểm tra rằng bằng chứng là thật:** hai hồ sơ giống hệt nhau, chỉ khác đường huyết đói (90 và 190). Vì mô hình không dùng đường huyết nên nguy cơ nó tính ra **bằng nhau**, nhưng bác sĩ phản biện cho **hai kết luận khác nhau**.
+Điều đó chứng tỏ phản biện dựa vào luật và số đo chứ không phải mô hình đồng ý với chính nó.
+""")
+code(r"""
+for g in (90, 190):
+    prof = dict(hoa["profile"], fasting_glucose=g)
+    r = clinic.consult(prof); c = r["summary"]["critique"]
+    print(f"Đường huyết {g:>3}: chỉ số nguy cơ của mô hình = {dl.predict(prof)['risk_index']:.4f} | phản biện: {c['outcome']:<9} | mức cuối: {c['final_level']}")
+""")
+
+# =====================================================================================================================
+md(r"""
+# Phần 5c. Giải thích kết quả: yếu tố tác động và "đổi một chỉ số thì nguy cơ đổi bao nhiêu"
+
+Với mỗi bệnh nhân, giao diện hiện hai thứ (đều tính bằng cách **chạy lại chính mô hình**, `mas/dl_agent.py` và `mas/whatif.py`):
+
+- **Biểu đồ yếu tố đẩy nguy cơ lên/xuống:** thay từng yếu tố bằng giá trị trung bình của dân số rồi xem chỉ số nguy cơ đổi bao nhiêu *điểm phần trăm*. Thanh đỏ là yếu tố đang đẩy nguy cơ lên, thanh xanh là yếu tố đang kéo xuống.
+- **What-if tương tác:** kéo cân nặng hoặc bật/tắt hút thuốc, vận động, trái cây, rau, rượu bia; mô hình tính lại ngay. Có thêm đường cong *nguy cơ theo BMI* để thấy nguy cơ tăng nhanh ở đâu. Nút "Nghe giải thích" đọc kết quả bằng giọng nói.
+
+Đây là thay đổi **theo mô hình trên dữ liệu khảo sát**, không phải lời hứa về hiệu quả điều trị với từng người; đường huyết không nằm trong mô hình nên không đổi được ở đây.
+""")
+code(r"""
+from project01.mas import whatif
+minh = PERSONAS[1]["profile"]
+base = dl.predict(minh)
+drivers = pd.DataFrame(base["drivers"])[["vi", "effect"]]
+drivers["hướng"] = ["đẩy lên" if v > 0 else "kéo xuống" for v in drivers["effect"]]
+display(drivers.rename(columns={"vi": "yếu tố", "effect": "tác động (điểm phần trăm = ×100)"}))
+for ch in ({"weight_kg": 78}, {"smoker": False, "phys_activity": True}, {"weight_kg": 78, "smoker": False, "phys_activity": True}):
+    out = whatif.what_if(clinic, minh, ch)
+    print(ch, "->", out["text"], f"(chỉ số {out['base']['risk_index']:.3f} → {out['new']['risk_index']:.3f})")
+curve = whatif.bmi_curve(clinic, minh)["points"]
+plt.figure(figsize=(6, 3)); plt.plot([p["bmi"] for p in curve], [p["risk_index"] for p in curve], color="#7060d8", lw=2.5)
+plt.axvline(whatif.bmi_curve(clinic, minh)["current"]["bmi"], color="#e8503a", ls="--", label="BMI hiện tại"); plt.xlabel("BMI"); plt.ylabel("chỉ số nguy cơ"); plt.legend(); plt.tight_layout(); plt.show()
+""")
+
+# =====================================================================================================================
+md(r"""
+# Phần 5d. Hỏi bác sĩ bằng câu hỏi tự do (RAG có trích dẫn)
+
+Tab "Hỏi bác sĩ" (`mas/ask.py`, `POST /api/ask`) trả lời câu hỏi tiếng Việt hoặc tiếng Anh dựa trên **kho 492 đoạn** NIDDK/CDC/MedlinePlus (`data/chapter04/diabetes_corpus.jsonl`).
+Quy trình: (1) dịch từ khóa y khoa Việt→Anh bằng bảng thuật ngữ; (2) truy hồi lai BM25 + đồ thị tri thức + vector MiniLM; (3) soạn câu trả lời **kèm trích dẫn [1], [2]** ánh xạ tới đoạn và URL.
+Có thể nhờ Qwen2.5-1.5B-Instruct viết lại, nhưng máy thiếu bộ nhớ ảo nên mặc định dùng **câu trả lời trích đoạn**; Qwen chạy chậm (40–140 giây) và bộ kiểm tra bám tài liệu thường loại câu sinh ra, khi đó hệ thống nói rõ đang dùng chế độ trích đoạn.
+Hệ thống **từ chối** khi cần chẩn đoán/liều thuốc cá nhân, khi có dấu hiệu cấp cứu, hoặc khi không có đoạn đủ liên quan.
+""")
+code(r"""
+from project01.mas.ask import AskEngine
+engine = AskEngine(clinic)
+engine.retriever.dense_ready.wait(600)          # chờ nạp xong mô hình vector nền (nếu chưa, chỉ dùng BM25)
+print("Vector sẵn sàng:", engine.retriever.dense is not None)
+for q in ["Triệu chứng của bệnh tiểu đường là gì?", "What is the A1C test?", "Tôi nên uống bao nhiêu mg metformin?"]:
+    t0 = time.time(); r = engine.ask(q, None, "retrieval")
+    print(f"Q: {q}\n  chế độ: {r['mode']} | {time.time() - t0:.1f}s | trích dẫn: {[c['id'] for c in r['citations']]}\n  A: {r['answer'][:260]}\n")
+ev = json.load(open(ART / "ask_eval.json", encoding="utf-8"))
+display(pd.DataFrame([{"tập": k, "số câu": ev[k]["questions"], "hit@1": ev[k]["hit_at_1"], "hit@3": ev[k]["hit_at_3"]} for k in ("english", "vietnamese", "combined")]))
+print(ev["note"])
+""")
+
+# =====================================================================================================================
+md(r"""
+# Phần 5e. Bảng độ tin cậy và kiểm tra công bằng
+
+`project01/train/eval_trust.py` chạy mô hình trên **đúng tập kiểm tra 50.736 hồ sơ** và ghi `artifacts/trust_metrics.json`: độ chính xác và recall từng nhóm, biểu đồ hiệu chuẩn xác suất, tỉ lệ cảnh báo đúng, và độ chính xác theo **nhóm tuổi, giới, thu nhập** (có khoảng tin cậy Wilson 95%).
+Mục đích là **nói thẳng điểm yếu**: độ chính xác 75% thấp hơn cả baseline "luôn đoán không tiểu đường"; chỉ bắt khoảng 17% ca tiền tiểu đường; người trẻ và người thu nhập cao bị bỏ sót nhiều hơn.
+""")
+code(r"""
+TM = json.load(open(ART / "trust_metrics.json", encoding="utf-8"))
+print(f"Độ chính xác {TM['accuracy']:.3f} (khoảng tin cậy {TM['accuracy_ci']}) | baseline luôn đoán 'không': {TM['baseline_always_none']['accuracy']:.3f}")
+display(pd.DataFrame(TM["per_class"])[["name", "support", "precision", "recall", "f1"]])
+m = TM["alerts"]["main"]
+print(f"Cảnh báo nguy cơ cao (chỉ số ≥ {m['threshold']}): {m['alerts']} người ({m['alert_rate']:.0%}); đúng {m['precision_diabetes']['value']:.1%}, bắt được {m['recall_diabetes']['value']:.1%} ca tiểu đường, báo nhầm {m['false_alarm_rate']['value']:.1%} người không bệnh")
+rows = []
+for key, g in TM["groups"].items():
+    for r in g["rows"]:
+        rows.append({"nhóm": g["title"], "giá trị": r["group"], "n": r["n"], "chính xác": r["accuracy"]["value"], "recall tiểu đường": r["recall_diabetes"]["value"], "tỉ lệ bị cảnh báo": r["alert_rate"]["value"]})
+display(pd.DataFrame(rows))
+print("\nKết luận công bằng:"); [print("  -", c) for c in TM["fairness"]["conclusions"]]
+cal = TM["calibration"]["diabetes"]
+print("\nHiệu chuẩn (lớp tiểu đường):", {k: cal[k] for k in cal if k in ("ece", "brier")})
+""")
+
+# =====================================================================================================================
+md(r"""
+# Phần 5f. Nhiều bệnh nhân, xu hướng 4 tuần, báo cáo PDF và nhập liệu bằng giọng nói
+
+- **Hàng đợi** (`mas/followup.py`, `POST /api/queue`): agent phân loại sắp hồ sơ theo mức khẩn (cờ đỏ khẩn trước, rồi chỉ số nguy cơ giảm dần) và nêu lý do.
+- **Xu hướng 4 tuần** (`POST /api/followup`): chuỗi 28 ngày đường huyết đói và cân nặng. **Đây là dữ liệu mẫu sinh bằng seed cố định, không phải số đo thật** (có thể gửi chuỗi thật qua `series`).
+  Mỗi tuần dựng lại bệnh nhân RL từ đường huyết và BMI của tuần đó, lấy kế hoạch ngày phổ biến nhất của huấn luyện viên RL qua 15 ngày mô phỏng, rồi so kế hoạch giữa các tuần để chỉ ra giờ nào **đổi**, kèm lý do bằng số.
+- **PDF** (`mas/pdf_report.py`, `POST /api/report/pdf`): ghép hình và bảng thư ký đã sinh thành báo cáo cho bệnh nhân (font DejaVu nhúng nên đủ dấu tiếng Việt, chân trang ghi "chỉ để học tập").
+- **Giọng nói vào** (`mas/stt.py`): Azure STT nhận WAV 16 kHz; bộ phân tích luật `parse_speech` rút tuổi, giới, chiều cao, cân nặng, đường huyết, bệnh nền, triệu chứng (hiểu cả số nói bằng chữ) để tự điền biểu mẫu.
+""")
+code(r"""
+from project01.mas import followup, pdf_report, stt
+q = followup.triage(clinic)
+display(pd.DataFrame([{k: v for k, v in x.items() if k in ("name", "level", "risk_index", "rank", "reason")} for x in q.get("patients", q.get("queue", []))]))
+fu = followup.analyze(clinic, {"profile": PERSONAS[1]["profile"]})
+print("Dữ liệu mô phỏng:", fu.get("simulated"), "| khóa kết quả:", list(fu.keys()))
+""")
+code(r"""
+pdf = pdf_report.build_pdf({"summary": result["summary"], "report": result["report"], "events": result["events"], "patient_name": "Bác Hùng"})
+print("PDF:", pdf[:5], f"{len(pdf) / 1024:.0f} KB")
+for s in ["Tôi năm mươi lăm tuổi, nam, cao một mét sáu lăm, nặng 70 ký, đường huyết 190, bị huyết áp cao và hay khát nước",
+          "Em nữ 24 tuổi cao 158 cm nặng 51 kg không hút thuốc"]:
+    print(s, "\n  ->", stt.parse_speech(s))
+""")
+
+# =====================================================================================================================
+md(r"""
 # Phần 6. Chạy như một dịch vụ và kiểm thử
 
 **Demo web:** `python project01/server.py --open` mở phòng khám 3D tại http://localhost:8200. Máy chủ chỉ dùng thư viện chuẩn của Python (`http.server`) và các API:
@@ -543,10 +679,10 @@ md(r"""
 Giọng nói là tùy chọn (Azure Speech qua `.env`); nếu không có khóa thì demo vẫn chạy bằng chữ.
 
 **Kiểm thử tự động:** ô dưới chạy các kiểm thử của Project 01: lược đồ hồ sơ khớp 21 chỉ số; xác suất cộng bằng 1; luật R1 kích hoạt với đường huyết nguy hiểm; đồ thị nhất quán và RAG trích đúng nguồn;
-huấn luyện viên RL tốt hơn không có huấn luyện viên trong mô phỏng; ban đêm chỉ được nghỉ hoặc ăn nhẹ; kịch bản hội chẩn đủ sáu agent kết thúc bằng sự kiện `final`.
+huấn luyện viên RL tốt hơn không có huấn luyện viên trong mô phỏng; ban đêm chỉ được nghỉ hoặc ăn nhẹ; kịch bản hội chẩn đủ bảy agent (có bác sĩ phản biện) kết thúc bằng sự kiện `final`.
 """)
 code(r"""
-res = subprocess.run([sys.executable, "-m", "pytest", "tests/test_project01.py", "-q", "-k", "not hub and not deepgraph"], cwd=ROOT, capture_output=True, text=True)
+res = subprocess.run([sys.executable, "-m", "pytest", "tests/test_project01.py", "tests/test_project01_critic.py", "tests/test_project01_trust.py", "tests/test_project01_ask.py", "tests/test_project01_stt.py", "tests/test_project01_followup.py", "tests/test_project01_pdf.py", "-q", "-k", "not hub and not deepgraph"], cwd=ROOT, capture_output=True, text=True)
 print((res.stdout or res.stderr).strip().splitlines()[-1])
 """)
 md(r"""
@@ -577,4 +713,4 @@ os.makedirs(os.path.dirname(OUT), exist_ok=True)
 client = NotebookClient(nb, timeout=900, kernel_name="python3", resources={"metadata": {"path": os.path.dirname(OUT)}})
 client.execute()
 nbf.write(nb, OUT)
-print("đã ghi", OUT, "với", len(cells), "ô")
+print("da ghi", OUT, "voi", len(cells), "o")

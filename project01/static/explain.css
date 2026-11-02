@@ -1,0 +1,26 @@
+/* Giải thích kết quả + thẻ phản biện */
+.card.explain h3.ex-h{margin-top:14px}
+.small{font-size:13px}
+.ex-drv{display:flex;flex-direction:column;gap:5px;margin:8px 0 4px}
+.ex-row{display:grid;grid-template-columns:118px 1fr 82px;align-items:center;gap:6px;font-size:13.5px}
+.ex-lab{font-weight:800;color:var(--ink2)}.ex-lab::first-letter{text-transform:uppercase}
+.ex-bar{display:grid;grid-template-columns:1fr 1fr;height:18px;background:linear-gradient(90deg,#eafaf4,#fff 50%,#fff0ed);border-radius:9px;overflow:hidden}
+.ex-half{position:relative;display:flex}.ex-half.l{justify-content:flex-end;border-right:2px solid #94a7c4}
+.ex-half i{display:block;height:100%}.ex-half i.up{background:linear-gradient(90deg,#f58a6b,#e8503a);border-radius:0 9px 9px 0}.ex-half i.dn{background:linear-gradient(90deg,#0d9f8f,#5ed4a8);border-radius:9px 0 0 9px}
+.ex-val{font-size:12.5px;text-align:right;white-space:nowrap}.up{color:#d6432c}.dn{color:#0b8a7a}
+.ex-legend{display:flex;justify-content:space-between;font-size:12px;font-weight:800}
+.ex-ctl{display:grid;gap:6px;background:#f4f8ff;border:2px solid #dbe7f8;border-radius:14px;padding:10px 12px;margin:6px 0}
+.ex-sl{display:grid;gap:3px;font-size:14px}.ex-sl input{width:100%;accent-color:#7060d8}
+.ex-tg{display:flex;gap:8px;align-items:center;font-size:14px;cursor:pointer}.ex-tg input{accent-color:#0d9f8f;width:18px;height:18px}
+.ex-out{margin:8px 0}.ex-delta{background:#eef9f6;border-left:6px solid #0d9f8f;border-radius:4px 12px 12px 4px;padding:8px 10px;font-size:14px}
+.ex-cmp{display:grid;gap:4px;margin-top:8px}.ex-b{display:grid;grid-template-columns:170px 1fr 40px;align-items:center;gap:6px;font-size:12.5px}
+.ex-bt{height:12px;background:#e8eefa;border-radius:6px;overflow:hidden}.ex-bt i{display:block;height:100%;transition:width .35s}
+.ex-curve{width:100%;height:auto;background:#fbfdff;border:2px solid #e3ecfa;border-radius:12px;margin-top:6px}
+/* phản biện */
+.card.critique{border-top:5px solid #8a5cf0}
+.crit-head{font-size:14.5px}
+.crit-list{list-style:none;margin:6px 0;padding:0;display:grid;gap:6px}
+.crit-list li{display:flex;gap:8px;border-radius:12px;padding:7px 10px;background:#f1fbf7;border:2px solid #cdeedd}
+.crit-list li.bad{background:#fff1ef;border-color:#f6c7bf}.crit-list li.soft{background:#fff9e8;border-color:#f3e2a8}.crit-list li.na{background:#f3f6fb;border-color:#dbe4f2}
+.crit-list li div{display:grid;gap:1px;font-size:13.5px}.crit-list li em{font-size:12px;color:var(--muted)}
+.msg.debate{background:#f4efff}

@@ -83,6 +83,7 @@ pywinpty==3.0.5; sys_platform == "win32"
 PyYAML==6.0.3
 pyzmq==27.2.0
 referencing==0.37.0
+reportlab==5.1.0
 requests==2.34.2
 rfc3339-validator==0.1.4
 rfc3986-validator==0.1.1

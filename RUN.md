@@ -48,13 +48,16 @@ Nếu đã chạy riêng một demo con thì thêm `--no-children`.
 ```powershell
 python project01/server.py --open                # mở http://localhost:8200
 python project01/server.py --open --port 8210    # đổi cổng nếu bị trùng
-python -m pytest tests/test_project01.py -q      # kiểm thử tự động
+python -m pytest tests/test_project01*.py -q     # kiểm thử tự động (64 kiểm thử)
 python -m jupyter lab notebooks/project01        # notebook thực hành (đã chạy sẵn, có giải thích từng ô)
 # Huấn luyện/đánh giá lại (tùy chọn, kết quả lưu ở project01/artifacts/)
-python project01/train/train_dl.py ; python project01/train/build_kg.py ; python project01/train/train_rl.py ; python project01/train/eval_rag.py
+python project01/train/train_dl.py ; python project01/train/build_kg.py ; python project01/train/train_rl.py ; python project01/train/eval_rag.py ; python project01/train/eval_trust.py
 ```
 
 Thêm `?mock=1` vào địa chỉ để xem dữ liệu mẫu khi chưa chạy máy chủ API.
+
+Sáu tab (phím 1–6): **Khám bệnh** (có bác sĩ phản biện tranh luận tối đa 2 vòng, biểu đồ yếu tố tác động, what-if kéo thả, tải PDF; nút 🎤 nhập hồ sơ bằng giọng nói), **Sống 24 giờ**, **Bản đồ tri thức**, **Hỏi bác sĩ** (RAG có trích dẫn trên kho 492 đoạn), **Độ tin cậy** (độ chính xác, hiệu chuẩn, công bằng theo tuổi/giới/thu nhập), **Hàng đợi** (phân loại và xu hướng 4 tuần, dữ liệu mẫu).
+Ghi chú: giọng nói (TTS) và nhập liệu giọng nói (STT) dùng khóa Azure trong `.env` (`API_MODEL_TTS`, `TTS_ENDPOINT`), không có khóa thì vẫn chạy bằng chữ. Câu trả lời của Hỏi bác sĩ mặc định là trích đoạn; Qwen2.5-1.5B (ô "Cho Qwen viết lại") chậm 40–140 giây và chỉ chạy một tiến trình, đừng bật cùng lúc với demo khác dùng Qwen. Gói PDF cần `reportlab` (có trong `requirements.txt`).
 
 Giọng nói (tùy chọn): đặt `API_MODEL_TTS` (khóa Azure Speech) và `TTS_ENDPOINT` (địa chỉ khu vực, ví dụ `https://southeastasia.api.cognitive.microsoft.com/`) trong tệp `.env` ở thư mục gốc (tệp này đã được git bỏ qua). Có khóa thì phòng khám vừa chạy phụ đề vừa đọc; không có khóa thì chỉ có chữ. Phím tắt: Dấu cách tạm dừng, V bật/tắt tiếng.
 

@@ -4,7 +4,7 @@
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var MOCK = /[?&]mock=1/.test(location.search);
-  var COLORS = { doctor: '#2589e0', predictor: '#7060d8', knowledge: '#0d9f8f', coach: '#f0603a', guardian: '#e8a317', reporter: '#e8508a' };
+  var COLORS = { doctor: '#2589e0', predictor: '#7060d8', knowledge: '#0d9f8f', coach: '#f0603a', guardian: '#e8a317', reporter: '#e8508a', critic: '#8a5cf0' };
   var SHIRTS = ['#2589e0', '#f0603a', '#16a34a', '#8b5cf6', '#e8508a', '#e8a317', '#0d9f8f', '#475569'];
   var ZONES = Clinic.ZONES;
 
@@ -188,12 +188,13 @@
   }
 
   /* ---------- chuyển chế độ ---------- */
+  var EXT = {}; // chế độ mở rộng: EXT[tên] = { onEnter }
   function switchMode(m) {
     if (S.mode === m) return;
     if (S.playing) { skipConsult(true); }
     S.mode = m; hideBanner();
     $$('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.mode === m); t.setAttribute('aria-selected', t.dataset.mode === m); });
-    ['consult', 'life', 'kg'].forEach(function (v) { $('#view-' + v).hidden = v !== m; });
+    $$('.view').forEach(function (v) { v.hidden = v.id !== 'view-' + m; });
     $('#panel').scrollTop = 0;
     $('#hud').hidden = !(m === 'consult' && S.consult && $('#consultRun').hidden === false);
     Clinic.setMode(m === 'kg' ? 'kg' : m === 'life' ? 'life' : 'clinic');
@@ -201,6 +202,7 @@
     if (m === 'life') { restoreLifeBubbles(); }
     if (m === 'kg') { Clinic.highlightKg(null); Clinic.kgAutoRotate(true); ensureKg(); }
     else if (S.consult && m === 'consult') { var kn = (S.consult.summary && S.consult.summary.kg_nodes) || []; Clinic.highlightKg(kn); }
+    (EXT[m] && EXT[m].onEnter) && EXT[m].onEnter();
     $('#stageChip').textContent = m === 'kg' ? 'Kéo để xoay · cuộn để phóng to · bấm vào nút để đọc mô tả' : 'Kéo chuột để xoay, cuộn để phóng to';
   }
 
@@ -230,8 +232,8 @@
 
   function addChat(ev) {
     var c = agentColor(ev.agent), log = $('#chatLog'), d = document.createElement('div');
-    d.className = 'msg' + (ev.type === 'alert' ? ' alert-' + (ev.level || 'warn') : ''); d.style.setProperty('--c', c);
-    var tag = { handoff: 'chuyển giao', tool: 'công cụ', cite: 'trích dẫn', alert: 'cảnh báo', final: 'kết luận' }[ev.type];
+    d.className = 'msg' + (ev.type === 'alert' ? ' alert-' + (ev.level || 'warn') : '') + (ev.round !== undefined ? ' debate' : ''); d.style.setProperty('--c', c);
+    var tag = { handoff: 'chuyển giao', tool: 'công cụ', cite: 'trích dẫn', alert: 'cảnh báo', final: 'kết luận', debate: ev.round ? 'tranh luận · vòng ' + ev.round : 'tranh luận', verdict: 'phản biện' }[ev.type];
     var extra = '';
     if (ev.type === 'tool' && ev.payload && ev.payload.risk) { var r = ev.payload.risk; extra = '<span class="quote">Không ' + pct(r.none) + '% · Tiền tiểu đường ' + pct(r.pre) + '% · Tiểu đường ' + pct(r.diabetes) + '%</span>'; }
     if (ev.type === 'cite' && ev.payload && ev.payload.passages) extra = ev.payload.passages.slice(0, 2).map(function (p) { return '<span class="quote">“' + esc(p.quote) + '”</span>'; }).join('');
@@ -283,7 +285,7 @@
     $('#consultForm').hidden = true; $('#consultRun').hidden = false; $('#consultResult').innerHTML = ''; $('#chatLog').innerHTML = '';
     $('#hud').hidden = false; $('#btnReplay').disabled = true;
     $('#hudDots').innerHTML = data.events.map(function (e) { return '<i style="--c:' + agentColor(e.agent) + '"></i>'; }).join('');
-    var dots = $$('#hudDots i'); Clinic.highlightKg(null);
+    var dots = $$('#hudDots i'), prevDeb = null; Clinic.highlightKg(null);
     setPaused(false); voicePrefetch(data.events, 0);
     for (var i = 0; i < data.events.length; i++) {
       var ev = data.events[i]; if (token !== S.playToken) return;
@@ -297,7 +299,10 @@
       var ms = Math.max(Math.max(600, (ev.ms || 2000)) / sp, voiceMs ? voiceMs + 500 : Math.max(2000, ev.text.length * 60) / sp);
       dots.forEach(function (d, j) { d.className = j < i ? 'done' : j === i ? 'cur' : ''; });
       addChat(ev); Clinic.speak(ev.agent, true);
-      Clinic.hideAllBubbles(); Clinic.say(ev.agent, shortText(ev.text), { mini: true });
+      if (ev.round !== undefined && prevDeb && prevDeb.agent !== ev.agent) { Object.keys(S.agents).forEach(function (id) { if (id !== prevDeb.agent) Clinic.hideBubble(id); }); } else Clinic.hideAllBubbles();
+      Clinic.say(ev.agent, shortText(ev.text), { mini: true }); prevDeb = ev.round !== undefined ? ev : null;
+      if (ev.round !== undefined && ev.reply_to && ev.reply_to !== 'doctor') Clinic.beam(ev.agent, ev.reply_to, col, ms * 0.8);
+      if (ev.round === 1 && ev.stance === 'challenge') Clinic.alert('warn', ms);
       showCaption(ev, voiceMs ? voiceMs * 0.9 : ms * 0.8);
       stopVoice(); if (audio) { Voice.audio = audio; audio.play().catch(function () {}); }
       if (ev.type === 'handoff' && ev.to) { Clinic.flyToChar(ev.agent, 700 / sp); Clinic.beam(ev.agent, ev.to, col, ms * 0.9); setTimeout(function (to, t) { if (t === S.playToken) Clinic.flyToChar(to, 800 / sp); }, ms * 0.5, ev.to, token); }
@@ -346,6 +351,7 @@
     h += '<div class="card res-head"><h3>Kết quả hội chẩn</h3>' + gaugeSVG(risk) + '<div class="level-badge" style="background:' + esc(col) + '">Nguy cơ ' + esc(sm.level || '') + '</div><p>' + esc(sm.headline || '') + '</p>';
     h += '<div class="stack"><i style="width:' + pct(risk.none) + '%;background:#22b05a"></i><i style="width:' + pct(risk.pre) + '%;background:#f5a623"></i><i style="width:' + pct(risk.diabetes) + '%;background:#e5342d"></i></div>';
     h += '<div class="risk-rows">' + [['none', 'Không tiểu đường', '#22b05a'], ['pre', 'Tiền tiểu đường', '#f5a623'], ['diabetes', 'Tiểu đường', '#e5342d']].map(function (r) { return '<div class="risk-row"><span>' + r[1] + '</span><div class="risk-track"><div class="risk-fill" style="width:0;background:' + r[2] + '" data-w="' + pct(risk[r[0]]) + '"></div></div><span class="risk-pct">' + pct(risk[r[0]]) + '%</span></div>'; }).join('') + '</div></div>';
+    if (sm.critique) h += critiqueCard(sm.critique);
     if (sm.red_flags && sm.red_flags.length) h += '<div class="card"><h3>🚩 Cờ đỏ</h3><ul class="clean flags">' + sm.red_flags.map(function (x) { return '<li>' + esc(typeof x === 'string' ? x : x.text) + '</li>'; }).join('') + '</ul></div>';
     if (sm.advice && sm.advice.length) h += '<div class="card"><h3>💡 Lời khuyên</h3><ul class="clean">' + sm.advice.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>';
     if (sm.citations && sm.citations.length) h += '<div class="card"><h3>📚 Trích dẫn tài liệu</h3>' + sm.citations.map(function (c) { return '<div class="cite"><span class="src">NIDDK</span><br>“' + esc(c.quote) + '”<br>' + (c.url ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener noreferrer">' + esc(c.url) + '</a>' : '') + '</div>'; }).join('') + '</div>';
@@ -360,8 +366,17 @@
     $('#consultResult').innerHTML = h;
     setTimeout(function () { $$('.risk-fill').forEach(function (e) { e.style.width = e.dataset.w + '%'; }); }, 60);
     var d = $('#btnDownload'); if (d) d.onclick = function () { downloadReport(data); };
+    resultHooks.forEach(function (fn) { try { fn(data, $('#consultResult')); } catch (e) { console.warn('hook lỗi', e); } });
     $('#btnAgain').onclick = function () { S.playToken++; wakeAll(); S.playing = false; $('#consultRun').hidden = true; $('#consultForm').hidden = false; $('#hud').hidden = true; Clinic.hideAllBubbles(); Clinic.highlightKg(null); Clinic.patientReset(); Clinic.flyHome(900); $('#panel').scrollTop = 0; };
     $('#btnToLife').onclick = function () { switchMode('life'); };
+  }
+  function critiqueCard(c) {
+    var ico = { ok: '✅', conflict: '⚠️', soft: 'ℹ️', na: '➖' }, cls = { ok: 'ok', conflict: 'bad', soft: 'soft', na: 'na' };
+    var h = '<div class="card critique"><h3>⚖️ Bác sĩ phản biện kiểm tra chéo</h3>';
+    h += '<p class="crit-head">' + (c.outcome === 'agree' ? 'Bốn phép thử đều thống nhất với Bác sĩ dữ liệu.' : c.escalated ? 'Có mâu thuẫn thật: mức nguy cơ được nâng từ <b>' + esc(c.base_level) + '</b> lên <b>' + esc(c.final_level) + '</b>.' : 'Có điểm cần lưu ý, mức nguy cơ giữ nguyên <b>' + esc(c.final_level) + '</b>.') + '</p>';
+    h += '<ul class="crit-list">' + c.checks.map(function (k) { return '<li class="' + cls[k.status] + '"><span class="ci">' + ico[k.status] + '</span><div><b>' + esc(k.title) + '</b><span>' + esc(k.evidence) + '</span><em>Nguồn: ' + esc(k.source) + '</em></div></li>'; }).join('') + '</ul>';
+    if (c.quote) h += '<div class="cite"><span class="src">Nguồn tri thức</span><br>“' + esc(c.quote.quote.slice(0, 260)) + (c.quote.quote.length > 260 ? '…' : '') + '”<br><a href="' + esc(c.quote.url) + '" target="_blank" rel="noopener noreferrer">' + esc(c.quote.url) + '</a></div>';
+    return h + '<p class="muted small">Bộ phản biện chạy luật, số đo thật và đoạn trích có nguồn; nó không chỉ hỏi lại mô hình.</p></div>';
   }
   function tableHtml(cols, rows) {
     return '<div class="tbl-wrap"><table class="data"><thead><tr>' + cols.map(function (c) { return '<th>' + esc(c) + '</th>'; }).join('') + '</tr></thead><tbody>' + rows.map(function (r) { return '<tr>' + r.map(function (c) { return '<td>' + esc(c) + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>';
@@ -559,7 +574,7 @@
     document.addEventListener('keydown', function (e) {
       var tg = e.target.tagName; if (tg === 'INPUT' || tg === 'SELECT' || tg === 'TEXTAREA' || e.ctrlKey || e.metaKey || e.altKey) return;
       var k = e.key.toLowerCase();
-      if (k === '1') switchMode('consult'); else if (k === '2') switchMode('life'); else if (k === '3') switchMode('kg');
+      if (k === '1') switchMode('consult'); else if (k === '2') switchMode('life'); else if (k === '3') switchMode('kg'); else if (k === '4') switchMode('ask'); else if (k === '5') switchMode('trust'); else if (k === '6') switchMode('queue');
       else if (k === '?' ) $('#helpModal').hidden = false; else if (k === 'escape') $('#helpModal').hidden = true;
       else if (k === ' ' && S.playing) { e.preventDefault(); setPaused(!S.paused); } else if (k === 'v' && Voice.available) $('#btnVoice').click();
       else if (k === 's') skipConsult(false); else if (k === 'f' && !$('#hud').hidden) $('#btnFast').click(); else if (k === 'r' && !$('#hud').hidden && !$('#btnReplay').disabled) $('#btnReplay').click();
@@ -590,5 +605,25 @@
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  /* ---------- API cho các tệp mở rộng (ask.js, trust.js, queue.js, voice.js, explain.js) ---------- */
+  var resultHooks = [];
+  window.ClinicApp = {
+    S: S, api: api, esc: esc, pct: pct, fmt1: fmt1, banner: banner, switchMode: switchMode, tableHtml: tableHtml,
+    registerMode: function (name, def) { EXT[name] = def || {}; },
+    onResult: function (fn) { resultHooks.push(fn); },
+    buildProfile: function () { return buildProfile(); },
+    setProfile: function (values) { Object.keys(values || {}).forEach(function (k) { S.values[k] = values[k]; }); markCustom(); renderFormValues(false); },
+    startConsultWith: function (profile) { S.values = Object.assign({}, S.values, profile); renderFormValues(false); switchMode('consult'); startConsult(); },
+    voice: Voice, speakText: function (text, agent) { return speakOnce(text, agent); },
+    say: function (agent, text, opt) { Clinic.say(agent, text, opt); }, agentName: agentName, agentColor: agentColor,
+    meta: function () { return S.meta; }
+  };
+  function speakOnce(text, agent) {
+    if (!Voice.available || !Voice.on) return Promise.resolve();
+    return voiceFetch({ agent: agent || 'doctor', text: text }).then(function (url) { return url ? loadAudio(url) : null; }).then(function (a) {
+      if (!a) return; stopVoice(); Voice.audio = a; a.play().catch(function () {});
+      return new Promise(function (res) { a.onended = res; setTimeout(res, 60000); });
+    });
+  }
   window.__app = S;
 })();

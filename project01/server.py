@@ -69,6 +69,27 @@ def life_compare(body: dict) -> dict:
     return out
 
 
+# Các mô-đun mở rộng (project01/mas/<tên>.py): mỗi mô-đun có thể định nghĩa routes(clinic, speaker) -> (get, post).
+# Handler POST nhận dict JSON; trả dict (JSON) hoặc tuple (content_type, bytes) cho nội dung nhị phân (PDF...).
+EXTENSIONS = ["ask", "trust", "followup", "pdf_report", "stt", "whatif"]
+ROUTES_GET: dict = {}
+
+
+def load_extensions():
+    import importlib
+    for name in EXTENSIONS:
+        try:
+            mod = importlib.import_module(f"project01.mas.{name}")
+        except ModuleNotFoundError as exc:
+            if exc.name != f"project01.mas.{name}":
+                raise
+            continue
+        if hasattr(mod, "routes"):
+            g, p = mod.routes(CLINIC, SPEAKER)
+            ROUTES_GET.update(g)
+            ROUTES_POST.update(p)
+
+
 ROUTES_POST = {
     "/api/consult": lambda b: CLINIC.consult(b.get("profile") or {}),
     "/api/kg/search": lambda b: kg_search(b),
@@ -97,6 +118,20 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
+    def _send_result(self, res):
+        if isinstance(res, tuple):
+            ctype, data = res[0], res[1]
+            self.send_response(200)
+            self.send_header("Content-Type", ctype)
+            self.send_header("Content-Length", str(len(data)))
+            self.send_header("Cache-Control", "no-store")
+            if len(res) > 2:
+                self.send_header("Content-Disposition", res[2])
+            self.end_headers()
+            self.wfile.write(data)
+            return
+        return self._json(200, res)
+
     def do_GET(self):
         path = urlparse(self.path).path
         if path == "/api/meta":
@@ -105,6 +140,12 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(200, dict(enabled=SPEAKER.enabled))
         if path == "/api/kg":
             return self._json(200, CLINIC.kb.graph())
+        if path in ROUTES_GET:
+            try:
+                return self._send_result(ROUTES_GET[path]())
+            except Exception as exc:
+                traceback.print_exc()
+                return self._json(500, dict(error=f"{type(exc).__name__}: {exc}"))
         rel = "index.html" if path in ("", "/") else path.lstrip("/")
         full = os.path.realpath(os.path.join(STATIC, rel))
         if not full.startswith(os.path.realpath(STATIC)) or not os.path.isfile(full):
@@ -144,9 +185,11 @@ class Handler(BaseHTTPRequestHandler):
         try:
             length = int(self.headers.get("Content-Length") or 0)
             body = json.loads(self.rfile.read(length) or b"{}")
-            return self._json(200, fn(body))
+            return self._send_result(fn(body))
         except (ValueError, KeyError, TypeError) as exc:
             return self._json(400, dict(error=f"Dữ liệu không hợp lệ: {exc}"))
+        except RuntimeError as exc:  # thiếu khóa/lỗi mạng của dịch vụ ngoài (Azure STT...)
+            return self._json(503, dict(error=str(exc)))
         except Exception as exc:  # trả lỗi dạng JSON để giao diện hiển thị
             traceback.print_exc()
             return self._json(500, dict(error=f"{type(exc).__name__}: {exc}"))
@@ -168,6 +211,7 @@ def main():
     args = ap.parse_args()
     print("Đang nạp mô hình Deep Learning, đồ thị tri thức và Q-table ...", flush=True)
     CLINIC = Clinic()
+    load_extensions()
     server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
     if socket.has_ipv6:  # "localhost" thường phân giải sang ::1 trước; không nghe thì trình duyệt chờ rất lâu
         class V6Server(ThreadingHTTPServer):

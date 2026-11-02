@@ -30,7 +30,8 @@
     knowledge: { name: 'Thủ thư tri thức', role: 'KB + RAG', color: '#0d9f8f', pos: [5.3, -3.0], kind: 'knowledge' },
     coach: { name: 'Huấn luyện viên', role: 'Reinforcement learning', color: '#f0603a', pos: [-4.7, 1.7], kind: 'coach' },
     guardian: { name: 'Hộ lý an toàn', role: 'Luật cảnh báo', color: '#e8a317', pos: [4.8, 1.6], kind: 'guardian' },
-    reporter: { name: 'Thư ký báo cáo', role: 'Sinh hình và bảng', color: '#e8508a', pos: [-2.9, -3.6], kind: 'reporter' }
+    reporter: { name: 'Thư ký báo cáo', role: 'Sinh hình và bảng', color: '#e8508a', pos: [-2.9, -3.6], kind: 'reporter' },
+    critic: { name: 'Bác sĩ phản biện', role: 'Kiểm tra chéo', color: '#8a5cf0', pos: [2.9, -3.6], kind: 'critic' }
   };
   var FACE_POINT = new T.Vector3(0, 0, 5);
   var PATIENT_SPOT = new T.Vector3(1.8, 0, 0.8);
@@ -159,6 +160,15 @@
       var hat = add(head, Sp(0.52, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), main, 0, 0.12, 0);
       add(head, Cy(0.58, 0.58, 0.06, 24), main, 0, 0.14, 0.04);
       add(head, B(0.12, 0.5, 0.04), white, 0, 0.3, 0.02).rotation.x = -0.4;
+    } else if (kind === 'critic') {
+      add(rig, Cy(0.46, 0.6, 1.1, 24), main, 0, 1.0, 0);
+      add(rig, B(0.5, 0.9, 0.04), white, 0, 1.0, 0.54);
+      add(rig, B(0.12, 0.3, 0.05), dark, 0, 1.35, 0.56);
+      add(head, Sp(0.48, 24, 16), skin, 0, 0, 0);
+      add(head, Cy(0.5, 0.5, 0.1, 24), dark, 0, 0.36, 0);
+      var mono = add(head, new T.TorusGeometry(0.16, 0.03, 8, 20), glowMat('#ffd35c'), 0.2, 0.07, 0.47);
+      var lens = add(rig, new T.TorusGeometry(0.2, 0.04, 8, 20), dark, 0.62, 0.8, 0.45); lens.rotation.y = 0.3;
+      add(rig, Cy(0.03, 0.03, 0.4, 8), dark, 0.62, 0.55, 0.45).rotation.z = 0.25;
     } else { // reporter
       add(rig, Cy(0.38, 0.62, 1.1, 24), main, 0, 1.0, 0);
       add(rig, Cy(0.4, 0.4, 0.1, 24), white, 0, 1.5, 0);
@@ -446,6 +456,10 @@
       siren = add(g, Sp(0.21, 16, 12, 0, Math.PI * 2, 0, Math.PI / 2), new T.MeshStandardMaterial({ color: '#ffb199', emissive: '#e5342d', emissiveIntensity: 0.1, transparent: true, opacity: 0.95 }), 0.55, 1.03, 0);
       sirenLight = new T.PointLight('#ff3b30', 0, 7, 2); sirenLight.position.set(0.55, 1.5, 0.2); g.add(sirenLight);
       add(g, B(0.5, 0.04, 0.34), stdMat('#fffaf0'), -0.5, 0.88, 0.05); add(g, B(0.12, 0.12, 0.02), stdMat('#e5342d'), -0.5, 0.91, 0.05);
+    } else if (k === 'critic') {
+      var beam2 = add(g, B(0.9, 0.04, 0.05), stdMat('#25304a'), 0, 1.22, 0); add(g, Cy(0.03, 0.03, 0.34, 8), stdMat('#25304a'), 0, 1.04, 0);
+      [-0.4, 0.4].forEach(function (x, i) { add(g, Cy(0.17, 0.17, 0.03, 16), stdMat(i ? '#ff9db5' : '#7fe3ff'), x, 1.0 + (i ? 0 : -0.04), 0); });
+      add(g, B(0.4, 0.04, 0.3), stdMat('#fffaf0'), -0.55, 0.88, 0.12);
     } else {
       add(g, B(0.7, 0.3, 0.5), stdMat('#ffffff'), -0.35, 1.0, -0.05); add(g, B(0.5, 0.04, 0.4), stdMat('#fffaf0'), -0.35, 1.19, 0.12).rotation.x = -0.3;
       add(g, B(0.4, 0.2, 0.3), stdMat('#fffaf0'), 0.5, 0.95, 0.05);

@@ -6,6 +6,12 @@
 <title>Phòng khám AI - Hệ đa agent cho bệnh tiểu đường</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232589e0'/%3E%3Crect x='26' y='12' width='12' height='40' rx='3' fill='white'/%3E%3Crect x='12' y='26' width='40' height='12' rx='3' fill='white'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="extra.css">
+<link rel="stylesheet" href="explain.css">
+<link rel="stylesheet" href="ask.css">
+<link rel="stylesheet" href="trust.css">
+<link rel="stylesheet" href="queue.css">
+<link rel="stylesheet" href="voice.css">
 </head>
 <body>
 <header class="topbar">
@@ -14,6 +20,9 @@
     <button class="tab active" data-mode="consult" role="tab" style="--tc:#2589e0"><span class="ti">🩺</span>Khám bệnh<kbd>1</kbd></button>
     <button class="tab" data-mode="life" role="tab" style="--tc:#f0603a"><span class="ti">🎮</span>Sống 24 giờ<kbd>2</kbd></button>
     <button class="tab" data-mode="kg" role="tab" style="--tc:#0d9f8f"><span class="ti">🕸️</span>Bản đồ tri thức<kbd>3</kbd></button>
+    <button class="tab" data-mode="ask" role="tab" style="--tc:#7060d8"><span class="ti">💬</span>Hỏi bác sĩ<kbd>4</kbd></button>
+    <button class="tab" data-mode="trust" role="tab" style="--tc:#e8a317"><span class="ti">📊</span>Độ tin cậy<kbd>5</kbd></button>
+    <button class="tab" data-mode="queue" role="tab" style="--tc:#e8508a"><span class="ti">👥</span>Hàng đợi<kbd>6</kbd></button>
   </nav>
   <div class="top-right">
     <span id="mockBadge" class="badge-mock" hidden>Chế độ demo offline</span>
@@ -114,13 +123,18 @@
       <div class="card" id="kgNodeInfo" hidden></div>
       <div id="kgSearchResult"></div>
     </div>
+
+    <!-- CÁC CHẾ ĐỘ MỞ RỘNG: mỗi chế độ do một tệp JS riêng dựng nội dung (ask.js, trust.js, queue.js) -->
+    <div class="view" id="view-ask" hidden></div>
+    <div class="view" id="view-trust" hidden></div>
+    <div class="view" id="view-queue" hidden></div>
   </aside>
 </div>
 
 <footer class="foot"><span class="foot-ico">⚕️</span><b>Chỉ để học tập, không phải chẩn đoán y khoa.</b><span class="foot-sub" id="footModel"></span></footer>
 
 <div class="modal" id="helpModal" hidden><div class="modal-card"><h3>Phím tắt</h3>
-  <ul class="keys"><li><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> Chuyển chế độ</li><li><kbd>Enter</kbd> Vào khám / bắt đầu</li><li><kbd>S</kbd> Bỏ qua hội chẩn</li><li><kbd>F</kbd> Tua nhanh</li><li><kbd>R</kbd> Phát lại</li><li><kbd>H</kbd> Về góc nhìn toàn cảnh</li><li><kbd>?</kbd> Mở bảng này</li><li><kbd>Esc</kbd> Đóng cửa sổ</li></ul>
+  <ul class="keys"><li><kbd>1</kbd>…<kbd>6</kbd> Chuyển chế độ</li><li><kbd>Enter</kbd> Vào khám / bắt đầu</li><li><kbd>S</kbd> Bỏ qua hội chẩn</li><li><kbd>F</kbd> Tua nhanh</li><li><kbd>R</kbd> Phát lại</li><li><kbd>H</kbd> Về góc nhìn toàn cảnh</li><li><kbd>?</kbd> Mở bảng này</li><li><kbd>Esc</kbd> Đóng cửa sổ</li></ul>
   <p class="muted">Thêm <code>?mock=1</code> vào địa chỉ để chạy bằng dữ liệu mẫu (offline).</p>
   <button class="btn primary" id="helpClose">Đã hiểu</button></div></div>
 
@@ -128,5 +142,10 @@
 <script src="vendor/OrbitControls.js"></script>
 <script src="scene.js"></script>
 <script src="app.js"></script>
+<script src="explain.js"></script>
+<script src="ask.js"></script>
+<script src="trust.js"></script>
+<script src="queue.js"></script>
+<script src="voice.js"></script>
 </body>
 </html>
