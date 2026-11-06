@@ -91,3 +91,7 @@ deliverables/**/previews_notebook/
 # Personal report documents remain local; publish source/notebooks after privacy review.
 
 models/chapter05/llm/
+
+# Neo4j Aura credentials (never commit)
+Neo4j-*.txt
+neo4j.txt
