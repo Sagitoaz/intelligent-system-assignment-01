@@ -4,6 +4,25 @@
 tests-diagnosis, managing-diabetes); các ngưỡng xét nghiệm theo chuẩn ADA (bảng trong trang NIDDK bị mất khi thu thập corpus nên
 được ghi là tri thức bổ sung). Mỗi nút được gắn tối đa 3 đoạn trích NIDDK gần nhất bằng BM25.
 Chạy: python project01/train/build_kg.py
+
+======================================================================================================
+BẢN ĐỒ FILE
+======================================================================================================
+Chức năng: ĐÂY LÀ NƠI ĐỊNH NGHĨA đồ thị tri thức (KB) của Project 01. Toàn bộ nút và cạnh viết tay trong hai danh sách:
+  - N (dòng "N = [") : 41 NÚT = khái niệm y khoa. Mỗi nút: id, tên EN, tên VN, loại (condition / symptom / risk_factor / test /
+                        lifestyle / treatment / complication), mô tả tiếng Việt, từ khóa tiếng Việt (để khớp câu hỏi) và từ khóa
+                        tiếng Anh (để truy xuất đoạn tài liệu NIDDK bằng BM25).
+  - E (dòng "E = [") : 54 CẠNH có hướng (nguồn, đích, quan hệ): is_a, symptom_of, raises_risk, causes, diagnosed_by,
+                        prevented_by, treated_by, monitors, helps, complication_of.
+  - main()           : dựng file; với mỗi nút tìm tối đa 3 đoạn NIDDK khớp nhất (BM25, điểm > 2,0) để gắn "bằng chứng" cho nút.
+Đọc : corpus NIDDK qua mas/kb.py (load_passages -> artifacts/diabetes_corpus_niddk183.jsonl).
+Ghi : artifacts/kg.json        (đồ thị cho mas/kb.py và giao diện; GET /api/kg)
+      artifacts/kg_neo4j.cypher (cùng đồ thị dưới dạng lệnh Cypher để nạp Neo4j: cypher-shell -f kg_neo4j.cypher)
+Muốn THÊM/SỬA kiến thức: sửa N hoặc E rồi chạy lại file này; mas/kb.py tự đọc kg.json mới.
+Được dùng bởi: mas/kb.py (KnowledgeBase), mas/orchestrator.py (Thủ thư tri thức), train/eval_rag.py (đo chất lượng RAG).
+Lưu ý để trả lời thầy: đây là KG "nhóm tự biên soạn" dựa trên NIDDK, KHÔNG phải KG trích xuất tự động; bằng chứng đi kèm là
+các đoạn trích thật của NIDDK. Các ngưỡng xét nghiệm (A1C 6,5%, FPG 126 mg/dL, OGTT 200 mg/dL) theo chuẩn ADA.
+======================================================================================================
 """
 from __future__ import annotations
 
@@ -81,19 +100,22 @@ E = [  # (nguồn, đích, quan hệ)
 
 
 def main():
+    """Dựng kg.json và kg_neo4j.cypher từ N và E (không có đầu vào; ghi hai file vào artifacts/ rồi in thống kê)."""
     passages = load_passages()
     bm25 = BM25(passages)
     nodes = []
     for nid, label, vi, typ, desc, aliases, en in N:
+        # gắn bằng chứng: tìm 3 đoạn NIDDK khớp nhất với từ khóa tiếng Anh của nút; chỉ giữ đoạn có điểm BM25 > 2,0 (lọc đoạn khớp yếu)
         found = bm25.search(" ".join(en), 3)
         nodes.append(dict(id=nid, label=label, vi=vi, type=typ, desc=desc, aliases=aliases, aliases_en=en, passages=[f["id"] for f in found if f["score"] > 2.0]))
     ids = {n["id"] for n in nodes}
     edges = [dict(source=s, target=t, rel=r) for s, t, r in E]
-    assert all(e["source"] in ids and e["target"] in ids for e in edges)
+    assert all(e["source"] in ids and e["target"] in ids for e in edges)  # kiểm tra: không có cạnh nào trỏ tới nút không tồn tại
     os.makedirs(OUT, exist_ok=True)
     with open(os.path.join(OUT, "kg.json"), "w", encoding="utf-8") as f:
         json.dump(dict(nodes=nodes, edges=edges), f, ensure_ascii=False, indent=1)
-    q = lambda s: s.replace("\\", "\\\\").replace("'", "\\'")
+    # --- xuất Cypher cho Neo4j: mỗi nút -> CREATE (:KBNode {...}); mỗi cạnh -> MATCH hai nút rồi CREATE quan hệ (tên quan hệ viết HOA)
+    q = lambda s: s.replace("\\", "\\\\").replace("'", "\\'")  # thoát dấu \ và ' để chuỗi tiếng Việt an toàn trong Cypher
     lines = ["// Đồ thị tri thức tiểu đường cho Neo4j. Chạy: cypher-shell -f kg_neo4j.cypher", "MATCH (n:KBNode) DETACH DELETE n;",
              "CREATE CONSTRAINT kb_id IF NOT EXISTS FOR (n:KBNode) REQUIRE n.id IS UNIQUE;"]
     for n in nodes:

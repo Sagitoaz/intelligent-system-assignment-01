@@ -2,6 +2,23 @@
 
 DỮ LIỆU XU HƯỚNG LÀ MẪU MÔ PHỎNG: bộ sinh có seed cố định xuất phát từ hồ sơ (đường huyết đói và cân nặng hiện tại),
 cộng một xu hướng nhẹ và nhiễu. Đó không phải số đo thật của bất kỳ ai.
+
+================================ BẢN ĐỒ FILE (đọc phần này trước) ================================
+Chức năng của phòng khám: (a) tab "Hàng đợi bệnh nhân" = agent PHÂN LOẠI (triage); (b) tab "Theo dõi 4 tuần" = xu hướng đường huyết/cân nặng
+và "RL điều chỉnh gợi ý" theo từng tuần. Giao diện: static/queue.js + queue.css.
+Endpoint (đăng ký qua routes() ở cuối file; server.py nạp mô-đun "followup" trong EXTENSIONS):
+    POST /api/queue     -> triage(clinic, profiles)   : xếp thứ tự khám tối đa 12 hồ sơ
+    POST /api/followup  -> analyze(clinic, body)      : phân tích chuỗi 28 ngày (mẫu mô phỏng hoặc do người dùng nhập), chia 4 tuần
+Dữ liệu: không đọc/ghi file. Dùng clinic.patient() (MLP dự đoán, orchestrator.py), rules.evaluate() (luật an toàn), rl.* (Q-learning coach, rl.py).
+Các hàm chính:
+    triage()        : cờ đỏ mức "danger" khám trước, còn lại xếp theo risk_index giảm dần; mỗi người có câu giải thích "reason"
+    sample_series() : sinh 28 ngày đường huyết đói + cân nặng (seed cố định theo tên hồ sơ), KHÔNG phải số đo thật
+    analyze()       : chia 4 tuần -> mỗi tuần dựng bệnh nhân ảo cho RL -> kế hoạch ngày ổn định (_modal_plan) -> so sánh tuần trước/sau (_diff, _reasons)
+    _modal_plan()   : kế hoạch "đa số phiếu" qua 15 ngày mô phỏng để chống nhiễu
+    _slope(), _chunks(), _clean(), _diff(), _reasons(), _hour_txt() : hàm phụ (độ dốc hồi quy, chia tuần, kiểm tra đầu vào, so sánh kế hoạch, lý do, giờ tiếng Việt)
+Thầy hỏi "RL điều chỉnh gợi ý ở đâu?" -> analyze() (vòng for theo tuần) gọi _modal_plan() và _diff()/_reasons().
+Thầy hỏi "vì sao xếp bệnh nhân này trước?" -> trường "reason" trong triage().
+================================================================================================
 """
 from __future__ import annotations
 
@@ -11,7 +28,8 @@ import zlib
 from . import rl, rules
 from .data import PERSONAS, bmi
 
-DAYS, WEEKS = 28, 4
+DAYS, WEEKS = 28, 4  # theo dõi 28 ngày = 4 tuần
+# Ghi chú bắt buộc hiển thị khi dùng dữ liệu mô phỏng, để người xem không nhầm với số đo thật.
 SIM_NOTE = ("Dữ liệu mẫu minh họa: chuỗi 28 ngày này do chương trình tự sinh (có seed cố định) từ hồ sơ mẫu, "
             "không phải số đo thật của ai.")
 LEVEL_COLOR = {"thấp": "#0d9f8f", "trung bình": "#e8a317", "cao": "#e8503a"}
@@ -20,10 +38,13 @@ ACT_VI = {a["id"]: a["label"].lower() for a in rl.ACTIONS}
 
 # ------------------------------------------------------------------ hàng đợi
 def triage(clinic, profiles: list | None = None) -> dict:
+    """Agent phân loại. Đầu vào: clinic và danh sách hồ sơ (None -> dùng PERSONAS mẫu), tối đa 12. Đầu ra: dict(queue=[hồ sơ đã xếp hạng, có rank, reason, red_flags], rule=giải thích quy tắc).
+    Quy tắc xếp: (1) có cờ đỏ mức danger -> khám trước; (2) còn lại xếp theo chỉ số nguy cơ (risk_index) từ cao xuống thấp. Công cụ học tập, không phải triage y khoa."""
     items = profiles if profiles else [dict(id=p["id"], name=p["name"], story=p["story"], profile=p["profile"]) for p in PERSONAS]
     if not isinstance(items, list) or len(items) > 12:
         raise ValueError("Hàng đợi cần một danh sách tối đa 12 hồ sơ")
     out = []
+    # Bước 1: với mỗi hồ sơ, chạy MLP (clinic.patient) + luật an toàn (rules.evaluate) để lấy risk_index, mức nguy cơ và danh sách cờ đỏ.
     for i, it in enumerate(items):
         if not isinstance(it, dict):
             raise ValueError("Mỗi hồ sơ phải là một đối tượng JSON")
@@ -36,8 +57,10 @@ def triage(clinic, profiles: list | None = None) -> dict:
         out.append(dict(id=str(it.get("id") or f"p{i + 1}"), name=str(it.get("name") or prof["name"]), story=it.get("story", ""), profile=raw,
                         risk=dl["risk"], risk_index=round(dl["risk_index"], 4), level=level, level_color=LEVEL_COLOR[level],
                         danger=danger, red_flags=flags, fasting_glucose=prof["fasting_glucose"], bmi=round(dl["bmi"], 1), age=prof["age_years"]))
+    # Bước 2: sắp xếp. Khóa sắp: (không-danger, -risk_index) -> người có cờ đỏ nguy hiểm lên đầu; cùng nhóm thì nguy cơ cao hơn đứng trước.
     order = sorted(range(len(out)), key=lambda i: (not out[i]["danger"], -out[i]["risk_index"]))
     ranked = []
+    # Bước 3: gắn thứ hạng và câu giải thích "vì sao xếp ở vị trí này" (minh bạch, dựa trên số liệu thật vừa tính).
     for rank, i in enumerate(order, 1):
         o = out[i]
         if o["danger"]:
@@ -55,7 +78,9 @@ def triage(clinic, profiles: list | None = None) -> dict:
 
 # ------------------------------------------------------------------ dữ liệu mẫu mô phỏng
 def sample_series(prof: dict, pat_base: float, seed: int = 2024) -> dict:
-    """Sinh 28 ngày đường huyết đói và cân nặng; ngày cuối khớp (xấp xỉ) số liệu hiện tại của hồ sơ."""
+    """Sinh 28 ngày đường huyết đói và cân nặng; ngày cuối khớp (xấp xỉ) số liệu hiện tại của hồ sơ.
+    Xu hướng (gs = độ dốc đường huyết mg/dL mỗi ngày, ws = độ dốc cân nặng kg mỗi ngày) phụ thuộc lối sống: ít vận động + thừa cân/đường huyết cao -> tăng nhẹ;
+    có vận động -> giảm hoặc đi ngang. Cộng nhiễu Gauss; seed lấy từ crc32(tên) nên cùng hồ sơ luôn ra cùng chuỗi (tái lập được)."""
     rng = random.Random(zlib.crc32(prof["name"].encode("utf-8")) ^ (int(seed) * 7919))
     g_now = prof["fasting_glucose"] or pat_base
     w_now = prof["weight_kg"]
@@ -78,6 +103,7 @@ def sample_series(prof: dict, pat_base: float, seed: int = 2024) -> dict:
 
 
 def _clean(vals, name, lo, hi) -> list[float]:
+    """Kiểm tra chuỗi người dùng nhập: phải là danh sách 8–120 số trong khoảng [lo, hi]; sai thì raise ValueError với thông báo tiếng Việt (API trả lỗi 400)."""
     if not isinstance(vals, list) or not (8 <= len(vals) <= 120):
         raise ValueError(f"Chuỗi {name} cần từ 8 đến 120 giá trị")
     try:
@@ -90,6 +116,7 @@ def _clean(vals, name, lo, hi) -> list[float]:
 
 
 def _slope(y: list[float]) -> float:
+    """Độ dốc hồi quy tuyến tính bình phương tối thiểu của y theo chỉ số ngày (đơn vị: giá trị/ngày); dùng để nói "đường huyết đang tăng/giảm"."""
     n = len(y)
     mx, my = (n - 1) / 2, sum(y) / n
     den = sum((i - mx) ** 2 for i in range(n))
@@ -97,24 +124,29 @@ def _slope(y: list[float]) -> float:
 
 
 def _chunks(v: list[float]) -> list[list[float]]:
+    """Chia chuỗi thành WEEKS=4 đoạn gần đều nhau (tuần 1..4)."""
     n = len(v)
     return [v[round(n * w / WEEKS):round(n * (w + 1) / WEEKS)] for w in range(WEEKS)]
 
 
 def _mean(v):
+    """Trung bình cộng của danh sách số."""
     return sum(v) / len(v)
 
 
 def _plan_map(plan: list[dict]) -> dict:
+    """Đổi kế hoạch [{hour, action,...}] thành dict giờ -> hành động để so sánh hai tuần."""
     return {p["hour"]: p["action"] for p in plan}
 
 
 def _hour_txt(h: int) -> str:
+    """Giờ dạng chữ tiếng Việt, ví dụ 7 -> "7h (sáng)"."""
     part = "sáng" if 5 <= h < 11 else "trưa" if h < 14 else "chiều" if h < 18 else "tối" if h < 23 else "đêm"
     return f"{h}h ({part})"
 
 
 def _diff(prev: dict, cur: dict) -> list[dict]:
+    """So sánh kế hoạch ngày của tuần trước (prev) và tuần này (cur): trả về danh sách thay đổi theo giờ, kind = "đổi" / "thêm" / "bỏ" kèm câu mô tả."""
     a, b = _plan_map(prev["plan"]), _plan_map(cur["plan"])
     out = []
     for h in sorted(set(a) | set(b)):
@@ -146,6 +178,7 @@ def _modal_plan(pt: dict, coach, days: int = 15) -> list[dict]:
 
 
 def _count(plan, ids):
+    """Đếm số hành động trong kế hoạch thuộc nhóm ids (ví dụ vận động: walk, workout)."""
     return sum(p["action"] in ids for p in plan)
 
 
@@ -173,6 +206,9 @@ def _reasons(prev: dict, cur: dict, diffs: list[dict]) -> list[str]:
 
 
 def analyze(clinic, body: dict) -> dict:
+    """Theo dõi 4 tuần. body: {profile, seed?, series?: {glucose[], weight[]}}. Không có series -> sinh mẫu mô phỏng (simulated=True).
+    Trả về dict(weeks[4 tuần: trung bình, kế hoạch RL, changes, reasons], stats, comment, rl_note, series, thresholds...).
+    Ý tưởng "RL điều chỉnh gợi ý": mỗi tuần dựng lại bệnh nhân ảo từ số đo trung bình tuần đó, hỏi Q-learning coach kế hoạch ngày, rồi so với tuần trước."""
     prof, dl, pat = clinic.patient(body.get("profile") or {})
     seed = int(body.get("seed", 2024))
     ser = body.get("series")
@@ -182,6 +218,7 @@ def analyze(clinic, body: dict) -> dict:
         g, w = ser["glucose"], ser["weight"]
     else:
         g, w = _clean(ser.get("glucose"), "đường huyết", 30, 600), _clean(ser.get("weight"), "cân nặng", 25, 250)
+    # Bước 1: chia 28 ngày thành 4 tuần; Bước 2: với mỗi tuần dựng "bệnh nhân ảo" cho môi trường RL từ chỉ số nguy cơ MLP + BMI + đường huyết trung bình tuần.
     gw, ww = _chunks(g), _chunks(w)
     h_m = prof["height_cm"] / 100.0
     weeks = []
@@ -194,12 +231,14 @@ def analyze(clinic, body: dict) -> dict:
         weeks.append(dict(week=i + 1, mean_glucose=round(mg, 1), mean_weight=round(mw, 2), n=len(gw[i]), bmi=round(mw / h_m ** 2, 1),
                           pct_ge_126=round(100 * sum(x >= 126 for x in gw[i]) / len(gw[i])), rl_patient=pt, plan=plan,
                           first_hour=dict(action=adv["action"], label=ACT_VI[adv["action"]], why=adv["why"])))
+    # Bước 3: so sánh kế hoạch từng tuần với tuần trước; lý do chỉ dựa trên số liệu đã tính (không bịa).
     for i, wk in enumerate(weeks):
         if i == 0:
             wk["changes"], wk["reasons"] = [], ["Đây là tuần đầu tiên nên chưa có tuần trước để so sánh."]
         else:
             wk["changes"] = _diff(weeks[i - 1], wk)
             wk["reasons"] = _reasons(weeks[i - 1], wk, wk["changes"])
+    # Bước 4: thống kê toàn kỳ (độ dốc, % ngày >=126 mg/dL là ngưỡng chẩn đoán đường huyết đói, % ngày >=100 là ngưỡng bình thường) và nhận xét tóm tắt.
     n = len(g)
     sg, sw = _slope(g), _slope(w)
     stats = dict(glucose_slope_per_day=round(sg, 3), glucose_slope_per_week=round(sg * 7, 1), weight_slope_per_week=round(sw * 7, 2),
@@ -221,4 +260,5 @@ def analyze(clinic, body: dict) -> dict:
 
 
 def routes(clinic, speaker):
+    """Hook cho server.py: (GET rỗng, POST: /api/queue -> triage, /api/followup -> analyze)."""
     return {}, {"/api/queue": lambda b: triage(clinic, b.get("profiles")), "/api/followup": lambda b: analyze(clinic, b)}

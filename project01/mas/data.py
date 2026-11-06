@@ -1,19 +1,44 @@
-"""Hồ sơ bệnh nhân: lược đồ nhập liệu thân thiện, ánh xạ sang 21 chỉ số BRFSS và các "vai" bệnh nhân mẫu."""
+"""Hồ sơ bệnh nhân: lược đồ nhập liệu thân thiện, ánh xạ sang 21 chỉ số BRFSS và các "vai" bệnh nhân mẫu.
+
+=====================  BẢN ĐỒ FILE (thầy hỏi "hồ sơ bệnh nhân / biểu mẫu nhập / 21 chỉ số ở đâu" thì mở file này)  =====================
+Không phải một agent riêng: đây là lớp DỮ LIỆU đầu vào dùng chung cho mọi agent (DL, luật, RL, phản biện, what-if).
+
+Luồng dữ liệu: người dùng nhập biểu mẫu (fields) → normalize() làm sạch/kẹp giá trị → to_vector() đổi thành vector 21 số BRFSS → DLAgent.predict().
+
+Thành phần chính (tìm theo tên):
+  - FEATURES   : 21 chỉ số BRFSS theo ĐÚNG thứ tự cột khi huấn luyện MLP (train/train_dl.py). Đổi thứ tự là mô hình sai.
+  - AGE_EDGES  : các mốc tuổi chia 13 nhóm tuổi BRFSS (nhóm 1 = 18–24 … nhóm 13 = 80+).
+  - SYMPTOMS   : 6 triệu chứng người dùng có thể chọn (id, nhãn tiếng Việt).
+  - DEFAULT    : hồ sơ mặc định (giá trị khi người dùng bỏ trống).
+  - PERSONAS   : 5 bệnh nhân mẫu (Lan, Minh, Hùng, An, Hoa) để demo nhanh; "Cô Hoa" cố ý tạo tình huống mô hình và đường huyết bất đồng (kích hoạt Bác sĩ phản biện).
+  - fields()   : mô tả biểu mẫu cho giao diện web (nhãn, loại ô nhập, giới hạn, nhóm).
+  - normalize(): làm sạch hồ sơ — chỉ giữ khóa hợp lệ, ép kiểu, kẹp khoảng giá trị (tuổi 18–95, cao 130–210, nặng 35–180, ...).
+  - bmi(), age_group(), to_vector() : tính BMI = kg/m², đổi tuổi sang nhóm BRFSS, tạo vector 21 số.
+
+Được gọi từ: mas/orchestrator.py (meta, consult), mas/dl_agent.py (normalize, to_vector, FEATURES), mas/rules.py, mas/critic.py,
+             mas/whatif.py, server.py (trả fields/PERSONAS cho giao diện qua /api/meta).
+===============================================================================================================================
+"""
 from __future__ import annotations
 
+# 21 chỉ số đầu vào của MLP, ĐÚNG thứ tự cột BRFSS 2015 dùng khi huấn luyện (xem train/train_dl.py và artifacts/dl_metrics.json).
 FEATURES = ["HighBP", "HighChol", "CholCheck", "BMI", "Smoker", "Stroke", "HeartDiseaseorAttack", "PhysActivity", "Fruits",
             "Veggies", "HvyAlcoholConsump", "AnyHealthcare", "NoDocbcCost", "GenHlth", "MentHlth", "PhysHlth", "DiffWalk",
             "Sex", "Age", "Education", "Income"]
 
+# Mốc trên của từng nhóm tuổi: tuổi ≤24 → nhóm 1, 25–29 → nhóm 2, ... > 79 → nhóm 13 (xem age_group()).
 AGE_EDGES = [24, 29, 34, 39, 44, 49, 54, 59, 64, 69, 74, 79]  # nhóm tuổi BRFSS 1..13
+# Triệu chứng người dùng chọn: (id dùng trong code, nhãn hiển thị). rules.py/critic.py coi 4 triệu chứng đầu (khát, tiểu nhiều, sụt cân, nhìn mờ) là "điển hình".
 SYMPTOMS = [("thirst", "Khát nước nhiều"), ("frequent_urination", "Đi tiểu nhiều"), ("fatigue", "Mệt mỏi"),
             ("blurred_vision", "Nhìn mờ"), ("slow_healing", "Vết thương lâu lành"), ("weight_loss", "Sụt cân không rõ lý do")]
 
+# Hồ sơ mặc định; normalize() lấy giá trị ở đây cho trường người dùng không nhập. fasting_glucose=None nghĩa là chưa đo.
 DEFAULT = dict(name="Bạn", age_years=45, sex="female", height_cm=165, weight_kg=62, high_bp=False, high_chol=False, chol_check=True,
                smoker=False, stroke=False, heart_disease=False, phys_activity=True, fruits_daily=True, veggies_daily=True,
                heavy_alcohol=False, any_healthcare=True, no_doc_cost=False, diff_walking=False, gen_health=2, mental_bad_days=2,
                physical_bad_days=2, education=5, income=6, fasting_glucose=None, symptoms=[])
 
+# 5 bệnh nhân mẫu cho demo (nút chọn nhanh trên giao diện). Mỗi persona = DEFAULT ghi đè vài trường.
 PERSONAS = [
     dict(id="lan", name="Chị Lan, 34 tuổi", story="Nhân viên văn phòng, năng động, ăn uống cân đối. Đi khám để yên tâm.",
          profile=dict(DEFAULT, name="Chị Lan", age_years=34, sex="female", height_cm=162, weight_kg=54, gen_health=2, fasting_glucose=88)),
@@ -70,6 +95,8 @@ def fields():
 
 
 def normalize(profile: dict) -> dict:
+    """Làm sạch hồ sơ từ giao diện/API: bắt đầu từ DEFAULT, chỉ nhận khóa có trong DEFAULT, ép kiểu và kẹp khoảng hợp lệ
+    (tuổi 18–95, cao 130–210 cm, nặng 35–180 kg, đường huyết 40–500, số ngày xấu 0–30), lọc triệu chứng lạ. Luôn trả dict đầy đủ khóa."""
     p = dict(DEFAULT)
     for k, v in (profile or {}).items():
         if k in DEFAULT:
@@ -91,10 +118,12 @@ def normalize(profile: dict) -> dict:
 
 
 def bmi(p: dict) -> float:
+    """BMI = cân nặng (kg) / chiều cao (m)²."""
     return p["weight_kg"] / (p["height_cm"] / 100.0) ** 2
 
 
 def age_group(age: float) -> int:
+    """Đổi tuổi (năm) sang nhóm tuổi BRFSS 1..13 bằng cách đếm số mốc AGE_EDGES mà tuổi vượt qua."""
     return 1 + sum(age > e for e in AGE_EDGES)
 
 

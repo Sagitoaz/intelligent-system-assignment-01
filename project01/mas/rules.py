@@ -1,13 +1,38 @@
-"""Agent luật an toàn (rule-based): cảnh báo khẩn và khuyến nghị tối thiểu, chạy trước mọi lời khuyên khác."""
+"""Agent luật an toàn (rule-based): cảnh báo khẩn và khuyến nghị tối thiểu, chạy trước mọi lời khuyên khác.
+
+=====================  BẢN ĐỒ FILE (thầy hỏi "phần luật / rule-based / cảnh báo an toàn ở đâu" thì mở file này)  =====================
+Thuộc agent: "Hộ lý an toàn" (id="guardian", vai trò Luật rule-based). Luật luôn được ƯU TIÊN hơn dự đoán của mô hình học máy.
+
+Cách hoạt động: không học gì cả; là một chuỗi if/elif cố định dựa trên ngưỡng xét nghiệm của ADA/NIDDK. Mỗi luật có
+  id (R1..R10), level ("info" | "warn" | "danger"), text (lời khuyên tiếng Việt) và basis (căn cứ, nguồn ngưỡng).
+
+Bảng luật:
+  R1  đường huyết ≥ 250 mg/dL                                  → danger (đi khám trong ngày)
+  R2  đường huyết ≥ 200 kèm ≥ 1 triệu chứng điển hình           → danger
+  R3  đường huyết đói ≥ 126                                     → warn  (ngưỡng tiểu đường ADA, cần xét nghiệm lặp lại)
+  R4  đường huyết đói 100–125                                   → warn  (vùng tiền tiểu đường)
+  R5  đường huyết < 70                                          → danger (quá thấp, ăn đường nhanh)
+  R6  ≥ 3 triệu chứng điển hình (và đường huyết < 200 / chưa đo) → warn
+  R7  BMI ≥ 30                                                  → warn  (béo phì)
+  R8  huyết áp cao + mỡ máu cao + bệnh tim/đột quỵ              → warn
+  R9  ≥ 45 tuổi mà chưa đo mỡ máu                               → info
+  R10 mô hình ước lượng P(tiểu đường) ≥ 50% và chưa có luật danger → warn (khuyên xét nghiệm xác nhận)
+  (R1–R5 loại trừ nhau theo thứ tự elif: chỉ một luật về đường huyết được kích hoạt.)
+
+Thành phần chính: evaluate() (chạy toàn bộ luật cho một hồ sơ), top_level() (mức nghiêm trọng cao nhất trong các luật đã kích hoạt).
+Được gọi từ: mas/orchestrator.py (hội chẩn: evaluate rồi top_level để đặt mức cảnh báo), mas/critic.py (đối chiếu kết luận của MLP với kết quả luật).
+=========================================================================================================================
+"""
 from __future__ import annotations
 
 from .data import SYMPTOMS, bmi, normalize
 
-SYM = dict(SYMPTOMS)
+SYM = dict(SYMPTOMS)  # id triệu chứng -> nhãn tiếng Việt, dùng để in tên triệu chứng trong lời khuyên
 
 
 def evaluate(profile: dict, risk_index: float | None = None, p_diabetes: float | None = None) -> list[dict]:
-    """Trả về danh sách luật đã kích hoạt: id, mức (info|warn|danger), nội dung, căn cứ."""
+    """Trả về danh sách luật đã kích hoạt: id, mức (info|warn|danger), nội dung, căn cứ.
+    Đầu vào: hồ sơ thân thiện; risk_index và p_diabetes (xác suất tiểu đường từ MLP) là tùy chọn, chỉ dùng cho R10."""
     p = normalize(profile)
     g = p["fasting_glucose"]
     sym = p["symptoms"]
@@ -16,6 +41,7 @@ def evaluate(profile: dict, risk_index: float | None = None, p_diabetes: float |
     def add(rid, level, text, basis):
         out.append(dict(id=rid, level=level, text=text, basis=basis))
 
+    # "triệu chứng điển hình" = 4 triệu chứng kinh điển của tiểu đường mà người dùng đã chọn
     classic = [s for s in ("thirst", "frequent_urination", "weight_loss", "blurred_vision") if s in sym]
     if g is not None and g >= 250:
         add("R1", "danger", f"Đường huyết {g:.0f} mg/dL rất cao. Hãy đi khám hoặc đến cơ sở y tế trong ngày, đặc biệt nếu khát nhiều, tiểu nhiều, buồn nôn hoặc thở nhanh.",
@@ -48,4 +74,5 @@ def evaluate(profile: dict, risk_index: float | None = None, p_diabetes: float |
 
 
 def top_level(rules: list[dict]) -> str:
+    """Mức nghiêm trọng cao nhất trong danh sách luật: "danger" > "warn" > "info" (không có luật nào cũng trả "info")."""
     return "danger" if any(r["level"] == "danger" for r in rules) else "warn" if any(r["level"] == "warn" for r in rules) else "info"

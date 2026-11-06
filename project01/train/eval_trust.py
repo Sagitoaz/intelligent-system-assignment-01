@@ -2,6 +2,27 @@
 
 Chạy: .venv\\Scripts\\python.exe project01/train/eval_trust.py   (chỉ cần numpy, pandas, scikit-learn; không cần torch)
 Phép chia train/test giống hệt train_dl.py (test_size=0,2, random_state=42, stratify theo nhãn).
+
+======================================================================================================
+BẢN ĐỒ FILE
+======================================================================================================
+Chức năng: trả lời câu hỏi "có nên TIN mô hình DL không, và nó có CÔNG BẰNG giữa các nhóm người không?" bằng số liệu thật trên tập test.
+Đọc : data/diabetes/diabetes_012_health_indicators_BRFSS2015.csv; mô hình đã huấn luyện qua mas/dl_agent.py (DLAgent) và
+      danh sách đặc trưng mas/data.py. Tái tạo đúng tập test của train_dl.py (cùng seed 42) nên không rò rỉ dữ liệu.
+Ghi : artifacts/trust_metrics.json -> được mas/trust.py phục vụ qua GET /api/trust và /api/trust/fairness cho tab "Độ tin cậy & công bằng".
+Các hàm (đều là thống kê thuần numpy, không cần torch):
+  - wilson(k, n)        : khoảng tin cậy Wilson 95% cho một tỉ lệ k/n (tốt hơn khoảng chuẩn khi n nhỏ hoặc tỉ lệ sát 0/1)
+  - rate(k, n)          : đóng gói {k, n, value, ci} cho một tỉ lệ kèm khoảng tin cậy
+  - confusion, per_class: ma trận nhầm lẫn 3x3 và precision/recall/F1 từng lớp
+  - reliability         : đường hiệu chuẩn (calibration): chia xác suất dự đoán thành 10 khoảng, so xác suất TB dự đoán với tần suất thật;
+                          trả ECE (sai số hiệu chuẩn kỳ vọng) và điểm Brier (sai số bình phương trung bình) - càng nhỏ càng tốt
+  - alert_stats         : thống kê hệ thống cảnh báo "nguy cơ cao" khi chỉ số nguy cơ >= ngưỡng (precision, recall, báo động giả)
+  - group_table, spread : so sánh theo nhóm (tuổi/giới/thu nhập) và tìm chênh lệch lớn nhất giữa nhóm cao nhất và thấp nhất
+  - main                : chạy toàn bộ, tự sinh phần kết luận bằng lời từ số thật và danh sách giới hạn
+Ý nghĩa để trả lời thầy: accuracy tổng 0,75 dễ gây hiểu lầm vì luôn đoán "không bệnh" cũng đúng ~84%; vì vậy file này báo thêm recall
+từng lớp (tiền tiểu đường chỉ 17,5%), hiệu chuẩn, báo động giả và chênh lệch giữa các nhóm. Chênh lệch nhóm một phần do tỉ lệ bệnh khác nhau
+thật, không hoàn toàn là thiên vị của mô hình.
+======================================================================================================
 """
 from __future__ import annotations
 
@@ -28,6 +49,7 @@ HIGH = 0.25  # ngưỡng "nguy cơ cao" của orchestrator.level
 
 
 def wilson(k, n, z=1.96):
+    """Khoảng tin cậy Wilson (z=1,96 ~ 95%) cho tỉ lệ k/n. Trả [thấp, cao] đã làm tròn; [None, None] nếu n = 0."""
     if n == 0:
         return [None, None]
     p = k / n
@@ -38,16 +60,19 @@ def wilson(k, n, z=1.96):
 
 
 def rate(k, n):
+    """Đóng gói một tỉ lệ: {k: số trúng, n: tổng, value: k/n, ci: khoảng tin cậy Wilson}."""
     return dict(k=int(k), n=int(n), value=round(k / n, 4) if n else None, ci=wilson(k, n))
 
 
 def confusion(y, pred):
+    """Ma trận nhầm lẫn 3x3: hàng = nhãn thật, cột = nhãn dự đoán (thứ tự none, pre, diabetes)."""
     cm = np.zeros((3, 3), dtype=int)
     np.add.at(cm, (y, pred), 1)
     return cm
 
 
 def per_class(cm):
+    """Từ ma trận nhầm lẫn tính support, số lần được dự đoán, precision, recall, F1 cho từng lớp."""
     out = []
     for k in range(3):
         tp = cm[k, k]
@@ -60,6 +85,11 @@ def per_class(cm):
 
 
 def reliability(p, truth, bins=10):
+    """Đường hiệu chuẩn (reliability diagram) cho xác suất p so với nhãn nhị phân truth (0/1).
+
+    Mỗi khoảng xác suất: n mẫu, xác suất dự đoán trung bình (mean_pred) và tần suất thật (observed); mô hình hiệu chuẩn tốt
+    khi hai số này gần nhau. ECE = trung bình có trọng số |mean_pred - observed|; Brier = trung bình (p - truth)^2.
+    """
     edges = np.linspace(0, 1, bins + 1)
     rows, ece = [], 0.0
     for i in range(bins):
@@ -77,6 +107,11 @@ def reliability(p, truth, bins=10):
 
 
 def alert_stats(score, y, thr):
+    """Chất lượng của hệ thống cảnh báo: cảnh báo khi chỉ số nguy cơ `score` >= `thr` (0,25 = ngưỡng "cao" của orchestrator).
+
+    Trả số cảnh báo, precision/recall với tiểu đường và với "bất kỳ bất thường" (tiền + tiểu đường), tỉ lệ báo động giả
+    (người khỏe bị cảnh báo), tỉ lệ cảnh báo sai trong số cảnh báo; mỗi tỉ lệ kèm khoảng tin cậy Wilson.
+    """
     a = score >= thr
     n_alert = int(a.sum())
     tp_dia = int((a & (y == 2)).sum())
@@ -90,6 +125,11 @@ def alert_stats(score, y, thr):
 
 
 def group_table(mask_list, y, pred, score):
+    """Bảng chỉ số theo nhóm (kiểm tra công bằng). mask_list = [(tên nhóm, mặt nạ boolean trên tập test), ...].
+
+    Mỗi nhóm: số người, accuracy, recall tiểu đường/tiền tiểu đường, tỉ lệ bị cảnh báo, độ phủ và độ chính xác của cảnh báo,
+    tỉ lệ mắc bệnh thật (diabetes_prevalence) - để tách "mô hình bỏ sót nhóm này" khỏi "nhóm này vốn bệnh nhiều hơn".
+    """
     rows = []
     for name, m in mask_list:
         n = int(m.sum())
@@ -109,21 +149,24 @@ def group_table(mask_list, y, pred, score):
 
 
 def spread(rows, key):
+    """Chênh lệch lớn nhất của chỉ số `key` giữa các nhóm (chỉ xét nhóm có n >= 30 để tránh nhiễu): nhóm cao nhất, thấp nhất, khoảng cách."""
     vals = [(r[key]["value"], r["group"]) for r in rows if r[key]["value"] is not None and r[key]["n"] >= 30]
     hi, lo = max(vals), min(vals)
     return dict(max_gap=round(hi[0] - lo[0], 4), highest=hi[1], lowest=lo[1], highest_value=hi[0], lowest_value=lo[0])
 
 
 def main():
+    """Chạy toàn bộ đánh giá độ tin cậy/công bằng và ghi trust_metrics.json (xem BẢN ĐỒ FILE ở đầu file)."""
     sys.stdout.reconfigure(encoding="utf-8")
     df = pd.read_csv(CSV)
     y_all = df["Diabetes_012"].astype(int).values
     X = df[FEATURES].astype("float32").values
+    # tái tạo ĐÚNG tập test của train_dl.py (cùng test_size, seed, stratify) -> số liệu độ tin cậy là số trên dữ liệu chưa từng huấn luyện
     _, Xte, _, yte = train_test_split(X, y_all, test_size=0.2, random_state=SEED, stratify=y_all)
     agent = DLAgent()
-    probs = agent._forward(Xte)
-    pred = (probs * agent.scale).argmax(1)
-    score = DLAgent.index(probs)
+    probs = agent._forward(Xte)                    # xác suất 3 lớp của MLP đã huấn luyện
+    pred = (probs * agent.scale).argmax(1)         # nhãn sau điều chỉnh ngưỡng (decision_scale)
+    score = DLAgent.index(probs)                   # chỉ số nguy cơ 0..1 mà giao diện hiển thị và dùng để cảnh báo
     n = len(yte)
     cm = confusion(yte, pred)
     acc = float((pred == yte).mean())
@@ -131,13 +174,14 @@ def main():
     pc = per_class(cm)
     recall_pre = pc[1]["recall"]
 
-    # hiệu chuẩn
+    # hiệu chuẩn: xác suất "70%" thì có thật sự khoảng 70% người mắc bệnh không? (kiểm tra cho lớp tiểu đường, tiền tiểu đường và chỉ số nguy cơ)
     calib = dict(diabetes=reliability(probs[:, 2], (yte == 2).astype(float)), pre=reliability(probs[:, 1], (yte == 1).astype(float)),
                  index=reliability(np.clip(score, 0, 1), ((yte == 2) | (yte == 1)).astype(float)))
 
+    # cảnh báo: "main" = ngưỡng thật của hệ thống (0,25), "loose" = ngưỡng lỏng 0,10 để so sánh đánh đổi giữa bỏ sót và báo động giả
     alerts = dict(main=alert_stats(score, yte, HIGH), loose=alert_stats(score, yte, 0.10))
 
-    # nhóm
+    # nhóm: chia theo mã tuổi BRFSS (1..13, mỗi mã = 5 năm), giới (0 nữ, 1 nam) và mức thu nhập (1..8) để kiểm tra công bằng
     age = X_age = Xte[:, FEATURES.index("Age")].astype(int)
     sex = Xte[:, FEATURES.index("Sex")].astype(int)
     inc = Xte[:, FEATURES.index("Income")].astype(int)

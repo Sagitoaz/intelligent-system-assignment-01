@@ -2,6 +2,24 @@
 
 POST /api/report/pdf  {summary, report:{figures,tables}, events?, patient_name?}  ->  ("application/pdf", bytes, Content-Disposition)
 Đây là công cụ học tập: mọi trang đều có dòng cảnh báo "Chỉ để học tập, không phải chẩn đoán y khoa".
+
+================================ BẢN ĐỒ FILE (đọc phần này trước) ================================
+Chức năng của phòng khám: nút "Tải báo cáo PDF" sau khi khám. Mô-đun mở rộng (server.py nạp "pdf_report" trong EXTENSIONS).
+Endpoint: POST /api/report/pdf -> routes() -> pdf() -> build_pdf(body) -> trả ("application/pdf", bytes, Content-Disposition: attachment).
+Đầu vào body: summary (kết luận từ Clinic.consult), report {figures, tables} (từ report.py), events (để suy ra tên bệnh nhân), patient_name tùy chọn.
+Thư viện: reportlab (Platypus) dựng PDF; font DejaVu Sans lấy từ thư mục font của matplotlib để hiển thị đủ dấu tiếng Việt.
+Dữ liệu: không đọc file dữ liệu; chỉ đọc font TTF của matplotlib. Không ghi file (PDF trả về bằng bytes trong bộ nhớ).
+Bố cục trang: banner tên + ngày -> huy hiệu "Mức nguy cơ" -> chỉ số tóm tắt -> thanh xác suất vẽ bằng Drawing -> cờ đỏ -> lời khuyên
+-> các hình (PNG base64) -> các bảng -> nguồn trích dẫn -> khung cảnh báo "chỉ để học tập". Chân trang mọi trang có cảnh báo + số trang.
+Các hàm chính:
+    build_pdf()      : hàm chính, ghép mọi phần ở trên (kiểm tra đầu vào, giới hạn kích thước: MAX_FIGS/MAX_TABLES/MAX_ROWS/MAX_PNG)
+    _register_fonts(), _styles() : đăng ký font, bộ kiểu chữ
+    _risk_bars()     : vẽ ba thanh xác suất bằng reportlab Drawing (không dùng ảnh)
+    _png_image()     : giải mã PNG base64, kiểm tra hợp lệ/kích thước, co vừa khung
+    _table(), _col_widths() : dựng bảng, tự chia độ rộng cột theo độ dài nội dung
+    _clean(), _p(), _patient_name() : bỏ emoji (font không có), tạo đoạn văn an toàn (escape XML), suy ra tên bệnh nhân
+Thầy hỏi "PDF xuất ra bằng gì, có an toàn đầu vào không?" -> reportlab; build_pdf() kiểm tra summary, giới hạn số hình/bảng/hàng, chỉ nhận PNG <= 6 MB.
+================================================================================================
 """
 from __future__ import annotations
 
@@ -25,16 +43,19 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (BaseDocTemplate, Frame, Image, KeepTogether, PageTemplate, Paragraph, Spacer, Table, TableStyle)
 
+# Dòng cảnh báo đặt ở chân mọi trang và trong metadata PDF.
 DISCLAIMER = "Chỉ để học tập, không phải chẩn đoán y khoa"
 FONT, FONT_B = "DejaVuSans", "DejaVuSans-Bold"
 INK, MUTED, LINE = colors.HexColor("#14203d"), colors.HexColor("#4a5a7c"), colors.HexColor("#d5e0f2")
 LEVEL_COLORS = {"thấp": "#0d9f8f", "trung bình": "#e8a317", "cao": "#e8503a"}
 RISK_ROWS = [("none", "Không tiểu đường", "#0d9f8f"), ("pre", "Tiền tiểu đường", "#e8a317"), ("diabetes", "Tiểu đường", "#e8503a")]
+# Giới hạn đầu vào để một yêu cầu xấu/quá lớn không làm treo máy chủ: tối đa 10 hình, 12 bảng, 300 hàng mỗi bảng, mỗi PNG <= 6.000.000 byte.
 MAX_FIGS, MAX_TABLES, MAX_ROWS, MAX_PNG = 10, 12, 300, 6_000_000
 _fonts_ready = False
 
 
 def _register_fonts():
+    """Đăng ký font DejaVu Sans (thường + đậm) của matplotlib với reportlab đúng một lần; reportlab mặc định không có font hiển thị được tiếng Việt có dấu."""
     global _fonts_ready
     if _fonts_ready:
         return
@@ -46,6 +67,7 @@ def _register_fonts():
 
 
 def _styles():
+    """Bộ kiểu chữ cho báo cáo: body, h1/h2/h3 (tiêu đề), sub, cap (chú thích hình), cell/cellh (ô bảng/tiêu đề cột), quote (trích dẫn), bullet."""
     s = lambda name, **kw: ParagraphStyle(name, fontName=kw.pop("fontName", FONT), textColor=kw.pop("textColor", INK), alignment=TA_LEFT, **kw)
     return dict(
         body=s("body", fontSize=10, leading=14.5, spaceAfter=3),
@@ -70,10 +92,12 @@ def _clean(text) -> str:
 
 
 def _p(text, style):
+    """Tạo Paragraph từ văn bản thô: bỏ emoji rồi escape ký tự XML (&, <, >) vì reportlab hiểu Paragraph như mini-HTML."""
     return Paragraph(escape(_clean(text)), style)
 
 
 def _patient_name(body: dict) -> str:
+    """Tên bệnh nhân: ưu tiên body["patient_name"]; không có thì tìm trong events câu chào "Chào <tên>!" của bác sĩ trưởng; mặc định "Bệnh nhân". Cắt tối đa 80 ký tự."""
     n = str(body.get("patient_name") or "").strip()
     if n:
         return n[:80]
@@ -85,6 +109,7 @@ def _patient_name(body: dict) -> str:
 
 
 def _risk_bars(risk: dict, width: float) -> Drawing:
+    """Vẽ ba thanh tiến độ xác suất (không bệnh / tiền tiểu đường / tiểu đường) bằng Drawing của reportlab: nhãn trái, thanh xám nền + thanh màu theo xác suất, số % phải."""
     h = 22
     d = Drawing(width, h * len(RISK_ROWS))
     lab_w, val_w = 108, 44
@@ -100,6 +125,7 @@ def _risk_bars(risk: dict, width: float) -> Drawing:
 
 
 def _png_image(b64: str, max_w: float, max_h: float):
+    """Giải mã PNG base64 và co vừa khung max_w x max_h giữ nguyên tỉ lệ. Kiểm tra: base64 hợp lệ, có chữ ký PNG, dung lượng <= MAX_PNG; sai thì ValueError (API trả lỗi)."""
     try:
         raw = base64.b64decode(b64, validate=False)
     except (binascii.Error, ValueError):
@@ -112,6 +138,7 @@ def _png_image(b64: str, max_w: float, max_h: float):
 
 
 def _col_widths(columns, rows, total):
+    """Chia độ rộng cột tỉ lệ với độ dài nội dung dài nhất (lấy 60 hàng đầu, nén bằng lũy thừa 0,8 để cột dài không nuốt cột ngắn, tối thiểu khoảng 10% mỗi cột); tổng đúng bằng `total`."""
     n = len(columns)
     weight = []
     for j in range(n):
@@ -124,6 +151,7 @@ def _col_widths(columns, rows, total):
 
 
 def _table(t: dict, st: dict, width: float):
+    """Dựng bảng reportlab từ dict(columns, rows): hàng tiêu đề xanh lặp lại khi bảng sang trang, nền xen kẽ; trả None nếu không có cột. Cắt tối đa MAX_ROWS hàng."""
     cols = [str(c) for c in (t.get("columns") or [])]
     rows = [list(r) for r in (t.get("rows") or [])][:MAX_ROWS]
     if not cols:
@@ -141,6 +169,8 @@ def _table(t: dict, st: dict, width: float):
 
 
 def build_pdf(body: dict) -> bytes:
+    """Dựng PDF hoàn chỉnh và trả về bytes. body: {summary, report:{figures, tables}, events?, patient_name?}.
+    Thiếu summary/risk/level thì raise ValueError (bị chuyển thành lỗi 400). Toàn bộ xử lý trong bộ nhớ, không ghi đĩa."""
     summary = body.get("summary")
     if not isinstance(summary, dict) or not isinstance(summary.get("risk"), dict) or "level" not in summary:
         raise ValueError("Thiếu kết quả khám (summary) để lập báo cáo")
@@ -154,12 +184,14 @@ def build_pdf(body: dict) -> bytes:
     level = str(summary.get("level"))
     lcol = colors.HexColor(summary.get("level_color") if re.fullmatch(r"#[0-9a-fA-F]{6}", str(summary.get("level_color") or "")) else LEVEL_COLORS.get(level, "#4a5a7c"))
 
+    # Khung trang A4: lề trái/phải 18 mm, trên 16 mm, dưới 20 mm; cw = bề rộng vùng nội dung.
     buf = io.BytesIO()
     W, H = A4
     mx, top, bottom = 18 * mm, 16 * mm, 20 * mm
     cw = W - 2 * mx
 
     def page(canvas, doc):
+        """Vẽ chân trang cho MỌI trang (cảnh báo học tập + tên + số trang) và đầu trang từ trang 2 trở đi."""
         canvas.saveState()
         canvas.setStrokeColor(LINE)
         canvas.line(mx, 14 * mm, W - mx, 14 * mm)
@@ -178,6 +210,7 @@ def build_pdf(body: dict) -> bytes:
                           title=f"Báo cáo khám - {name}", author="Phòng khám AI", subject=DISCLAIMER)
     doc.addPageTemplates([PageTemplate(id="p", frames=[Frame(mx, bottom, cw, H - top - bottom - 2 * mm, id="f", leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)], onPage=page)])
 
+    # el = danh sách "flowable" nối tiếp nhau; doc.build(el) tự ngắt trang. KeepTogether giữ tiêu đề dính với nội dung để không bị mồ côi ở cuối trang.
     el = []
     banner = Table([[Paragraph("Báo cáo khám · Phòng khám AI", st["h1"])], [Paragraph(f"Bệnh nhân: <b>{escape(name)}</b> · Ngày lập: {now}", st["sub"])]], colWidths=[cw])
     banner.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#2589e0")), ("LEFTPADDING", (0, 0), (-1, -1), 12),
@@ -199,6 +232,7 @@ def build_pdf(body: dict) -> bytes:
     el += [Paragraph("Xác suất theo mô hình", st["h2"]), _risk_bars(summary["risk"], cw),
            _p("Ba thanh là xác suất mô hình học máy gán cho từng nhóm; đây là ước lượng thống kê, không phải kết luận bệnh.", st["cap"])]
 
+    # Cờ đỏ: mức danger tô đỏ "NGUY HIỂM", mức còn lại tô vàng "Lưu ý".
     flags = [f for f in (summary.get("red_flags") or []) if isinstance(f, dict)]
     el.append(Paragraph("Cờ đỏ cần chú ý", st["h2"]))
     if flags:
@@ -247,6 +281,7 @@ def build_pdf(body: dict) -> bytes:
 
 
 def routes(clinic, speaker):
+    """Hook cho server.py: (GET rỗng, POST {"/api/report/pdf": pdf}). Handler trả bộ ba (content-type, bytes, header Content-Disposition) để trình duyệt tải về file bao-cao-kham.pdf."""
     def pdf(body: dict):
         return "application/pdf", build_pdf(body), 'attachment; filename="bao-cao-kham.pdf"'
     return {}, {"/api/report/pdf": pdf}

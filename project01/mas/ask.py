@@ -8,6 +8,29 @@ Sinh câu trả lời có hai chế độ:
 - "qwen": Qwen2.5-1.5B-Instruct (ChatGenerator của Chương 4/5, nạp bản int8 tiết kiệm bộ nhớ qua scripts/chapter05/lowmem_llm.py).
   Nạp lười, một tiến trình, một khóa: không bao giờ chạy hai lượt sinh cùng lúc. Quá ngân sách thời gian hoặc lỗi bộ nhớ thì rơi về "retrieval".
 - "retrieval": trích các câu liên quan nhất từ đoạn tìm được, kèm [1], [2] ánh xạ tới đoạn và đường dẫn nguồn. Luôn nhanh, không bịa.
+
+================================ BẢN ĐỒ FILE (đọc phần này trước) ================================
+Chức năng của phòng khám: tab "Hỏi bác sĩ" (RAG hỏi đáp tự do về tiểu đường, có trích dẫn). Giao diện: static/ask.js + ask.css.
+Endpoint (đăng ký qua routes() ở cuối file; server.py nạp mô-đun "ask" trong danh sách EXTENSIONS):
+    POST /api/ask         -> post_ask()  -> AskEngine.ask()      (câu hỏi + hồ sơ tùy chọn + mode auto|qwen|retrieval)
+    GET  /api/ask/status  -> get_status()                        (Qwen đã sẵn sàng chưa, vector đã nạp chưa, số đoạn tài liệu)
+Dữ liệu đọc: data/chapter04/diabetes_corpus.jsonl (492 đoạn); models/chapter04/embedding (MiniLM); results/chapter04/diabetes_embeddings.npy
+             (cache vector); models/chapter05/llm (Qwen2.5-1.5B). Không ghi file nào.
+Luồng một lượt hỏi (AskEngine.ask):
+    1) làm sạch câu hỏi -> 2) chặn câu CẤP CỨU / CÁ NHÂN (liều thuốc, chẩn đoán) -> 3) thử Qwen (có ngân sách thời gian)
+    -> 4) kiểm tra câu trả lời Qwen có bám tài liệu không (answer_problem) -> 5) nếu không đạt/không có Qwen: trích câu nguyên văn
+    (extractive_answer) -> 6) gắn lời nhắc "chỉ để học tập" + danh sách trích dẫn.
+Các thành phần chính (tìm số dòng bằng Ctrl+F tên hàm):
+    TERMS / vi_to_en_terms()  : bảng thuật ngữ Việt->Anh (dịch câu hỏi KHÔNG dùng mô hình dịch)
+    PERSONAL_RX, EMERGENCY_RX : luật an toàn chặn câu hỏi chẩn đoán/liều thuốc và dấu hiệu cấp cứu
+    load_corpus(), Retriever  : nạp corpus; truy hồi hybrid BM25 (+mở rộng bằng đồ thị tri thức kb.py) + vector, hợp nhất bằng RRF
+    QwenRunner                : chạy LLM Qwen int8 một luồng, có khóa và ngân sách thời gian
+    answer_problem()          : "kiểm chứng bám nguồn" (chống bịa) cho câu trả lời của Qwen
+    extractive_answer()       : phương án dự phòng, trích nguyên văn
+    AskEngine                 : ghép tất cả; refusal() tạo câu từ chối an toàn
+Thầy hỏi "BM25 nằm ở đâu?" -> class BM25 ở kb.py (import ở đầu file này), được dùng trong Retriever.search().
+Thầy hỏi "chống bịa/hallucination ở đâu?" -> answer_problem() + chế độ retrieval + từ chối "nohit" trong AskEngine.ask().
+================================================================================================
 """
 from __future__ import annotations
 
@@ -30,7 +53,7 @@ DISCLAIMER = "Thông tin chỉ để học tập, không thay thế bác sĩ."
 _IMPORT_LOCK = threading.Lock()
 
 
-def import_ml() -> None:
+def import_ml() -> None:  # nạp torch/transformers an toàn đa luồng; được gọi từ Retriever._load_dense và QwenRunner._gen
     """Nạp torch/transformers trong một khóa: hai luồng cùng import transformers lần đầu có thể gây lỗi ImportError (nạp lười chạy đua)."""
     with _IMPORT_LOCK:
         import torch  # noqa: F401
@@ -39,6 +62,8 @@ def import_ml() -> None:
 
 
 # --- bảng thuật ngữ Việt -> Anh (khóa không dấu; khớp cụm dài trước) -----------------------------------------------------------------
+# VÌ SAO có bảng này: câu hỏi tiếng Việt phải thành từ khóa tiếng Anh để khớp corpus NIDDK (tiếng Anh). Dùng bảng thủ công thay cho mô hình dịch
+# vì Qwen int8 dịch Việt-Anh không đáng tin. Khóa viết KHÔNG dấu (đã strip_accents) để khớp cả khi người dùng gõ thiếu dấu.
 TERMS = {
     "tieu duong thai ky": "gestational diabetes", "tieu duong tip 1": "type 1 diabetes", "tieu duong tip 2": "type 2 diabetes",
     "tieu duong type 1": "type 1 diabetes", "tieu duong type 2": "type 2 diabetes", "tieu duong loai 1": "type 1 diabetes",
@@ -85,12 +110,14 @@ TERMS = {
     "gay ra": "cause causes", "anh huong": "affect", "co the": "can", "hoc": "",
 }
 # tên hiển thị tiếng Việt cho chủ đề khi gợi ý
-_PHRASES = sorted(TERMS, key=len, reverse=True)
+_PHRASES = sorted(TERMS, key=len, reverse=True)  # cụm dài khớp trước ("tieu duong tip 2" trước "tieu duong") để không bị cắt nhỏ sai
 
+# KEEP_EN: từ/ký hiệu tiếng Anh giữ nguyên khi gặp trong câu hỏi (A1C, BMI, mg, dl...); STOP_VI: danh sách từ dừng tiếng Việt không dấu.
 KEEP_EN = {"a1c", "cgm", "mg", "dl", "bmi", "ldl", "hdl", "ketones", "insulin", "metformin", "glucose", "type"}
 STOP_VI = set("la gi co khong bi cua cho toi minh em anh chi ban the nao nhu nay kia va hay hoac nhung thi se da dang duoc o trong tren voi mot cac nhieu rat".split())
 
 # câu hỏi cần chẩn đoán cá nhân hoặc liều thuốc: không trả lời, chỉ chỉ dẫn đi khám
+# LUẬT AN TOÀN số 1: nhận diện câu hỏi "tôi có bị bệnh không?", "uống bao nhiêu mg?", "đổi thuốc..." -> từ chối, hướng dẫn đi khám (xem refusal()).
 PERSONAL_PATTERNS = [
     r"\b(toi|minh|em|bo toi|me toi|chong toi|vo toi)\b.{0,40}\b(co bi|co phai bi|bi .{0,20} khong|co mac|mac benh .{0,12} khong)",
     r"\bchan doan (cho|giup|xem)",
@@ -100,10 +127,12 @@ PERSONAL_PATTERNS = [
     r"\b(do i have diabetes|am i diabetic|what dose|how many units|dosage for me|diagnose me|prescribe)\b",
 ]
 PERSONAL_RX = re.compile("|".join("(?:%s)" % x for x in PERSONAL_PATTERNS), re.I)
+# LUẬT AN TOÀN số 2: dấu hiệu cấp cứu (hôn mê, co giật, đau ngực...) -> khuyên gọi 115, không trả lời bằng tài liệu.
 EMERGENCY_RX = re.compile(r"(hon me|bat tinh|co giat|kho tho|dau nguc|nguy kich|cap cuu|unconscious|seizure|chest pain|emergency)", re.I)
 
 
 def detect_vi(text: str) -> bool:
+    """Đoán câu hỏi có phải tiếng Việt không: có chữ cái có dấu đặc trưng, hoặc chứa từ Việt phổ biến khi gõ không dấu. Dùng để quyết định có dịch bằng TERMS không."""
     if re.search(r"[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]", text.lower()):
         return True
     q = " " + strip_accents(text) + " "
@@ -128,6 +157,7 @@ def vi_to_en_terms(question: str) -> list[str]:
 
 # --- kho tri thức + truy hồi ---------------------------------------------------------------------------------------------------------
 def load_corpus(path: str = CORPUS) -> list[dict]:
+    """Đọc corpus jsonl (492 đoạn); bỏ đoạn quá ngắn (<60 ký tự). Trả về danh sách dict(id, text, url, title, section, org); org là nguồn: NIDDK/CDC/MedlinePlus."""
     rows = []
     with open(path, encoding="utf-8") as f:
         for line in f:
@@ -139,6 +169,7 @@ def load_corpus(path: str = CORPUS) -> list[dict]:
 
 
 def split_sentences(text: str) -> list[str]:
+    """Tách đoạn thành các câu (cắt sau . ! ? khi câu sau bắt đầu bằng chữ hoa/số) để extractive_answer chọn câu."""
     parts = re.split(r"(?<=[.!?])\s+(?=[A-Z0-9“\"(])", text)
     return [p.strip() for p in parts if len(p.strip()) > 20]
 
@@ -149,6 +180,7 @@ class Retriever:
     BM25_MIN_ONLY = 12.0  # khi chưa có vector: điểm BM25 tối thiểu
 
     def __init__(self, kb: KnowledgeBase | None = None, dense: bool = True):
+        """kb: đồ thị tri thức để mở rộng truy vấn (có thể None). dense=True thì nạp mô hình vector ở luồng nền (không chặn khởi động; trong lúc chờ dùng BM25)."""
         self.rows = [json.loads(line) for line in open(CORPUS, encoding="utf-8")]
         self.passages = load_corpus()
         self.bm25 = BM25(self.passages)
@@ -163,6 +195,7 @@ class Retriever:
             self.dense_ready.set()
 
     def _load_dense(self) -> None:
+        """Luồng nền: nạp Encoder MiniLM + DenseRetriever (cache vector .npy). Lỗi thì ghi dense_error và vẫn chạy bằng BM25; luôn set dense_ready khi xong."""
         try:
             if ROOT not in sys.path:
                 sys.path.insert(0, ROOT)
@@ -177,8 +210,10 @@ class Retriever:
 
     def build_query(self, question: str, english: str | None = None) -> tuple[list[str], list[str], str, list[str]]:
         """Trả về (token BM25, nút đồ thị khớp, câu tiếng Anh cho vector, từ mở rộng từ đồ thị). Từ khóa chính lặp 2 lần; từ mở rộng từ đồ thị lặp 1 lần."""
+        # Bước 1: có câu tiếng Anh sẵn thì dùng; nếu là tiếng Việt thì dịch bằng bảng TERMS; nếu đã là tiếng Anh thì giữ nguyên.
         base = english if english else (" ".join(vi_to_en_terms(question)) if detect_vi(question) else question)
         main = tokens(base)
+        # Bước 2 (Graph-RAG): khớp câu hỏi với tối đa 3 nút trong đồ thị tri thức rồi lấy alias tiếng Anh của nút làm từ khóa mở rộng.
         seeds = self.kb.match_nodes(question + " " + base, 3) if self.kb else []
         extra: list[str] = []
         for nid in seeds:
@@ -187,13 +222,18 @@ class Retriever:
         return main * 2, seeds, base, [t for t in dict.fromkeys(extra) if t not in main]
 
     def search(self, question: str, k: int = 3, english: str | None = None, use_dense: bool = True) -> dict:
+        """Truy hồi top-k đoạn. Trả về dict(hits=[{id, quote, url, score, bm25, title, section, org}], seeds=nút đồ thị khớp, query, hybrid, relevant).
+        relevant=False nghĩa là không đủ liên quan -> AskEngine từ chối thay vì đoán (chống bịa)."""
         qt, seeds, base, extra = self.build_query(question, english)
         if not qt:
             return dict(hits=[], seeds=seeds, query=[], hybrid=False, relevant=False)
+        # Nhánh từ khóa: điểm BM25 của từ khóa gốc (đã nhân đôi trọng số ở build_query).
         sc = self.bm25.scores(qt)
         if extra:  # mở rộng truy vấn bằng đồ thị tri thức, trọng số thấp hơn từ khóa gốc
             sc = [a + 0.35 * b for a, b in zip(sc, self.bm25.scores(extra))]
         lex = [i for i in sorted(range(len(sc)), key=lambda i: -sc[i])[:40] if sc[i] > 0 and not self.passages[i]["text"][0].islower()]
+        # Nhánh ngữ nghĩa (nếu mô hình vector đã nạp): lấy top 40 theo cosine, rồi hợp nhất với top 40 từ khóa bằng RRF
+        # (Reciprocal Rank Fusion: điểm = tổng 1/(60+hạng)). VÌ SAO: BM25 mạnh về từ khóa chính xác, vector mạnh về đồng nghĩa; RRF không cần chỉnh thang điểm.
         dense = self.dense if (use_dense and self.dense is not None) else None
         cos: dict[int, float] = {}
         if dense is not None:
@@ -207,6 +247,7 @@ class Retriever:
                     rrf[i] = rrf.get(i, 0.0) + 1 / (60 + r)
             order = sorted(rrf, key=lambda i: -rrf[i])
             top_cos = float(sims[order[0]]) if order else 0.0
+            # Ngưỡng liên quan: cosine tối thiểu DENSE_MIN, hoặc BM25 đủ cao; câu ngoài chủ đề (hỏi về bóng đá...) sẽ bị loại ở đây.
             relevant = bool(order) and max(cos.values()) >= self.DENSE_MIN and (top_cos >= self.DENSE_MIN * 0.8 or (lex and sc[lex[0]] >= 8))
         else:
             order = lex
@@ -221,6 +262,7 @@ class Retriever:
 
 # --- Qwen (một thể hiện duy nhất cho cả tiến trình) ----------------------------------------------------------------------------------
 class QwenRunner:
+    """Bọc mô hình sinh Qwen2.5-1.5B-Instruct: nạp lười, chỉ một thể hiện, một khóa (không chạy hai lượt cùng lúc để khỏi tràn RAM)."""
     def __init__(self):
         self.gen = None
         self.lock = threading.Lock()   # đúng một lượt sinh tại một thời điểm
@@ -229,10 +271,12 @@ class QwenRunner:
 
     @staticmethod
     def available() -> bool:
+        """True nếu máy có thư mục mô hình (config.json) và đủ gói torch + transformers."""
         return (os.path.isfile(os.path.join(LLM_PATH, "config.json")) and importlib.util.find_spec("torch") is not None
                 and importlib.util.find_spec("transformers") is not None)
 
     def _gen(self):
+        """Tạo ChatGenerator lần đầu (nạp int8 qua scripts/chapter05/lowmem_llm.py để đỉnh RAM ~2,5 GB thay vì 6,5 GB); các lần sau dùng lại."""
         if self.gen is None:
             if ROOT not in sys.path:
                 sys.path.insert(0, ROOT)
@@ -244,7 +288,9 @@ class QwenRunner:
         return self.gen
 
     def run(self, question: str, retriever: Retriever, k: int, box: dict) -> None:
-        """Chạy trong luồng nền; ghi kết quả vào box. Dùng acquire không chặn: nếu đang bận thì box['busy']=True và thoát."""
+        """Chạy trong luồng nền; ghi kết quả vào box. Dùng acquire không chặn: nếu đang bận thì box['busy']=True và thoát.
+        Các khóa box: found (kết quả truy hồi), q_en (truy vấn tiếng Anh), weak (không đủ liên quan), full (câu trả lời Qwen),
+        grounded (lý do bị loại bởi answer_problem, rỗng = đạt), error, busy, done. Luồng: tìm đoạn -> nếu liên quan thì Qwen viết lại -> kiểm bám nguồn."""
         if not self.lock.acquire(blocking=False):
             box["busy"] = True
             box["done"] = True
@@ -276,11 +322,14 @@ class QwenRunner:
 
 
 # --- Hợp nhất ------------------------------------------------------------------------------------------------------------------------
+# Cụm câu "xin lỗi/không thể giúp" của LLM: nếu xuất hiện nghĩa là Qwen không dùng tài liệu -> bị loại, chuyển sang trích nguyên văn.
 BAD_PHRASES = re.compile(r"(i'?m sorry|i am sorry|could you (please )?(provide|clarify|rephrase)|as an ai|i can'?t provide|ai assistant|i'?m here to help|end of period|không thể trả lời|xin lỗi)", re.I)
 
 
 def answer_problem(full: dict, quotes: list[str]) -> str:
-    """Kiểm tra câu trả lời của Qwen có bám sát tài liệu không; trả về lý do loại (chuỗi rỗng nếu đạt)."""
+    """Kiểm tra câu trả lời của Qwen có bám sát tài liệu không; trả về lý do loại (chuỗi rỗng nếu đạt).
+    Đây là cơ chế CHỐNG BỊA (hallucination guard): (1) không chứa câu xin lỗi/chung chung, (2) không quá dài, (3) ít nhất 70% từ khóa của câu trả lời
+    phải có trong các đoạn tìm được, (4) mọi con số trong câu trả lời phải xuất hiện trong tài liệu (trừ 1, 2, 3 là số thứ tự trích dẫn)."""
     eng = (full.get("english_answer") or "").strip()
     vi = (full.get("answer") or "").strip()
     if full.get("insufficient") or not eng:
@@ -313,6 +362,7 @@ def trim_sentence(text: str) -> str:
 
 
 def bmi_text(profile: dict) -> str:
+    """Tính BMI từ height_cm, weight_kg của hồ sơ; thiếu/sai dữ liệu thì trả chuỗi rỗng."""
     try:
         h, w = float(profile.get("height_cm")), float(profile.get("weight_kg"))
         return f"BMI khoảng {w / (h / 100) ** 2:.1f}"
@@ -321,6 +371,7 @@ def bmi_text(profile: dict) -> str:
 
 
 def personal_intro(profile: dict | None) -> str:
+    """Câu mở đầu cá nhân hóa nhẹ (tuổi, BMI, huyết áp, hút thuốc) nếu người dùng gửi hồ sơ; luôn nhấn mạnh đây là thông tin chung, không phải lời khuyên riêng."""
     if not profile:
         return ""
     bits = []
@@ -365,12 +416,15 @@ def extractive_answer(question: str, hits: list[dict], retriever: Retriever) -> 
 
 
 class AskEngine:
+    """Bộ máy hỏi đáp: ghép Retriever (truy hồi) + QwenRunner (sinh) + luật an toàn. Một thể hiện duy nhất cho cả máy chủ (xem routes())."""
     def __init__(self, clinic=None):
+        """clinic: đối tượng Clinic của orchestrator.py; lấy clinic.kb (đồ thị tri thức) để Graph-RAG mở rộng truy vấn."""
         kb = getattr(clinic, "kb", None)
         self.retriever = Retriever(kb)
         self.qwen = QwenRunner()
 
     def refusal(self, kind: str, started: float, profile) -> dict:
+        """Tạo phản hồi từ chối an toàn. kind: "personal" (cần bác sĩ), "emergency" (gọi 115), "nohit" (không có đoạn đủ liên quan nên không đoán). Không có trích dẫn."""
         msgs = {
             "personal": "Câu hỏi này cần bác sĩ đánh giá riêng cho bạn (chẩn đoán hoặc liều thuốc), nên mình không trả lời để tránh gây hại. "
                         "Bạn có thể dùng tab \"Khám bệnh\" để xem mức nguy cơ tham khảo, rồi mang kết quả đến gặp bác sĩ.",
@@ -383,12 +437,15 @@ class AskEngine:
                     speak=msgs[kind])
 
     def ask(self, question: str, profile: dict | None = None, mode: str = "auto") -> dict:
+        """Trả lời một câu hỏi. mode: "auto" (thử Qwen rồi dự phòng), "qwen", "retrieval" (chỉ trích đoạn).
+        Trả về dict(answer, citations[{id, quote, url, score, title, org}], mode đã dùng, seconds, notes giải thích cho người dùng, speak cho TTS, graph_nodes)."""
         started = time.perf_counter()
         question = re.sub(r"\s+", " ", str(question or "")).strip()[:400]
         if len(question) < 3:
             raise ValueError("Hãy nhập câu hỏi (ít nhất vài chữ)")
         if mode not in ("auto", "qwen", "retrieval"):
             raise ValueError("mode phải là auto, qwen hoặc retrieval")
+        # Luật an toàn chạy TRƯỚC mọi truy hồi: cấp cứu và câu hỏi cá nhân bị chặn ngay.
         plain = strip_accents(question)
         if EMERGENCY_RX.search(plain):
             return self.refusal("emergency", started, profile)
@@ -400,6 +457,7 @@ class AskEngine:
         answer = None
         used = "retrieval"
         found = None
+        # Nhánh 1: thử Qwen trong luồng riêng, chờ tối đa QWEN_BUDGET giây (mặc định 60); mọi trường hợp lỗi/bận/quá giờ đều ghi note và rơi xuống nhánh 2.
         if mode != "retrieval":
             if self.qwen.broken:
                 notes.append(f"Đang dùng chế độ trích đoạn (Qwen không chạy được: {self.qwen.broken}).")
@@ -433,6 +491,7 @@ class AskEngine:
                     notes.append("Câu trả lời do Qwen2.5-1.5B-Instruct (bản int8, chạy trên máy này) viết lại từ các đoạn tìm được; có thể còn sai sót, hãy đối chiếu trích dẫn.")
                     if full.get("translation_problems"):
                         notes.append("Bản dịch tiếng Việt chưa đạt kiểm tra nên được giữ nguyên văn tiếng Anh.")
+        # Nhánh 2 (dự phòng, luôn nhanh và không bịa): trích nguyên văn các câu liên quan nhất. Không đủ liên quan -> từ chối "nohit".
         if used == "retrieval":
             found = self.retriever.search(question, k)
             hits = found["hits"]
@@ -461,6 +520,7 @@ _ENGINE_LOCK = threading.Lock()
 
 
 def routes(clinic, speaker):
+    """Hook cho server.py: trả về (bảng GET, bảng POST) = ({"/api/ask/status": get_status}, {"/api/ask": post_ask}). speaker (TTS) không dùng ở đây."""
     def engine() -> AskEngine:
         global _ENGINE
         with _ENGINE_LOCK:
@@ -471,10 +531,12 @@ def routes(clinic, speaker):
     threading.Thread(target=engine, daemon=True).start()  # dựng sẵn chỉ mục (và nạp mô hình vector nền) ngay khi máy chủ khởi động
 
     def post_ask(body: dict) -> dict:
+        """POST /api/ask, body {question, profile?, mode?} -> kết quả AskEngine.ask()."""
         profile = body.get("profile") if isinstance(body.get("profile"), dict) else None
         return engine().ask(body.get("question", ""), profile, str(body.get("mode", "auto")))
 
     def get_status() -> dict:
+        """GET /api/ask/status: giao diện dùng để hiện trạng thái Qwen/vector (đang nạp hay sẵn sàng) và số đoạn trong kho."""
         e = engine()
         return dict(qwen_available=QwenRunner.available() and not e.qwen.broken, qwen_loaded=bool(e.qwen.gen and e.qwen.gen.ready),
                     passages=len(e.retriever.passages), budget_seconds=QWEN_BUDGET, vector_ready=e.retriever.dense is not None, vector_loading=not e.retriever.dense_ready.is_set())
