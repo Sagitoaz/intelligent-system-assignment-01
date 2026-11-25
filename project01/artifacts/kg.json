@@ -15,9 +15,9 @@
     "diabetes blood glucose insulin"
    ],
    "passages": [
-    "symptoms-causes:51",
-    "what-is-diabetes:9",
-    "managing-diabetes:101"
+    "hypoglycemia:6",
+    "hypoglycemia:1",
+    "type-1-diabetes:22"
    ]
   },
   {
@@ -36,9 +36,9 @@
     "type 1 diabetes immune system beta cells"
    ],
    "passages": [
-    "symptoms-causes:50",
-    "tests-diagnosis:62",
-    "what-is-diabetes:14"
+    "symptoms-causes:6",
+    "type-1-diabetes:12",
+    "type-1-diabetes:0"
    ]
   },
   {
@@ -57,9 +57,9 @@
     "type 2 diabetes insulin resistance"
    ],
    "passages": [
-    "symptoms-causes:54",
-    "symptoms-causes:56",
-    "symptoms-causes:86"
+    "prediabetes:11",
+    "prediabetes:0",
+    "prediabetes:8"
    ]
   },
   {
@@ -76,9 +76,9 @@
     "prediabetes blood glucose higher than normal"
    ],
    "passages": [
-    "what-is-diabetes:21",
-    "symptoms-causes:55",
-    "tests-diagnosis:13"
+    "what-is-diabetes:5",
+    "prediabetes:6",
+    "prediabetes:9"
    ]
   },
   {
@@ -96,9 +96,9 @@
     "gestational diabetes pregnancy"
    ],
    "passages": [
-    "what-is-diabetes:19",
-    "symptoms-causes:64",
-    "tests-diagnosis:34"
+    "what-is-diabetes:4",
+    "gestational-diabetes:1",
+    "symptoms-causes:11"
    ]
   },
   {
@@ -115,9 +115,9 @@
     "insulin resistance cells glucose"
    ],
    "passages": [
-    "symptoms-causes:54",
-    "symptoms-causes:69",
-    "symptoms-causes:51"
+    "prediabetes:6",
+    "symptoms-causes:8",
+    "cdc-type-2:4"
    ]
   },
   {
@@ -134,7 +134,9 @@
     "thirsty thirst"
    ],
    "passages": [
-    "tests-diagnosis:19"
+    "cdc-symptoms:1",
+    "type-1-diabetes:10",
+    "type-2-diabetes:2"
    ]
   },
   {
@@ -151,9 +153,9 @@
     "urinate more often"
    ],
    "passages": [
-    "tests-diagnosis:19",
-    "symptoms-causes:47",
-    "symptoms-causes:87"
+    "gestational-diabetes:5",
+    "tests-diagnosis:2",
+    "symptoms-causes:5"
    ]
   },
   {
@@ -171,9 +173,9 @@
     "tired fatigue feeling very tired"
    ],
    "passages": [
-    "tests-diagnosis:19",
-    "managing-diabetes:64",
-    "managing-diabetes:71"
+    "type-1-diabetes:11",
+    "heart-disease-stroke:21",
+    "managing-diabetes:23"
    ]
   },
   {
@@ -189,7 +191,11 @@
    "aliases_en": [
     "blurry vision"
    ],
-   "passages": []
+   "passages": [
+    "cdc-vision:4",
+    "eye-disease:1",
+    "cdc-vision:1"
+   ]
   },
   {
    "id": "slow_heal",
@@ -206,9 +212,9 @@
     "sores that heal slowly infections"
    ],
    "passages": [
-    "symptoms-causes:23",
-    "symptoms-causes:41",
-    "symptoms-causes:31"
+    "neuropathy:15",
+    "type-1-diabetes:10",
+    "symptoms-causes:0"
    ]
   },
   {
@@ -226,9 +232,9 @@
     "weight loss unexplained"
    ],
    "passages": [
-    "symptoms-causes:26",
-    "managing-diabetes:100",
-    "managing-diabetes:36"
+    "type-2-diabetes:2",
+    "symptoms-causes:1",
+    "insulin-medicines:20"
    ]
   },
   {
@@ -246,9 +252,9 @@
     "diabetic ketoacidosis DKA ketones"
    ],
    "passages": [
-    "managing-diabetes:73",
-    "symptoms-causes:32",
-    "managing-diabetes:46"
+    "type-1-diabetes:6",
+    "healthy-living:19",
+    "cdc-treatment:5"
    ]
   },
   {
@@ -267,9 +273,9 @@
     "overweight obesity weight"
    ],
    "passages": [
-    "managing-diabetes:36",
-    "tests-diagnosis:25",
-    "tests-diagnosis:28"
+    "risk-factors-type-2:4",
+    "risk-factors-type-2:3",
+    "managing-diabetes:9"
    ]
   },
   {
@@ -288,9 +294,9 @@
     "physically active less than 3 times a week"
    ],
    "passages": [
-    "symptoms-causes:66",
-    "symptoms-causes:61",
-    "managing-diabetes:34"
+    "cdc-type-2:3",
+    "gestational-diabetes:14",
+    "niddk-4steps-pdf:11"
    ]
   },
   {
@@ -308,9 +314,9 @@
     "age 35 or older risk increases as a person gets older"
    ],
    "passages": [
-    "symptoms-causes:58",
-    "symptoms-causes:92",
-    "managing-diabetes:58"
+    "risk-factors-type-2:1",
+    "symptoms-causes:9",
+    "prediabetes:2"
    ]
   },
   {
@@ -328,9 +334,9 @@
     "family history parent sibling"
    ],
    "passages": [
-    "symptoms-causes:73",
-    "tests-diagnosis:63",
-    "symptoms-causes:65"
+    "type-1-diabetes:18",
+    "type-1-diabetes:13",
+    "cdc-type-1:3"
    ]
   },
   {
@@ -347,9 +353,9 @@
     "high blood pressure"
    ],
    "passages": [
-    "managing-diabetes:23",
-    "what-is-diabetes:30",
-    "managing-diabetes:66"
+    "heart-disease-stroke:4",
+    "heart-disease-stroke:12",
+    "managing-diabetes:3"
    ]
   },
   {
@@ -359,16 +365,16 @@
    "type": "risk_factor",
    "desc": "HDL thấp và triglyceride cao là yếu tố nguy cơ; mỡ máu cần được kiểm soát cùng đường huyết.",
    "aliases": [
-    "mo mmau",
+    "mo mau",
     "cholesterol"
    ],
    "aliases_en": [
     "cholesterol triglycerides HDL"
    ],
    "passages": [
-    "managing-diabetes:25",
-    "symptoms-causes:100",
-    "managing-diabetes:29"
+    "heart-disease-stroke:5",
+    "niddk-4steps-pdf:8",
+    "cdc-heart:2"
    ]
   },
   {
@@ -385,8 +391,9 @@
     "smoking quit smoking"
    ],
    "passages": [
-    "managing-diabetes:27",
-    "symptoms-causes:65"
+    "healthy-living:23",
+    "heart-disease-stroke:14",
+    "heart-disease-stroke:3"
    ]
   },
   {
@@ -403,9 +410,9 @@
     "history of gestational diabetes baby weighing 9 pounds"
    ],
    "passages": [
-    "symptoms-causes:64",
-    "symptoms-causes:48",
-    "symptoms-causes:73"
+    "risk-factors-type-2:1",
+    "symptoms-causes:9",
+    "prediabetes:2"
    ]
   },
   {
@@ -423,9 +430,9 @@
     "A1C test average blood glucose"
    ],
    "passages": [
-    "tests-diagnosis:43",
-    "tests-diagnosis:41",
-    "managing-diabetes:21"
+    "a1c-test:0",
+    "a1c-test:19",
+    "a1c-test:20"
    ]
   },
   {
@@ -444,9 +451,9 @@
     "fasting plasma glucose FPG fasted 8 hours"
    ],
    "passages": [
-    "tests-diagnosis:39",
-    "tests-diagnosis:45",
-    "tests-diagnosis:50"
+    "tests-diagnosis:8",
+    "a1c-test:6",
+    "tests-diagnosis:11"
    ]
   },
   {
@@ -464,9 +471,9 @@
     "oral glucose tolerance test OGTT"
    ],
    "passages": [
-    "tests-diagnosis:49",
-    "tests-diagnosis:47",
-    "tests-diagnosis:51"
+    "tests-diagnosis:13",
+    "gestational-diabetes:10",
+    "prediabetes:10"
    ]
   },
   {
@@ -483,9 +490,9 @@
     "random plasma glucose test symptoms"
    ],
    "passages": [
-    "tests-diagnosis:45",
-    "tests-diagnosis:39",
-    "tests-diagnosis:47"
+    "tests-diagnosis:11",
+    "type-1-diabetes:14",
+    "a1c-test:6"
    ]
   },
   {
@@ -503,9 +510,9 @@
     "routine testing risk factors retested every 3 years"
    ],
    "passages": [
-    "tests-diagnosis:29",
-    "tests-diagnosis:22",
-    "symptoms-causes:70"
+    "prediabetes:7",
+    "tests-diagnosis:3",
+    "tests-diagnosis:4"
    ]
   },
   {
@@ -523,9 +530,9 @@
     "manage your weight lose weight"
    ],
    "passages": [
-    "managing-diabetes:36",
-    "managing-diabetes:100",
-    "what-is-diabetes:17"
+    "managing-diabetes:9",
+    "prediabetes:11",
+    "healthy-living:21"
    ]
   },
   {
@@ -544,9 +551,9 @@
     "physical activity 150 minutes brisk walking"
    ],
    "passages": [
-    "managing-diabetes:34",
-    "managing-diabetes:36",
-    "managing-diabetes:64"
+    "managing-diabetes:8",
+    "healthy-living:13",
+    "insulin-medicines:4"
    ]
   },
   {
@@ -565,9 +572,9 @@
     "healthy eating meal plan vegetables"
    ],
    "passages": [
-    "managing-diabetes:64",
-    "managing-diabetes:71",
-    "managing-diabetes:83"
+    "niddk-4steps-pdf:11",
+    "gestational-diabetes:13",
+    "healthy-living:3"
    ]
   },
   {
@@ -583,8 +590,9 @@
     "quit smoking"
    ],
    "passages": [
-    "managing-diabetes:27",
-    "symptoms-causes:65"
+    "healthy-living:23",
+    "heart-disease-stroke:14",
+    "neuropathy:10"
    ]
   },
   {
@@ -602,9 +610,9 @@
     "check blood glucose level at home CGM time in range"
    ],
    "passages": [
-    "managing-diabetes:59",
-    "managing-diabetes:48",
-    "managing-diabetes:45"
+    "managing-diabetes:19",
+    "managing-diabetes:15",
+    "managing-diabetes:16"
    ]
   },
   {
@@ -621,9 +629,9 @@
     "time in range percentage of time glucose"
    ],
    "passages": [
-    "managing-diabetes:59",
-    "tests-diagnosis:43",
-    "managing-diabetes:58"
+    "managing-diabetes:19",
+    "a1c-test:19",
+    "a1c-test:1"
    ]
   },
   {
@@ -640,9 +648,9 @@
     "diabetes medicines insulin"
    ],
    "passages": [
-    "symptoms-causes:94",
-    "managing-diabetes:42",
-    "managing-diabetes:45"
+    "insulin-medicines:17",
+    "type-2-diabetes:6",
+    "type-1-diabetes:22"
    ]
   },
   {
@@ -659,9 +667,9 @@
     "insulin take insulin"
    ],
    "passages": [
-    "what-is-diabetes:14",
-    "symptoms-causes:92",
-    "symptoms-causes:54"
+    "insulin-medicines:7",
+    "insulin-medicines:2",
+    "type-1-diabetes:21"
    ]
   },
   {
@@ -678,9 +686,9 @@
     "hypoglycemia blood glucose too low below 70 mg/dL"
    ],
    "passages": [
-    "managing-diabetes:60",
-    "managing-diabetes:66",
-    "tests-diagnosis:47"
+    "cdc-treatment:4",
+    "hypoglycemia:0",
+    "managing-diabetes:20"
    ]
   },
   {
@@ -697,9 +705,9 @@
     "high blood glucose hyperglycemia"
    ],
    "passages": [
-    "managing-diabetes:66",
-    "tests-diagnosis:50",
-    "symptoms-causes:55"
+    "medlineplus-hyperglycemia:10",
+    "medlineplus-hyperglycemia:7",
+    "medlineplus-hyperglycemia:2"
    ]
   },
   {
@@ -718,9 +726,9 @@
     "heart disease stroke"
    ],
    "passages": [
-    "symptoms-causes:101",
-    "managing-diabetes:19",
-    "managing-diabetes:90"
+    "heart-disease-stroke:2",
+    "heart-disease-stroke:1",
+    "heart-disease-stroke:8"
    ]
   },
   {
@@ -737,9 +745,9 @@
     "kidney disease damage"
    ],
    "passages": [
-    "managing-diabetes:90",
-    "symptoms-causes:84",
-    "managing-diabetes:19"
+    "kidney-disease:0",
+    "kidney-disease:11",
+    "kidney-disease:2"
    ]
   },
   {
@@ -756,9 +764,9 @@
     "eye damage retinopathy"
    ],
    "passages": [
-    "what-is-diabetes:31",
-    "managing-diabetes:112",
-    "symptoms-causes:84"
+    "eye-disease:18",
+    "eye-disease:7",
+    "eye-disease:11"
    ]
   },
   {
@@ -776,9 +784,9 @@
     "nerve damage neuropathy feet"
    ],
    "passages": [
-    "what-is-diabetes:30",
-    "what-is-diabetes:31",
-    "managing-diabetes:112"
+    "neuropathy:1",
+    "neuropathy:12",
+    "neuropathy:8"
    ]
   },
   {
@@ -795,9 +803,9 @@
     "foot problems feet sores"
    ],
    "passages": [
-    "managing-diabetes:90",
-    "what-is-diabetes:30",
-    "managing-diabetes:19"
+    "neuropathy:15",
+    "foot-problems:1",
+    "foot-problems:4"
    ]
   }
  ],

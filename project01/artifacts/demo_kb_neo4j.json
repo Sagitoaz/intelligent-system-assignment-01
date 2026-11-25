@@ -1,0 +1,98 @@
+{
+ "backend": "neo4j",
+ "note": "",
+ "KBNode": 41,
+ "KBSource": 29,
+ "KBPassage": 514,
+ "MENTIONS": 123,
+ "passages_by_source": {
+  "NIDDK": 409,
+  "CDC": 67,
+  "MedlinePlus": 16,
+  "PDF NIDDK": 22
+ },
+ "passages": 514,
+ "sources": 29,
+ "questions": [
+  {
+   "question": "Which test diagnoses prediabetes?",
+   "seeds": [
+    "prediabetes",
+    "diabetes",
+    "ogtt"
+   ],
+   "cypher_queries": 2,
+   "hits": [
+    "prediabetes:10",
+    "prediabetes:9",
+    "a1c-test:3"
+   ],
+   "backend": "neo4j",
+   "citations": [
+    "https://www.niddk.nih.gov/health-information/diabetes/overview/what-is-diabetes/prediabetes-insulin-resistance",
+    "https://www.niddk.nih.gov/health-information/diabetes/overview/what-is-diabetes/prediabetes-insulin-resistance",
+    "https://www.niddk.nih.gov/health-information/diabetes/overview/tests-diagnosis/a1c-test"
+   ]
+  },
+  {
+   "question": "Xét nghiệm A1C dùng để làm gì?",
+   "seeds": [
+    "a1c",
+    "ogtt",
+    "screening"
+   ],
+   "cypher_queries": 2,
+   "hits": [
+    "a1c-test:5",
+    "tests-diagnosis:10",
+    "managing-diabetes:2"
+   ],
+   "backend": "neo4j",
+   "citations": [
+    "https://www.niddk.nih.gov/health-information/diabetes/overview/tests-diagnosis/a1c-test",
+    "https://www.niddk.nih.gov/health-information/diabetes/overview/tests-diagnosis",
+    "https://www.niddk.nih.gov/health-information/diabetes/overview/managing-diabetes"
+   ]
+  },
+  {
+   "question": "What are the four steps to manage diabetes?",
+   "seeds": [
+    "diabetes",
+    "type2",
+    "type1"
+   ],
+   "cypher_queries": 2,
+   "hits": [
+    "niddk-4steps-pdf:16",
+    "niddk-4steps-pdf:0",
+    "what-is-diabetes:8"
+   ],
+   "backend": "neo4j",
+   "citations": [
+    "https://www.niddk.nih.gov/-/media/Files/Health-Information/Health-Professionals/Diabetes/health-care-professionals/4StepsToManageDiabetes-English_508.pdf",
+    "https://www.niddk.nih.gov/-/media/Files/Health-Information/Health-Professionals/Diabetes/health-care-professionals/4StepsToManageDiabetes-English_508.pdf",
+    "https://www.niddk.nih.gov/health-information/diabetes/overview/what-is-diabetes"
+   ]
+  },
+  {
+   "question": "How often should I get routine care for diabetes?",
+   "seeds": [
+    "diabetes",
+    "type2",
+    "type1"
+   ],
+   "cypher_queries": 2,
+   "hits": [
+    "niddk-4steps-pdf:15",
+    "cdc-physical-activity:7",
+    "managing-diabetes:2"
+   ],
+   "backend": "neo4j",
+   "citations": [
+    "https://www.niddk.nih.gov/-/media/Files/Health-Information/Health-Professionals/Diabetes/health-care-professionals/4StepsToManageDiabetes-English_508.pdf",
+    "https://www.cdc.gov/diabetes/living-with/physical-activity.html",
+    "https://www.niddk.nih.gov/health-information/diabetes/overview/managing-diabetes"
+   ]
+  }
+ ]
+}

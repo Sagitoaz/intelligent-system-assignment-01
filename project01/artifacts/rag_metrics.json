@@ -1,9 +1,9 @@
 {
  "BM25": {
-  "hit_at_1": 0.375,
-  "hit_at_3": 0.5625,
-  "mrr": 0.4844,
-  "questions": 16,
+  "hit_at_1": 0.35,
+  "hit_at_3": 0.525,
+  "mrr": 0.4571,
+  "questions": 40,
   "detail": [
    {
     "id": "DM01",
@@ -12,86 +12,206 @@
    },
    {
     "id": "DM02",
-    "question": "Which hormone helps glucose enter cells?",
-    "rank": 2
+    "question": "What is diabetes?",
+    "rank": null
    },
    {
     "id": "DM03",
-    "question": "What is the most common type of diabetes?",
-    "rank": null
+    "question": "What are the common symptoms of diabetes?",
+    "rank": 5
    },
    {
     "id": "DM04",
-    "question": "When does gestational diabetes develop?",
-    "rank": null
+    "question": "What are the symptoms of type 1 diabetes in children?",
+    "rank": 1
    },
    {
     "id": "DM05",
-    "question": "Are glucose levels in prediabetes above normal?",
-    "rank": 1
+    "question": "Do people with type 2 diabetes always have symptoms?",
+    "rank": 5
    },
    {
     "id": "DM06",
-    "question": "What attacks insulin-producing cells in type 1 diabetes?",
-    "rank": 1
+    "question": "Does gestational diabetes cause symptoms?",
+    "rank": 3
    },
    {
     "id": "DM07",
-    "question": "What causes monogenic diabetes?",
-    "rank": null
+    "question": "What causes type 1 diabetes?",
+    "rank": 5
    },
    {
     "id": "DM08",
-    "question": "How many months are reflected in an A1C blood test?",
-    "rank": 2
+    "question": "What causes type 2 diabetes?",
+    "rank": null
    },
    {
     "id": "DM09",
-    "question": "How many hours should a person fast before the fasting plasma glucose test?",
-    "rank": 2
+    "question": "Which medicines can cause diabetes?",
+    "rank": 3
    },
    {
     "id": "DM10",
-    "question": "Can an over-the-counter blood glucose meter diagnose diabetes?",
-    "rank": 1
+    "question": "Who should be tested for type 2 diabetes?",
+    "rank": null
    },
    {
     "id": "DM11",
-    "question": "During which pregnancy weeks is gestational diabetes screening recommended?",
-    "rank": 4
-   },
-   {
-    "id": "DM12",
-    "question": "Which health measure corresponds to B in the diabetes ABCs?",
-    "rank": null
-   },
-   {
-    "id": "DM13",
-    "question": "Which health measure corresponds to C in the diabetes ABCs?",
-    "rank": null
-   },
-   {
-    "id": "DM14",
-    "question": "How many minutes of moderate activity per week does this source suggest?",
+    "question": "When is gestational diabetes tested?",
     "rank": 1
    },
    {
+    "id": "DM12",
+    "question": "Is there a cure for type 1 diabetes?",
+    "rank": 1
+   },
+   {
+    "id": "DM13",
+    "question": "What eye problems can diabetes cause?",
+    "rank": 3
+   },
+   {
+    "id": "DM14",
+    "question": "What is diabetic kidney disease?",
+    "rank": 2
+   },
+   {
     "id": "DM15",
-    "question": "How many hours of sleep per night should most adults aim for according to this source?",
+    "question": "Is diabetes a leading cause of kidney disease?",
     "rank": 1
    },
    {
     "id": "DM16",
-    "question": "Can type 2 diabetes occur during childhood?",
+    "question": "What is peripheral neuropathy?",
     "rank": 1
+   },
+   {
+    "id": "DM17",
+    "question": "What does autonomic neuropathy damage?",
+    "rank": 1
+   },
+   {
+    "id": "DM18",
+    "question": "How often should I check my feet?",
+    "rank": null
+   },
+   {
+    "id": "DM19",
+    "question": "How does diabetes affect the heart?",
+    "rank": null
+   },
+   {
+    "id": "DM20",
+    "question": "What should I do when my blood glucose is below 70 mg/dL?",
+    "rank": 5
+   },
+   {
+    "id": "DM21",
+    "question": "What are the complications of severe low blood glucose?",
+    "rank": 1
+   },
+   {
+    "id": "DM22",
+    "question": "What is the plate method?",
+    "rank": 1
+   },
+   {
+    "id": "DM23",
+    "question": "What drinks should a person with diabetes choose?",
+    "rank": 1
+   },
+   {
+    "id": "DM24",
+    "question": "How many minutes of physical activity per week are recommended?",
+    "rank": 3
+   },
+   {
+    "id": "DM25",
+    "question": "Should I eat before, during, or after physical activity?",
+    "rank": 2
+   },
+   {
+    "id": "DM26",
+    "question": "What is a normal A1C level?",
+    "rank": 1
+   },
+   {
+    "id": "DM27",
+    "question": "What does the A1C test measure?",
+    "rank": null
+   },
+   {
+    "id": "DM28",
+    "question": "What blood glucose targets do many people aim for before a meal?",
+    "rank": 1
+   },
+   {
+    "id": "DM29",
+    "question": "What is continuous glucose monitoring?",
+    "rank": 1
+   },
+   {
+    "id": "DM30",
+    "question": "What is an artificial pancreas?",
+    "rank": 5
+   },
+   {
+    "id": "DM31",
+    "question": "Can insulin be taken with an inhaler?",
+    "rank": 1
+   },
+   {
+    "id": "DM32",
+    "question": "What do most people with type 2 diabetes take first?",
+    "rank": null
+   },
+   {
+    "id": "DM33",
+    "question": "How does metformin work?",
+    "rank": 5
+   },
+   {
+    "id": "DM34",
+    "question": "How can I lower my chances of developing type 2 diabetes?",
+    "rank": 4
+   },
+   {
+    "id": "DM35",
+    "question": "How much weight loss may prevent or delay diabetes?",
+    "rank": null
+   },
+   {
+    "id": "DM36",
+    "question": "What is prediabetes?",
+    "rank": null
+   },
+   {
+    "id": "DM37",
+    "question": "What is diabetic ketoacidosis?",
+    "rank": 2
+   },
+   {
+    "id": "DM38",
+    "question": "What are the symptoms of diabetic ketoacidosis?",
+    "rank": 1
+   },
+   {
+    "id": "DM39",
+    "question": "What is hyperglycemia?",
+    "rank": null
+   },
+   {
+    "id": "DM40",
+    "question": "What are the symptoms of low blood glucose?",
+    "rank": null
    }
   ]
  },
  "Graph-RAG": {
-  "hit_at_1": 0.4375,
-  "hit_at_3": 0.625,
-  "mrr": 0.5208,
-  "questions": 16,
+  "hit_at_1": 0.35,
+  "hit_at_3": 0.5,
+  "mrr": 0.4513,
+  "questions": 40,
   "detail": [
    {
     "id": "DM01",
@@ -100,78 +220,198 @@
    },
    {
     "id": "DM02",
-    "question": "Which hormone helps glucose enter cells?",
-    "rank": 2
+    "question": "What is diabetes?",
+    "rank": null
    },
    {
     "id": "DM03",
-    "question": "What is the most common type of diabetes?",
-    "rank": null
+    "question": "What are the common symptoms of diabetes?",
+    "rank": 5
    },
    {
     "id": "DM04",
-    "question": "When does gestational diabetes develop?",
-    "rank": null
+    "question": "What are the symptoms of type 1 diabetes in children?",
+    "rank": 1
    },
    {
     "id": "DM05",
-    "question": "Are glucose levels in prediabetes above normal?",
-    "rank": 1
+    "question": "Do people with type 2 diabetes always have symptoms?",
+    "rank": null
    },
    {
     "id": "DM06",
-    "question": "What attacks insulin-producing cells in type 1 diabetes?",
-    "rank": 1
-   },
-   {
-    "id": "DM07",
-    "question": "What causes monogenic diabetes?",
-    "rank": null
-   },
-   {
-    "id": "DM08",
-    "question": "How many months are reflected in an A1C blood test?",
-    "rank": 2
-   },
-   {
-    "id": "DM09",
-    "question": "How many hours should a person fast before the fasting plasma glucose test?",
-    "rank": 1
-   },
-   {
-    "id": "DM10",
-    "question": "Can an over-the-counter blood glucose meter diagnose diabetes?",
-    "rank": 1
-   },
-   {
-    "id": "DM11",
-    "question": "During which pregnancy weeks is gestational diabetes screening recommended?",
+    "question": "Does gestational diabetes cause symptoms?",
     "rank": 3
    },
    {
-    "id": "DM12",
-    "question": "Which health measure corresponds to B in the diabetes ABCs?",
+    "id": "DM07",
+    "question": "What causes type 1 diabetes?",
+    "rank": 4
+   },
+   {
+    "id": "DM08",
+    "question": "What causes type 2 diabetes?",
     "rank": null
    },
    {
-    "id": "DM13",
-    "question": "Which health measure corresponds to C in the diabetes ABCs?",
+    "id": "DM09",
+    "question": "Which medicines can cause diabetes?",
+    "rank": 4
+   },
+   {
+    "id": "DM10",
+    "question": "Who should be tested for type 2 diabetes?",
     "rank": null
    },
    {
-    "id": "DM14",
-    "question": "How many minutes of moderate activity per week does this source suggest?",
+    "id": "DM11",
+    "question": "When is gestational diabetes tested?",
     "rank": 1
    },
    {
+    "id": "DM12",
+    "question": "Is there a cure for type 1 diabetes?",
+    "rank": 1
+   },
+   {
+    "id": "DM13",
+    "question": "What eye problems can diabetes cause?",
+    "rank": 3
+   },
+   {
+    "id": "DM14",
+    "question": "What is diabetic kidney disease?",
+    "rank": 2
+   },
+   {
     "id": "DM15",
-    "question": "How many hours of sleep per night should most adults aim for according to this source?",
+    "question": "Is diabetes a leading cause of kidney disease?",
     "rank": 1
    },
    {
     "id": "DM16",
-    "question": "Can type 2 diabetes occur during childhood?",
+    "question": "What is peripheral neuropathy?",
     "rank": 1
+   },
+   {
+    "id": "DM17",
+    "question": "What does autonomic neuropathy damage?",
+    "rank": 1
+   },
+   {
+    "id": "DM18",
+    "question": "How often should I check my feet?",
+    "rank": null
+   },
+   {
+    "id": "DM19",
+    "question": "How does diabetes affect the heart?",
+    "rank": null
+   },
+   {
+    "id": "DM20",
+    "question": "What should I do when my blood glucose is below 70 mg/dL?",
+    "rank": 5
+   },
+   {
+    "id": "DM21",
+    "question": "What are the complications of severe low blood glucose?",
+    "rank": 1
+   },
+   {
+    "id": "DM22",
+    "question": "What is the plate method?",
+    "rank": 1
+   },
+   {
+    "id": "DM23",
+    "question": "What drinks should a person with diabetes choose?",
+    "rank": 1
+   },
+   {
+    "id": "DM24",
+    "question": "How many minutes of physical activity per week are recommended?",
+    "rank": 3
+   },
+   {
+    "id": "DM25",
+    "question": "Should I eat before, during, or after physical activity?",
+    "rank": 2
+   },
+   {
+    "id": "DM26",
+    "question": "What is a normal A1C level?",
+    "rank": 1
+   },
+   {
+    "id": "DM27",
+    "question": "What does the A1C test measure?",
+    "rank": null
+   },
+   {
+    "id": "DM28",
+    "question": "What blood glucose targets do many people aim for before a meal?",
+    "rank": 1
+   },
+   {
+    "id": "DM29",
+    "question": "What is continuous glucose monitoring?",
+    "rank": 1
+   },
+   {
+    "id": "DM30",
+    "question": "What is an artificial pancreas?",
+    "rank": 5
+   },
+   {
+    "id": "DM31",
+    "question": "Can insulin be taken with an inhaler?",
+    "rank": 1
+   },
+   {
+    "id": "DM32",
+    "question": "What do most people with type 2 diabetes take first?",
+    "rank": null
+   },
+   {
+    "id": "DM33",
+    "question": "How does metformin work?",
+    "rank": 5
+   },
+   {
+    "id": "DM34",
+    "question": "How can I lower my chances of developing type 2 diabetes?",
+    "rank": 4
+   },
+   {
+    "id": "DM35",
+    "question": "How much weight loss may prevent or delay diabetes?",
+    "rank": null
+   },
+   {
+    "id": "DM36",
+    "question": "What is prediabetes?",
+    "rank": null
+   },
+   {
+    "id": "DM37",
+    "question": "What is diabetic ketoacidosis?",
+    "rank": 2
+   },
+   {
+    "id": "DM38",
+    "question": "What are the symptoms of diabetic ketoacidosis?",
+    "rank": 1
+   },
+   {
+    "id": "DM39",
+    "question": "What is hyperglycemia?",
+    "rank": null
+   },
+   {
+    "id": "DM40",
+    "question": "What are the symptoms of low blood glucose?",
+    "rank": null
    }
   ]
  }

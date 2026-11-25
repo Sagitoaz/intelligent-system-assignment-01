@@ -1,6 +1,7 @@
 """Agent tri thức trả lời câu hỏi tự do về bệnh tiểu đường, có trích dẫn nguồn (NIDDK / CDC / MedlinePlus).
 
-Kho tri thức: data/chapter04/diabetes_corpus.jsonl (492 đoạn tiếng Anh, 28 trang). Truy hồi: BM25 (cùng cài đặt với kb.py) trên truy vấn
+Kho tri thức: 514 đoạn tiếng Anh = data/chapter04/diabetes_corpus.jsonl (492 đoạn, 28 trang web) + project01/artifacts/diabetes_pdf_passages.jsonl
+(22 đoạn từ 1 file PDF của NIDDK), cùng kho với KB trong mas/kb.py. Truy hồi: BM25 (cùng cài đặt với kb.py) trên truy vấn
 đã được mở rộng bằng đồ thị tri thức (alias tiếng Việt -> từ khóa tiếng Anh của nút). Câu hỏi tiếng Việt được chuyển sang từ khóa tiếng Anh
 bằng bảng thuật ngữ (GLOSSARY của src/chapter04/rag.py đảo chiều + bảng bổ sung bên dưới), không cần mô hình.
 
@@ -14,8 +15,8 @@ Chức năng của phòng khám: tab "Hỏi bác sĩ" (RAG hỏi đáp tự do v
 Endpoint (đăng ký qua routes() ở cuối file; server.py nạp mô-đun "ask" trong danh sách EXTENSIONS):
     POST /api/ask         -> post_ask()  -> AskEngine.ask()      (câu hỏi + hồ sơ tùy chọn + mode auto|qwen|retrieval)
     GET  /api/ask/status  -> get_status()                        (Qwen đã sẵn sàng chưa, vector đã nạp chưa, số đoạn tài liệu)
-Dữ liệu đọc: data/chapter04/diabetes_corpus.jsonl (492 đoạn); models/chapter04/embedding (MiniLM); results/chapter04/diabetes_embeddings.npy
-             (cache vector); models/chapter05/llm (Qwen2.5-1.5B). Không ghi file nào.
+Dữ liệu đọc: kho 514 đoạn (kb.load_rows); models/chapter04/embedding (MiniLM); results/project01/ask_embeddings.npy
+             (cache vector, tự tính lại khi kho đổi); models/chapter05/llm (Qwen2.5-1.5B). Không ghi file nào.
 Luồng một lượt hỏi (AskEngine.ask):
     1) làm sạch câu hỏi -> 2) chặn câu CẤP CỨU / CÁ NHÂN (liều thuốc, chẩn đoán) -> 3) thử Qwen (có ngân sách thời gian)
     -> 4) kiểm tra câu trả lời Qwen có bám tài liệu không (answer_problem) -> 5) nếu không đạt/không có Qwen: trích câu nguyên văn
@@ -29,6 +30,13 @@ Các thành phần chính (tìm số dòng bằng Ctrl+F tên hàm):
     extractive_answer()       : phương án dự phòng, trích nguyên văn
     AskEngine                 : ghép tất cả; refusal() tạo câu từ chối an toàn
 Thầy hỏi "BM25 nằm ở đâu?" -> class BM25 ở kb.py (import ở đầu file này), được dùng trong Retriever.search().
+Thầy hỏi "KB nối với RAG ở đâu?" -> Retriever.build_query(): kb.match_nodes() chọn nút đồ thị khớp câu hỏi, lấy "aliases_en" của nút làm từ khóa
+  mở rộng (bước "Graph-RAG"); Retriever.search() còn hỏi KB các đoạn bằng chứng của nút đó (kb.evidence(): Cypher MENTIONS trên Neo4j) để cộng điểm,
+  rồi chấm BM25 + vector và hợp nhất bằng RRF. Đồ thị chạy bằng Neo4j khi có kết nối (kb.backend == "neo4j"), nếu không rơi về kg.json (xem mas/neo4j_kb.py).
+Nguồn dữ liệu / link tải của kho: 3 nhóm link NIDDK (https://www.niddk.nih.gov/health-information/diabetes/overview/),
+  CDC (https://www.cdc.gov/diabetes/), MedlinePlus (https://medlineplus.gov/hyperglycemia.html) = 28 URL (biến PAGES trong
+  scripts/chapter04/build_diabetes_corpus.py, hoặc data/chapter04/diabetes_corpus_manifest.json) + 1 PDF NIDDK "4 Steps to Manage Your Diabetes for Life"
+  (project01/train/build_pdf_corpus.py). Tất cả là tài liệu công khai của chính phủ Hoa Kỳ.
 Thầy hỏi "chống bịa/hallucination ở đâu?" -> answer_problem() + chế độ retrieval + từ chối "nohit" trong AskEngine.ask().
 ================================================================================================
 """
@@ -42,7 +50,7 @@ import sys
 import threading
 import time
 
-from project01.mas.kb import BM25, KnowledgeBase, strip_accents, tokens
+from project01.mas.kb import BM25, KnowledgeBase, load_rows, strip_accents, tokens
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 CORPUS = os.path.join(ROOT, "data", "chapter04", "diabetes_corpus.jsonl")
@@ -156,15 +164,20 @@ def vi_to_en_terms(question: str) -> list[str]:
 
 
 # --- kho tri thức + truy hồi ---------------------------------------------------------------------------------------------------------
-def load_corpus(path: str = CORPUS) -> list[dict]:
-    """Đọc corpus jsonl (492 đoạn); bỏ đoạn quá ngắn (<60 ký tự). Trả về danh sách dict(id, text, url, title, section, org); org là nguồn: NIDDK/CDC/MedlinePlus."""
+def load_corpus(path: str | None = None) -> list[dict]:
+    """Đọc kho 514 đoạn (492 web + 22 PDF) qua kb.load_rows (hoặc một file jsonl khác nếu truyền path); bỏ đoạn quá ngắn (<60 ký tự).
+    Trả về danh sách dict(id, text, url, title, section, org, type); org là nguồn: NIDDK/CDC/MedlinePlus; type: "web" hoặc "pdf"."""
+    if path is None:
+        source = load_rows()
+    else:
+        with open(path, encoding="utf-8") as f:
+            source = [json.loads(line) for line in f if line.strip()]
     rows = []
-    with open(path, encoding="utf-8") as f:
-        for line in f:
-            r = json.loads(line)
-            text = r["text"].strip()
-            if len(text) >= 60:
-                rows.append(dict(id=r["id"], text=text, url=r["source_url"], title=r.get("title", ""), section=r.get("section", ""), org=r.get("source_org", "")))
+    for r in source:
+        text = r["text"].strip()
+        if len(text) >= 60:
+            rows.append(dict(id=r["id"], text=text, url=r["source_url"], title=r.get("title", ""), section=r.get("section", ""),
+                             org=r.get("source_org", ""), type=r.get("source_type", "web")))
     return rows
 
 
@@ -181,7 +194,7 @@ class Retriever:
 
     def __init__(self, kb: KnowledgeBase | None = None, dense: bool = True):
         """kb: đồ thị tri thức để mở rộng truy vấn (có thể None). dense=True thì nạp mô hình vector ở luồng nền (không chặn khởi động; trong lúc chờ dùng BM25)."""
-        self.rows = [json.loads(line) for line in open(CORPUS, encoding="utf-8")]
+        self.rows = load_rows()
         self.passages = load_corpus()
         self.bm25 = BM25(self.passages)
         self.kb = kb
@@ -202,7 +215,7 @@ class Retriever:
             import_ml()
             from src.chapter04.retrieval import DenseRetriever, Encoder
             enc = Encoder(os.path.join(ROOT, "models", "chapter04", "embedding"))
-            self.dense = DenseRetriever(self.rows, enc, os.path.join(ROOT, "results", "chapter04", "diabetes_embeddings.npy"))
+            self.dense = DenseRetriever(self.rows, enc, os.path.join(ROOT, "results", "project01", "ask_embeddings.npy"))
         except Exception as exc:  # không có mô hình vector: vẫn chạy được bằng BM25
             self.dense_error = f"{type(exc).__name__}: {exc}"
         finally:
@@ -229,6 +242,9 @@ class Retriever:
             return dict(hits=[], seeds=seeds, query=[], hybrid=False, relevant=False)
         # Nhánh từ khóa: điểm BM25 của từ khóa gốc (đã nhân đôi trọng số ở build_query).
         sc = self.bm25.scores(qt)
+        if self.kb and seeds:  # KB -> RAG: đoạn là bằng chứng (MENTIONS) của nút khớp câu hỏi được cộng 1,0 điểm; ids lấy từ Neo4j bằng Cypher khi có kết nối
+            ev = {pid for pids in self.kb.evidence([n for n in seeds if n != "diabetes"]).values() for pid in pids}
+            sc = [a + (1.0 if p["id"] in ev else 0.0) for a, p in zip(sc, self.passages)]
         if extra:  # mở rộng truy vấn bằng đồ thị tri thức, trọng số thấp hơn từ khóa gốc
             sc = [a + 0.35 * b for a, b in zip(sc, self.bm25.scores(extra))]
         lex = [i for i in sorted(range(len(sc)), key=lambda i: -sc[i])[:40] if sc[i] > 0 and not self.passages[i]["text"][0].islower()]
@@ -257,7 +273,7 @@ class Retriever:
             p = self.passages[i]
             hits.append(dict(id=p["id"], quote=p["text"], url=p["url"], score=round(cos[i], 3) if i in cos else round(sc[i], 3), bm25=round(sc[i], 3),
                              title=p["title"], section=p.get("section", ""), org=p["org"]))
-        return dict(hits=hits, seeds=seeds, query=sorted(set(qt)), hybrid=dense is not None, relevant=relevant)
+        return dict(hits=hits, seeds=seeds, query=sorted(set(qt)), hybrid=dense is not None, relevant=relevant, graph=self.kb.backend if self.kb else "none")
 
 
 # --- Qwen (một thể hiện duy nhất cho cả tiến trình) ----------------------------------------------------------------------------------
@@ -503,6 +519,8 @@ class AskEngine:
             if not found.get("hybrid"):
                 notes.append("Tìm kiếm tạm chỉ dùng từ khóa (BM25) vì mô hình vector chưa nạp xong; kết quả có thể kém chính xác hơn.")
         hits = found["hits"]
+        if found.get("graph") == "neo4j":  # cho người dùng biết đồ thị tri thức đang được truy vấn từ Neo4j (không phải từ tệp)
+            notes.append("Đồ thị tri thức được truy vấn từ Neo4j bằng Cypher để mở rộng truy vấn và cộng điểm cho đoạn bằng chứng.")
         intro = personal_intro(profile)
         if intro:
             answer = intro + " " + answer
@@ -512,7 +530,7 @@ class AskEngine:
             speak = re.sub(r"\[\d+\]", "", speak)
         return dict(answer=answer, citations=[dict(id=h["id"], quote=h["quote"], url=h["url"], score=h["score"], title=h["title"], org=h["org"]) for h in hits],
                     mode=used, seconds=round(time.perf_counter() - started, 2), notes=notes, speak=speak,
-                    graph_nodes=found.get("seeds", []))
+                    graph_nodes=found.get("seeds", []), graph_backend=getattr(self.retriever.kb, "backend", "none"))
 
 
 _ENGINE: AskEngine | None = None
@@ -538,7 +556,9 @@ def routes(clinic, speaker):
     def get_status() -> dict:
         """GET /api/ask/status: giao diện dùng để hiện trạng thái Qwen/vector (đang nạp hay sẵn sàng) và số đoạn trong kho."""
         e = engine()
-        return dict(qwen_available=QwenRunner.available() and not e.qwen.broken, qwen_loaded=bool(e.qwen.gen and e.qwen.gen.ready),
+        kb = e.retriever.kb
+        return dict(kb_backend=getattr(kb, "backend", "none"), kb_note=getattr(kb, "backend_note", ""),
+                    qwen_available=QwenRunner.available() and not e.qwen.broken, qwen_loaded=bool(e.qwen.gen and e.qwen.gen.ready),
                     passages=len(e.retriever.passages), budget_seconds=QWEN_BUDGET, vector_ready=e.retriever.dense is not None, vector_loading=not e.retriever.dense_ready.is_set())
 
     return {"/api/ask/status": get_status}, {"/api/ask": post_ask}

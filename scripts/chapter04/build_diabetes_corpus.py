@@ -19,7 +19,7 @@ RAW = DATA / 'raw_pages'
 ACCESSED = time.strftime('%Y-%m-%d')
 NIDDK = 'https://www.niddk.nih.gov/health-information/diabetes/overview/'
 CDC = 'https://www.cdc.gov/diabetes/'
-HEADERS = {'User-Agent': 'Mozilla/5.0 (educational coursework, contact trung241az@gmail.com)'}
+HEADERS = {'User-Agent': 'Mozilla/5.0 (educational coursework)'}
 LICENSES = {
     'NIDDK': 'US government work (NIH/NIDDK); public domain, may be reproduced with attribution (niddk.nih.gov/about-niddk/policies-and-guidelines)',
     'CDC': 'US government work (CDC); public domain, content may be copied and used without permission (cdc.gov/other/policies.html)',

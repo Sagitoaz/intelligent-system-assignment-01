@@ -48,10 +48,16 @@ Nếu đã chạy riêng một demo con thì thêm `--no-children`.
 ```powershell
 python project01/server.py --open                # mở http://localhost:8200
 python project01/server.py --open --port 8210    # đổi cổng nếu bị trùng
-python -m pytest tests/test_project01*.py -q     # kiểm thử tự động (64 kiểm thử)
+python -m pytest tests/test_project01*.py -q     # kiểm thử tự động (74 kiểm thử)
 python -m jupyter lab notebooks/project01        # notebook thực hành (đã chạy sẵn, có giải thích từng ô)
 # Huấn luyện/đánh giá lại (tùy chọn, kết quả lưu ở project01/artifacts/)
-python project01/train/train_dl.py ; python project01/train/build_kg.py ; python project01/train/train_rl.py ; python project01/train/eval_rag.py ; python project01/train/eval_trust.py
+python project01/train/train_dl.py ; python project01/train/build_pdf_corpus.py ; python project01/train/build_kg.py ; python project01/train/train_rl.py ; python project01/train/eval_rag.py ; python project01/train/eval_trust.py
+# KB_diabet trên Neo4j (đồ thị tri thức + nguồn web/PDF): file Cypher ở db_diabet_cypher/
+# Cần file Neo4j-*.txt (Aura) ở thư mục gốc hoặc biến NEO4J_URI / NEO4J_USERNAME / NEO4J_PASSWORD / NEO4J_DATABASE
+python scripts/push_to_neo4j.py --only kb         # nạp KB_diabet lên Neo4j
+python project01/train/demo_kb_neo4j.py           # demo: RAG truy vấn Neo4j bằng Cypher, trích dẫn web + PDF
+# KB_BACKEND=auto (mặc định: thử Neo4j, lỗi thì dùng kg.json) | neo4j (bắt buộc) | file (không cần mạng)
+$env:KB_BACKEND = "file"                          # PowerShell: chạy phòng khám không cần Neo4j
 ```
 
 Thêm `?mock=1` vào địa chỉ để xem dữ liệu mẫu khi chưa chạy máy chủ API.

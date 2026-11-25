@@ -2,7 +2,7 @@
 
 Nguồn dữ liệu:
   1. knowledge_graph/cypher/diabetes_knowledge_graph.cypher  -> hệ thống/mô hình tiểu đường (domain=diabetes_assignment_01)
-  2. project01/artifacts/kg_neo4j.cypher                     -> KG khái niệm tiểu đường của Project 01 (nhãn KBNode)
+  2. db_diabet_cypher/01..03_*.cypher                        -> KB_diabet của Project 01: KBNode (khái niệm), KBSource/KBPassage (28 trang web + 1 PDF), MENTIONS (bằng chứng)
   3. knowledge_graph/chapter04/*.json.gz                     -> đồ thị chương 4: tài liệu NIDDK (bệnh án 130 BV nạp bởi push_datasets_to_neo4j.py)
 
 Kết nối: đọc biến môi trường NEO4J_URI/NEO4J_USER|NEO4J_USERNAME/NEO4J_PASSWORD/NEO4J_DATABASE,
@@ -11,7 +11,7 @@ hoặc file Neo4j-*.txt ở thư mục gốc (file Aura tải về), hoặc back
 Idempotent: dùng MERGE, chạy lại nhiều lần an toàn. Dữ liệu chương 4 mang nhãn Ch4Node + nhãn theo loại,
 thuộc tính `graph` cho biết thuộc đồ thị nào, `uid` = graph|id (duy nhất).
 
-Chạy:  python scripts/push_to_neo4j.py [--only cypher|project01|ch4] [--reset-ch4]
+Chạy:  python scripts/push_to_neo4j.py [--only cypher|kb|ch4] [--reset-ch4]     (--only project01 là tên cũ của --only kb)
 """
 from __future__ import annotations
 
@@ -24,7 +24,8 @@ import re
 import sys
 from pathlib import Path
 
-from neo4j import GraphDatabase
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from project01.mas.neo4j_kb import make_driver  # noqa: E402  (có xử lý chứng chỉ TLS của Aura)
 
 ROOT = Path(__file__).resolve().parents[1]
 BATCH = 1000
@@ -47,10 +48,15 @@ def _read_env_file(path: Path) -> dict[str, str]:
 
 def load_config() -> dict[str, str]:
     cfg: dict[str, str] = {}
-    for p in [ROOT / "backend" / ".env", *map(Path, glob.glob(str(ROOT / "Neo4j-*.txt"))), ROOT / "neo4j.txt"]:
+    aura = sorted(map(Path, glob.glob(str(ROOT / "Neo4j-*.txt"))), key=lambda f: f.stat().st_mtime)  # file Aura mới nhất được ưu tiên
+    for p in [ROOT / "backend" / ".env", *aura, ROOT / "neo4j.txt"]:
         cfg.update(_read_env_file(p))
+    if aura:  # tên đăng nhập trong file Aura đi cùng URI/mật khẩu của nó, không để NEO4J_USER cũ trong backend/.env đè lên
+        user_in_file = _read_env_file(aura[-1]).get("NEO4J_USERNAME")
+        if user_in_file:
+            cfg["NEO4J_USER"] = user_in_file
     cfg.update({k: v for k, v in os.environ.items() if k.startswith("NEO4J_")})
-    user = cfg.get("NEO4J_USER") or cfg.get("NEO4J_USERNAME") or "neo4j"
+    user =cfg.get("NEO4J_USER") or cfg.get("NEO4J_USERNAME") or "neo4j"
     return {
         "uri": cfg["NEO4J_URI"],
         "user": user,
@@ -120,10 +126,13 @@ def report(session) -> None:
     print("\n== Kiểm tra trên Neo4j ==")
     q = {
         "System KG (domain=diabetes_assignment_01)": "MATCH (n {domain:'diabetes_assignment_01'}) RETURN count(n) AS c",
-        "Project01 KBNode": "MATCH (n:KBNode) RETURN count(n) AS c",
+        "Project01 KBNode (khái niệm)": "MATCH (n:KBNode) RETURN count(n) AS c",
+        "Project01 KBSource (trang web/PDF)": "MATCH (n:KBSource) RETURN count(n) AS c",
+        "Project01 KBPassage (đoạn tài liệu)": "MATCH (n:KBPassage) RETURN count(n) AS c",
+        "Project01 MENTIONS (khái niệm -> đoạn)": "MATCH (:KBNode)-[r:MENTIONS]->(:KBPassage) RETURN count(r) AS c",
     }
     for k, v in q.items():
-        print(f"  {k}: {session.run(v).single()['c']} nút")
+        print(f"  {k}: {session.run(v).single()['c']}")
     for r in session.run("MATCH (n:Ch4Node) RETURN n.graph AS g, count(n) AS c ORDER BY g"):
         rels = session.run("MATCH (a:Ch4Node {graph:$g})-[r]->() RETURN count(r) AS c", g=r["g"]).single()["c"]
         print(f"  {r['g']}: {r['c']} nút, {rels} cạnh")
@@ -134,20 +143,21 @@ def report(session) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--only", choices=["cypher", "project01", "ch4"])
+    ap.add_argument("--only", choices=["cypher", "kb", "project01", "ch4"])
     ap.add_argument("--reset-ch4", action="store_true", help="xóa đồ thị chương 4 trước khi nạp lại")
     a = ap.parse_args()
     cfg = load_config()
     print(f"Kết nối {cfg['uri']} (database={cfg['database']}, user={cfg['user']})")
-    driver = GraphDatabase.driver(cfg["uri"], auth=(cfg["user"], cfg["password"]))
+    driver = make_driver(cfg)
     driver.verify_connectivity()
     with driver.session(database=cfg["database"]) as s:
         if a.only in (None, "cypher"):
             n = run_cypher_file(s, ROOT / "knowledge_graph" / "cypher" / "diabetes_knowledge_graph.cypher")
             print(f"[1] diabetes_knowledge_graph.cypher: {n} câu lệnh")
-        if a.only in (None, "project01"):
-            n = run_cypher_file(s, ROOT / "project01" / "artifacts" / "kg_neo4j.cypher", split_lines=True)
-            print(f"[2] project01 kg_neo4j.cypher: {n} câu lệnh")
+        if a.only in (None, "kb", "project01"):
+            for f in sorted((ROOT / "db_diabet_cypher").glob("0*_*.cypher")):  # thứ tự 01 -> 02 -> 03 (nút, rồi đoạn tài liệu, rồi liên kết MENTIONS)
+                n = run_cypher_file(s, f, split_lines=True)
+                print(f"[2] db_diabet_cypher/{f.name}: {n} câu lệnh", flush=True)
         if a.only in (None, "ch4"):
             print("[3] Đồ thị chương 4:")
             push_ch4(s, a.reset_ch4)

@@ -1,13 +1,13 @@
 {
-  "corpus": "data/chapter04/diabetes_corpus.jsonl (492 đoạn, 28 trang)",
+  "corpus": "data/chapter04/diabetes_corpus.jsonl (492 đoạn, 28 trang web) + project01/artifacts/diabetes_pdf_passages.jsonl (22 đoạn, 1 PDF) = 514 đoạn",
   "qa": "data/chapter04/diabetes_qa_demo.json",
-  "retriever": "hybrid: BM25 + mở rộng đồ thị tri thức + vector MiniLM (RRF)",
+  "retriever": "hybrid: BM25 + mở rộng và cộng điểm bằng đồ thị tri thức + vector MiniLM (RRF)",
   "hybrid": true,
   "english": {
     "questions": 40,
-    "hit_at_1": 0.4,
+    "hit_at_1": 0.425,
     "hit_at_3": 0.75,
-    "hits_at_1": 16,
+    "hits_at_1": 17,
     "hits_at_3": 30
   },
   "vietnamese": {
@@ -19,9 +19,9 @@
   },
   "combined": {
     "questions": 52,
-    "hits_at_1": 18,
+    "hits_at_1": 19,
     "hits_at_3": 37,
-    "hit_at_1": 0.346,
+    "hit_at_1": 0.365,
     "hit_at_3": 0.712
   },
   "note": "Đoạn kỳ vọng do người viết gắn tay (gold_ids); một câu có thể có nhiều đoạn đúng nhưng chỉ tính các đoạn đã gắn nên số liệu là cận dưới. Câu tiếng Việt do người dịch tay từ 12 câu tiếng Anh và đi qua bảng thuật ngữ Việt-Anh, không qua Qwen."

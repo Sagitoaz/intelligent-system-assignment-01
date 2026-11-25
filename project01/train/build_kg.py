@@ -1,9 +1,19 @@
 """Dựng đồ thị tri thức tiểu đường (KB) và xuất Cypher cho Neo4j.
 
-Đồ thị do nhóm biên soạn (nhãn tiếng Việt) dựa trên 4 trang NIDDK trong data/chapter04 (what-is-diabetes, symptoms-causes,
-tests-diagnosis, managing-diabetes); các ngưỡng xét nghiệm theo chuẩn ADA (bảng trong trang NIDDK bị mất khi thu thập corpus nên
-được ghi là tri thức bổ sung). Mỗi nút được gắn tối đa 3 đoạn trích NIDDK gần nhất bằng BM25.
-Chạy: python project01/train/build_kg.py
+Đồ thị do nhóm biên soạn (nhãn tiếng Việt) dựa trên kho tài liệu công khai: 28 trang web (NIDDK, CDC, MedlinePlus) + 1 file PDF của NIDDK;
+các ngưỡng xét nghiệm theo chuẩn ADA (bảng trong trang NIDDK bị mất khi thu thập corpus nên được ghi là tri thức bổ sung).
+Mỗi nút được gắn tối đa 3 đoạn trích gần nhất bằng BM25 (bằng chứng; quan hệ MENTIONS trong Neo4j).
+Chạy: python project01/train/build_kg.py   (nên chạy project01/train/build_pdf_corpus.py trước nếu PDF thay đổi)
+Nguồn: 3 nhóm link + 1 PDF (chi tiết ở docstring mas/kb.py):
+    NIDDK       https://www.niddk.nih.gov/health-information/diabetes/overview/
+    CDC         https://www.cdc.gov/diabetes/
+    MedlinePlus https://medlineplus.gov/hyperglycemia.html
+    PDF NIDDK   "4 Steps to Manage Your Diabetes for Life" (data/project01/niddk_4_steps_manage_diabetes.pdf)
+Các file Cypher do script này SINH RA, lưu ở thư mục db_diabet_cypher/ (đừng sửa tay; sửa N/E rồi chạy lại):
+    01_kb_concepts.cypher       nút KBNode (khái niệm y khoa) + cạnh giữa các nút
+    02_sources_passages.cypher  nút KBSource (trang web / PDF) + KBPassage (từng đoạn tài liệu) + quan hệ HAS_PASSAGE
+    03_evidence_links.cypher    quan hệ (KBNode)-[:MENTIONS {rank}]->(KBPassage): bằng chứng của từng khái niệm
+Nạp vào Neo4j: python scripts/push_to_neo4j.py --only kb   (hoặc cypher-shell -f từng file theo thứ tự 01, 02, 03).
 
 ======================================================================================================
 BẢN ĐỒ FILE
@@ -15,13 +25,13 @@ Chức năng: ĐÂY LÀ NƠI ĐỊNH NGHĨA đồ thị tri thức (KB) của Pr
   - E (dòng "E = [") : 54 CẠNH có hướng (nguồn, đích, quan hệ): is_a, symptom_of, raises_risk, causes, diagnosed_by,
                         prevented_by, treated_by, monitors, helps, complication_of.
   - main()           : dựng file; với mỗi nút tìm tối đa 3 đoạn NIDDK khớp nhất (BM25, điểm > 2,0) để gắn "bằng chứng" cho nút.
-Đọc : corpus NIDDK qua mas/kb.py (load_passages -> artifacts/diabetes_corpus_niddk183.jsonl).
-Ghi : artifacts/kg.json        (đồ thị cho mas/kb.py và giao diện; GET /api/kg)
-      artifacts/kg_neo4j.cypher (cùng đồ thị dưới dạng lệnh Cypher để nạp Neo4j: cypher-shell -f kg_neo4j.cypher)
-Muốn THÊM/SỬA kiến thức: sửa N hoặc E rồi chạy lại file này; mas/kb.py tự đọc kg.json mới.
+Đọc : kho 514 đoạn qua mas/kb.py (load_rows/load_passages: 492 đoạn web + 22 đoạn PDF).
+Ghi : artifacts/kg.json            (bản dự phòng của đồ thị khi không có Neo4j; mas/kb.py đọc khi KB_BACKEND=file hoặc mất mạng)
+      ../../db_diabet_cypher/*.cypher  (KB_diabet dưới dạng Cypher: nguồn thật của đồ thị khi chạy với Neo4j)
+Muốn THÊM/SỬA kiến thức: sửa N hoặc E rồi chạy lại file này, sau đó python scripts/push_to_neo4j.py --only kb.
 Được dùng bởi: mas/kb.py (KnowledgeBase), mas/orchestrator.py (Thủ thư tri thức), train/eval_rag.py (đo chất lượng RAG).
-Lưu ý để trả lời thầy: đây là KG "nhóm tự biên soạn" dựa trên NIDDK, KHÔNG phải KG trích xuất tự động; bằng chứng đi kèm là
-các đoạn trích thật của NIDDK. Các ngưỡng xét nghiệm (A1C 6,5%, FPG 126 mg/dL, OGTT 200 mg/dL) theo chuẩn ADA.
+Lưu ý để trả lời thầy: đây là KG "nhóm tự biên soạn" dựa trên tài liệu NIDDK/CDC/MedlinePlus, KHÔNG phải KG trích xuất tự động; bằng chứng đi kèm
+là các đoạn trích thật (web hoặc PDF). Các ngưỡng xét nghiệm (A1C 6,5%, FPG 126 mg/dL, OGTT 200 mg/dL) theo chuẩn ADA.
 ======================================================================================================
 """
 from __future__ import annotations
@@ -33,7 +43,9 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from project01.mas.kb import BM25, load_passages  # noqa: E402
 
-OUT = os.path.join(os.path.dirname(__file__), "..", "artifacts")
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+OUT = os.path.join(ROOT, "project01", "artifacts")
+CYPHER_DIR = os.path.join(ROOT, "db_diabet_cypher")  # thư mục chứa KB_diabet dạng Cypher (thầy: "lưu vào folder, vd db_diabet_cypher")
 
 # (id, label_en, vi, type, mô tả tiếng Việt, từ khóa tìm kiếm tiếng Việt/đồng nghĩa, từ khóa truy xuất tiếng Anh)
 N = [
@@ -55,7 +67,7 @@ N = [
     ("age", "Age 35 or older", "Tuổi từ 35 trở lên", "risk_factor", "Nguy cơ tiểu đường típ 2 tăng dần theo tuổi; người lớn tuổi nên được tầm soát định kỳ.", ["tuoi", "lon tuoi", "cao tuoi"], ["age 35 or older risk increases as a person gets older"]),
     ("family", "Family history", "Tiền sử gia đình", "risk_factor", "Có cha mẹ hoặc anh chị em ruột bị tiểu đường làm tăng nguy cơ; không thay đổi được.", ["gia dinh", "di truyen", "cha me"], ["family history parent sibling"]),
     ("high_bp", "High blood pressure", "Huyết áp cao", "risk_factor", "Huyết áp cao thường đi cùng tiểu đường típ 2 và làm tăng nguy cơ biến chứng tim, thận.", ["huyet ap", "cao huyet ap"], ["high blood pressure"]),
-    ("high_chol", "High cholesterol", "Mỡ máu cao", "risk_factor", "HDL thấp và triglyceride cao là yếu tố nguy cơ; mỡ máu cần được kiểm soát cùng đường huyết.", ["mo mmau", "cholesterol"], ["cholesterol triglycerides HDL"]),
+    ("high_chol", "High cholesterol", "Mỡ máu cao", "risk_factor", "HDL thấp và triglyceride cao là yếu tố nguy cơ; mỡ máu cần được kiểm soát cùng đường huyết.", ["mo mau", "cholesterol"], ["cholesterol triglycerides HDL"]),
     ("smoking", "Smoking", "Hút thuốc", "risk_factor", "Hút thuốc làm tăng nguy cơ tiểu đường típ 2 và làm biến chứng mạch máu nặng hơn; bỏ thuốc rất có lợi.", ["hut thuoc", "thuoc la"], ["smoking quit smoking"]),
     ("hx_gdm", "History of gestational diabetes", "Từng bị tiểu đường thai kỳ", "risk_factor", "Phụ nữ từng bị tiểu đường thai kỳ hoặc sinh con trên 4 kg có nguy cơ cao hơn.", ["tieu duong thai ky", "sinh con"], ["history of gestational diabetes baby weighing 9 pounds"]),
     ("a1c", "A1C test", "Xét nghiệm A1C", "test", "Đo đường huyết trung bình 2–3 tháng. Theo chuẩn ADA: từ 6,5% trở lên là tiểu đường; 5,7–6,4% là tiền tiểu đường.", ["a1c", "hba1c", "duong huyet trung binh"], ["A1C test average blood glucose"]),
@@ -100,7 +112,7 @@ E = [  # (nguồn, đích, quan hệ)
 
 
 def main():
-    """Dựng kg.json và kg_neo4j.cypher từ N và E (không có đầu vào; ghi hai file vào artifacts/ rồi in thống kê)."""
+    """Dựng kg.json (bản dự phòng) và 3 file Cypher trong db_diabet_cypher/ từ N, E và kho tài liệu (không có đầu vào; in thống kê khi xong)."""
     passages = load_passages()
     bm25 = BM25(passages)
     nodes = []
@@ -114,18 +126,69 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     with open(os.path.join(OUT, "kg.json"), "w", encoding="utf-8") as f:
         json.dump(dict(nodes=nodes, edges=edges), f, ensure_ascii=False, indent=1)
-    # --- xuất Cypher cho Neo4j: mỗi nút -> CREATE (:KBNode {...}); mỗi cạnh -> MATCH hai nút rồi CREATE quan hệ (tên quan hệ viết HOA)
-    q = lambda s: s.replace("\\", "\\\\").replace("'", "\\'")  # thoát dấu \ và ' để chuỗi tiếng Việt an toàn trong Cypher
-    lines = ["// Đồ thị tri thức tiểu đường cho Neo4j. Chạy: cypher-shell -f kg_neo4j.cypher", "MATCH (n:KBNode) DETACH DELETE n;",
-             "CREATE CONSTRAINT kb_id IF NOT EXISTS FOR (n:KBNode) REQUIRE n.id IS UNIQUE;"]
-    for n in nodes:
-        lines.append(f"CREATE (:KBNode {{id:'{n['id']}', label:'{q(n['label'])}', vi:'{q(n['vi'])}', type:'{n['type']}', desc:'{q(n['desc'])}'}});")
-    for e in edges:
-        lines.append(f"MATCH (a:KBNode {{id:'{e['source']}'}}), (b:KBNode {{id:'{e['target']}'}}) CREATE (a)-[:{e['rel'].upper()}]->(b);")
-    with open(os.path.join(OUT, "kg_neo4j.cypher"), "w", encoding="utf-8") as f:
-        f.write("\n".join(lines) + "\n")
+    write_cypher(nodes, edges, passages)
     linked = sum(1 for n in nodes if n["passages"])
-    print(f"{len(nodes)} nút, {len(edges)} cạnh, {linked} nút có đoạn trích NIDDK")
+    print(f"{len(nodes)} nút, {len(edges)} cạnh, {linked} nút có đoạn trích; {len(passages)} đoạn tài liệu -> {os.path.relpath(CYPHER_DIR, ROOT)}/")
+
+
+def q(s: str) -> str:
+    """Thoát dấu \\ và ' rồi đổi xuống dòng thành khoảng trắng để chuỗi tiếng Việt/tiếng Anh nằm gọn trên MỘT dòng Cypher."""
+    return " ".join(str(s).split()).replace("\\", "\\\\").replace("'", "\\'")
+
+
+def lst(items) -> str:
+    """Danh sách chuỗi dạng Cypher: ['a', 'b']."""
+    return "[" + ", ".join(f"'{q(x)}'" for x in items) + "]"
+
+
+def write_cypher(nodes: list[dict], edges: list[dict], passages: list[dict]) -> None:
+    """Sinh 3 file Cypher vào db_diabet_cypher/. Quy ước: MỖI CÂU LỆNH MỘT DÒNG, kết thúc bằng dấu ';' (push_to_neo4j.py đọc theo dòng);
+    dòng bắt đầu bằng // là chú thích. Đoạn tài liệu nạp theo lô UNWIND (25 đoạn/lệnh) để đẩy lên Aura nhanh."""
+    os.makedirs(CYPHER_DIR, exist_ok=True)
+
+    def save(name: str, lines: list[str]) -> None:
+        with open(os.path.join(CYPHER_DIR, name), "w", encoding="utf-8", newline="\n") as f:
+            f.write("\n".join(lines) + "\n")
+
+    # --- 01: khái niệm y khoa. Mỗi nút -> CREATE (:KBNode {...}); mỗi cạnh -> MATCH hai nút rồi CREATE quan hệ (tên quan hệ viết HOA)
+    l1 = ["// KB_diabet - FILE 1/3: khái niệm y khoa (KBNode) và quan hệ giữa chúng. Do project01/train/build_kg.py sinh ra, đừng sửa tay.",
+          f"// {len(nodes)} nút, {len(edges)} cạnh. Chạy theo thứ tự 01 -> 02 -> 03:  cypher-shell -f 01_kb_concepts.cypher  (hoặc python scripts/push_to_neo4j.py --only kb)",
+          "MATCH (n:KBNode) DETACH DELETE n;",
+          "CREATE CONSTRAINT kb_id IF NOT EXISTS FOR (n:KBNode) REQUIRE n.id IS UNIQUE;"]
+    for n in nodes:
+        l1.append(f"CREATE (:KBNode {{id:'{n['id']}', label:'{q(n['label'])}', vi:'{q(n['vi'])}', type:'{n['type']}', desc:'{q(n['desc'])}', "
+                  f"aliases:{lst(n['aliases'])}, aliases_en:{lst(n['aliases_en'])}}});")
+    for e in edges:
+        l1.append(f"MATCH (a:KBNode {{id:'{e['source']}'}}), (b:KBNode {{id:'{e['target']}'}}) CREATE (a)-[:{e['rel'].upper()}]->(b);")
+    save("01_kb_concepts.cypher", l1)
+
+    # --- 02: nguồn (trang web / PDF) và từng đoạn tài liệu
+    sources: dict[str, dict] = {}
+    for p in passages:
+        s = sources.setdefault(p["url"], dict(url=p["url"], title=p["title"], org=p["org"], type=p["type"], n=0))
+        s["n"] += 1
+    l2 = ["// KB_diabet - FILE 2/3: nguồn tài liệu (KBSource: trang web hoặc PDF) và từng đoạn trích (KBPassage). Do build_kg.py sinh ra, đừng sửa tay.",
+          f"// {len(sources)} nguồn ({sum(s['type'] == 'pdf' for s in sources.values())} PDF), {len(passages)} đoạn. Văn bản đoạn là nguyên văn tiếng Anh từ tài liệu gốc.",
+          "MATCH (n:KBPassage) DETACH DELETE n;", "MATCH (n:KBSource) DETACH DELETE n;",
+          "CREATE CONSTRAINT kb_passage_id IF NOT EXISTS FOR (n:KBPassage) REQUIRE n.id IS UNIQUE;",
+          "CREATE CONSTRAINT kb_source_url IF NOT EXISTS FOR (n:KBSource) REQUIRE n.url IS UNIQUE;"]
+    for s in sources.values():
+        l2.append(f"CREATE (:KBSource {{url:'{q(s['url'])}', title:'{q(s['title'])}', org:'{q(s['org'])}', source_type:'{s['type']}', passages:{s['n']}}});")
+    for i in range(0, len(passages), 25):
+        rows = ", ".join(f"{{id:'{q(p['id'])}', text:'{q(p['text'])}', title:'{q(p['title'])}', section:'{q(p['section'])}', url:'{q(p['url'])}', "
+                         f"org:'{q(p['org'])}', source_type:'{p['type']}'}}" for p in passages[i:i + 25])
+        l2.append(f"UNWIND [{rows}] AS r CREATE (p:KBPassage) SET p = r;")
+    l2.append("MATCH (p:KBPassage), (s:KBSource {url:p.url}) CREATE (s)-[:HAS_PASSAGE]->(p);")
+    save("02_sources_passages.cypher", l2)
+
+    # --- 03: bằng chứng của từng khái niệm (rank 1 = đoạn khớp nhất theo BM25)
+    triples = [(n["id"], pid, r) for n in nodes for r, pid in enumerate(n["passages"], 1)]
+    l3 = ["// KB_diabet - FILE 3/3: bằng chứng. (KBNode)-[:MENTIONS {rank}]->(KBPassage); rank 1 = đoạn khớp nhất. Do build_kg.py sinh ra, đừng sửa tay.",
+          f"// {len(triples)} liên kết. Đây là chỗ RAG đi từ khái niệm trong đồ thị tới đoạn tài liệu (mas/neo4j_kb.py: evidence())."]
+    for i in range(0, len(triples), 50):
+        rows = ", ".join(f"['{a}', '{q(b)}', {r}]" for a, b, r in triples[i:i + 50])
+        l3.append(f"UNWIND [{rows}] AS t MATCH (n:KBNode {{id:t[0]}}), (p:KBPassage {{id:t[1]}}) CREATE (n)-[:MENTIONS {{rank:t[2]}}]->(p);")
+    save("03_evidence_links.cypher", l3)
 
 
 if __name__ == "__main__":

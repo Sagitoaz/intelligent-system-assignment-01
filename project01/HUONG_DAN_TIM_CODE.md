@@ -10,9 +10,13 @@ Mỗi file `.py` trong `project01/` đều có khối **"BẢN ĐỒ FILE"** ở
 | Khi chạy demo, MLP suy luận thế nào (không cần torch)? | `mas/dl_agent.py` | `_forward` (62), `predict` (78), `index` (75) |
 | 21 đặc trưng đầu vào là gì, chuẩn hóa ở đâu? | `mas/data.py` | `FEATURES`, `normalize` (97), `to_vector` (130) |
 | Kết quả mô hình (accuracy, F1, AUC)? | `artifacts/dl_metrics.json` | do `train/train_dl.py` ghi |
-| Knowledge Base (đồ thị tri thức) nằm đâu? | `train/build_kg.py` | `N` (39, 41 nút), `E` (83, 54 cạnh), `main` (102) ghi `artifacts/kg.json` và `kg_neo4j.cypher` |
-| RAG hoạt động thế nào? BM25 là gì? | `mas/kb.py` | `BM25` (70), `scores` (88), `search` (100) |
-| Graph-RAG khác BM25 thường chỗ nào? | `mas/kb.py` | `match_nodes` (134), `expand` (149), `search` (162) |
+| Knowledge Base (đồ thị tri thức) nằm đâu? | `train/build_kg.py` | `N` (41 nút), `E` (54 cạnh), `main` ghi `artifacts/kg.json`; `write_cypher` ghi 3 file Cypher vào thư mục `db_diabet_cypher/` (xem `db_diabet_cypher/README.md`) |
+| KB lưu trên Neo4j thế nào, nạp ra sao? | `db_diabet_cypher/`, `scripts/push_to_neo4j.py` | `python scripts/push_to_neo4j.py --only kb`: nút `KBNode`, `KBSource`, `KBPassage`, quan hệ `MENTIONS` (bằng chứng) |
+| Nguồn dữ liệu: 3 link + PDF lấy ở đâu? | `mas/kb.py` (docstring đầu file), `train/build_pdf_corpus.py` | web: `scripts/chapter04/build_diabetes_corpus.py` (28 URL); PDF: `data/project01/niddk_4_steps_manage_diabetes.pdf` -> `artifacts/diabetes_pdf_passages.jsonl` |
+| RAG nối với KB qua code ở đâu? (Neo4j) | `mas/neo4j_kb.py`, `mas/kb.py` | `Neo4jKB.neighbors`, `Neo4jKB.evidence` (Cypher); `KnowledgeBase.expand`, `KnowledgeBase.evidence`; chọn backend bằng `KB_BACKEND` |
+| Demo KB + RAG trên Neo4j | `train/demo_kb_neo4j.py` | in số nút/đoạn trên Neo4j, câu Cypher đã chạy và trích dẫn web/PDF |
+| RAG hoạt động thế nào? BM25 là gì? | `mas/kb.py` | `BM25`, `BM25.scores`, `BM25.search` |
+| Graph-RAG khác BM25 thường chỗ nào? | `mas/kb.py` | `match_nodes`, `expand`, `evidence`, `KnowledgeBase.search` |
 | RAG đo chất lượng bằng gì? | `train/eval_rag.py` | `main` (33): Hit@1, Hit@3, MRR; kết quả ở `artifacts/rag_metrics.json` |
 | Chức năng "Hỏi bác sĩ" (RAG + Qwen)? | `mas/ask.py` | `Retriever` (177), `AskEngine.ask` (439), `QwenRunner` (264), `extractive_answer` (402) |
 | Chống bịa, chặn câu hỏi cá nhân hoặc cấp cứu? | `mas/ask.py` | `PERSONAL_RX` (129), `EMERGENCY_RX` (131), `answer_problem` (329), `BAD_PHRASES` (326) |
@@ -32,9 +36,11 @@ Mỗi file `.py` trong `project01/` đều có khối **"BẢN ĐỒ FILE"** ở
 
 ## 2. Hai điểm dễ bị hỏi
 
-- **Hai corpus RAG.** Tab Thủ thư (`kb.py`) dùng `artifacts/diabetes_corpus_niddk183.jsonl` (183 đoạn, bản đóng băng). "Hỏi bác sĩ" (`ask.py`) và Bác sĩ phản biện (`critic.py`) dùng `data/chapter04/diabetes_corpus.jsonl` (492 đoạn, 28 trang). Số Hit@1 trong báo cáo đo trên bản 183 đoạn.
+- **Một kho RAG duy nhất.** `kb.py` (Thủ thư), `ask.py` (Hỏi bác sĩ) và nút KBPassage trên Neo4j cùng dùng kho 514 đoạn = 492 đoạn web (`data/chapter04/diabetes_corpus.jsonl`) + 22 đoạn PDF (`artifacts/diabetes_pdf_passages.jsonl`). (`critic.py` vẫn đọc riêng 492 đoạn web.) Trước đây Thủ thư dùng bản 183 đoạn cũ nên số đo bị lệch; nay đã gộp.
+- **Neo4j là nguồn thật của đồ thị khi có kết nối.** `KB_BACKEND=auto` (mặc định) thử Neo4j rồi rơi về `kg.json`; `neo4j` bắt buộc; `file` không cần mạng. Văn bản đoạn để BM25 vẫn đọc từ file jsonl cho nhanh.
 - **Tranh luận của Bác sĩ phản biện** (`critic._debate`) dựng hội thoại từ mẫu câu có sẵn dựa trên bằng chứng đã tính, không phải hai mô hình ngôn ngữ nói chuyện với nhau.
 - Truy hồi của `kb.py` là BM25 theo từ khóa, không có embedding. Riêng `ask.py` có thêm truy hồi vector, hợp nhất bằng RRF.
+- Trên 40 câu hỏi, Graph-RAG của `kb.py` **không hơn** BM25 thuần (xem `artifacts/rag_metrics.json`); báo cáo ghi trung thực kết quả này.
 
 ## 3. Dữ liệu và kết quả đã lưu (`artifacts/`)
 
@@ -42,11 +48,13 @@ Mỗi file `.py` trong `project01/` đều có khối **"BẢN ĐỒ FILE"** ở
 |---|---|
 | `dl_model.npz`, `dl_metrics.json` | Trọng số MLP và số đo |
 | `rl_qtable.json`, `rl_metrics.json` | Q-table và số đo của huấn luyện viên RL |
-| `kg.json`, `kg_neo4j.cypher` | Đồ thị tri thức (41 nút, 54 cạnh) |
-| `diabetes_corpus_niddk183.jsonl` | Corpus 183 đoạn cho Thủ thư |
+| `kg.json` | Đồ thị tri thức (41 nút, 54 cạnh), bản dự phòng khi không có Neo4j; bản Cypher nằm ở `db_diabet_cypher/` |
+| `diabetes_pdf_passages.jsonl` | 22 đoạn trích từ file PDF NIDDK (nguồn PDF của KB) |
+| `demo_kb_neo4j.json` | Kết quả chạy `train/demo_kb_neo4j.py` (số nút/đoạn trên Neo4j, câu Cypher mỗi câu hỏi) |
 | `rag_metrics.json`, `ask_eval.json`, `trust_metrics.json` | Số đo RAG, hỏi bác sĩ, tin cậy và công bằng |
 
 ## 4. Chạy lại
 
 Xem `RUN.md` mục 0 để chạy phòng khám. Huấn luyện và đánh giá lại (chạy từ thư mục gốc):
-`python project01/train/train_dl.py` (cần torch), `train_rl.py`, `build_kg.py`, `eval_rag.py`, `eval_trust.py`.
+`python project01/train/train_dl.py` (cần torch), `train_rl.py`, `build_pdf_corpus.py`, `build_kg.py`, `eval_rag.py`, `eval_trust.py`;
+rồi nạp KB lên Neo4j: `python scripts/push_to_neo4j.py --only kb`; demo: `python project01/train/demo_kb_neo4j.py`.

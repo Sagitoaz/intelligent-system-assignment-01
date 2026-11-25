@@ -16,10 +16,9 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from neo4j import GraphDatabase
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from push_to_neo4j import ROOT, load_config  # noqa: E402
+from push_to_neo4j import ROOT, load_config, make_driver  # noqa: E402
 
 D = ROOT / "data"
 BATCH = 1000
@@ -292,7 +291,7 @@ def main() -> int:
     ap.add_argument("--reset", action="store_true", help="xóa các nút DSNode của bộ được chọn trước khi nạp")
     a = ap.parse_args()
     cfg = load_config()
-    driver = GraphDatabase.driver(cfg["uri"], auth=(cfg["user"], cfg["password"]))
+    driver = make_driver(cfg)  # có xử lý chứng chỉ TLS của Aura
     driver.verify_connectivity()
     with driver.session(database=cfg["database"]) as ses:
         ses.run("CREATE CONSTRAINT ds_uid IF NOT EXISTS FOR (n:DSNode) REQUIRE n.uid IS UNIQUE").consume()

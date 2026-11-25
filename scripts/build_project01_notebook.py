@@ -264,8 +264,8 @@ md(r"""
 ## 2.1. Đồ thị tri thức (Knowledge Graph)
 
 Mô hình học sâu ở Phần 1 không biết "vì sao" nguy cơ tăng. Agent tri thức cung cấp phần đó bằng một **đồ thị tri thức**: nút là khái niệm y khoa (bệnh, triệu chứng, yếu tố nguy cơ,
-xét nghiệm, điều trị, lối sống, biến chứng), cạnh là quan hệ có hướng (`raises_risk`, `symptom_of`, `diagnosed_by`...). Đồ thị do nhóm biên soạn (41 nút) dựa trên bốn trang của NIDDK,
-mỗi nút gắn với các **đoạn trích** liên quan nhất (`passages`) để mọi câu trả lời đều có nguồn. Đồ thị được xuất ra Cypher (`kg_neo4j.cypher`) để nạp vào Neo4j.
+xét nghiệm, điều trị, lối sống, biến chứng), cạnh là quan hệ có hướng (`raises_risk`, `symptom_of`, `diagnosed_by`...). Đồ thị do nhóm biên soạn (41 nút) dựa trên kho tài liệu công khai (28 trang web NIDDK/CDC/MedlinePlus và 1 file PDF của NIDDK),
+mỗi nút gắn với các **đoạn trích** liên quan nhất (`passages`, quan hệ `MENTIONS` trong Neo4j) để mọi câu trả lời đều có nguồn. Đồ thị được xuất ra ba file Cypher trong thư mục `db_diabet_cypher/` để nạp vào Neo4j.
 
 Ô dưới đếm nút theo loại, cạnh theo quan hệ và in vài sự kiện dạng "A — quan hệ — B".
 """)
@@ -326,9 +326,9 @@ print("Nguồn:", g["passages"][0]["url"])
 print("Sự kiện từ đồ thị:", g["facts"][:3])
 """)
 md(r"""
-**Đọc kết quả cụ thể:** trong ba câu mẫu, Graph-RAG chỉ đổi đoạn xếp 1 ở **câu thứ hai** (từ `tests-diagnosis:50` sang `managing-diabetes:66`, đoạn nói về hyperglycemia nên hợp ý hơn);
-hai câu còn lại giữ nguyên thứ hạng của BM25. Cũng thấy một **hạn chế**: ở câu thứ hai, các nút khớp gồm "Huyết áp cao" vì từ khóa `high` trùng với tên nút, tức khớp nút bằng từ khóa còn thô.
-Vì vậy đừng suy ra Graph-RAG luôn tốt hơn: lợi ích chỉ xuất hiện ở một phần câu hỏi và phụ thuộc chất lượng khớp nút.
+**Đọc kết quả cụ thể:** trên kho 514 đoạn, ở cả ba câu mẫu Graph-RAG **giữ nguyên** đoạn xếp 1 của BM25 (điểm cộng của đồ thị chỉ đổi thứ hạng ở các vị trí 2-3 hoặc không đổi gì).
+Cũng thấy một **hạn chế**: ở câu thứ hai, các nút khớp gồm "Huyết áp cao" và "Mỡ máu cao" vì từ khóa `high` trùng với tên nút, tức khớp nút bằng từ khóa còn thô.
+Vì vậy đừng suy ra Graph-RAG luôn tốt hơn: lợi ích (nếu có) chỉ xuất hiện ở một phần câu hỏi và phụ thuộc chất lượng khớp nút.
 """)
 code(r"""
 RAG = json.load(open(ART / "rag_metrics.json", encoding="utf-8"))
@@ -341,8 +341,31 @@ ax.set_xticks(x); ax.set_xticklabels(["hit@1", "hit@3", "MRR"]); ax.legend(); ax
 plt.tight_layout(); plt.show()
 """)
 md(r"""
-**Đọc kết quả thận trọng:** Graph-RAG nhỉnh hơn BM25 thuần, nhưng bộ đánh giá chỉ có 16 câu tiếng Anh và trọng số cộng điểm được chọn thử trên chính bộ này,
-nên đây chỉ là xu hướng, không phải bằng chứng chắc chắn.
+**Đọc kết quả thận trọng:** trên 40 câu tiếng Anh, Graph-RAG **không hơn** BM25 thuần (hit@1 bằng nhau; hit@3 và MRR thấp hơn một chút). Đây là kết quả đo đúng kho 514 đoạn;
+bản đo trước đây trên 16 câu cho thấy Graph-RAG nhỉnh hơn nhưng đo trên kho cũ không chứa đoạn đáp án nên không đáng tin. Với cỡ mẫu nhỏ như vậy, chênh lệch vài câu không có ý nghĩa thống kê.
+""")
+
+md(r"""
+## 2.3. KB_diabet trên Neo4j: RAG truy vấn đồ thị bằng Cypher
+
+Ba file Cypher trong `db_diabet_cypher/` (khái niệm, nguồn + đoạn tài liệu web/PDF, bằng chứng) được nạp lên Neo4j bằng `python scripts/push_to_neo4j.py --only kb`.
+Khi có kết nối, `KnowledgeBase` đọc đồ thị từ Neo4j và **mỗi câu hỏi chạy hai câu Cypher** (láng giềng của nút khớp và các đoạn bằng chứng `MENTIONS`); mất mạng thì tự rơi về `kg.json`.
+Ô dưới tạo một `KnowledgeBase` với backend `auto`, in backend đang dùng, số nút/đoạn trên Neo4j và số câu Cypher đã chạy cho một câu hỏi (nếu máy không có Neo4j, ô chỉ báo dùng file).
+""")
+code(r"""
+kbn = KnowledgeBase()   # KB_BACKEND=auto: thử Neo4j, lỗi thì dùng kg.json
+print("Backend đồ thị:", kbn.backend, kbn.backend_note)
+if kbn.neo:
+    for label in ("KBNode", "KBSource", "KBPassage"):
+        print(f"  (:{label}) trên Neo4j:", kbn.neo._run(f"MATCH (n:{label}) RETURN count(n) AS c")[0]["c"])
+    print("  [:MENTIONS] trên Neo4j:", kbn.neo._run("MATCH (:KBNode)-[r:MENTIONS]->(:KBPassage) RETURN count(r) AS c")[0]["c"])
+    before = kbn.neo.queries
+    r = kbn.search("Which test diagnoses prediabetes?", 3)
+    print("Số câu Cypher cho 1 câu hỏi:", kbn.neo.queries - before, "| câu gần nhất:", kbn.neo.last_cypher[:90], "...")
+    print("Đoạn tìm được:", [p["id"] for p in r["passages"]])
+    kbn.neo.close()
+else:
+    print("Máy này không có kết nối Neo4j: dùng kg.json (xem db_diabet_cypher/README.md để nạp và bật Neo4j).")
 """)
 
 # =====================================================================================================================
@@ -543,7 +566,7 @@ Nếu chỉ hỏi lại chính mô hình thì nó sẽ tự đồng ý với mì
 
 1. **Luật an toàn** (`rules.py`) cùng ngưỡng ADA mà luật dựa vào (đường huyết đói ≥ 126 mg/dL).
 2. **Số liệu thật của hồ sơ** (đường huyết, triệu chứng) và **phép thử độ nhạy** chạy lại chính mô hình khi cân nặng lệch ±5 kg.
-3. **Đoạn trích có nguồn** từ kho tri thức 492 đoạn NIDDK/CDC/MedlinePlus (`data/chapter04/diabetes_corpus.jsonl`).
+3. **Đoạn trích có nguồn** từ kho tri thức 514 đoạn: 492 đoạn từ 28 trang NIDDK/CDC/MedlinePlus (`data/chapter04/diabetes_corpus.jsonl`) và 22 đoạn từ 1 file PDF của NIDDK.
 
 Bốn phép thử: C1 đường huyết so với mô hình, C2 triệu chứng so với mô hình, C3 độ chắc chắn (hai nhóm đứng đầu cách nhau bao nhiêu), C4 độ nhạy với sai số đo.
 Khi có **mâu thuẫn thật** các agent tranh luận **tối đa 2 vòng**: vòng 1 bác sĩ phản biện nêu bằng chứng và bác sĩ dữ liệu bảo vệ; vòng 2 hộ lý an toàn nêu luật, thủ thư tri thức đọc nguyên văn tài liệu, bác sĩ phản biện kết luận.
@@ -604,7 +627,7 @@ plt.axvline(whatif.bmi_curve(clinic, minh)["current"]["bmi"], color="#e8503a", l
 md(r"""
 # Phần 5d. Hỏi bác sĩ bằng câu hỏi tự do (RAG có trích dẫn)
 
-Tab "Hỏi bác sĩ" (`mas/ask.py`, `POST /api/ask`) trả lời câu hỏi tiếng Việt hoặc tiếng Anh dựa trên **kho 492 đoạn** NIDDK/CDC/MedlinePlus (`data/chapter04/diabetes_corpus.jsonl`).
+Tab "Hỏi bác sĩ" (`mas/ask.py`, `POST /api/ask`) trả lời câu hỏi tiếng Việt hoặc tiếng Anh dựa trên **kho 514 đoạn** (492 đoạn NIDDK/CDC/MedlinePlus từ `data/chapter04/diabetes_corpus.jsonl` và 22 đoạn từ 1 file PDF của NIDDK).
 Quy trình: (1) dịch từ khóa y khoa Việt→Anh bằng bảng thuật ngữ; (2) truy hồi lai BM25 + đồ thị tri thức + vector MiniLM; (3) soạn câu trả lời **kèm trích dẫn [1], [2]** ánh xạ tới đoạn và URL.
 Có thể nhờ Qwen2.5-1.5B-Instruct viết lại, nhưng máy thiếu bộ nhớ ảo nên mặc định dùng **câu trả lời trích đoạn**; Qwen chạy chậm (40–140 giây) và bộ kiểm tra bám tài liệu thường loại câu sinh ra, khi đó hệ thống nói rõ đang dùng chế độ trích đoạn.
 Hệ thống **từ chối** khi cần chẩn đoán/liều thuốc cá nhân, khi có dấu hiệu cấp cứu, hoặc khi không có đoạn đủ liên quan.
@@ -693,7 +716,7 @@ md(r"""
 **Hạn chế cần nói rõ khi trình bày**
 - MLP chỉ đạt AUC ≈ 0,78 và gần như không phân biệt được tiền tiểu đường: dữ liệu khảo sát không có xét nghiệm máu.
 - BRFSS là khảo sát tự khai ở Hoa Kỳ năm 2015, chỉ phản ánh tương quan, không đại diện cho mọi quần thể.
-- Đồ thị tri thức nhỏ (41 nút), tài liệu nguồn bằng tiếng Anh, bộ đánh giá RAG chỉ có 16 câu.
+- Đồ thị tri thức nhỏ (41 nút), tài liệu nguồn bằng tiếng Anh, bộ đánh giá RAG chỉ có 40 câu.
 - Mô phỏng 24 giờ là mô hình đồ chơi với tham số đặt theo trực giác; kết quả RL gần tối đa chỉ có ý nghĩa trong môi trường này.
 
 **Câu hỏi trình bày**

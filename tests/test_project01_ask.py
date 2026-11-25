@@ -34,9 +34,22 @@ def _hits(engine, q, k=3):
     return [h["id"] for h in engine.retriever.search(q, k)["hits"]]
 
 
-def test_corpus_is_the_new_492_passages(engine):
-    assert len(engine.retriever.passages) == 492
-    assert {p["org"] for p in engine.retriever.passages} == {"NIDDK", "CDC", "MedlinePlus"}
+def test_corpus_is_492_web_plus_pdf_passages(engine):
+    """Kho = 492 đoạn từ 28 trang web + các đoạn từ file PDF NIDDK; cùng kho với KB (mas/kb.py)."""
+    passages = engine.retriever.passages
+    pdf = [p for p in passages if p["type"] == "pdf"]
+    assert len(passages) - len(pdf) == 492 and 15 <= len(pdf) <= 40
+    assert {p["org"] for p in passages} == {"NIDDK", "CDC", "MedlinePlus"}
+    assert all(p["url"].lower().endswith(".pdf") for p in pdf)
+    assert {p["id"] for p in passages} == {p["id"] for p in engine.retriever.kb.passages}  # RAG và KB dùng đúng cùng kho
+
+
+def test_kb_evidence_ids_exist_in_the_corpus(engine):
+    """Mọi id đoạn mà nút KB trỏ tới (dây nối KB-RAG, cũng là quan hệ MENTIONS trong Neo4j) phải có thật trong kho."""
+    kb = engine.retriever.kb
+    ids = {p["id"] for p in engine.retriever.passages}
+    linked = {pid for n in kb.nodes.values() for pid in n["passages"]}
+    assert linked and linked <= ids
 
 
 def test_vietnamese_term_mapping():
@@ -109,8 +122,8 @@ def test_retrieval_eval_writes_artifact(engine):
     both = dict(questions=en["questions"] + vi["questions"], hits_at_1=en["hits_at_1"] + vi["hits_at_1"], hits_at_3=en["hits_at_3"] + vi["hits_at_3"])
     both["hit_at_1"], both["hit_at_3"] = round(both["hits_at_1"] / both["questions"], 3), round(both["hits_at_3"] / both["questions"], 3)
     hybrid = engine.retriever.dense is not None
-    out = dict(corpus="data/chapter04/diabetes_corpus.jsonl (492 đoạn, 28 trang)", qa="data/chapter04/diabetes_qa_demo.json",
-               retriever="hybrid: BM25 + mở rộng đồ thị tri thức + vector MiniLM (RRF)" if hybrid else "BM25 + mở rộng đồ thị tri thức (mô hình vector không nạp được)",
+    out = dict(corpus="data/chapter04/diabetes_corpus.jsonl (492 đoạn, 28 trang web) + project01/artifacts/diabetes_pdf_passages.jsonl (22 đoạn, 1 PDF) = 514 đoạn", qa="data/chapter04/diabetes_qa_demo.json",
+               retriever="hybrid: BM25 + mở rộng và cộng điểm bằng đồ thị tri thức + vector MiniLM (RRF)" if hybrid else "BM25 + mở rộng đồ thị tri thức (mô hình vector không nạp được)",
                hybrid=hybrid, english=en, vietnamese=vi, combined=both,
                note="Đoạn kỳ vọng do người viết gắn tay (gold_ids); một câu có thể có nhiều đoạn đúng nhưng chỉ tính các đoạn đã gắn nên số liệu là cận dưới. "
                     "Câu tiếng Việt do người dịch tay từ 12 câu tiếng Anh và đi qua bảng thuật ngữ Việt-Anh, không qua Qwen.")
