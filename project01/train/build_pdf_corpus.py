@@ -1,5 +1,11 @@
 """Biến file PDF nguồn của KB tiểu đường thành các đoạn (passage) để RAG và Neo4j dùng chung với kho 492 đoạn từ web.
 
+NÓI ĐƠN GIẢN (đây là chỗ trả lời ý "tạo nguồn từ 3 link + PDF" của thầy):
+  - RAG không đọc được cả cuốn PDF một lần; phải cắt thành các đoạn ngắn (~50-150 từ), mỗi đoạn là một "mảnh tri thức" có thể trích dẫn.
+  - Script này: mở PDF -> lấy chữ từng trang -> bỏ rác (số trang, số điện thoại, mục lục) -> gom thành đoạn -> ghi ra file jsonl (mỗi dòng một đoạn).
+  - Các đoạn PDF có cùng định dạng với đoạn từ web nên được đối xử như nhau; chỉ khác trường "source_type": "pdf" và "page" (số trang) để biết trích từ đâu.
+  - 20 trang PDF -> 22 đoạn. Có thể kiểm tra: mở artifacts/diabetes_pdf_passages.jsonl, so với PDF gốc.
+
 Chạy: python project01/train/build_pdf_corpus.py   (không cần mạng nếu PDF đã nằm trong data/project01/)
 
 Nguồn PDF (tài liệu công khai của chính phủ Mỹ, NIDDK/NIH, 20 trang):
@@ -34,7 +40,7 @@ NOISE = re.compile(r"(^\d+$|^national diabetes education program|^1-800|^www\.|^
 
 
 def ensure_pdf() -> None:
-    """Tải PDF về nếu chưa có (kiểm tra đúng là PDF bằng 4 byte đầu)."""
+    """Tải PDF về nếu chưa có (kiểm tra đúng là PDF bằng 4 byte đầu: mọi file PDF thật đều bắt đầu bằng "%PDF")."""
     if os.path.isfile(PDF_PATH):
         return
     os.makedirs(os.path.dirname(PDF_PATH), exist_ok=True)
@@ -47,17 +53,19 @@ def ensure_pdf() -> None:
 
 
 def clean(text: str) -> str:
-    """Gộp khoảng trắng, đổi ký tự gạch đầu dòng lạ của PDF (thường thành �) thành dấu gạch ngang, nối từ bị ngắt dòng."""
+    """Gộp khoảng trắng, đổi ký tự gạch đầu dòng lạ của PDF (thường thành �) thành dấu gạch ngang, nối từ bị ngắt dòng.
+    Nói đơn giản: chữ lấy từ PDF hay bị xuống dòng giữa chừng và có ký tự lạ; hàm này "làm sạch" để thành câu liền mạch."""
     text = text.replace("�", "-").replace("•", "-").replace("\xa0", " ")
     text = re.sub(r"-\s*\n\s*", "", text) if re.search(r"[a-z]-\n[a-z]", text) else text
     return re.sub(r"\s+", " ", text).strip()
 
 
 def page_paragraphs(page) -> list[str]:
-    """Trả về các khối chữ của một trang theo thứ tự đọc (PyMuPDF 'blocks'), bỏ khối nhiễu."""
+    """Trả về các khối chữ của một trang theo thứ tự đọc (PyMuPDF 'blocks'), bỏ khối nhiễu.
+    Nói đơn giản: PyMuPDF chia trang thành các "khối chữ" (mỗi khối ~ một đoạn văn). Ta sắp theo vị trí từ trên xuống, trái sang phải."""
     out = []
     for b in sorted(page.get_text("blocks"), key=lambda b: (round(b[1] / 8), b[0])):
-        t = clean(b[4]) if b[6] == 0 else ""
+        t = clean(b[4]) if b[6] == 0 else ""   # b[4] = chữ của khối; b[6] == 0 nghĩa là khối chữ (khác 1 = ảnh) nên bỏ ảnh
         if t and not NOISE.search(t) and len(t.split()) >= 3:
             out.append(t)
     return out
@@ -72,10 +80,11 @@ def main() -> int:
     doc = pymupdf.open(PDF_PATH)
     accessed = time.strftime("%Y-%m-%d")
     rows = []
-    for pno, page in enumerate(doc, 1):
-        buf: list[str] = []
+    for pno, page in enumerate(doc, 1):   # pno = số trang (từ 1)
+        buf: list[str] = []              # "giỏ" gom các khối chữ cho tới khi đủ dài thì đóng thành một đoạn
 
         def flush():
+            """Đóng giỏ hiện tại thành MỘT đoạn (nếu đủ dài và không phải mục lục/chân trang) rồi đổ giỏ."""
             text = " ".join(buf).strip()
             if len(text.split()) >= MIN_WORDS and not SKIP_TEXT.search(text):
                 rows.append(dict(id=f"niddk-4steps-pdf:{len(rows)}", text=f"{TITLE} - trang {pno}: {text}", title=TITLE, section=f"Trang {pno}",
@@ -84,7 +93,7 @@ def main() -> int:
             buf.clear()
 
         for para in page_paragraphs(page):
-            if len(" ".join(buf + [para]).split()) > MAX_WORDS:
+            if len(" ".join(buf + [para]).split()) > MAX_WORDS:   # thêm khối này sẽ vượt 150 từ -> đóng đoạn cũ trước, khối này sang đoạn mới
                 flush()
             buf.append(para)
         flush()

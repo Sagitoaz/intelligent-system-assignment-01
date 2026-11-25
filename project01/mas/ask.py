@@ -222,7 +222,9 @@ class Retriever:
             self.dense_ready.set()
 
     def build_query(self, question: str, english: str | None = None) -> tuple[list[str], list[str], str, list[str]]:
-        """Trả về (token BM25, nút đồ thị khớp, câu tiếng Anh cho vector, từ mở rộng từ đồ thị). Từ khóa chính lặp 2 lần; từ mở rộng từ đồ thị lặp 1 lần."""
+        """Trả về (token BM25, nút đồ thị khớp, câu tiếng Anh cho vector, từ mở rộng từ đồ thị). Từ khóa chính lặp 2 lần; từ mở rộng từ đồ thị lặp 1 lần.
+        Nói đơn giản: biến câu hỏi thành "phiếu tìm kiếm". Từ khóa của câu hỏi nặng gấp đôi; từ gợi ý thêm từ đồ thị (vd nút "Xét nghiệm A1C" gợi ý
+        thêm "average blood glucose") nhẹ hơn (x0,35) để bổ sung chứ không lấn át ý người hỏi."""
         # Bước 1: có câu tiếng Anh sẵn thì dùng; nếu là tiếng Việt thì dịch bằng bảng TERMS; nếu đã là tiếng Anh thì giữ nguyên.
         base = english if english else (" ".join(vi_to_en_terms(question)) if detect_vi(question) else question)
         main = tokens(base)
@@ -236,12 +238,22 @@ class Retriever:
 
     def search(self, question: str, k: int = 3, english: str | None = None, use_dense: bool = True) -> dict:
         """Truy hồi top-k đoạn. Trả về dict(hits=[{id, quote, url, score, bm25, title, section, org}], seeds=nút đồ thị khớp, query, hybrid, relevant).
-        relevant=False nghĩa là không đủ liên quan -> AskEngine từ chối thay vì đoán (chống bịa)."""
+        relevant=False nghĩa là không đủ liên quan -> AskEngine từ chối thay vì đoán (chống bịa).
+
+        NÓI ĐƠN GIẢN - một câu hỏi đi qua 5 bước (ví dụ "Xét nghiệm A1C là gì?"):
+          1) Dịch ra từ khóa tiếng Anh ("A1C test") vì tài liệu bằng tiếng Anh.
+          2) Hỏi KB: câu này liên quan khái niệm nào? -> nút "Xét nghiệm A1C".
+          3) Hỏi Neo4j (Cypher): nút đó có những đoạn bằng chứng nào? -> các đoạn này được CỘNG 1 điểm (đây là chỗ KB giúp RAG).
+          4) Hai "người tìm" chạy song song: BM25 (khớp từ khóa) và vector (khớp ý nghĩa).
+          5) Gộp hai bảng xếp hạng bằng RRF rồi lấy top-k; nếu điểm quá thấp thì từ chối thay vì đoán (chống bịa)."""
         qt, seeds, base, extra = self.build_query(question, english)
         if not qt:
             return dict(hits=[], seeds=seeds, query=[], hybrid=False, relevant=False)
         # Nhánh từ khóa: điểm BM25 của từ khóa gốc (đã nhân đôi trọng số ở build_query).
         sc = self.bm25.scores(qt)
+        # >>> ĐÂY LÀ CHỖ "RAG NỐI VỚI KB" <<<  (thầy hỏi "RAG liên kết KB_diabet qua code ở đâu?" -> chỉ vào 3 dòng bên dưới)
+        # self.kb.evidence(...) = hỏi đồ thị "các nút này có bằng chứng ở đoạn nào?"; khi KB chạy bằng Neo4j thì đây là một câu Cypher thật.
+        # Bỏ nút "diabetes" vì quá chung chung (nó gắn với mọi thứ nên cộng điểm cho nó chẳng giúp phân biệt đoạn nào).
         if self.kb and seeds:  # KB -> RAG: đoạn là bằng chứng (MENTIONS) của nút khớp câu hỏi được cộng 1,0 điểm; ids lấy từ Neo4j bằng Cypher khi có kết nối
             ev = {pid for pids in self.kb.evidence([n for n in seeds if n != "diabetes"]).values() for pid in pids}
             sc = [a + (1.0 if p["id"] in ev else 0.0) for a, p in zip(sc, self.passages)]
@@ -519,6 +531,7 @@ class AskEngine:
             if not found.get("hybrid"):
                 notes.append("Tìm kiếm tạm chỉ dùng từ khóa (BM25) vì mô hình vector chưa nạp xong; kết quả có thể kém chính xác hơn.")
         hits = found["hits"]
+        # found["graph"] cho biết đồ thị vừa được đọc từ đâu ("neo4j" hay "file"); chỉ khi là Neo4j mới thêm ghi chú để người dùng/thầy thấy.
         if found.get("graph") == "neo4j":  # cho người dùng biết đồ thị tri thức đang được truy vấn từ Neo4j (không phải từ tệp)
             notes.append("Đồ thị tri thức được truy vấn từ Neo4j bằng Cypher để mở rộng truy vấn và cộng điểm cho đoạn bằng chứng.")
         intro = personal_intro(profile)

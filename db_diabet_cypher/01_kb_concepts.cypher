@@ -1,5 +1,6 @@
 // KB_diabet - FILE 1/3: khái niệm y khoa (KBNode) và quan hệ giữa chúng. Do project01/train/build_kg.py sinh ra, đừng sửa tay.
 // 41 nút, 54 cạnh. Chạy theo thứ tự 01 -> 02 -> 03:  cypher-shell -f 01_kb_concepts.cypher  (hoặc python scripts/push_to_neo4j.py --only kb)
+// Nói đơn giản: CREATE (:KBNode {...}) = tạo một nút khái niệm; MATCH (a),(b) CREATE (a)-[:TÊN_QUAN_HỆ]->(b) = vẽ mũi tên giữa hai nút.
 MATCH (n:KBNode) DETACH DELETE n;
 CREATE CONSTRAINT kb_id IF NOT EXISTS FOR (n:KBNode) REQUIRE n.id IS UNIQUE;
 CREATE (:KBNode {id:'diabetes', label:'Diabetes', vi:'Bệnh tiểu đường', type:'condition', desc:'Bệnh xảy ra khi đường huyết (glucose) trong máu quá cao vì cơ thể thiếu hoặc không dùng tốt insulin.', aliases:['tiểu đường', 'đái tháo đường', 'diabetes'], aliases_en:['diabetes blood glucose insulin']});

@@ -132,7 +132,8 @@ def main():
 
 
 def q(s: str) -> str:
-    """Thoát dấu \\ và ' rồi đổi xuống dòng thành khoảng trắng để chuỗi tiếng Việt/tiếng Anh nằm gọn trên MỘT dòng Cypher."""
+    """Thoát dấu \\ và ' rồi đổi xuống dòng thành khoảng trắng để chuỗi tiếng Việt/tiếng Anh nằm gọn trên MỘT dòng Cypher.
+    Nói đơn giản: trong Cypher chuỗi nằm giữa hai dấu ' nên nếu văn bản có dấu ' (vd "don't") phải viết thành \\' kẻo câu lệnh bị cắt ngang."""
     return " ".join(str(s).split()).replace("\\", "\\\\").replace("'", "\\'")
 
 
@@ -143,7 +144,13 @@ def lst(items) -> str:
 
 def write_cypher(nodes: list[dict], edges: list[dict], passages: list[dict]) -> None:
     """Sinh 3 file Cypher vào db_diabet_cypher/. Quy ước: MỖI CÂU LỆNH MỘT DÒNG, kết thúc bằng dấu ';' (push_to_neo4j.py đọc theo dòng);
-    dòng bắt đầu bằng // là chú thích. Đoạn tài liệu nạp theo lô UNWIND (25 đoạn/lệnh) để đẩy lên Aura nhanh."""
+    dòng bắt đầu bằng // là chú thích. Đoạn tài liệu nạp theo lô UNWIND (25 đoạn/lệnh) để đẩy lên Aura nhanh.
+
+    NÓI ĐƠN GIẢN: hàm này "dịch" dữ liệu Python (danh sách nút N, cạnh E, đoạn tài liệu) thành câu lệnh Cypher để Neo4j hiểu.
+      - File 01: CREATE (:KBNode {...}) = "tạo một nút"; MATCH (a),(b) CREATE (a)-[:QUAN_HE]->(b) = "vẽ mũi tên từ a sang b".
+      - File 02: tạo nút KBSource (trang web/PDF) và KBPassage (từng đoạn văn), nối bằng HAS_PASSAGE = "trang này chứa đoạn này".
+      - File 03: nối KBNode -> KBPassage bằng MENTIONS = "đoạn này là bằng chứng cho khái niệm này" (rank 1 = khớp nhất).
+    Mỗi file mở đầu bằng DETACH DELETE (xóa dữ liệu cũ của chính nó) nên chạy lại bao nhiêu lần cũng không bị trùng."""
     os.makedirs(CYPHER_DIR, exist_ok=True)
 
     def save(name: str, lines: list[str]) -> None:
@@ -153,6 +160,7 @@ def write_cypher(nodes: list[dict], edges: list[dict], passages: list[dict]) -> 
     # --- 01: khái niệm y khoa. Mỗi nút -> CREATE (:KBNode {...}); mỗi cạnh -> MATCH hai nút rồi CREATE quan hệ (tên quan hệ viết HOA)
     l1 = ["// KB_diabet - FILE 1/3: khái niệm y khoa (KBNode) và quan hệ giữa chúng. Do project01/train/build_kg.py sinh ra, đừng sửa tay.",
           f"// {len(nodes)} nút, {len(edges)} cạnh. Chạy theo thứ tự 01 -> 02 -> 03:  cypher-shell -f 01_kb_concepts.cypher  (hoặc python scripts/push_to_neo4j.py --only kb)",
+          "// Nói đơn giản: CREATE (:KBNode {...}) = tạo một nút khái niệm; MATCH (a),(b) CREATE (a)-[:TÊN_QUAN_HỆ]->(b) = vẽ mũi tên giữa hai nút.",
           "MATCH (n:KBNode) DETACH DELETE n;",
           "CREATE CONSTRAINT kb_id IF NOT EXISTS FOR (n:KBNode) REQUIRE n.id IS UNIQUE;"]
     for n in nodes:
@@ -169,6 +177,7 @@ def write_cypher(nodes: list[dict], edges: list[dict], passages: list[dict]) -> 
         s["n"] += 1
     l2 = ["// KB_diabet - FILE 2/3: nguồn tài liệu (KBSource: trang web hoặc PDF) và từng đoạn trích (KBPassage). Do build_kg.py sinh ra, đừng sửa tay.",
           f"// {len(sources)} nguồn ({sum(s['type'] == 'pdf' for s in sources.values())} PDF), {len(passages)} đoạn. Văn bản đoạn là nguyên văn tiếng Anh từ tài liệu gốc.",
+          "// Nói đơn giản: KBSource = một trang web hoặc file PDF; KBPassage = một đoạn văn trích từ đó; HAS_PASSAGE = 'trang này chứa đoạn này'.",
           "MATCH (n:KBPassage) DETACH DELETE n;", "MATCH (n:KBSource) DETACH DELETE n;",
           "CREATE CONSTRAINT kb_passage_id IF NOT EXISTS FOR (n:KBPassage) REQUIRE n.id IS UNIQUE;",
           "CREATE CONSTRAINT kb_source_url IF NOT EXISTS FOR (n:KBSource) REQUIRE n.url IS UNIQUE;"]
@@ -184,7 +193,8 @@ def write_cypher(nodes: list[dict], edges: list[dict], passages: list[dict]) -> 
     # --- 03: bằng chứng của từng khái niệm (rank 1 = đoạn khớp nhất theo BM25)
     triples = [(n["id"], pid, r) for n in nodes for r, pid in enumerate(n["passages"], 1)]
     l3 = ["// KB_diabet - FILE 3/3: bằng chứng. (KBNode)-[:MENTIONS {rank}]->(KBPassage); rank 1 = đoạn khớp nhất. Do build_kg.py sinh ra, đừng sửa tay.",
-          f"// {len(triples)} liên kết. Đây là chỗ RAG đi từ khái niệm trong đồ thị tới đoạn tài liệu (mas/neo4j_kb.py: evidence())."]
+          f"// {len(triples)} liên kết. Đây là chỗ RAG đi từ khái niệm trong đồ thị tới đoạn tài liệu (mas/neo4j_kb.py: evidence()).",
+          "// Nói đơn giản: MENTIONS = 'đoạn văn này là bằng chứng cho khái niệm này'; rank 1 = đoạn khớp nhất. Mỗi dòng UNWIND nạp một lô liên kết cùng lúc cho nhanh."]
     for i in range(0, len(triples), 50):
         rows = ", ".join(f"['{a}', '{q(b)}', {r}]" for a, b, r in triples[i:i + 50])
         l3.append(f"UNWIND [{rows}] AS t MATCH (n:KBNode {{id:t[0]}}), (p:KBPassage {{id:t[1]}}) CREATE (n)-[:MENTIONS {{rank:t[2]}}]->(p);")

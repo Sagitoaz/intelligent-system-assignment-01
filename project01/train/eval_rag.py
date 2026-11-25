@@ -1,4 +1,4 @@
-"""Đánh giá truy xuất của agent tri thức trên 16 câu hỏi có đáp án (data/chapter04/diabetes_qa_demo.json).
+"""Đánh giá truy xuất của agent tri thức trên 40 câu hỏi có đáp án (data/chapter04/diabetes_qa_demo.json).
 
 So sánh BM25 thuần và Graph-RAG (mở rộng truy vấn qua đồ thị tri thức). Chỉ số: hit@1, hit@3 theo đoạn gold, MRR.
 Chạy: python project01/train/eval_rag.py  -> project01/artifacts/rag_metrics.json
@@ -7,16 +7,20 @@ Chạy: python project01/train/eval_rag.py  -> project01/artifacts/rag_metrics.j
 BẢN ĐỒ FILE
 ======================================================================================================
 Chức năng: đo chất lượng TRUY XUẤT (retrieval) của agent tri thức, trả lời câu hỏi "Graph-RAG có tốt hơn BM25 thuần không?".
-Đọc : data/chapter04/diabetes_qa_demo.json (16 câu hỏi, mỗi câu có `gold_ids` = các đoạn tài liệu chứa đáp án đúng);
-      KnowledgeBase trong mas/kb.py (corpus NIDDK 183 đoạn + kg.json).
+Đọc : data/chapter04/diabetes_qa_demo.json (40 câu hỏi, mỗi câu có `gold_ids` = các đoạn tài liệu chứa đáp án đúng);
+      KnowledgeBase trong mas/kb.py (kho 514 đoạn = 492 web + 22 PDF; đồ thị từ Neo4j hoặc kg.json - kết quả hai cách giống hệt nhau).
 Ghi : artifacts/rag_metrics.json (hit@1, hit@3, MRR và thứ hạng từng câu; giao diện/báo cáo đọc file này).
 Hàm : main() - chạy hai chế độ: "BM25" (graph=False) và "Graph-RAG" (graph=True: mở rộng truy vấn bằng nút láng giềng trong KG).
 Giải thích chỉ số (nên thuộc khi bảo vệ):
   - rank   : vị trí đầu tiên trong 5 đoạn trả về mà đoạn đó thuộc gold_ids (None nếu không có đoạn đúng trong top 5)
   - hit@1  : tỉ lệ câu có đoạn đúng đứng ĐẦU ; hit@3 : tỉ lệ câu có đoạn đúng nằm trong 3 đoạn đầu
   - MRR    : Mean Reciprocal Rank = trung bình của 1/rank (rank None tính 0); càng gần 1 càng tốt
-Kết quả đã lưu: BM25 hit@1 0,375 / hit@3 0,5625 / MRR 0,4844 ; Graph-RAG hit@1 0,4375 / hit@3 0,625 / MRR 0,5208 (16 câu).
-Cỡ mẫu nhỏ (16 câu) nên chênh lệch chỉ mang tính minh họa, không đủ để kết luận có ý nghĩa thống kê.
+Kết quả đã lưu (40 câu): BM25 hit@1 0,35 / hit@3 0,525 / MRR 0,457 ; Graph-RAG hit@1 0,35 / hit@3 0,50 / MRR 0,451.
+=> Graph-RAG KHÔNG hơn BM25 thuần trên bộ này. Cỡ mẫu nhỏ nên chênh lệch vài câu không có ý nghĩa thống kê; nên nói thật như vậy với thầy.
+
+NÓI ĐƠN GIẢN: ta cho 40 câu hỏi mà đã biết trước đoạn tài liệu chứa đáp án (gold_ids). Với mỗi câu, cho hệ tìm 5 đoạn rồi xem đoạn đúng
+đứng thứ mấy. hit@1 = bao nhiêu % câu có đoạn đúng đứng đầu; hit@3 = nằm trong 3 đầu; MRR = điểm trung bình theo vị trí (đứng nhất = 1, nhì = 0,5...).
+Lưu ý lịch sử: bản đo cũ (16 câu, Graph-RAG nhỉnh hơn) chạy trên kho 183 đoạn không chứa đoạn đáp án nên không đáng tin; đã đo lại.
 ======================================================================================================
 """
 import json

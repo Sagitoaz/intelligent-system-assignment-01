@@ -1,5 +1,12 @@
 """Kết nối Neo4j (Aura hoặc local) để RAG của Project 01 truy vấn đồ thị tri thức KB_diabet bằng Cypher.
 
+NÓI ĐƠN GIẢN (đọc phần này trước):
+  - Neo4j là "cuốn sổ tay quan hệ": mỗi khái niệm y khoa (vd "Tiền tiểu đường") là một nút, mối liên hệ ("được chẩn đoán bằng") là một mũi tên.
+  - Cypher là ngôn ngữ để hỏi Neo4j, giống SQL nhưng cho đồ thị. Ví dụ: MATCH (a)-[:DIAGNOSED_BY]->(b) RETURN a, b = "tìm cặp a, b nối bằng mũi tên DIAGNOSED_BY".
+  - File này chỉ làm 1 việc: mở kết nối tới Neo4j rồi chạy 3 câu hỏi Cypher (nạp đồ thị, hỏi láng giềng, hỏi bằng chứng). RAG (mas/kb.py) gọi nó
+    để biết "câu hỏi này liên quan khái niệm nào, và đoạn tài liệu nào chứng minh khái niệm đó".
+  - Nếu Neo4j hỏng/không có mạng thì file này báo lỗi, KnowledgeBase tự chuyển sang đọc kg.json -> demo không bao giờ chết.
+
 =====================  BẢN ĐỒ FILE (thầy hỏi "RAG nối với KB qua code ở đâu?" thì mở file này)  =====================
 Chức năng: lớp mỏng bọc driver `neo4j`. mas/kb.py (KnowledgeBase) gọi các hàm ở đây để:
     - load_graph()  : nạp toàn bộ nút KBNode + cạnh khi khởi động (nguồn thật của đồ thị là Neo4j, kg.json chỉ là bản dự phòng);
@@ -40,7 +47,9 @@ def _read_env_file(path: str) -> dict[str, str]:
 
 
 def load_config() -> dict[str, str] | None:
-    """Gom cấu hình kết nối; trả None nếu thiếu URI hoặc mật khẩu (khi đó KB dùng file)."""
+    """Gom cấu hình kết nối; trả None nếu thiếu URI hoặc mật khẩu (khi đó KB dùng file).
+    Nói đơn giản: địa chỉ + tài khoản + mật khẩu Neo4j không nằm trong code (để không lộ lên git) mà đọc từ file Neo4j-*.txt tải từ Aura.
+    Nguồn đọc theo thứ tự, nguồn sau ĐÈ nguồn trước: backend/.env < file Neo4j-*.txt (mới nhất) < biến môi trường."""
     cfg: dict[str, str] = {}
     aura = sorted(glob.glob(os.path.join(ROOT, "Neo4j-*.txt")), key=os.path.getmtime)  # file Aura tải về: file MỚI NHẤT được ưu tiên (instance cũ có thể đã bị xóa)
     for p in [os.path.join(ROOT, "backend", ".env"), *aura, os.path.join(ROOT, "neo4j.txt")]:
@@ -61,9 +70,9 @@ def make_driver(cfg: dict[str, str], **kwargs):
     SSL.com mà nhiều máy Windows chưa có root này ("self-signed certificate in certificate chain"). VẪN xác thực chứng chỉ đầy đủ (không dùng +ssc)."""
     from neo4j import GraphDatabase
 
-    uri = cfg["uri"]
+    uri = cfg["uri"]                      # vd "neo4j+s://xxxx.databases.neo4j.io": "+s" nghĩa là kết nối được mã hóa (TLS)
     scheme, rest = uri.split("://", 1)
-    if scheme.endswith("+s"):
+    if scheme.endswith("+s"):             # nói đơn giản: giống "ổ khóa https"; ta chỉ đổi nơi lấy danh sách "nhà cấp chứng chỉ tin cậy", KHÔNG tắt kiểm tra
         try:
             import certifi
             from neo4j import TrustCustomCAs
@@ -76,7 +85,8 @@ def make_driver(cfg: dict[str, str], **kwargs):
 
 
 class Neo4jKB:
-    """Một kết nối Neo4j dùng chung; mọi truy vấn đi qua _run() để đếm số lần gọi và lưu câu Cypher cuối (phục vụ demo)."""
+    """Một kết nối Neo4j dùng chung; mọi truy vấn đi qua _run() để đếm số lần gọi và lưu câu Cypher cuối (phục vụ demo).
+    Nói đơn giản: giống một "quầy hỏi đáp" tới Neo4j. Có 3 câu hỏi chuẩn: load_graph (lấy cả đồ thị), neighbors (ai là láng giềng), evidence (bằng chứng ở đâu)."""
 
     def __init__(self, cfg: dict[str, str]):
         self.cfg = cfg  # neo4j được nạp lười trong make_driver: máy không cài neo4j vẫn chạy được bằng file
@@ -118,12 +128,16 @@ class Neo4jKB:
         return nodes, edges
 
     def neighbors(self, ids: list[str]) -> list[str]:
-        """Láng giềng 1 bước (cả hai chiều) của các nút `ids`, không trùng, theo thứ tự id."""
+        """Láng giềng 1 bước (cả hai chiều) của các nút `ids`, không trùng, theo thứ tự id.
+        Ví dụ: ids=["prediabetes"] -> ["a1c", "fpg", "type2", ...] (các khái niệm nối trực tiếp với "Tiền tiểu đường").
+        Cypher: (n)--(m) = "n và m nối nhau bằng BẤT KỲ mũi tên nào, chiều nào"; $ids là tham số truyền vào (an toàn, không ghép chuỗi)."""
         rows = self._run("MATCH (n:KBNode)--(m:KBNode) WHERE n.id IN $ids RETURN DISTINCT m.id AS id ORDER BY id", ids=ids)
         return [r["id"] for r in rows]
 
     def evidence(self, ids: list[str]) -> dict[str, list[str]]:
-        """Với mỗi nút trong `ids`: danh sách id đoạn tài liệu mà nút MENTIONS, theo thứ hạng (1 = khớp nhất)."""
+        """Với mỗi nút trong `ids`: danh sách id đoạn tài liệu mà nút MENTIONS, theo thứ hạng (1 = khớp nhất).
+        Ví dụ: ids=["a1c"] -> {"a1c": ["a1c-test:0", "a1c-test:19", "a1c-test:20"]}.
+        Đây chính là "dây nối KB -> RAG": khái niệm trong đồ thị trỏ tới đoạn văn thật (web hoặc PDF) làm bằng chứng. RAG dùng nó để cộng điểm cho đoạn đó."""
         rows = self._run("MATCH (n:KBNode)-[m:MENTIONS]->(p:KBPassage) WHERE n.id IN $ids "
                          "RETURN n.id AS nid, p.id AS pid ORDER BY nid, m.rank", ids=ids)
         out: dict[str, list[str]] = {}
@@ -137,7 +151,8 @@ class Neo4jKB:
 
 
 def connect(mode: str | None = None) -> Neo4jKB | None:
-    """Tạo kết nối theo KB_BACKEND. file -> None. auto -> Neo4jKB nếu kết nối + có dữ liệu, ngược lại None. neo4j -> bắt buộc, lỗi thì ném ngoại lệ."""
+    """Tạo kết nối theo KB_BACKEND. file -> None. auto -> Neo4jKB nếu kết nối + có dữ liệu, ngược lại None. neo4j -> bắt buộc, lỗi thì ném ngoại lệ.
+    Nói đơn giản: trả về None nghĩa là "đừng dùng Neo4j, đọc file". Chế độ auto là cầu chì an toàn: có mạng thì dùng Neo4j, không thì dùng file."""
     mode = (mode or os.environ.get("KB_BACKEND", "auto")).lower()
     if mode == "file":
         return None

@@ -66,6 +66,9 @@ def load_config() -> dict[str, str]:
 
 
 def run_cypher_file(session, path: Path, split_lines: bool = False) -> int:
+    """Đọc một file .cypher và chạy từng câu lệnh lên Neo4j, trả về số câu lệnh đã chạy.
+    Nói đơn giản: file .cypher chỉ là chữ; hàm này "gửi từng dòng lệnh" cho Neo4j thực hiện (giống chạy file .sql).
+    split_lines=True: mỗi dòng là một lệnh (đúng định dạng 3 file trong db_diabet_cypher/); dòng bắt đầu bằng // là chú thích nên bỏ qua."""
     text = path.read_text(encoding="utf-8")
     if split_lines:  # file một câu lệnh/dòng, kết thúc bằng ';'
         stmts = [ln.strip().rstrip(";") for ln in text.splitlines() if ln.strip() and not ln.startswith("//")]
@@ -155,6 +158,7 @@ def main() -> int:
             n = run_cypher_file(s, ROOT / "knowledge_graph" / "cypher" / "diabetes_knowledge_graph.cypher")
             print(f"[1] diabetes_knowledge_graph.cypher: {n} câu lệnh")
         if a.only in (None, "kb", "project01"):
+            # KB_diabet: chạy 3 file theo thứ tự tên 01 -> 02 -> 03 (phải có nút KBNode và KBPassage trước rồi mới nối được liên kết MENTIONS)
             for f in sorted((ROOT / "db_diabet_cypher").glob("0*_*.cypher")):  # thứ tự 01 -> 02 -> 03 (nút, rồi đoạn tài liệu, rồi liên kết MENTIONS)
                 n = run_cypher_file(s, f, split_lines=True)
                 print(f"[2] db_diabet_cypher/{f.name}: {n} câu lệnh", flush=True)

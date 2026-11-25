@@ -180,7 +180,8 @@ class KnowledgeBase:
         return "neo4j" if self.neo is not None else "file"
 
     def _fallback(self, exc: Exception) -> None:
-        """Mất kết nối khi đang chạy: ghi lý do và chuyển hẳn sang file (đồ thị đã nạp sẵn trong bộ nhớ nên không mất gì)."""
+        """Mất kết nối khi đang chạy: ghi lý do và chuyển hẳn sang file (đồ thị đã nạp sẵn trong bộ nhớ nên không mất gì).
+        Nói đơn giản: "cầu chì". Đang demo mà rớt mạng thì hệ không báo lỗi mà lặng lẽ dùng bản sao trong bộ nhớ, kết quả vẫn đúng."""
         self.backend_note = f"Neo4j lỗi giữa chừng ({type(exc).__name__}), dùng đồ thị trong bộ nhớ"
         self.neo = None
 
@@ -199,7 +200,9 @@ class KnowledgeBase:
 
     def match_nodes(self, query: str, limit: int = 6) -> list[str]:
         """Bước 1 Graph-RAG — tìm các nút đồ thị khớp câu hỏi. Điểm = số từ trùng + 2 nếu cả cụm tên/biệt danh xuất hiện trong câu
-        (so khớp sau khi bỏ dấu). Trả về tối đa `limit` id nút, điểm cao trước."""
+        (so khớp sau khi bỏ dấu). Trả về tối đa `limit` id nút, điểm cao trước.
+        Nói đơn giản: "câu hỏi này đang nói về khái niệm nào?". Vd "Which test diagnoses prediabetes?" -> nút "Tiền tiểu đường", "Xét nghiệm A1C"...
+        Hạn chế (nên nói thật nếu thầy hỏi): khớp theo từ khóa nên có lúc nhầm, vd từ "high" trong "high blood sugar" khớp nhầm nút "Huyết áp cao"."""
         q = set(tokens(query))
         qs = strip_accents(query)
         scored = []
@@ -214,7 +217,9 @@ class KnowledgeBase:
 
     def expand(self, seeds: list[str], hops: int = 1) -> list[str]:
         """Bước 2 Graph-RAG — duyệt rộng (BFS) từ các nút hạt giống `seeds` ra `hops` bước (mặc định 1) theo self.adj.
-        Trả về seeds đứng đầu, sau đó là nút láng giềng (sắp xếp theo id để kết quả ổn định)."""
+        Trả về seeds đứng đầu, sau đó là nút láng giềng (sắp xếp theo id để kết quả ổn định).
+        Nói đơn giản: từ khái niệm tìm được, đi thêm MỘT bước theo mũi tên để lấy các khái niệm "hàng xóm" (vd Tiền tiểu đường -> A1C, FPG, ăn uống lành mạnh).
+        Có Neo4j thì bước đi này là một câu Cypher; không có thì dùng danh sách kề self.adj trong bộ nhớ. Hai cách cho kết quả giống hệt nhau."""
         seen, frontier = list(seeds), set(seeds)
         for _ in range(hops):
             nxt = set()
@@ -232,7 +237,12 @@ class KnowledgeBase:
         return seen
 
     def search(self, query: str, k: int = 3, graph: bool = True) -> dict:
-        """Graph-RAG: tìm nút khớp truy vấn -> mở rộng 1 bước -> BM25 trên câu hỏi, cộng điểm cho đoạn gắn với các nút đó."""
+        """Graph-RAG: tìm nút khớp truy vấn -> mở rộng 1 bước -> BM25 trên câu hỏi, cộng điểm cho đoạn gắn với các nút đó.
+        Nói đơn giản - 4 việc, mỗi việc 1 dòng code bên dưới:
+          (1) match_nodes: câu hỏi nói về khái niệm nào?   (2) expand: lấy thêm khái niệm hàng xóm.
+          (3) evidence: các khái niệm đó có bằng chứng ở đoạn tài liệu nào? (Cypher MENTIONS nếu có Neo4j) -> cộng điểm cho các đoạn đó
+              (nút khớp +1,0; nút hàng xóm +0,3).   (4) BM25 chấm điểm từ khóa + điểm cộng -> lấy top-k đoạn kèm link nguồn.
+        graph=False = tắt (1)-(3), chỉ còn BM25 thuần: dùng để so sánh "có đồ thị" với "không đồ thị" (train/eval_rag.py)."""
         # Thứ tự: (1) seeds = nút khớp câu hỏi; (2) mở rộng 1 bước, giữ tối đa 14 nút; (3) tính boost; (4) BM25 + boost; (5) gom "sự kiện" từ cạnh.
         # graph=False tắt toàn bộ phần đồ thị -> chính là BM25 thuần, dùng làm đối chứng khi đo (train/eval_rag.py).
         seeds = self.match_nodes(query) if graph else []

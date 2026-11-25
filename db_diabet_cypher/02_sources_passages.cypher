@@ -1,5 +1,6 @@
 // KB_diabet - FILE 2/3: nguồn tài liệu (KBSource: trang web hoặc PDF) và từng đoạn trích (KBPassage). Do build_kg.py sinh ra, đừng sửa tay.
 // 29 nguồn (1 PDF), 514 đoạn. Văn bản đoạn là nguyên văn tiếng Anh từ tài liệu gốc.
+// Nói đơn giản: KBSource = một trang web hoặc file PDF; KBPassage = một đoạn văn trích từ đó; HAS_PASSAGE = 'trang này chứa đoạn này'.
 MATCH (n:KBPassage) DETACH DELETE n;
 MATCH (n:KBSource) DETACH DELETE n;
 CREATE CONSTRAINT kb_passage_id IF NOT EXISTS FOR (n:KBPassage) REQUIRE n.id IS UNIQUE;

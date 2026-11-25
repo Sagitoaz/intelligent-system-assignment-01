@@ -8,6 +8,12 @@ Bốn phần trình diễn (khớp 4 ý của thầy):
   3. RAG <-> KB bằng code: với mỗi câu hỏi in nút khớp, các câu Cypher đã chạy (MATCH ... MENTIONS), đoạn tài liệu tìm được kèm link/PDF.
   4. Hỏi đáp có trích dẫn: gọi AskEngine (chế độ trích đoạn, không cần Qwen) để thấy câu trả lời cuối cùng và nguồn.
 Ghi kết quả vào project01/artifacts/demo_kb_neo4j.json (để báo cáo trích số liệu thật).
+
+NÓI ĐƠN GIẢN - cách trình bày với thầy (khoảng 3 phút), chạy file này rồi chỉ vào từng khối in ra:
+  "Thầy xem, KB nằm trên Neo4j: 41 khái niệm, 29 nguồn (28 trang web + 1 PDF), 514 đoạn tài liệu, 123 liên kết bằng chứng."   (khối 1, 2)
+  "Em hỏi 1 câu, RAG đi qua KB: tìm khái niệm khớp -> chạy 2 câu Cypher lên Neo4j -> lấy đoạn bằng chứng -> xếp hạng."        (khối 3)
+  "Kết quả là đoạn trích có link nguồn, có cả đoạn lấy từ file PDF (nhãn [PDF])."                                           (khối 3, 4)
+  Nếu thầy hỏi "không có mạng thì sao?" -> chạy lại với --file: vẫn ra kết quả giống, chỉ không có dòng Cypher.
 """
 from __future__ import annotations
 
@@ -28,6 +34,7 @@ def main() -> int:
     from project01.mas.ask import AskEngine
     from project01.mas.kb import KnowledgeBase
 
+    # KnowledgeBase() tự thử kết nối Neo4j (KB_BACKEND=auto). Truyền "file" để ép dùng kg.json (không cần mạng).
     kb = KnowledgeBase("file" if "--file" in sys.argv else None)
     out: dict = dict(backend=kb.backend, note=kb.backend_note)
     print(f"\n=== Backend đồ thị tri thức: {kb.backend.upper()} " + (f"({kb.neo.host})" if kb.neo else f"({kb.backend_note or 'kg.json'})"))
@@ -51,6 +58,7 @@ def main() -> int:
     else:
         print("  (đang dùng file nên bỏ qua; đặt NEO4J_* hoặc file Neo4j-*.txt rồi chạy lại để xem phần này)")
 
+    # Khối 2: đếm đoạn theo nguồn, chứng minh kho dữ liệu gồm cả 3 nhóm link (NIDDK, CDC, MedlinePlus) lẫn PDF.
     print("\n=== 2. Nguồn dữ liệu (3 nhóm link + PDF)")
     by = Counter()
     for p in kb.passages:
@@ -62,6 +70,7 @@ def main() -> int:
     out["passages_by_source"], out["passages"], out["sources"] = dict(by), len(kb.passages), len(pages)
 
     print("\n=== 3 + 4. RAG đi qua KB (mỗi câu hỏi) và câu trả lời có trích dẫn")
+    # Khối 3 + 4: với mỗi câu hỏi, in nút KB khớp, số câu Cypher đã chạy (kb.neo.queries tăng lên), đoạn tìm được (web/PDF) và câu trả lời cuối.
     engine = AskEngine(type("C", (), {"kb": kb})())
     out["questions"] = []
     for q in QUESTIONS:
